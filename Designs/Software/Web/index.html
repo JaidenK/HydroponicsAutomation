@@ -21,6 +21,20 @@
         height: 200px;
         background: #aaa;
     }
+    .video-container {
+      position:relative;
+      padding-bottom:56.25%;
+      padding-top:30px;
+      height:0;
+      overflow:hidden;
+    }
+    .video-container video {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    }
   </style>
 
 </head>
@@ -34,7 +48,7 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="alert alert-info">
-        <strong>Notice:</strong> This is all still placeholder text.
+        <strong>Notice:</strong> Most of this is still placeholder text.
       </div>
     </div>
   </div>
@@ -68,11 +82,16 @@
       <p>Some text..</p>
       <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
       <br>
-      <h2>TITLE HEADING</h2>
-      <h5>Title description, Sep 2, 2017</h5>
-      <div class="fakeimg">Fake Image</div>
-      <p>Some text..</p>
-      <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+      <h2>Project Pitch</h2>
+      <h5>In-class presentation, Oct 30, 2018</h5>
+      <p>
+        <div class="video-container">
+          <video width="1280" height="720" controls>
+            <source src="media/video/HydroPitch.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </p>
     </div>
   </div>
 </div>
