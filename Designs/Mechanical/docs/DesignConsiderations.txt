@@ -1,4 +1,4 @@
-Design Considerations
+Mechanical Design Considerations
 
 Power Supply
    Standard wall plug
@@ -7,3 +7,6 @@ Power Supply
       Using a wall wart would make it easy for us because the wall wart has built in mechanisms to deal with main's power and outputs a mostly safe and usable voltage for us. It also converts it to DC for us. This would be harder for the user to connect an extension cord to and would involve them having to plug in an extra thing. This wouldn't be a huge inconvenience, but every inconvenience counts.
    Battery
       Minimal inconvenience to the user during initial setup. Relatively convenient for us. Introduces increased maintenance costs and electrical design requirements.
+
+Do the sensors need to be placed in a reference solution, or is air ok?
+Peristaltic pumps or solenoids or other actuators?
