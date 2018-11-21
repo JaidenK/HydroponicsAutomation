@@ -1,1 +1,1 @@
-Contributor	Task	Date Time	HoursJaiden	Mechanical design brainstorming	11/20/2018 10:00AM	1	Git setup	Website		Barron Administrative 11/20/2018 11:05 0.01
+Contributor	Task	Date Time	HoursJaiden	Mechanical design brainstorming	11/20/2018 10:00AM	3	Git setup	Website		Barron Administrative 11/20/2018 11:05 0.01Jaiden	Mechanical/Electrical design	11/20/2018 8:00PM	3
