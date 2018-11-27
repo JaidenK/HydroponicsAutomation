@@ -15,7 +15,7 @@
         <a class="nav-link" href="#">Link</a>
       </li>  -->  
     </ul>
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto" id="navLoggedOut">
       <li class="nav-item">
           <a class="nav-link" href="/login.php">Login</a>
       </li>
@@ -24,6 +24,24 @@
       </li>
       <!-- TODO: Make this change if they're logged in. -->
     </ul>
+    <ul class="navbar-nav ml-auto" id="navLoggedIn">
+      <li class="nav-item">
+          <a class="nav-link" href="/controlPanel.php">Control Panel</a>
+      </li>
+      <li class="navbar-text" id="navUsername">
+          Username
+      </li>
+    </ul>
   </div>  
 </nav>
-<script type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    if(test) {
+      $("#navLoggedIn").show();
+      $("#navLoggedOut").hide();
+    }else{
+      $("#navLoggedIn").hide();
+      $("#navLoggedOut").show();
+    }
+});
+</script>

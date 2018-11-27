@@ -1,3 +1,6 @@
+<?php
+  $test = 'true';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,17 +32,17 @@
     }
   </style>
 
-  <script type="text/javascript">
-    var test = <?php echo "\"test\"" ?>;
-    alert(test);
+  <script>
+    var test = <?php echo 'true' ?>;    
   </script>
 
 </head>
 <body>
 
 <!-- Nav bar to replaced by jQuery and nav.html -->
-<div id="nav-placeholder"></div>
-<script>$(function(){$("#nav-placeholder").load("nav.html");});</script>
+<!--<div id="nav-placeholder"></div>
+<script>$(function(){$("#nav-placeholder").load("nav.html");});</script>-->
+<?php include 'nav.php'; ?>
 
 <div class="container" style="margin-top:30px">
   <!--<div class="row">
@@ -98,6 +101,11 @@
 <div id="footer-placeholder"></div>
 <script>$(function(){$("#footer-placeholder").load("footer.html");});</script>
 
+<script type="text/javascript">
+  $(document).ready(function(){
+    // alert(test);
+  });
+</script>
 
 </body>
 </html>
