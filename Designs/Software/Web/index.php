@@ -17,10 +17,6 @@
   <script src="jquery-3.3.1.min.js"></script>
 
   <style>
-    .fakeimg {
-        height: 200px;
-        background: #aaa;
-    }
     .video-container {
       position:relative;
       padding-bottom:56.25%;
@@ -36,6 +32,11 @@
       height:100%;
     }
   </style>
+
+  <script type="text/javascript">
+    var test = <?php echo "test" ?>;
+    alert(test);
+  </script>
 
 </head>
 <body>

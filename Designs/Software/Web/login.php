@@ -1,3 +1,7 @@
+<?php
+  session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,11 +26,6 @@
 <!-- Nav bar to replaced by jQuery and nav.html -->
 <div id="nav-placeholder"></div>
 <script>$(function(){$("#nav-placeholder").load("nav.html");});</script>
-
-<?php
-echo "My first PHP script!";
-?>
-
 
 <div class="container" style="margin-top:30px;margin-bottom:30px">
     <div id="login-row" class="row justify-content-center align-items-center">
