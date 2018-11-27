@@ -27,10 +27,44 @@
 echo "My first PHP script!";
 ?>
 
+
+<div class="container" style="margin-top:30px;margin-bottom:30px">
+    <div id="login-row" class="row justify-content-center align-items-center">
+        <div id="login-column" class="col-md-6">
+            <div class="box">
+                <div class="float">
+                    <form class="form" action="">
+                        <div class="form-group">
+                            <label for="username">Username:</label><br>
+                            <input type="text" name="username" id="username" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label><br>
+                            <input type="text" name="password" id="password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" class="btn btn-info btn-md" value="Login">
+                        </div>
+                        <div>
+                          <a href="/reset.php">Forgot password?</a>
+                        </div>
+                        <div>
+                          <a href="/signup.php">Create new account</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Footer to replaced by jQuery and footer.html -->
 <div id="footer-placeholder"></div>
 <script>$(function(){$("#footer-placeholder").load("footer.html");});</script>
 
 
+
+<!-- https://bootsnipp.com/snippets/featured/login-form -->
 </body>
 </html>
