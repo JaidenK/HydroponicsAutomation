@@ -15,9 +15,8 @@
 </head>
 <body>
 
-<!-- Nav bar to replaced by jQuery and nav.html -->
-<div id="nav-placeholder"></div>
-<script>$(function(){$("#nav-placeholder").load("nav.html");});</script>
+<!-- Navbar -->
+<?php include 'nav.php'; ?>
 
 <div class="container" style="margin-top:30px;margin-bottom:30px">
   <div class="row">

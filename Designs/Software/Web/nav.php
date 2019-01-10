@@ -6,7 +6,7 @@
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="/goals.html">Goals</a>
+        <a class="nav-link" href="/goals.php">Goals</a>
       </li>
       <!--<li class="nav-item">
         <a class="nav-link" href="#">Link</a>
@@ -15,33 +15,33 @@
         <a class="nav-link" href="#">Link</a>
       </li>  -->  
     </ul>
-    <ul class="navbar-nav ml-auto" id="navLoggedOut">
-      <li class="nav-item">
-          <a class="nav-link" href="/login.php">Login</a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" href="/signup.php">Register</a>
-      </li>
-      <!-- TODO: Make this change if they're logged in. -->
-    </ul>
-    <ul class="navbar-nav ml-auto" id="navLoggedIn">
-      <li class="nav-item">
-          <a class="nav-link" href="/controlPanel.php">Control Panel</a>
-      </li>
-      <li class="navbar-text" id="navUsername">
-          Username
-      </li>
-    </ul>
+    <?php
+      if (!$_SESSION["isLoggedIn"]) {
+        echo' 
+          <ul class="navbar-nav ml-auto" id="navLoggedOut">
+            <li class="nav-item">
+                <a class="nav-link" href="/login.php">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/signup.php">Register</a>
+            </li>
+          </ul>
+        ';
+      }else{
+        echo '
+          <ul class="navbar-nav ml-auto" id="navLoggedIn">
+            <li class="nav-item">
+                <a class="nav-link" href="/logout.php">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/controlPanel.php">Control Panel</a>
+            </li>
+            <li class="navbar-text" id="navUsername">
+                Username
+            </li>
+          </ul>
+        ';
+      }
+    ?>
   </div>  
 </nav>
-<script type="text/javascript">
-$(document).ready(function(){
-    if(test) {
-      $("#navLoggedIn").show();
-      $("#navLoggedOut").hide();
-    }else{
-      $("#navLoggedIn").hide();
-      $("#navLoggedOut").show();
-    }
-});
-</script>

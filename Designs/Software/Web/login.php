@@ -1,5 +1,19 @@
 <?php
   session_start();
+  $loginError = '';
+  if (isset($_POST['username'])) {
+    if ($_POST['username'] == 'admin') {
+      if($_POST['password'] == 'password') {
+        $_SESSION['isLoggedIn'] = true;
+        header("Location: /index.php");
+        die();
+      }else{
+        $loginError = "Incorrect password.";
+      }
+    }else{
+      $loginError = "User does not exist.";
+    }
+  }
 ?>
 
 <!DOCTYPE html>
@@ -19,37 +33,45 @@
 </head>
 <body>
 
-<!-- Nav bar to replaced by jQuery and nav.html -->
-<div id="nav-placeholder"></div>
-<script>$(function(){$("#nav-placeholder").load("nav.html");});</script>
+<!-- Navbar -->
+<?php include 'nav.php'; ?>
 
 <div class="container" style="margin-top:30px;margin-bottom:30px">
     <div id="login-row" class="row justify-content-center align-items-center">
-        <div id="login-column" class="col-md-6">
-            <div class="box">
-                <div class="float">
-                    <form class="form" action="">
-                        <div class="form-group">
-                            <label for="username">Username:</label><br>
-                            <input type="text" name="username" id="username" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password:</label><br>
-                            <input type="text" name="password" id="password" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" name="submit" class="btn btn-info btn-md" value="Login">
-                        </div>
-                        <div>
-                          <a href="/reset.php">Forgot password?</a>
-                        </div>
-                        <div>
-                          <a href="/signup.php">Create new account</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+      <div id="login-column" class="col-md-6">
+        <div class="box">
+          <div class="float">
+            <?php
+              if($loginError != ''){
+                echo '
+                  <div class="alert alert-danger">
+                    '.$loginError.'
+                  </div>
+                ';
+              }
+            ?>
+            <form class="form" action="" method="post">
+              <div class="form-group">
+                <label for="username">Username:</label><br>
+                <input type="text" name="username" id="username" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="password">Password:</label><br>
+                <input type="text" name="password" id="password" class="form-control">
+              </div>
+              <div class="form-group">
+                <input type="submit" name="submit" class="btn btn-info btn-md" value="Login">
+              </div>
+              <div>
+                <a href="/reset.php">Forgot password?</a>
+              </div>
+              <div>
+                <a href="/signup.php">Create new account</a>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
 </div>
 
