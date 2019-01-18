@@ -1,10 +1,10 @@
 <?php
 
-session_start();
-if(!$_SESSION['isLoggedIn']) {
-   header("Location: /login.php");
-   die();
-}
+// session_start();
+// if(!$_SESSION['isLoggedIn']) {
+//    header("Location: /login.php");
+//    die();
+// }
 
 include "dbinfo.php";
 
