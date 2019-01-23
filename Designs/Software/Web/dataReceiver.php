@@ -56,9 +56,10 @@ $ec_target = (double) $_GET["ec_target"];
 $sql = "INSERT INTO `TestTable` (`h2o_level`, `h2o_stored`, `ph_level`, `ph_up_stored`, `ph_down_stored`, `ec_level`, `ec_stored`, `temp_measured`, `flow_measured`, `flow_target`, `ph_target`, `ec_target`, `time`, `table_key`) VALUES ('$h2o_level', '$h2o_stored', '$ph_level', '$ph_up_stored', '$ph_down_stored', '$ec_level', '$ec_stored', '$temp_measured', '$flow_measured', '$flow_target', '$ph_target', '$ec_target', CURRENT_TIMESTAMP, NULL);";
 
 if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
+   echo "new_record=success\n";
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+   echo "new_record=error\n";
+   echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
 ?> 

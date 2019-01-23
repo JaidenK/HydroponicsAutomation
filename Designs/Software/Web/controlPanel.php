@@ -18,7 +18,7 @@
   include "dbinfo.php";
   $h2o_level = [];
 
-  $sql = 'SELECT h2o_level, h2o_stored, time FROM TestTable ORDER BY time DESC LIMIT 180';
+  $sql = 'SELECT h2o_level, h2o_stored, time FROM TestTable ORDER BY time DESC LIMIT 60';
   $result = mysqli_query($conn,$sql);
   if(!$result) {
     die('Could not get data: ' . mysqli_error());

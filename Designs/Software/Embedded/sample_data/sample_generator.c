@@ -5,6 +5,7 @@
 #include <sys/socket.h> /* socket, connect */
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
 #include <netdb.h> /* struct hostent, gethostbyname */
+#include <time.h> // for random
 
 void error(const char *msg) { perror(msg); exit(0); }
 
@@ -23,7 +24,25 @@ struct SensorData {
    double ec_target;
 };
 
+void parseResponse(char *response) {
+   //printf("Parsing response:\n");
+   char *tok; 
+   tok = strtok(response,"\n");
+   while(tok != NULL) {
+      if(strncmp(tok,"new_record",10) == 0) {
+         if(strcmp(tok+11,"success")==0) {
+            printf("Record created successfully.\n");
+         }else{
+            printf("Error logging data:\n\t%s\n", tok+11);
+         }
+      }
+      tok = strtok(NULL,"\n");
+   }
+}
+
 void setRandomData(struct SensorData *sd) {
+   time_t t;
+   srand((unsigned)time(&t));
    sd->h2o_level =       rand() % 256;
    sd->h2o_stored =      rand() % 256;
    sd->ph_level =        rand() % 256;
@@ -36,6 +55,21 @@ void setRandomData(struct SensorData *sd) {
    sd->flow_target =     rand() % 256;
    sd->ph_target =       rand() % 256;
    sd->ec_target =       rand() % 256;
+}
+
+void randomWalk(struct SensorData *sd) {
+   sd->h2o_level +=       (double)rand()/RAND_MAX*2.0-1.0;
+   sd->h2o_stored +=      (double)rand()/RAND_MAX*2.0-1.0;
+   sd->ph_level +=        (double)rand()/RAND_MAX*2.0-1.0;
+   sd->ph_up_stored +=    (double)rand()/RAND_MAX*2.0-1.0;
+   sd->ph_down_stored +=  (double)rand()/RAND_MAX*2.0-1.0;
+   sd->ec_level +=        (double)rand()/RAND_MAX*2.0-1.0;
+   sd->ec_stored +=       (double)rand()/RAND_MAX*2.0-1.0;
+   sd->temp_measured +=   (double)rand()/RAND_MAX*2.0-1.0;
+   sd->flow_measured +=   (double)rand()/RAND_MAX*2.0-1.0;
+   sd->flow_target +=     (double)rand()/RAND_MAX*2.0-1.0;
+   sd->ph_target +=       (double)rand()/RAND_MAX*2.0-1.0;
+   sd->ec_target +=       (double)rand()/RAND_MAX*2.0-1.0;
 }
 
 void getGETstr(char *buf, struct SensorData *sd) {
@@ -69,14 +103,12 @@ void getGETstr(char *buf, struct SensorData *sd) {
    );
 }
 
-int main(int argc,char *argv[])
-{
-   struct SensorData *sd = malloc(sizeof(*sd));
-   setRandomData(sd);
+int logData(struct SensorData *sd) {
+
    char httpGETdata[2048];
    getGETstr(httpGETdata,sd);
-   printf("%s\n",httpGETdata);
-
+   //printf("%s\n",httpGETdata);
+   //https://stackoverflow.com/questions/22077802/simple-c-example-of-doing-an-http-post-and-consuming-the-response
    /* first what are we going to send and where are we going to send it? */
    int portno =        80;
    char *host =        "sdp.ballistaline.com";
@@ -87,11 +119,9 @@ int main(int argc,char *argv[])
    int sockfd, bytes, sent, received, total;
    char message[1024],response[4096];
 
-   if (argc < 2) { puts("Parameters: <GET>"); exit(0); }
-
    /* fill in the parameters */
    sprintf(message,message_fmt,httpGETdata);
-   printf("Request:\n%s\n",message);
+   //printf("Request:\n%s\n",message);
 
    /* create the socket */
    sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -143,7 +173,33 @@ int main(int argc,char *argv[])
    close(sockfd);
 
    /* process response */
-   printf("Response:\n%s\n",response);
+   //printf("Response:\n%s\n",response);
+   parseResponse(response);
 
    return 0;
+}
+
+int main(int argc,char *argv[])
+{
+   int logCount = 60;
+   int delaySeconds = 1;
+   if(argc > 1) {
+      logCount = atoi(argv[1]);
+   }
+   if(argc > 2) {
+      delaySeconds = atoi(argv[2]);
+      if(delaySeconds<1) {
+         delaySeconds = 1;
+      }
+   }
+   printf("Generating %d logs every %d seconds.\n",logCount,delaySeconds);
+
+   struct SensorData *sd = malloc(sizeof(*sd));
+   setRandomData(sd);
+
+   for (int i = 0; i < logCount; i++) {
+      sleep(delaySeconds);
+      randomWalk(sd);
+      logData(sd);
+   }
 }
