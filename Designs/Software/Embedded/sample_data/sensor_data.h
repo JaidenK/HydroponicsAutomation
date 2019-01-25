@@ -1,9 +1,23 @@
 #ifndef _SENSOR_DATA_H
 #define _SENSOR_DATA_H
 
-struct SensorData;
-
+struct SensorData {
+   double h2o_level;
+   double h2o_stored;
+   double ph_level;
+   double ph_up_stored;
+   double ph_down_stored;
+   double ec_level;
+   double ec_stored;
+   double temp_measured;
+   double flow_measured;
+   double flow_target;
+   double ph_target;
+   double ec_target;
+};
 void getGETstr(char *buf, struct SensorData *sd);
+void setRandomData(struct SensorData *sd);
+void randomWalk(struct SensorData *sd);
 
 #endif
 
