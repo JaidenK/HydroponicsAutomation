@@ -12,13 +12,13 @@
       $this->y = $y_;
     }
     function toString() {
-      return "{x:new Date('$this->x'),y:$this->y}";
+      return "{x:moment('$this->x','YYYY-MM-DD HH:mm:ss'),y:$this->y}";
     }
   }
   include "dbinfo.php";
-  $h2o_level = [];
+  $allData = [];
 
-  $sql = 'SELECT h2o_level, h2o_stored, time FROM TestTable ORDER BY time DESC LIMIT 60';
+  $sql = 'SELECT h2o_level, ph_level, ph_target, ec_level, ec_target, flow_measured, flow_target, time FROM TestTable WHERE time > date_sub(now(), interval 30 minute);';
   $result = mysqli_query($conn,$sql);
   if(!$result) {
     die('Could not get data: ' . mysqli_error());
@@ -28,16 +28,22 @@
   $i = 0;
   while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
     // $h2o_level[$i] = new Point(strtotime($row['time'])-$now+$sevenHours,$row['h2o_level']);
-    $h2o_level[$i] = new Point($row['time'],$row['h2o_level']);
-    //echo $h2o_level[$i]->x." ";
+    $allData["h2o_level"][$i] = new Point($row['time'],$row['h2o_level']);
+    //$allData["h2o_stored"][$i] = new Point($row['time'],$row['h2o_stored']);
+    $allData["ph_level"][$i] = new Point($row['time'],$row['ph_level']);
+    $allData["ph_target"][$i] = new Point($row['time'],$row['ph_target']);
+    $allData["ec_level"][$i] = new Point($row['time'],$row['ec_level']);
+    $allData["ec_target"][$i] = new Point($row['time'],$row['ec_target']);
+    $allData["flow_level"][$i] = new Point($row['time'],$row['flow_level']);
+    $allData["flow_target"][$i] = new Point($row['time'],$row['flow_target']);
     $i++;
   }
 
-  function getData() {
-    global $h2o_level;
+  function getData($valueKey) {
+    global $allData;
     // isFirst flag so I can include the comma
     $isFirst = TRUE;
-    foreach($h2o_level as $point) {
+    foreach($allData[$valueKey] as $point) {
       if(!$isFirst) {
         echo ",";
       }
@@ -66,7 +72,171 @@
 
   <!-- Charts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+  <script src="http://momentjs.com/downloads/moment.js"></script>
 
+  <script type="text/javascript">
+    $(document).ready(function(){
+      
+      var ctx = $("#myChart1");
+      var myChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Level',
+            showLine: true,
+            data: [<?php getData("h2o_level") ?>],
+            backgroundColor: "rgba(85,85,255,0.1)",
+            borderColor: "rgba(85,85,255,0.8)"
+          }]
+          // },{
+          //   label: 'Stored',
+          //   showLine: true,
+          //   data: [<?php getData("h2o_stored") ?>],
+          //   backgroundColor: "rgba(0,0,0,0)",
+          //   borderColor: "rgba(30,30,100,0.8)"
+          // }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Water"
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+            }],
+            yAxes: [{
+              display: true,
+              ticks: {
+                suggestedMin: 0
+              }
+            }]
+          },
+          legend: {
+            display: true
+          }
+        }
+      });
+      var phCtx = $("#phChart");
+      var phChart = new Chart(phCtx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Level',
+            showLine: true,
+            data: [<?php getData("ph_level") ?>],
+            backgroundColor: "rgba(85,255,85,0.1)",
+            borderColor: "rgba(85,255,85,0.8)"
+          },{
+            label: 'Target',
+            showLine: true,
+            data: [<?php getData("ph_target") ?>],
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: "rgba(30,100,30,0.8)"
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "pH"
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+            }],
+            yAxes: [{
+              display: true,
+              ticks: {
+                suggestedMin: 0
+              }
+            }]
+          },
+          legend: {
+            display: true
+          }
+        }
+      });
+      var ecCtx = $("#ecChart");
+      var ecChart = new Chart(ecCtx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Level',
+            showLine: true,
+            data: [<?php getData("ec_level") ?>],
+            backgroundColor: "rgba(136, 102, 68, 0.1)",
+            borderColor: "rgba(136, 102, 68, 0.8)"
+          },{
+            label: 'Target',
+            showLine: true,
+            data: [<?php getData("ec_target") ?>],
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: "rgba(60, 40, 20,0.8)"
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "EC"
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+            }],
+            yAxes: [{
+              display: true,
+              ticks: {
+                suggestedMin: 0
+              }
+            }]
+          },
+          legend: {
+            display: true
+          }
+        }
+      });
+
+      var flowCtx = $("#flowChart");
+      var flowChart = new Chart(flowCtx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Measured',
+            showLine: true,
+            data: [<?php getData("flow_measured") ?>],
+            backgroundColor: "rgba(0, 128, 128, 0.1)",
+            borderColor: "rgba(0, 128, 128, 0.8)"
+          },{
+            label: 'Target',
+            showLine: true,
+            data: [<?php getData("flow_target") ?>],
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: "rgba(0, 100, 100,0.8)"
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Flow"
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+            }],
+            yAxes: [{
+              display: true,
+              ticks: {
+                suggestedMin: 0
+              }
+            }]
+          },
+          legend: {
+            display: true
+          }
+        }
+      });
+    })
+  </script>
 </head>
 <body>
 
@@ -75,34 +245,17 @@
 
 <div class="container" style="margin-top:30px;margin-bottom:30px">
     <div class="row justify-content-center align-items-center">
-      <div id="login-column" class="col-md-6">
-        <canvas id="myChart" width="400" height="400"></canvas>
-        <script type="text/javascript">
-          var ctx = $("#myChart");
-          var myChart = new Chart(ctx, {
-            type: 'scatter',
-            data: {
-              datasets: [{
-                label: 'Scatter Dataset',
-                showLine: true,
-                data: [<?php getData() ?>]
-              }]
-            },
-            options: {
-              scales: {
-                xAxes: [{
-                  type: 'time',
-                  time: {
-                    unit: 'hour'
-                  }
-                }]
-              },
-              legend: {
-                display: false
-              }
-            }
-          });
-        </script>
+      <div class="col col-lg-6 col-sm-12">
+        <canvas id="myChart1"></canvas>
+      </div>
+      <div class="col col-lg-6 col-sm-12">
+        <canvas id="phChart"></canvas>
+      </div>
+      <div class="col col-lg-6 col-sm-12">
+        <canvas id="ecChart"></canvas>
+      </div>
+      <div class="col col-lg-6 col-sm-12">
+        <canvas id="flowChart"></canvas>
       </div>
     </div>
 </div>

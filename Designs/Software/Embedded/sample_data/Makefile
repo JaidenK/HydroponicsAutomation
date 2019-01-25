@@ -3,9 +3,9 @@ LIBFLAGS     =
 GCC          = gcc -Wall $(INCLUDEFLAGS) $(LIBFLAGS)
 COMPILE      = $(GCC) -c
 LINK         = $(GCC) -o
-SOURCES      = sample_generator.c
+SOURCES      = sample_generator.c http.c sensor_data.c
 OBJECTS      = $(patsubst %.c, %.o, $(SOURCES))
-HEADERS      = 
+HEADERS      = http.h sensor_data.h
 EXEC         = sample_generator
 
 
