@@ -80,17 +80,36 @@ int receiveResponse() {
 // TODO something more useful than a print satement
 void parseResponse(char *response) {
    //printf("Parsing response:\n");
-   printf("%s\n",response);
+   // printf("%s\n",response);
    char *tok; 
    tok = strtok(response,"\n");
    while(tok != NULL) {
-      if(strncmp(tok,"new_record",10) == 0) {
-         if(strcmp(tok+11,"success")==0) {
-            printf("Record created successfully.\n");
-         }else{
-            printf("Error logging data:\n\t%s\n", tok+11);
+      char *val;
+      val = strchr(tok,'=');
+      if(val != NULL) {
+         // If val was null then no '=' was found and this isn't a line
+         // with a key=value pair
+         val++;
+         char arg[256];
+         memset(arg,'\0',256);
+         strncpy(arg,tok,val-tok-1);
+         printf("arg: %s\nval: %s\n", arg, val);
+
+
+         if(strcmp(arg,"new_record") == 0) {
+            if(strcmp(val,"success")==0) {
+               printf("Record created successfully.\n");
+            }else{
+               printf("Error logging data:\n\t%s\n", val);
+            }
+         }
+
+         if(strncmp(tok,"water_target",12) == 0) {
+            printf("Water\n");
          }
       }
+
+      // Move to the next line of the response
       tok = strtok(NULL,"\n");
    }
 }

@@ -7,7 +7,6 @@ if($_GET['ProductID'] != "ABCD1234EFGH5678") {
    die("Invalid product id.");
 }
 
-
 $keys = array(
    "h2o_level",
    "h2o_stored",
@@ -34,22 +33,22 @@ foreach($keys as $key) {
 }
 
 if($isBadRequest) {
-   die("Bad request.");
+   die("new_record=error");
 }
 
 // TODO this needs to be cleaned up and refactored. Too much reppetitiotns 
-$h2o_level = (double)$_GET["h2o_level"];
-$h2o_stored = (double) $_GET["h2o_stored"];
-$ph_level = (double) $_GET["ph_level"];
-$ph_up_stored = (double) $_GET["ph_up_stored"];
+$h2o_level =      (double)$_GET["h2o_level"];
+$h2o_stored =     (double) $_GET["h2o_stored"];
+$ph_level =       (double) $_GET["ph_level"];
+$ph_up_stored =   (double) $_GET["ph_up_stored"];
 $ph_down_stored = (double) $_GET["ph_down_stored"];
-$ec_level = (double) $_GET["ec_level"];
-$ec_stored = (double) $_GET["ec_stored"];
-$temp_measured = (double) $_GET["temp_measured"];
-$flow_measured = (double) $_GET["flow_measured"];
-$flow_target = (double) $_GET["flow_target"];
-$ph_target = (double) $_GET["ph_target"];
-$ec_target = (double) $_GET["ec_target"];
+$ec_level =       (double) $_GET["ec_level"];
+$ec_stored =      (double) $_GET["ec_stored"];
+$temp_measured =  (double) $_GET["temp_measured"];
+$flow_measured =  (double) $_GET["flow_measured"];
+$flow_target =    (double) $_GET["flow_target"];
+$ph_target =      (double) $_GET["ph_target"];
+$ec_target =      (double) $_GET["ec_target"];
 
 $ProductID = mysqli_real_escape_string($conn, $_GET["ProductID"]);
 
@@ -66,6 +65,10 @@ if ($conn->query($sql) === TRUE) {
 $sql = "SELECT * FROM `MachineConfig` WHERE `ProductID` = '$ProductID'";
 $result = mysqli_query($conn,$sql) or die(mysql_error());
 while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-  echo $row['water']." ".$row['ph']." ".$row['ec']." ".$row['flow']." ".$row['temp']."\n";
+  echo "water_target=".$row['water']."\n";
+  echo "ph_target=".$row['ph']."\n";
+  echo "ec_target=".$row['ec']."\n";
+  echo "flow_target=".$row['flow']."\n";
+  echo "temp_target=".$row['temp']."\n";
 }
 ?> 
