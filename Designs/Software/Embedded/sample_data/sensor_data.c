@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 
 
@@ -22,6 +23,7 @@ void setRandomData(struct SensorData *sd) {
    sd->flow_target =     rand() % 256;
    sd->ph_target =       rand() % 256;
    sd->ec_target =       rand() % 256;
+   strcpy(sd->ProductID,"ABCD1234EFGH5678");
 }
 
 double randomExponentially(double current, double max, double min) {
@@ -62,7 +64,8 @@ void getGETstr(char *buf, struct SensorData *sd) {
       "flow_measured=%f&"
       "flow_target=%f&"
       "ph_target=%f&"
-      "ec_target=%f",
+      "ec_target=%f&"
+      "ProductID=%s",
       sd->h2o_level,
       sd->h2o_stored,
       sd->ph_level,
@@ -74,6 +77,7 @@ void getGETstr(char *buf, struct SensorData *sd) {
       sd->flow_measured,
       sd->flow_target,
       sd->ph_target,
-      sd->ec_target
+      sd->ec_target,
+      sd->ProductID
    );
 }

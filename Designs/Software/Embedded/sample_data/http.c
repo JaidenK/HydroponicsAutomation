@@ -80,6 +80,7 @@ int receiveResponse() {
 // TODO something more useful than a print satement
 void parseResponse(char *response) {
    //printf("Parsing response:\n");
+   printf("%s\n",response);
    char *tok; 
    tok = strtok(response,"\n");
    while(tok != NULL) {

@@ -3,7 +3,7 @@
 include "dbinfo.php";
 
 // This all should be changed to a $_POST to increase security, reliability, and allow longer string.
-if($_GET['ProductID'] != "password") {
+if($_GET['ProductID'] != "ABCD1234EFGH5678") {
    die("Invalid product id.");
 }
 
@@ -51,6 +51,7 @@ $flow_target = (double) $_GET["flow_target"];
 $ph_target = (double) $_GET["ph_target"];
 $ec_target = (double) $_GET["ec_target"];
 
+$ProductID = mysqli_real_escape_string($conn, $_GET["ProductID"]);
 
 
 $sql = "INSERT INTO `TestTable` (`h2o_level`, `h2o_stored`, `ph_level`, `ph_up_stored`, `ph_down_stored`, `ec_level`, `ec_stored`, `temp_measured`, `flow_measured`, `flow_target`, `ph_target`, `ec_target`, `time`, `table_key`) VALUES ('$h2o_level', '$h2o_stored', '$ph_level', '$ph_up_stored', '$ph_down_stored', '$ec_level', '$ec_stored', '$temp_measured', '$flow_measured', '$flow_target', '$ph_target', '$ec_target', CURRENT_TIMESTAMP, NULL);";
@@ -62,4 +63,9 @@ if ($conn->query($sql) === TRUE) {
    echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
+$sql = "SELECT * FROM `MachineConfig` WHERE `ProductID` = '$ProductID'";
+$result = mysqli_query($conn,$sql) or die(mysql_error());
+while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+  echo $row['water']." ".$row['ph']." ".$row['ec']." ".$row['flow']." ".$row['temp']."\n";
+}
 ?> 
