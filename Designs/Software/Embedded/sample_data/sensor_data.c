@@ -23,6 +23,7 @@ void setRandomData(struct SensorData *sd) {
    sd->flow_target =     rand() % 256;
    sd->ph_target =       rand() % 256;
    sd->ec_target =       rand() % 256;
+   sd->h2o_target =      rand() % 256;
    strcpy(sd->ProductID,"ABCD1234EFGH5678");
 }
 
@@ -44,9 +45,10 @@ void randomWalk(struct SensorData *sd) {
    sd->ec_stored +=       randomExponentially(sd->ec_stored,245,10);
    sd->temp_measured +=   randomExponentially(sd->temp_measured,245,10);
    sd->flow_measured +=   randomExponentially(sd->flow_measured,245,10);
-   sd->flow_target +=     randomExponentially(sd->flow_target,245,10);
-   sd->ph_target +=       randomExponentially(sd->ph_target,245,10);
-   sd->ec_target +=       randomExponentially(sd->ec_target,245,10);
+   // sd->flow_target +=     randomExponentially(sd->flow_target,245,10);
+   // sd->ph_target +=       randomExponentially(sd->ph_target,245,10);
+   // sd->ec_target +=       randomExponentially(sd->ec_target,245,10);
+   // sd->h2o_target +=      randomExponentially(sd->h2o_target,245,10);
 }
 
 void getGETstr(char *buf, struct SensorData *sd) {
@@ -65,6 +67,7 @@ void getGETstr(char *buf, struct SensorData *sd) {
       "flow_target=%f&"
       "ph_target=%f&"
       "ec_target=%f&"
+      "h2o_target=%f&"
       "ProductID=%s",
       sd->h2o_level,
       sd->h2o_stored,
@@ -78,6 +81,7 @@ void getGETstr(char *buf, struct SensorData *sd) {
       sd->flow_target,
       sd->ph_target,
       sd->ec_target,
+      sd->h2o_target,
       sd->ProductID
    );
 }

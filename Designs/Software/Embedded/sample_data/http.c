@@ -9,6 +9,8 @@
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
 #include <netdb.h> /* struct hostent, gethostbyname */
 
+#include <ctype.h> // isspace()
+
 // Data received during the HTTP request
 char httpGETdata[2048];
 
@@ -78,7 +80,7 @@ int receiveResponse() {
 }
 
 // TODO something more useful than a print satement
-void parseResponse(char *response) {
+void parseResponse(char *response, struct SensorData *sd) {
    //printf("Parsing response:\n");
    // printf("%s\n",response);
    char *tok; 
@@ -104,11 +106,31 @@ void parseResponse(char *response) {
             }
          }
 
-         if(strncmp(tok,"water_target",12) == 0) {
-            printf("Water\n");
+         if(strcmp(arg,"water_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->h2o_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing water_target %s\n",val);
+            }
+         }
+         if(strcmp(arg,"ph_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->ph_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing ph_target %s\n",val);
+            }
          }
       }
 
+   // sd->flow_target =     rand() % 256;
+   // sd->ph_target =       rand() % 256;
+   // sd->ec_target =       rand() % 256;
+   // sd->h2o_target =      rand() % 256;
+   
       // Move to the next line of the response
       tok = strtok(NULL,"\n");
    }
@@ -152,7 +174,7 @@ int logData(struct SensorData *sd) {
 
    /* process response */
    //printf("Response:\n%s\n",response);
-   parseResponse(response);
+   parseResponse(response,sd);
 
    return 0;
 }

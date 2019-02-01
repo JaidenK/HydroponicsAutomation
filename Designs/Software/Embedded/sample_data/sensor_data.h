@@ -14,6 +14,7 @@ struct SensorData {
    double flow_target;
    double ph_target;
    double ec_target;
+   double h2o_target;
    char ProductID[256];
 };
 void getGETstr(char *buf, struct SensorData *sd);
