@@ -1,6 +1,7 @@
 <?php
 
 include "dbinfo.php";
+include "notificationSystem.php";
 
 // This all should be changed to a $_POST to increase security, reliability, and allow longer string.
 if($_GET['ProductID'] != "ABCD1234EFGH5678") {
@@ -51,6 +52,10 @@ $ph_target =      (double) $_GET["ph_target"];
 $ec_target =      (double) $_GET["ec_target"];
 
 $ProductID = mysqli_real_escape_string($conn, $_GET["ProductID"]);
+
+if($_GET["notify"]) {
+   sendNotification($ProductID,mysqli_real_escape_string($conn, $_GET["notify"]));
+}
 
 
 $sql = "INSERT INTO `TestTable` (`h2o_level`, `h2o_stored`, `ph_level`, `ph_up_stored`, `ph_down_stored`, `ec_level`, `ec_stored`, `temp_measured`, `flow_measured`, `flow_target`, `ph_target`, `ec_target`, `time`, `table_key`) VALUES ('$h2o_level', '$h2o_stored', '$ph_level', '$ph_up_stored', '$ph_down_stored', '$ec_level', '$ec_stored', '$temp_measured', '$flow_measured', '$flow_target', '$ph_target', '$ec_target', CURRENT_TIMESTAMP, NULL);";

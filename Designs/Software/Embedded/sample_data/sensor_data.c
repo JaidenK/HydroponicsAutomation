@@ -117,7 +117,8 @@ int saveData(struct SensorData *sd, char *filename) {
          "ec_target=%lf\n"
          "h2o_target=%lf\n"
          "temp_target=%lf\n"
-         "ProductID=%s\n",
+         "ProductID=%s\n"
+         "notify=Hehe_xD",
          sd->h2o_level,
          sd->h2o_stored,
          sd->ph_level,
