@@ -18,7 +18,7 @@
   include "dbinfo.php";
   $allData = [];
 
-  $sql = 'SELECT h2o_level, ph_level, ph_target, ec_level, ec_target, flow_measured, flow_target, time FROM TestTable WHERE 1=1 LIMIT 1';
+  $sql = 'SELECT * FROM TestTable ORDER BY `time` DESC LIMIT 1';
   $result = mysqli_query($conn,$sql);
   if(!$result) {
     die('Could not get data: ' . mysqli_error());
@@ -34,8 +34,10 @@
     $allData["ph_target"][$i] = new Point($row['time'],$row['ph_target']);
     $allData["ec_level"][$i] = new Point($row['time'],$row['ec_level']);
     $allData["ec_target"][$i] = new Point($row['time'],$row['ec_target']);
-    $allData["flow_level"][$i] = new Point($row['time'],$row['flow_level']);
+    $allData["flow_measured"][$i] = new Point($row['time'],$row['flow_measured']);
     $allData["flow_target"][$i] = new Point($row['time'],$row['flow_target']);
+    $allData["temp_measured"][$i] = new Point($row['time'],$row['temp_measured']);
+    $allData["temp_target"][$i] = new Point($row['time'],$row['temp_target']);
     $i++;
   }
 
@@ -115,11 +117,11 @@
     }
 
     $(document).ready(function(){
-      newTopPageTargetChart("water",240,130,300);
-      newTopPageTargetChart("pH",7,10,14);
-      newTopPageTargetChart("EC",490,190,500);
-      newTopPageTargetChart("Flow",120,200,300);
-      newTopPageTargetChart("Temp",69,39,80);
+      newTopPageTargetChart("water",<?php echo $allData["h2o_level"][0]->y ?>,130,300);
+      newTopPageTargetChart("pH",<?php echo $allData["ph_level"][0]->y ?>,<?php echo $allData["ph_target"][0]->y ?>,14);
+      newTopPageTargetChart("EC",<?php echo $allData["ec_level"][0]->y ?>,<?php echo $allData["ec_target"][0]->y ?>,500);
+      newTopPageTargetChart("Flow",<?php echo $allData["flow_measured"][0]->y ?>,<?php echo $allData["flow_measured"][0]->y ?>,300);
+      newTopPageTargetChart("Temp",<?php echo $allData["temp_measured"][0]->y ?>,<?php echo $allData["temp_target"][0]->y ?>,80);
       
       var phUpCtx = $("#phUpChart");
       var phUpChart = new Chart(phUpCtx, {

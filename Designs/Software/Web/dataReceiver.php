@@ -5,7 +5,7 @@ include "notificationSystem.php";
 
 // This all should be changed to a $_POST to increase security, reliability, and allow longer string.
 if($_GET['ProductID'] != "ABCD1234EFGH5678") {
-   die("new_record=Invalid product id.");
+   die("new_record=Invalid product id: ".$_GET['ProductID']);
 }
 
 $keys = array(

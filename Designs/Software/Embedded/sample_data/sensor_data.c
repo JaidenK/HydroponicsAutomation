@@ -37,14 +37,14 @@ double randomExponentially(double current, double max, double min) {
 }
 
 void randomWalk(struct SensorData *sd) {
-   sd->h2o_level +=       randomExponentially(sd->h2o_level,245,10);
+   sd->h2o_level +=       randomExponentially(sd->h2o_level,300,10);
    sd->h2o_stored +=      randomExponentially(sd->h2o_stored,245,10);
-   sd->ph_level +=        randomExponentially(sd->ph_level,245,10);
+   sd->ph_level +=        randomExponentially(sd->ph_level,14,1);
    sd->ph_up_stored +=    randomExponentially(sd->ph_up_stored,245,10);
    sd->ph_down_stored +=  randomExponentially(sd->ph_down_stored,245,10);
-   sd->ec_level +=        randomExponentially(sd->ec_level,245,10);
+   sd->ec_level +=        randomExponentially(sd->ec_level,500,10);
    sd->ec_stored +=       randomExponentially(sd->ec_stored,245,10);
-   sd->temp_measured +=   randomExponentially(sd->temp_measured,245,10);
+   sd->temp_measured +=   randomExponentially(sd->temp_measured,80,10);
    sd->flow_measured +=   randomExponentially(sd->flow_measured,245,10);
    // sd->flow_target +=     randomExponentially(sd->flow_target,245,10);
    // sd->ph_target +=       randomExponentially(sd->ph_target,245,10);
@@ -117,8 +117,7 @@ int saveData(struct SensorData *sd, char *filename) {
          "ec_target=%lf\n"
          "h2o_target=%lf\n"
          "temp_target=%lf\n"
-         "ProductID=%s\n"
-         "notify=Hehe_xD",
+         "ProductID=%s\n",
          sd->h2o_level,
          sd->h2o_stored,
          sd->ph_level,
@@ -157,7 +156,8 @@ void getGETstr(char *buf, struct SensorData *sd) {
       "ec_target=%f&"
       "h2o_target=%f&"
       "temp_target=%f&"
-      "ProductID=%s",
+      "ProductID=%s&"
+      "",
       sd->h2o_level,
       sd->h2o_stored,
       sd->ph_level,
