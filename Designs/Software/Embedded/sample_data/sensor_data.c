@@ -21,9 +21,10 @@ void setRandomData(struct SensorData *sd) {
    sd->temp_measured =   rand() % 256;
    sd->flow_measured =   rand() % 256;
    sd->flow_target =     rand() % 256;
-   sd->ph_target =       rand() % 256;
-   sd->ec_target =       rand() % 256;
-   sd->h2o_target =      rand() % 256;
+   sd->ph_target =       0;//rand() % 256;
+   sd->ec_target =       0;//rand() % 256;
+   sd->h2o_target =      0;//rand() % 256;
+   sd->temp_target =     0;//rand() % 256;
    strcpy(sd->ProductID,"ABCD1234EFGH5678");
 }
 
@@ -51,6 +52,92 @@ void randomWalk(struct SensorData *sd) {
    // sd->h2o_target +=      randomExponentially(sd->h2o_target,245,10);
 }
 
+int loadData(struct SensorData *sd, char *filename) {
+   FILE *save_file = fopen("save_data.dat", "r");
+   if(!save_file) {
+      printf("Error opening saved data.\n");
+      setRandomData(sd);
+   }else{
+      fscanf(
+         save_file,
+         "h2o_level=%lf\n"
+         "h2o_stored=%lf\n"
+         "ph_level=%lf\n"
+         "ph_up_stored=%lf\n"
+         "ph_down_stored=%lf\n"
+         "ec_level=%lf\n"
+         "ec_stored=%lf\n"
+         "temp_measured=%lf\n"
+         "flow_measured=%lf\n"
+         "flow_target=%lf\n"
+         "ph_target=%lf\n"
+         "ec_target=%lf\n"
+         "h2o_target=%lf\n"
+         "temp_target=%lf\n"
+         "ProductID=%s\n",
+         &(sd->h2o_level),
+         &(sd->h2o_stored),
+         &(sd->ph_level),
+         &(sd->ph_up_stored),
+         &(sd->ph_down_stored),
+         &(sd->ec_level),
+         &(sd->ec_stored),
+         &(sd->temp_measured),
+         &(sd->flow_measured),
+         &(sd->flow_target),
+         &(sd->ph_target),
+         &(sd->ec_target),
+         &(sd->h2o_target),
+         &(sd->temp_target),
+         (sd->ProductID)
+      );
+   }
+   return 0;
+}
+
+int saveData(struct SensorData *sd, char *filename) {
+   FILE *save_file = fopen("save_data.dat", "w");
+   if(!save_file) {
+      printf("Error opening saved data.\n");
+      setRandomData(sd);
+   }else{
+      fprintf(
+         save_file,
+         "h2o_level=%lf\n"
+         "h2o_stored=%lf\n"
+         "ph_level=%lf\n"
+         "ph_up_stored=%lf\n"
+         "ph_down_stored=%lf\n"
+         "ec_level=%lf\n"
+         "ec_stored=%lf\n"
+         "temp_measured=%lf\n"
+         "flow_measured=%lf\n"
+         "flow_target=%lf\n"
+         "ph_target=%lf\n"
+         "ec_target=%lf\n"
+         "h2o_target=%lf\n"
+         "temp_target=%lf\n"
+         "ProductID=%s\n",
+         sd->h2o_level,
+         sd->h2o_stored,
+         sd->ph_level,
+         sd->ph_up_stored,
+         sd->ph_down_stored,
+         sd->ec_level,
+         sd->ec_stored,
+         sd->temp_measured,
+         sd->flow_measured,
+         sd->flow_target,
+         sd->ph_target,
+         sd->ec_target,
+         sd->h2o_target,
+         sd->temp_target,
+         sd->ProductID
+      );
+   }
+   return 0;
+}
+
 void getGETstr(char *buf, struct SensorData *sd) {
    sprintf(
       buf,
@@ -68,6 +155,7 @@ void getGETstr(char *buf, struct SensorData *sd) {
       "ph_target=%f&"
       "ec_target=%f&"
       "h2o_target=%f&"
+      "temp_target=%f&"
       "ProductID=%s",
       sd->h2o_level,
       sd->h2o_stored,
@@ -82,6 +170,7 @@ void getGETstr(char *buf, struct SensorData *sd) {
       sd->ph_target,
       sd->ec_target,
       sd->h2o_target,
+      sd->temp_target,
       sd->ProductID
    );
 }

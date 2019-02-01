@@ -15,11 +15,15 @@ struct SensorData {
    double ph_target;
    double ec_target;
    double h2o_target;
+   double temp_target;
    char ProductID[256];
 };
 void getGETstr(char *buf, struct SensorData *sd);
 void setRandomData(struct SensorData *sd);
 void randomWalk(struct SensorData *sd);
+
+int loadData(struct SensorData *sd, char *filename);
+int saveData(struct SensorData *sd, char *filename);
 
 #endif
 

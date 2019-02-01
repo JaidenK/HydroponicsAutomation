@@ -26,11 +26,11 @@ int main(int argc,char *argv[])
    printf("Generating %d logs every %d seconds.\n",logCount,delaySeconds);
 
    struct SensorData *sd = malloc(sizeof(*sd));
-   setRandomData(sd);
-
+   loadData(sd, "save_data.dat");
    for (int i = 0; i < logCount; i++) {
       sleep(delaySeconds);
       randomWalk(sd);
       logData(sd);
+      saveData(sd, "save_data.dat");
    }
 }

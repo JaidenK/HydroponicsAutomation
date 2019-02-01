@@ -95,14 +95,14 @@ void parseResponse(char *response, struct SensorData *sd) {
          char arg[256];
          memset(arg,'\0',256);
          strncpy(arg,tok,val-tok-1);
-         printf("arg: %s\nval: %s\n", arg, val);
+         // printf("arg: %s\nval: %s\n", arg, val);
 
 
          if(strcmp(arg,"new_record") == 0) {
             if(strcmp(val,"success")==0) {
                printf("Record created successfully.\n");
             }else{
-               printf("Error logging data:\n\t%s\n", val);
+               printf("Error logging data: %s\n", val);
             }
          }
 
@@ -124,13 +124,35 @@ void parseResponse(char *response, struct SensorData *sd) {
                printf("Error parsing ph_target %s\n",val);
             }
          }
+         if(strcmp(arg,"ec_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->ec_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing ec_target %s\n",val);
+            }
+         }
+         if(strcmp(arg,"flow_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->flow_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing flow_target %s\n",val);
+            }
+         }
+         if(strcmp(arg,"temp_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->temp_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing temp_target %s\n",val);
+            }
+         }
       }
 
-   // sd->flow_target =     rand() % 256;
-   // sd->ph_target =       rand() % 256;
-   // sd->ec_target =       rand() % 256;
-   // sd->h2o_target =      rand() % 256;
-   
       // Move to the next line of the response
       tok = strtok(NULL,"\n");
    }

@@ -1,0 +1,15 @@
+h2o_level=14.225947
+h2o_stored=34.004911
+ph_level=155.903018
+ph_up_stored=97.899239
+ph_down_stored=112.376414
+ec_level=51.080793
+ec_stored=17.500996
+temp_measured=140.913399
+flow_measured=140.997719
+flow_target=80.000000
+ph_target=40.000000
+ec_target=60.000000
+h2o_target=20.000000
+temp_target=100.000000
+ProductID=ABCD1234EFGH5678
