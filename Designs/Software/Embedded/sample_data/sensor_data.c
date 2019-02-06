@@ -6,6 +6,12 @@
 #include <math.h>
 #include <string.h>
 
+#include <ctype.h> // isspace()
+
+
+#include "http.h"
+
+void parseResponse(char *response, struct SensorData *sd);
 
 
 void setRandomData(struct SensorData *sd) {
@@ -92,8 +98,10 @@ int loadData(struct SensorData *sd, char *filename) {
          (sd->ProductID)
       );
    }
+   fclose(save_file);
    return 0;
 }
+
 
 int saveData(struct SensorData *sd, char *filename) {
    FILE *save_file = fopen("save_data.dat", "w");
@@ -135,6 +143,7 @@ int saveData(struct SensorData *sd, char *filename) {
          sd->ProductID
       );
    }
+   fclose(save_file);
    return 0;
 }
 
@@ -175,3 +184,95 @@ void getGETstr(char *buf, struct SensorData *sd) {
       sd->ProductID
    );
 }
+
+int logData(struct SensorData *sd) {
+   char response[4096];
+   char getStr[4096];
+   getGETstr(getStr,sd);
+   HTTP_Get("dataReceiver.php",getStr,response,4096);
+   parseResponse(response,sd);
+   return 0;
+}
+
+// TODO something more useful than a print satement
+void parseResponse(char *response, struct SensorData *sd) {
+   //printf("Parsing response:\n");
+   // printf("%s\n",response);
+   char *tok; 
+   tok = strtok(response,"\n");
+   while(tok != NULL) {
+      char *val;
+      val = strchr(tok,'=');
+      if(val != NULL) {
+         // If val was null then no '=' was found and this isn't a line
+         // with a key=value pair
+         val++;
+         char arg[256];
+         memset(arg,'\0',256);
+         strncpy(arg,tok,val-tok-1);
+         // printf("arg: %s\nval: %s\n", arg, val);
+
+
+         if(strcmp(arg,"new_record") == 0) {
+            if(strcmp(val,"success")==0) {
+               printf("Record created successfully.\n");
+            }else{
+               if(strncmp(val,"Invalid product id",18)==0) {
+                  printf("Your data will not be saved to the web until you've registered your product to your account.\n");
+               }
+               printf("Error logging data: %s\n", val);
+            }
+         }
+
+         if(strcmp(arg,"water_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->h2o_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing water_target %s\n",val);
+            }
+         }
+         if(strcmp(arg,"ph_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->ph_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing ph_target %s\n",val);
+            }
+         }
+         if(strcmp(arg,"ec_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->ec_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing ec_target %s\n",val);
+            }
+         }
+         if(strcmp(arg,"flow_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->flow_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing flow_target %s\n",val);
+            }
+         }
+         if(strcmp(arg,"temp_target") == 0) {
+            char *err;
+            double d = strtod(val, &err);
+            if (*err == 0) { 
+               sd->temp_target = d;
+            }else if (!isspace((unsigned char)*err)) {
+               printf("Error parsing temp_target %s\n",val);
+            }
+         }
+      }
+
+      // Move to the next line of the response
+      tok = strtok(NULL,"\n");
+   }
+}
+

@@ -1,0 +1,79 @@
+\hypertarget{http_8h}{}\section{/\+Users/jaidenking/\+Google Drive (jaaking@ucsc.\+edu)/\+T\+E\+AM Hydroponic\+Automation/\+Git\+Repo/\+Hydroponics\+Automation/\+Designs/\+Software/\+Embedded/sample\+\_\+data/http.h File Reference}
+\label{http_8h}\index{/Users/jaidenking/Google Drive (jaaking"@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/sample\_data/http.h@{/Users/jaidenking/Google Drive (jaaking"@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/sample\_data/http.h}}
+
+
+H\+T\+TP service.  
+
+
+{\ttfamily \#include \char`\"{}sensor\+\_\+data.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{http_8h_a45ee4134a5d3421d9d051639bfae0bf4}{H\+T\+T\+P\+\_\+\+Init}} (char $\ast$host)
+\item 
+int \mbox{\hyperlink{http_8h_a4fdc15d8feda5c50d0b708e52c1d7c39}{H\+T\+T\+P\+\_\+\+Set\+Host}} (char $\ast$host)
+\item 
+int \mbox{\hyperlink{http_8h_a71975a7d4a6fe564525224cc568892ef}{H\+T\+T\+P\+\_\+\+Set\+Message\+Format}} (char $\ast$message\+\_\+format)
+\item 
+\mbox{\Hypertarget{http_8h_a3c07efad0e237843cd18f2a6915c1fcd}\label{http_8h_a3c07efad0e237843cd18f2a6915c1fcd}} 
+int {\bfseries H\+T\+T\+P\+\_\+\+Get} ()
+\item 
+\mbox{\Hypertarget{http_8h_ae559f3506ed6e490a51b4635a01570b0}\label{http_8h_ae559f3506ed6e490a51b4635a01570b0}} 
+int {\bfseries log\+Data} (struct \mbox{\hyperlink{struct_sensor_data}{Sensor\+Data}} $\ast$sd)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+H\+T\+TP service. 
+
+\begin{DoxyAuthor}{Author}
+Jaiden King
+\end{DoxyAuthor}
+Descriptions 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{http_8h_a45ee4134a5d3421d9d051639bfae0bf4}\label{http_8h_a45ee4134a5d3421d9d051639bfae0bf4}} 
+\index{http.h@{http.h}!HTTP\_Init@{HTTP\_Init}}
+\index{HTTP\_Init@{HTTP\_Init}!http.h@{http.h}}
+\subsubsection{\texorpdfstring{HTTP\_Init()}{HTTP\_Init()}}
+{\footnotesize\ttfamily int H\+T\+T\+P\+\_\+\+Init (\begin{DoxyParamCaption}\item[{char $\ast$}]{host }\end{DoxyParamCaption})}
+
+Initializes the H\+T\+TP library with a particular host and automatically sets the message format to a G\+ET with that site. \begin{DoxyNote}{Note}
+This function should be called before any other H\+T\+TP library functions.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em host} & A string containing the base url of the website. (e.\+g. \char`\"{}www.\+example.\+com\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, 1 otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{http_8h_a4fdc15d8feda5c50d0b708e52c1d7c39}\label{http_8h_a4fdc15d8feda5c50d0b708e52c1d7c39}} 
+\index{http.h@{http.h}!HTTP\_SetHost@{HTTP\_SetHost}}
+\index{HTTP\_SetHost@{HTTP\_SetHost}!http.h@{http.h}}
+\subsubsection{\texorpdfstring{HTTP\_SetHost()}{HTTP\_SetHost()}}
+{\footnotesize\ttfamily int H\+T\+T\+P\+\_\+\+Set\+Host (\begin{DoxyParamCaption}\item[{char $\ast$}]{host }\end{DoxyParamCaption})}
+
+Updates the host. Does not change message format. 
+\begin{DoxyParams}{Parameters}
+{\em host} & String specifying the new host. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, 1 otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{http_8h_a71975a7d4a6fe564525224cc568892ef}\label{http_8h_a71975a7d4a6fe564525224cc568892ef}} 
+\index{http.h@{http.h}!HTTP\_SetMessageFormat@{HTTP\_SetMessageFormat}}
+\index{HTTP\_SetMessageFormat@{HTTP\_SetMessageFormat}!http.h@{http.h}}
+\subsubsection{\texorpdfstring{HTTP\_SetMessageFormat()}{HTTP\_SetMessageFormat()}}
+{\footnotesize\ttfamily int H\+T\+T\+P\+\_\+\+Set\+Message\+Format (\begin{DoxyParamCaption}\item[{char $\ast$}]{message\+\_\+format }\end{DoxyParamCaption})}
+
+Update the message format. 
+\begin{DoxyParams}{Parameters}
+{\em message\+\_\+format} & String of the new message format. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, 1 otherwise. 
+\end{DoxyReturn}

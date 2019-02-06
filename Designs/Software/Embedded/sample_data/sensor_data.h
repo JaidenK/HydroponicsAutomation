@@ -18,12 +18,22 @@ struct SensorData {
    double temp_target;
    char ProductID[256];
 };
+
+struct Notifications {
+   unsigned int isPhUpLow:1;
+   unsigned int isPhDownLow:1;
+   unsigned int isECLow:1;
+   unsigned int isWaterLow:1;
+};
+
 void getGETstr(char *buf, struct SensorData *sd);
 void setRandomData(struct SensorData *sd);
 void randomWalk(struct SensorData *sd);
 
 int loadData(struct SensorData *sd, char *filename);
 int saveData(struct SensorData *sd, char *filename);
+
+int logData(struct SensorData *sd);
 
 #endif
 

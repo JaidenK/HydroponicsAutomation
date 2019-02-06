@@ -23,6 +23,7 @@ int main(int argc,char *argv[])
          delaySeconds = 1;
       }
    }
+   HTTP_Init("sdp.ballistaline.com");
    printf("Generating %d logs every %d seconds.\n",logCount,delaySeconds);
 
    struct SensorData *sd = malloc(sizeof(*sd));
