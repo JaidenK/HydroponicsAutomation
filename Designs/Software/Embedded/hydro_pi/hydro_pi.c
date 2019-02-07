@@ -3,6 +3,7 @@
 #include <stdlib.h> // rawterm, restore term
 #include <signal.h> // For catching ctrl+c
 #include <stdint.h> // Integer data types
+#include <math.h> // for sin cos
 
 // Peripheral libraries
 #include <wiringPi.h>
@@ -32,6 +33,9 @@ int main(int argc, char *argv[]) {
   wiringPiSetup();
   // Initialize QEI with GPIO Pins 24, 25
   QEI_Init(5,6);
+  // Pins for the Y axis of the joystick (op-amp output)
+  pinMode(1,INPUT);
+  pinMode(4,INPUT);
   
 	int width, height;
   // Graphics
@@ -52,8 +56,17 @@ int main(int argc, char *argv[]) {
     Circle(width / 2, 0, width);			// The "world"
     Fill(255, 255, 255, 1);					// White text
     char buf[100];
-    sprintf(buf, "Pos: %d", QEI_GetPosition());
-    TextMid(width / 2, height / 2, buf, SerifTypeface, width / 10);	// Greetings 
+    int pos = -QEI_GetPosition();
+    sprintf(buf, "Pos: %d", pos);
+    TextMid((width/2)+(width/2)*cos(pos/100.0), (width/2)*sin(pos/100.0), buf, SerifTypeface, 10);	// Greetings 
+    
+    // Color the circles based on the joystick readings.
+    Fill(255,255,255,0.3 + digitalRead(1)*0.7);
+    Circle(width / 2, height/2 + 30, 40);
+    Fill(255,255,255,0.3 + digitalRead(4)*0.7);
+    Circle(width / 2, height/2 - 30, 40);
+    
+    
     End();	
   }
   printf("\n");

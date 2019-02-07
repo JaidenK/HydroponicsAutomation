@@ -13,7 +13,7 @@ int chB = 0;
 // Accumulated position. 4 per click
 int position = 0;
 
-// States
+// States based on the direction you're turning
 enum enc_states {
   ENC_IDLE, ENC_CW_A, ENC_CW_AB, ENC_CW_B, ENC_CCW_B, ENC_CCW_BA, ENC_CCW_A
 } state;
@@ -48,8 +48,10 @@ void CHANGE_ISR() {
   int a = digitalRead(chA);
   int b = digitalRead(chB);
   uint8_t AB = (a<<1) | b;
-  printf("%d%d %d\n",a,b,AB);
   
+  
+  // Switch through each state and do the appropriate action based on 
+  // the states of AB
   switch(state) {
     case ENC_IDLE:
       switch(AB) {
