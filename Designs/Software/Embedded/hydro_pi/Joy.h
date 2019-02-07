@@ -1,10 +1,10 @@
 #ifndef _JOY_H
 #define _JOY_H
 /**
- * @file QEI.h
+ * @file Joy.h
  * @author Jaiden King
  * 
- * API for the clicky turny dial
+ * API for the 2 axis joystick
  * 
  */
 

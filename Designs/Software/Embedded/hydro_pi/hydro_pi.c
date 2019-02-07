@@ -15,15 +15,21 @@
 
 // My libraries
 #include "QEI.h"
+#include "Joy.h"
 
 // Flag for the main loop
 volatile uint8_t isRunning = 1;
 
-uint8_t pin1prevState = 0;
-int edges = 0;
-
+// Signal interrupt handler
 void INThandler(int);
-uint8_t isRisingEdge(int pin);
+
+// Joystick interrupts
+void joy_up(void);
+void joy_down(void);
+void joy_left(void);
+void joy_right(void);
+
+
 
 int main(int argc, char *argv[]) {
   // Specify the interrupt handler for ctrl+c
@@ -34,8 +40,9 @@ int main(int argc, char *argv[]) {
   // Initialize QEI with GPIO Pins 24, 25
   QEI_Init(5,6);
   // Pins for the Y axis of the joystick (op-amp output)
-  pinMode(1,INPUT);
-  pinMode(4,INPUT);
+  //~ pinMode(1,INPUT);
+  //~ pinMode(4,INPUT);
+  JOY_Init(11,10,1,4,joy_up,joy_down,joy_left,joy_right);
   
 	int width, height;
   // Graphics
@@ -65,7 +72,12 @@ int main(int argc, char *argv[]) {
     Circle(width / 2, height/2 + 30, 40);
     Fill(255,255,255,0.3 + digitalRead(4)*0.7);
     Circle(width / 2, height/2 - 30, 40);
+    Fill(255,255,255,0.3 + digitalRead(10)*0.7);
+    Circle(width / 2 - 30, height/2, 40);
+    Fill(255,255,255,0.3 + digitalRead(11)*0.7);
+    Circle(width / 2 + 30, height/2, 40);
     
+    // Selection based on QEI
     // Square on highlighted one
     int selected = (abs(pos)/4)%4;
     if(pos<0) {
@@ -73,13 +85,33 @@ int main(int argc, char *argv[]) {
     }
     Fill(255,255,255,1);
     Roundrect(width/2 + 200*selected - 305, height/2+95, 50, 50, 15, 15);
-    
     // Squares
     Fill(77,255,255,1);
     Roundrect(width/2 - 100, height/2+100, 40, 40, 10, 10);
     Roundrect(width/2 - 300, height/2+100, 40, 40, 10, 10);
     Roundrect(width/2 + 100, height/2+100, 40, 40, 10, 10);
     Roundrect(width/2 + 300, height/2+100, 40, 40, 10, 10);
+    
+    
+    // Display joystick coords
+    int xJoy = JOY_GetXPosition(); 
+    int yJoy = JOY_GetYPosition();
+    sprintf(buf, "(%d, %d)", xJoy,yJoy);
+    TextMid((width/2), (height/2)-400, buf, SerifTypeface, 30);	
+    // Grid for joystick as well as selection based on joystick
+    for(int row=0;row<5;row++){
+      for(int col=0;col<10;col++){
+        if((row-2)==-yJoy && (col-5)==xJoy) {
+          Fill(255,255,255,1);
+        }else{
+          Fill(255,255,255,0.3);
+        }
+        Roundrect(width/2 - 9*20 + 40*col, height/2-200 - 40*row, 30, 30, 5, 5);
+      }
+    }
+    
+    
+    
     
     
     
@@ -97,9 +129,16 @@ void INThandler(int sig) {
   isRunning = 0;
 }
 
-uint8_t isRisingEdge(int pin) {
-  uint8_t pinState = digitalRead(pin);
-  uint8_t hasRisingEdge = (pin1prevState != pinState) && pinState;
-  pin1prevState = pinState;
-  return hasRisingEdge;
+void joy_up(void) {
+  printf("up\n");
 }
+void joy_down(void){
+  printf("down\n");
+}
+void joy_left(void){
+  printf("left\n");
+}
+void joy_right(void){
+  printf("right\n");
+}
+
