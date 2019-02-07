@@ -56,15 +56,31 @@ int main(int argc, char *argv[]) {
     Circle(width / 2, 0, width);			// The "world"
     Fill(255, 255, 255, 1);					// White text
     char buf[100];
-    int pos = -QEI_GetPosition();
+    int pos = QEI_GetPosition();
     sprintf(buf, "Pos: %d", pos);
-    TextMid((width/2)+(width/2)*cos(pos/100.0), (width/2)*sin(pos/100.0), buf, SerifTypeface, 10);	// Greetings 
+    TextMid((width/2)+(width/2)*cos(-pos/100.0+M_PI/2), (width/2)*sin(-pos/100.0+M_PI/2), buf, SerifTypeface, 10);	// Greetings 
     
     // Color the circles based on the joystick readings.
     Fill(255,255,255,0.3 + digitalRead(1)*0.7);
     Circle(width / 2, height/2 + 30, 40);
     Fill(255,255,255,0.3 + digitalRead(4)*0.7);
     Circle(width / 2, height/2 - 30, 40);
+    
+    // Square on highlighted one
+    int selected = (abs(pos)/4)%4;
+    if(pos<0) {
+      selected = 3-selected;
+    }
+    Fill(255,255,255,1);
+    Roundrect(width/2 + 200*selected - 305, height/2+95, 50, 50, 15, 15);
+    
+    // Squares
+    Fill(77,255,255,1);
+    Roundrect(width/2 - 100, height/2+100, 40, 40, 10, 10);
+    Roundrect(width/2 - 300, height/2+100, 40, 40, 10, 10);
+    Roundrect(width/2 + 100, height/2+100, 40, 40, 10, 10);
+    Roundrect(width/2 + 300, height/2+100, 40, 40, 10, 10);
+    
     
     
     End();	
