@@ -276,3 +276,7 @@ void parseResponse(char *response, struct SensorData *sd) {
    }
 }
 
+void funcPointerTest(void (*func)()) {
+   func();
+}
+

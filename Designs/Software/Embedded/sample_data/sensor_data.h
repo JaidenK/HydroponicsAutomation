@@ -35,6 +35,8 @@ int saveData(struct SensorData *sd, char *filename);
 
 int logData(struct SensorData *sd);
 
+void funcPointerTest(void (*func)());
+
 #endif
 
 

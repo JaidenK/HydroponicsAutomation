@@ -10,8 +10,21 @@
 #include "sensor_data.h"
 #include "http.h"
 
+int x = 0;
+
+void foo() {
+   x = 10;
+   printf("Bar %d\n",x);
+}
+
 int main(int argc,char *argv[])
 {
+
+   funcPointerTest(foo);
+   printf("new x: %d\n",x);
+   exit(0);
+
+
    int logCount = 60;
    int delaySeconds = 1;
    if(argc > 1) {
