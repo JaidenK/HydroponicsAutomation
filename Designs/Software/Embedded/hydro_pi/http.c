@@ -17,20 +17,80 @@ char httpGETdata[2048];
 // The port on the server to connect to. 80 for HTTP traffic.
 int portno = 80;
 // host ip
-char *host =        "sdp.ballistaline.com";
+char host[1024];// =        "sdp.ballistaline.com";
 // The format of the http message to be sent. A simple GET request.
-char *message_fmt = "GET http://sdp.ballistaline.com/dataReceiver.php?%s HTTP/1.0\r\n\r\n";
+char message_fmt[1024];// = "GET http://sdp.ballistaline.com/dataReceiver.php?%s HTTP/1.0\r\n\r\n";
 
 // Will store the details about the server, like it's IP, given a URL
 struct hostent *server;
 
 struct sockaddr_in serv_addr;
 int sockfd;
-char message[1024],response[4096];
+
+int sendMessage();
+int receiveResponse();
 
 void error(const char *msg) { perror(msg); exit(0); }
 
-int sendMessage() {
+int HTTP_Init(char *host_) {
+  printf("Initializing HTTP.\n");
+  HTTP_SetHost(host_);
+  sprintf(message_fmt,"GET http://%s/%%s?%%s HTTP/1.0\r\n\r\n",host);
+  return 0;
+}
+
+int HTTP_SetHost(char *host_) {
+  printf("Setting host: ");
+  strcpy(host,host_);
+  printf("%s\n",host);
+  return 0;
+}
+
+int HTTP_SetMessageFormat(char *message_fmt_) {
+  printf("Setting message format: ");
+  strcpy(message_fmt,message_fmt_);
+  printf("%s\n",message_fmt);
+  return 0;
+}
+
+int HTTP_Get(char *page, char *data, char *response, unsigned int size) {
+   /* create the socket */
+   sockfd = socket(AF_INET, SOCK_STREAM, 0);
+   if (sockfd < 0) error("ERROR opening socket");
+
+   /* lookup the ip address */
+   server = gethostbyname(host);
+   if (server == NULL) error("ERROR, no such host");
+
+   /* fill in the parameters */
+   // Clear the message so that garbage doesn't go on the end.
+   char message[4096];
+   memset(message,0,sizeof(message));
+   sprintf(message,message_fmt,page,data);
+   printf("HTTP GET Request:\n%s\n",message);
+
+   /* fill in the structure */
+   memset(&serv_addr,0,sizeof(serv_addr));
+   serv_addr.sin_family = AF_INET; // Address Family
+   serv_addr.sin_port = htons(portno);
+   memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
+
+   /* connect the socket */
+   if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0)
+   error("ERROR connecting");
+
+   sendMessage(message);
+
+   receiveResponse(response, size);
+
+   /* close the socket */
+   close(sockfd);
+
+   return 0;
+}
+
+
+int sendMessage(char *message) {
    /* send the request */
    // Total number of bytes in the message
    int total = strlen(message);
@@ -51,17 +111,15 @@ int sendMessage() {
    return 0;
 }
 
-int receiveResponse() {
+int receiveResponse(char *response, unsigned int size) {
    /* receive the response */
-   // Clear the response string
-   memset(response,0,sizeof(response));
-   // Max bytes possible to receive 
-   int total = sizeof(response)-1;
+   // Clear the old data
+   memset(response,0,size);
    // Bytes received
    int received = 0;
    int bytes = 0;
    do {
-      bytes = read(sockfd,response+received,total-received);
+      bytes = read(sockfd,response+received,size-received);
       if (bytes < 0) {
          error("ERROR reading response from socket");
       }
@@ -69,134 +127,12 @@ int receiveResponse() {
          break;
       }
       received+=bytes;
-   } while (received < total);
+   } while (received < size);
 
    // Receive buffer full
-   if (received == total) {
+   if (received == size) {
       error("ERROR storing complete response from socket");
    }
-
-   return 0;
-}
-
-// TODO something more useful than a print satement
-void parseResponse(char *response, struct SensorData *sd) {
-   //printf("Parsing response:\n");
-   // printf("%s\n",response);
-   char *tok; 
-   tok = strtok(response,"\n");
-   while(tok != NULL) {
-      char *val;
-      val = strchr(tok,'=');
-      if(val != NULL) {
-         // If val was null then no '=' was found and this isn't a line
-         // with a key=value pair
-         val++;
-         char arg[256];
-         memset(arg,'\0',256);
-         strncpy(arg,tok,val-tok-1);
-         // printf("arg: %s\nval: %s\n", arg, val);
-
-
-         if(strcmp(arg,"new_record") == 0) {
-            if(strcmp(val,"success")==0) {
-               printf("Record created successfully.\n");
-            }else{
-               printf("Error logging data: %s\n", val);
-            }
-         }
-
-         if(strcmp(arg,"water_target") == 0) {
-            char *err;
-            double d = strtod(val, &err);
-            if (*err == 0) { 
-               sd->h2o_target = d;
-            }else if (!isspace((unsigned char)*err)) {
-               printf("Error parsing water_target %s\n",val);
-            }
-         }
-         if(strcmp(arg,"ph_target") == 0) {
-            char *err;
-            double d = strtod(val, &err);
-            if (*err == 0) { 
-               sd->ph_target = d;
-            }else if (!isspace((unsigned char)*err)) {
-               printf("Error parsing ph_target %s\n",val);
-            }
-         }
-         if(strcmp(arg,"ec_target") == 0) {
-            char *err;
-            double d = strtod(val, &err);
-            if (*err == 0) { 
-               sd->ec_target = d;
-            }else if (!isspace((unsigned char)*err)) {
-               printf("Error parsing ec_target %s\n",val);
-            }
-         }
-         if(strcmp(arg,"flow_target") == 0) {
-            char *err;
-            double d = strtod(val, &err);
-            if (*err == 0) { 
-               sd->flow_target = d;
-            }else if (!isspace((unsigned char)*err)) {
-               printf("Error parsing flow_target %s\n",val);
-            }
-         }
-         if(strcmp(arg,"temp_target") == 0) {
-            char *err;
-            double d = strtod(val, &err);
-            if (*err == 0) { 
-               sd->temp_target = d;
-            }else if (!isspace((unsigned char)*err)) {
-               printf("Error parsing temp_target %s\n",val);
-            }
-         }
-      }
-
-      // Move to the next line of the response
-      tok = strtok(NULL,"\n");
-   }
-}
-
-int logData(struct SensorData *sd) {
-
-   getGETstr(httpGETdata,sd);
-   //printf("%s\n",httpGETdata);
-   //https://stackoverflow.com/questions/22077802/simple-c-example-of-doing-an-http-post-and-consuming-the-response
-   /* first what are we going to send and where are we going to send it? */
-
-   /* create the socket */
-   sockfd = socket(AF_INET, SOCK_STREAM, 0);
-   if (sockfd < 0) error("ERROR opening socket");
-
-   /* lookup the ip address */
-   server = gethostbyname(host);
-   if (server == NULL) error("ERROR, no such host");
-
-   /* fill in the parameters */
-   sprintf(message,message_fmt,httpGETdata);
-   //printf("Request:\n%s\n",message);
-
-   /* fill in the structure */
-   memset(&serv_addr,0,sizeof(serv_addr));
-   serv_addr.sin_family = AF_INET; // Address Family
-   serv_addr.sin_port = htons(portno);
-   memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
-
-   /* connect the socket */
-   if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0)
-   error("ERROR connecting");
-
-   sendMessage();
-
-   receiveResponse();
-
-   /* close the socket */
-   close(sockfd);
-
-   /* process response */
-   //printf("Response:\n%s\n",response);
-   parseResponse(response,sd);
 
    return 0;
 }

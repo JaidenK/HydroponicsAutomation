@@ -15,7 +15,7 @@
  * @param func_up, func_down, func_left, func_right Call-back functions which are called in the ISR
  * @note wiringPiSetup() must be called before this.
  */
-void JOY_Init(int chXpos, int chXneg, int chYpos, int chYneg, void (*func_up)(), void (*func_down)(), void (*func_left)(), void (*func_right)());
+void JOY_Init(int chXpos, int chXneg, int chYpos, int chYneg, int sw, void (*func_up)(), void (*func_down)(), void (*func_left)(), void (*func_right)(), void (*func_click)());
 
 /**
  * @return The x position of the Joystick.
@@ -25,5 +25,10 @@ int JOY_GetXPosition();
  * @return The y position of the Joystick.
  */
 int JOY_GetYPosition();
+
+/**
+ * Determines whether or not a negative position is allowed.
+ */
+void JOY_PreventNegativePositions();
 
 #endif
