@@ -5,7 +5,7 @@ include "notificationSystem.php";
 
 // This all should be changed to a $_POST to increase security, reliability, and allow longer string.
 if($_GET['ProductID'] != "ABCD1234EFGH5678") {
-   die("new_record=Invalid product id: ".$_GET['ProductID']);
+   die("new_record=Invalid product id: ".$_GET['ProductID']."\n");
 }
 
 $keys = array(
@@ -34,7 +34,7 @@ foreach($keys as $key) {
 }
 
 if($isBadRequest) {
-   die("new_record=error");
+   die("new_record=error\n");
 }
 
 // TODO this needs to be cleaned up and refactored. Too much reppetitiotns 
