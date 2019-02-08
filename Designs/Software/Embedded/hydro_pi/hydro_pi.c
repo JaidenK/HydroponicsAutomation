@@ -70,14 +70,14 @@ int main(int argc, char *argv[]) {
     digitalWrite(2,1);
     digitalWrite(0,1);
     digitalWrite(7,1);
-    for(unsigned int i =0;i<500000000;i++){}
+    for(unsigned int i =0;i<50000000;i++){}
     printf("Low\n");
     digitalWrite(9,0);
     digitalWrite(3,0);
     digitalWrite(2,0);
     digitalWrite(0,0);
     digitalWrite(7,0);
-    for(unsigned int i =0;i<500000000;i++){}
+    for(unsigned int i =0;i<50000000;i++){}
   }
   
   // Initialize QEI with GPIO Pins 24, 25
