@@ -17,6 +17,7 @@
 #include "FlowController.h"
 #include "SerialCom.h"
 #include "USBCom.h"
+#include "Protocol.h"
 
 #define DELAY_TICKS 24000000
 #define DELAY() for(int i = 0 ; i <  DELAY_TICKS; i ++);
