@@ -56,10 +56,35 @@ int main(int argc, char *argv[]) {
   
   // Setup GPIO
   wiringPiSetup();
+  
+  pinMode(9,OUTPUT);
+  pinMode(3,OUTPUT);
+  pinMode(2,OUTPUT);
+  pinMode(0,OUTPUT);
+  pinMode(7,OUTPUT);
+  
+  while(1) {
+    printf("High\n");
+    digitalWrite(9,1);
+    digitalWrite(3,1);
+    digitalWrite(2,1);
+    digitalWrite(0,1);
+    digitalWrite(7,1);
+    for(unsigned int i =0;i<500000000;i++){}
+    printf("Low\n");
+    digitalWrite(9,0);
+    digitalWrite(3,0);
+    digitalWrite(2,0);
+    digitalWrite(0,0);
+    digitalWrite(7,0);
+    for(unsigned int i =0;i<500000000;i++){}
+  }
+  
   // Initialize QEI with GPIO Pins 24, 25
-  QEI_Init(5,6);
-  // Pins for the Y axis of the joystick (op-amp output). GPIO pins #18, #23, CE8, CE1, #22
-  JOY_Init(11,10,1,4,3,joy_up,joy_down,joy_left,joy_right,joy_click);
+  //QEI_Init( , );
+  // Pins for the Y axis of the joystick (op-amp output). 
+  // BCM 23, 22, 27, 17, 4, 3
+  JOY_Init(4,3,2,0,9,joy_up,joy_down,joy_left,joy_right,joy_click);
   JOY_PreventNegativePositions();
   
   VG_KB_Init();
@@ -190,10 +215,10 @@ int main(int argc, char *argv[]) {
     Fill(44, 77, 232, 1);					// Big blue marble
     Circle(width / 2, 0, width);			// The "world"
     Fill(255, 255, 255, 1);					// White text
-    char buf[100];
-    int pos = QEI_GetPosition();
-    sprintf(buf, "Pos: %d", pos);
-    TextMid((width/2)+(width/2)*cos(-pos/100.0+M_PI/2), (width/2)*sin(-pos/100.0+M_PI/2), buf, SerifTypeface, 10);	// Greetings 
+    //char buf[100];
+    //int pos = QEI_GetPosition();
+    //sprintf(buf, "Pos: %d", pos);
+    //TextMid((width/2)+(width/2)*cos(-pos/100.0+M_PI/2), (width/2)*sin(-pos/100.0+M_PI/2), buf, SerifTypeface, 10);	// Greetings 
     
     VG_KB_Draw(0,0,width,height);
     
@@ -210,18 +235,18 @@ int main(int argc, char *argv[]) {
       
     // Selection based on QEI
     // Square on highlighted one
-    int selected = (abs(pos)/4)%4;
-    if(pos<0) {
-      selected = 3-selected;
-    }
-    Fill(255,255,255,1);
-    Roundrect(width/2 + 200*selected - 305, height/2+95, 50, 50, 15, 15);
+    //int selected = (abs(pos)/4)%4;
+    //if(pos<0) {
+    //  selected = 3-selected;
+    //}
+    //Fill(255,255,255,1);
+    //Roundrect(width/2 + 200*selected - 305, height/2+95, 50, 50, 15, 15);
     // Squares
-    Fill(77,255,255,1);
-    Roundrect(width/2 - 100, height/2+100, 40, 40, 10, 10);
-    Roundrect(width/2 - 300, height/2+100, 40, 40, 10, 10);
-    Roundrect(width/2 + 100, height/2+100, 40, 40, 10, 10);
-    Roundrect(width/2 + 300, height/2+100, 40, 40, 10, 10);
+    //Fill(77,255,255,1);
+    //Roundrect(width/2 - 100, height/2+100, 40, 40, 10, 10);
+    //Roundrect(width/2 - 300, height/2+100, 40, 40, 10, 10);
+    //Roundrect(width/2 + 100, height/2+100, 40, 40, 10, 10);
+    //Roundrect(width/2 + 300, height/2+100, 40, 40, 10, 10);
     
     
     // Display joystick coords
