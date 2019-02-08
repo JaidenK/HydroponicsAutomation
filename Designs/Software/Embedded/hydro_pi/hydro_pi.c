@@ -18,6 +18,7 @@
 #include "QEI.h"
 #include "Joy.h"
 #include "http.h"
+#include "vg_keyboard.h"
 
 // Flag for the main loop
 volatile uint8_t isRunning = 1;
@@ -60,6 +61,8 @@ int main(int argc, char *argv[]) {
   // Pins for the Y axis of the joystick (op-amp output). GPIO pins #18, #23, CE8, CE1, #22
   JOY_Init(11,10,1,4,3,joy_up,joy_down,joy_left,joy_right,joy_click);
   JOY_PreventNegativePositions();
+  
+  VG_KB_Init();
   
   // Setup Graphics
 	int width, height;
@@ -173,7 +176,7 @@ int main(int argc, char *argv[]) {
   
   // Initialize HTTP library
   //HTTP_Init("sdp.ballistaline.com");
-  char response[1024];
+  //char response[1024];
   //HTTP_Get("dataReceiver.php", "ProductID=25258&foo=bar", response, 1024);
   //printf("Response:\n%s\n",response);
   //HTTP_Get("dataReceiver.php", "ProductID=264&foo=bar", response, 1024);
@@ -192,6 +195,8 @@ int main(int argc, char *argv[]) {
     sprintf(buf, "Pos: %d", pos);
     TextMid((width/2)+(width/2)*cos(-pos/100.0+M_PI/2), (width/2)*sin(-pos/100.0+M_PI/2), buf, SerifTypeface, 10);	// Greetings 
     
+    VG_KB_Draw(0,0,width,height);
+    
     // Color the circles based on the joystick readings.
     Fill(255,255,255,0.3 + digitalRead(1)*0.7);
     Circle(width / 2, height/2 + 30, 40);
@@ -202,6 +207,7 @@ int main(int argc, char *argv[]) {
     Fill(255,255,255,0.3 + digitalRead(11)*0.7);
     Circle(width / 2 + 30, height/2, 40);
     
+      
     // Selection based on QEI
     // Square on highlighted one
     int selected = (abs(pos)/4)%4;
@@ -258,16 +264,16 @@ void INThandler(int sig) {
 }
 
 void joy_up(void) {
-  //~ printf("up\n");
+  VG_KB_Up();
 }
 void joy_down(void){
-  //~ printf("down\n");
+  VG_KB_Down();
 }
 void joy_left(void){
-  //~ printf("left\n");
+  VG_KB_Left();
 }
 void joy_right(void){
-  //~ printf("right\n");
+  VG_KB_Right();
 }
 
 void joy_click(void) {

@@ -36,7 +36,7 @@ void VG_KB_Right();
 /**
  * Draws the keyboard centered within these bounds, keeping its aspect ratio.
  */
-char VG_KB_Draw(int x, int y, int w, int h);
+void VG_KB_Draw(int x, int y, int w, int h);
 
 
 #endif
