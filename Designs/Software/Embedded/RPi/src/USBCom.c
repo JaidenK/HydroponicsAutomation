@@ -88,7 +88,6 @@ int USBCom_CheckReceivedData(char * buffer){
 * @author Barron Wong 01/31/19
 */
 void USBCom_SendData(char * msg){
-	printf("Attempting Out Transfer!\n");
 	int sent_bytes = 0;
 	int return_val = 0;
 	int length = strlen(msg);
@@ -128,20 +127,21 @@ int main (int argc, char * argv[]){
   }
   
   // Set up data block 
-  strcpy(tx_data, "Hello PSoC\r\n");
-
-  USBCom_SendData("Hello\r\n");
+  strcpy(tx_data, "1:432.12\r\n");
+while(1){
+  USBCom_SendData(tx_data);
   
   if (return_val != 0){
 	  printf("Did Not Recieve Data");
   }
   
   for(int i = 0; i < 64; i++)
-	  rx_data[i] = NULL;
+	  rx_data[i] = 0;
   
   if(USBCom_CheckReceivedData(rx_data)){
 	  printf("%s\n", rx_data);
   }
+}
 
 
   libusb_close(dev);
