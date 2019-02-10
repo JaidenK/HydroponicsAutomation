@@ -19,8 +19,6 @@
 #define TRUE 1
 static uint16_t flowSensorFreq = 0;
 
-#define SLOPE 1.1763
-#define BIAS 0.131
 static float flow_ref = 0;
 
 
@@ -48,9 +46,9 @@ CY_ISR(FlowCounterTimerISRHandler){
     
     dutyCycle = dutyCycle+(kp*error)/100.0;
     FlowController_SetFlowDutyCycle(dutyCycle);
-    flowRate = SLOPE*FlowController_GetFlowRate() + BIAS;
+    flowRate = FlowController_GetFlowRate();
     error = flow_ref - flowRate;
-    printf("Flow Rate: %2.3fLPM Flow Sensor Freq: %d PWM Duty Cycle: %3.3f\r\n", flowRate, flowSensorFreq,dutyCycle*100);
+    //printf("Flow Rate: %2.3fLPM Flow Sensor Freq: %d PWM Duty Cycle: %3.3f\r\n", flowRate, flowSensorFreq,dutyCycle*100);
         
 }
 
@@ -70,6 +68,8 @@ void FlowController_Init(void){
     flow_ref = 1.5;
 }
 
+#define SLOPE 1.1763
+#define BIAS 0.131
 /**
  * @function FlowController_GetFlowRate(void)
  * @param None
@@ -77,17 +77,16 @@ void FlowController_Init(void){
  * @brief Converts the current frequency and returns flow rate
  * @author Barron Wong 01/25/19
 */
-#define AVG_SIZE 64
 float FlowController_GetFlowRate(){
+    
     uint16_t reading = 0;
-    static uint16_t ticksTotal = 0;
-    static uint8_t index = 0;
-    static uint8_t count = 0;
-    static uint16_t flowRateTicksHistory[AVG_SIZE];
+    float flowRate;
     
     reading = flowSensorFreq;
     
-    return reading/FLOWRATE_CONVERSION_FACTOR;
+    flowRate = SLOPE*(reading/FLOWRATE_CONVERSION_FACTOR) + BIAS;
+    
+    return flowRate;
 }
 /**
  * @function FlowController_SetFlow(void)

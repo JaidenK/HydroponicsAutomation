@@ -55,7 +55,8 @@ void USBCom_Init(void){
  * @param None
  * @return None
  * @brief Checks to see if configuration has changed. If it has it 
- *        will reenable the output endpoint
+ *        will reenable the output endpoint. Used by USBCom_Init()
+ *        and USBCom_CheckRecievedData()
  * @author Barron Wong 01/31/19
  */
 void USBCom_CheckConfiguration(void){
@@ -75,7 +76,7 @@ void USBCom_CheckConfiguration(void){
  * @function USBCom_CheckConfiguration(void)
  * @param None
  * @return None
- * @brief Checks to see if configuration has changed. If it has it 
+ * @brief Must Call USBCom_Init() before using. Checks to see if configuration has changed. If it has it 
  *        will reenable the output endpoint
  * @author Barron Wong 01/31/19
  */
@@ -83,6 +84,7 @@ int USBCom_CheckRecievedData(char * buffer){
 
     uint16 length = 0;
     
+    USBCom_CheckConfiguration();
     
     /* Check if data was received. */
     if (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM))
@@ -110,7 +112,7 @@ int USBCom_CheckRecievedData(char * buffer){
  * @function USBCom_SendData(void)
  * @param None
  * @return None
- * @brief Checks to see if configuration has changed. If it has it 
+ * @brief Must Call USBCom_Init() before using. Checks to see if configuration has changed. If it has it 
  *        will reenable the output endpoint
  * @author Barron Wong 01/31/19
  */

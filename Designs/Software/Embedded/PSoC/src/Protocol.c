@@ -15,7 +15,6 @@
 #include "Protocol.h"
 #include "project.h"
 
-
 /**
  * @function Protocol_DecodeInput(char * input)
  * @param None
@@ -52,6 +51,26 @@ target_t Protocol_DecodeInput(char * input){
     return target;
     
 }
+/**
+ * @function Protocol_EncodeOutput(char * input)
+ * @param key, value, and buffer
+ * @return String pointer ready for output
+ * @brief Takes a key and a parameter and get it read for output
+ * @author Barron Wong 02/08/19
+*/
+char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
+    int size = strlen(buffer);
+ 
+    //clear buffer
+    for(int i = 0; i < size; i++){
+        buffer[0] = 0;
+    }
+    if(key > invalid_key && key <= flow_measured){
+        sprintf(buffer,"%d:%f",(int)key,value);
+    }
+    
+    return buffer;
+}
 
 #ifdef PROTOCOL_TEST
 #include "SerialCom.h"
@@ -61,16 +80,29 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
 
+    //Output data to UART
     SerialCom_Init();
     
+    //Channel for receiving and sending data
+    USBCom_Init();
+    
     char buffer[20] = {"1:543.24"};
+    int length = 0;
     target_t target;
     
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
 
-    target = Protocol_DecodeInput(buffer);
-    
-    printf("Key: %d Value: %f\r\n", (int)target.key, target.value);
+    for(;;){
+        length = USBCom_CheckRecievedData(buffer);
+        if(length > 0){
+            target = Protocol_DecodeInput(buffer);
+            if(target.key != invalid_key){
+                printf("Key: %d Value: %f\r\n", (int)target.key, target.value);
+            }
+        }
+        Protocol_EncodeOutput(ph_measured, 3.456, buffer);
+        USBCom_SendData(buffer);
+    }
     
     
 }

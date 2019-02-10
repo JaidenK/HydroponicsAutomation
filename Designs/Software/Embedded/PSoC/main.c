@@ -19,16 +19,14 @@
 #include "USBCom.h"
 #include "Protocol.h"
 
-#define DELAY_TICKS 24000000
-#define DELAY() for(int i = 0 ; i <  DELAY_TICKS; i ++);
-
-#define FLOW_REF 1.5
+#define FLOW_REF 1
 
 #ifndef MODULE_TEST    
     
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
+    char buffer[64];
     ADC_DelSig_1_Start();
     FlowController_Init();
     SerialCom_Init();
@@ -38,10 +36,25 @@ int main(void)
     FlowController_SetFlowReference(FLOW_REF);
     
     printf("Hydroponic Automation\r\n");
-    
+    float flowRate = 0;
+    target_t target;
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
+        //Get Flow Rate
+        flowRate = FlowController_GetFlowRate();
+        
+        //Encode and send data
+        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
+        USBCom_SendData(buffer);
+        
+        //Check if USB has received data
+        USBCom_CheckRecievedData(buffer);
+        target = Protocol_DecodeInput(buffer);
+        
+        if(target.key != invalid_key)
+           printf("Target: Key %d Value %f\r\n",target.key,target.value);
+        
 
     }
     
