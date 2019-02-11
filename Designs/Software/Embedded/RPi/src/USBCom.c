@@ -20,26 +20,45 @@ libusb_device_handle* dev; // Pointer to data structure representing USB device
 libusb_device_handle* USBCom_Init(void){
 	
 	libusb_init(NULL); // Initialize the LIBUSB library
+	
+	if(!USBCom_CheckConfiguration())
+		return NULL;
+	
+	return dev;
+}
 
+/**
+ * @function USBCom_CheckConfiguration(void)
+ * @param None
+ * @return None
+ * @brief Checks to see if configuration has changed. If it has it 
+ *        will reenable the output endpoint
+ * @author Barron Wong 01/31/19
+ */
+uint8_t USBCom_CheckConfiguration(void){
+	
 	// Open the USB device (the Cypress device has
 	// Vendor ID = 0x04B4 and Product ID = 0x8051)
+	
 	dev = libusb_open_device_with_vid_pid(NULL, 0x04B4, 0x8051);
 
 	if (dev == NULL){
 		perror("device not found\n");
-		return NULL;
+		return FALSE;
 	}
-
+	
 	// Reset the USB device.
 	// This step is not always needed, but clears any residual state from
 	// previous invocations of the program.
 	if (libusb_reset_device(dev) != 0){
 		perror("Device reset failed\n");
+		return FALSE;
 	} 
 
 	// Set configuration of USB device
 	if (libusb_set_configuration(dev, 1) != 0){
 		perror("Set configuration failed\n");
+		return FALSE;
 	} 
 
 
@@ -47,8 +66,9 @@ libusb_device_handle* USBCom_Init(void){
 	// issued to the USB device.
 	if (libusb_claim_interface(dev, 0) !=0){
 		perror("Cannot claim interface");
+		return FALSE;
 	}
-	return dev;
+	return TRUE;
 }
 
 /**
@@ -103,6 +123,10 @@ void USBCom_SendData(char * msg){
 	
 	if(return_val != 0){
 		printf("Incomplete Data Send");
+		dev = NULL;
+		while(dev == NULL){
+			dev = USBCom_Init();
+		}
 	}
 
 }

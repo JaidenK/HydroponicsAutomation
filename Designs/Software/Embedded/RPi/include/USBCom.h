@@ -22,6 +22,16 @@
 libusb_device_handle* USBCom_Init(void);
 
 /**
+ * @function USBCom_CheckConfiguration(void)
+ * @param None
+ * @return None
+ * @brief Checks to see if configuration has changed. If it has it 
+ *        will reenable the output endpoint
+ * @author Barron Wong 01/31/19
+ */
+uint8_t USBCom_CheckConfiguration(void);
+
+/**
  * @function USBCom_CheckRecievedData(void)
  * @param buffer for data recieved
  * @return Length of data recieved
