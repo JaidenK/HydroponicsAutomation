@@ -22,9 +22,9 @@
  * @brief Converts the current frequency and returns flow rate
  * @author Barron Wong 02/08/19
 */
-target_t Protocol_DecodeInput(char * input){
+message_t Protocol_DecodeInput(char * input){
     char * ptr;
-    target_t target;
+    message_t target;
     uint8_t count = 0;
     
     ptr = strtok(input,":");
@@ -70,6 +70,17 @@ char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
     }
     
     return buffer;
+}
+/**
+ * @function Protocol_PrintMessage(char * input)
+ * @param target_t
+ * @return none
+ * @brief Prints a message and its value
+ * @author Barron Wong 02/08/19
+ */
+void Protocol_PrintMessage(message_t message){
+    if(message.key <= flow_measured)
+        printf("%s:%f\r\n", pkey_const[message.key], message.value);
 }
 
 #ifdef PROTOCOL_TEST

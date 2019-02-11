@@ -34,7 +34,7 @@ CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
     static float dutyCycle = 0.2;
     float difference = 0;
-    float kp = .5;
+    float kp = 1;
     static float error = 0;
     
     //Take Reading
@@ -48,8 +48,6 @@ CY_ISR(FlowCounterTimerISRHandler){
     FlowController_SetFlowDutyCycle(dutyCycle);
     flowRate = FlowController_GetFlowRate();
     error = flow_ref - flowRate;
-    //printf("Flow Rate: %2.3fLPM Flow Sensor Freq: %d PWM Duty Cycle: %3.3f\r\n", flowRate, flowSensorFreq,dutyCycle*100);
-        
 }
 
 /**
