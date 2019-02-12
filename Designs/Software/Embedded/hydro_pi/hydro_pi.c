@@ -57,34 +57,34 @@ int main(int argc, char *argv[]) {
   // Setup GPIO
   wiringPiSetup();
   
-  pinMode(9,OUTPUT);
-  pinMode(3,OUTPUT);
-  pinMode(2,OUTPUT);
-  pinMode(0,OUTPUT);
-  pinMode(7,OUTPUT);
+  // pinMode(9,OUTPUT);
+  // pinMode(3,OUTPUT);
+  // pinMode(2,OUTPUT);
+  // pinMode(0,OUTPUT);
+  // pinMode(7,OUTPUT);
   
-  while(1) {
-    printf("High\n");
-    digitalWrite(9,1);
-    digitalWrite(3,1);
-    digitalWrite(2,1);
-    digitalWrite(0,1);
-    digitalWrite(7,1);
-    for(unsigned int i =0;i<50000000;i++){}
-    printf("Low\n");
-    digitalWrite(9,0);
-    digitalWrite(3,0);
-    digitalWrite(2,0);
-    digitalWrite(0,0);
-    digitalWrite(7,0);
-    for(unsigned int i =0;i<50000000;i++){}
-  }
+  // while(1) {
+  //   printf("High\n");
+  //   digitalWrite(9,1);
+  //   digitalWrite(3,1);
+  //   digitalWrite(2,1);
+  //   digitalWrite(0,1);
+  //   digitalWrite(7,1);
+  //   for(unsigned int i =0;i<50000000;i++){}
+  //   printf("Low\n");
+  //   digitalWrite(9,0);
+  //   digitalWrite(3,0);
+  //   digitalWrite(2,0);
+  //   digitalWrite(0,0);
+  //   digitalWrite(7,0);
+  //   for(unsigned int i =0;i<50000000;i++){}
+  // }
   
   // Initialize QEI with GPIO Pins 24, 25
   //QEI_Init( , );
   // Pins for the Y axis of the joystick (op-amp output). 
   // BCM 23, 22, 27, 17, 4, 3
-  JOY_Init(4,3,2,0,9,joy_up,joy_down,joy_left,joy_right,joy_click);
+  JOY_Init(3,2,7,0,9,joy_up,joy_down,joy_left,joy_right,joy_click);
   JOY_PreventNegativePositions();
   
   VG_KB_Init();

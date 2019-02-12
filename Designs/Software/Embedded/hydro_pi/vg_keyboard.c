@@ -31,7 +31,6 @@ Key key_lbracket, key_rbracket, key_backslash, key_enter, key_rshift, key_comma,
 Key key_space;
 Key *selected_key;
 
-
 void VG_KB_Init() {
   
   // Home row
@@ -146,6 +145,119 @@ void VG_KB_Init() {
     '|','\\',41,10
   };
   
+  // Number row
+  key_tilde = (Key) {
+    &key_tilde, &key_tab, &key_tilde, &key_1,
+    '~','`',1,13
+  };
+  key_1 = (Key) {
+    &key_1, &key_q, &key_tilde, &key_2,
+    '!','1',4,13
+  };
+  key_2 = (Key) {
+    &key_2, &key_w, &key_1, &key_3,
+    '@','2',7,13
+  };
+  key_3 = (Key) {
+    &key_3, &key_e, &key_2, &key_4,
+    '#','3',10,13
+  };
+  key_4 = (Key) {
+    &key_4, &key_r, &key_3, &key_5,
+    '$','4',13,13
+  };
+  key_5 = (Key) {
+    &key_5, &key__t, &key_4, &key_6,
+    '%','5',16,13
+  };
+  key_6 = (Key) {
+    &key_6, &key_y, &key_5, &key_7,
+    '^','6',19,13
+  };
+  key_7 = (Key) {
+    &key_7, &key_u, &key_6, &key_8,
+    '&','7',22,13
+  };
+  key_8 = (Key) {
+    &key_8, &key_i, &key_7, &key_9,
+    '*','8',25,13
+  };
+  key_9 = (Key) {
+    &key_9, &key_o, &key_8, &key_0,
+    '(','9',28,13
+  };
+  key_0 = (Key) {
+    &key_0, &key_p, &key_9, &key_minus,
+    ')','0',31,13
+  };
+  key_minus = (Key) {
+    &key_minus, &key_lbracket, &key_0, &key_equals,
+    '_','-',34,13
+  };
+  key_equals = (Key) {
+    &key_equals, &key_rbracket, &key_minus, &key_backspace,
+    '+','=',37,13
+  };
+  key_backspace = (Key) {
+    &key_backspace, &key_backslash, &key_equals, &key_backspace,
+    '\b','\b',40,13
+  };
+  
+  // Bottom row
+  key_lshift = (Key) {
+    &key_caps, &key_space, &key_lshift, &key_z,
+    '\0','\0',1,4
+  };
+  key_z = (Key) {
+    &key_a, &key_space, &key_lshift, &key_x,
+    'Z','z',7,4
+  };
+  key_x = (Key) {
+    &key_s, &key_space, &key_z, &key_c,
+    'X','x',10,4
+  };
+  key_c = (Key) {
+    &key_d, &key_space, &key_x, &key_v,
+    'C','c',13,4
+  };
+  key_v = (Key) {
+    &key_f, &key_space, &key_c, &key_b,
+    'V','v',16,4
+  };
+  key_b = (Key) {
+    &key_g, &key_space, &key_v, &key_n,
+    'B','b',19,4
+  };
+  key_n = (Key) {
+    &key_h, &key_space, &key_b, &key_m,
+    'N','n',22,4
+  };
+  key_m = (Key) {
+    &key_j, &key_space, &key_n, &key_comma,
+    'M','m',25,4
+  };
+  key_comma = (Key) {
+    &key_k, &key_space, &key_m, &key_period,
+    '<',',',28,4
+  };
+  key_period = (Key) {
+    &key_l, &key_space, &key_comma, &key_slash,
+    '>','.',31,4
+  };
+  key_slash = (Key) {
+    &key_semicolon, &key_space, &key_period, &key_rshift,
+    '?','/',34,4
+  };
+  key_rshift = (Key) {
+    &key_enter, &key_space, &key_slash, &key_rshift,
+    '\0','\0',37,4
+  };
+
+  key_space = (Key) {
+    &key_b, &key_space, &key_lshift, &key_rshift,
+    ' ',' ',21,1
+  };
+    
   
   // TODO fill out the other keyboard rows
   
