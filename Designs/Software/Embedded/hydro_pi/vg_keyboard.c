@@ -11,7 +11,7 @@
 int isShiftOn = 0;
 int isCapsOn = 0;
 
-int units = 24;
+double units = 16.409;
 
 typedef struct Key {
   struct Key *up;

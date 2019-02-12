@@ -200,12 +200,12 @@ int main(int argc, char *argv[]) {
   
   
   // Initialize HTTP library
-  //HTTP_Init("sdp.ballistaline.com");
-  //char response[1024];
+  // HTTP_Init("sdp.ballistaline.com");
+  // char response[1024];
   //HTTP_Get("dataReceiver.php", "ProductID=25258&foo=bar", response, 1024);
   //printf("Response:\n%s\n",response);
-  //HTTP_Get("dataReceiver.php", "ProductID=264&foo=bar", response, 1024);
-  //printf("Response:\n%s\n",response);
+  // HTTP_Get("dataReceiver.php", "ProductID=264&foo=bar", response, 1024);
+  // printf("Response:\n%s\n",response);
   
   
   
