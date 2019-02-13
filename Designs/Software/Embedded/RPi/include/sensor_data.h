@@ -1,5 +1,6 @@
 #ifndef _SENSOR_DATA_H
 #define _SENSOR_DATA_H
+#include "Protocol.h"
 
 struct SensorData {
    double h2o_level;
@@ -25,6 +26,7 @@ void sensor_data_init(struct SensorData *sd);
 
 int loadData(struct SensorData *sd, char *filename);
 int saveData(struct SensorData *sd, char *filename);
+int updateSensors(message_t * msg, struct SensorData *sd);
 
 
 #endif

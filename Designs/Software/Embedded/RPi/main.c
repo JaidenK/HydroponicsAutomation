@@ -9,9 +9,10 @@
 #include <libusb.h>
 #include "USBCom.h"
 #include "sensor_data.h"
+#include "Protocol.h"
 #include "http.h"
+#include <time.h>
 
-#define PRODUCT_ID "ABCD1234EFGH5678"
 struct SensorData sd;
 
 int main(int argc, char * argv[]) {
@@ -22,9 +23,11 @@ int main(int argc, char * argv[]) {
 	int sent_bytes; // Bytes transmitted
 	int rcvd_bytes; // Bytes received
 	int return_val;
+	message_t msg;
+	time_t timestamp;
 
 	sensor_data_init(&sd);
-	
+
 
 	while (dev == NULL) {
 		dev = USBCom_Init();
@@ -39,19 +42,18 @@ int main(int argc, char * argv[]) {
 	char request[1024];
 	char response[1024];
 
-	getGETstr(request, &sd);
-	
-
-	HTTP_Get("dataReceiver.php", request, response, 1024);
-	printf("Response:\n%s\n", response);
+	//Start Time
+	timestamp = time(NULL);
 
 
 	// Set up data block 
 	strcpy(tx_data, "1:432.12\r\n");
+
+
 	while (1) {
 
 
-		USBCom_SendData(tx_data);
+		return_val = USBCom_SendData(tx_data);
 
 		if (return_val != 0) {
 			printf("Did Not Recieve Data");
@@ -61,7 +63,17 @@ int main(int argc, char * argv[]) {
 			rx_data[i] = 0;
 
 		if (USBCom_CheckReceivedData(rx_data)) {
-			printf("%s\n", rx_data);
+			msg = Protocol_DecodeInput(rx_data);
+			updateSensors(&msg, &sd);
+			//Protocol_PrintMessage(&msg);
+			//printf("SD Flow Value: %f\n",sd.flow_measured);
+		}
+
+		if (difftime(time(NULL), timestamp) > 1) {
+			timestamp = time(NULL);
+			getGETstr(request, &sd);
+			HTTP_Get("dataReceiver.php", request, response, 1024);
+			printf("%s\n", response);
 		}
 	}
 }

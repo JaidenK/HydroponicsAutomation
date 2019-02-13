@@ -47,7 +47,7 @@ int USBCom_CheckReceivedData(char * buffer);
  * @brief Sends string being pointed to by msg.
  * @author Barron Wong 01/31/19
  */
-void USBCom_SendData(char * msg);
+int USBCom_SendData(char * msg);
 
 #endif
 /* [] END OF FILE */
