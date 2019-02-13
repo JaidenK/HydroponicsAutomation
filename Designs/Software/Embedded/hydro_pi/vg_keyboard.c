@@ -24,6 +24,7 @@ typedef struct Key {
   int yPos;
 } Key;
 
+
 Key key_a, key_b, key_c, key_d, key_e, key_f, key_g, key_h, key_i, key_j, key_k, key_l, key_m, key_n, key_o, key_p, key_q, key_r, key_s, key__t, key_u, key_v, key_w, key_x, key_y, key_z;
 Key key_tilde, key_1, key_2, key_3, key_4, key_5, key_6, key_7, key_8, key_9, key_0, key_minus, key_equals, key_backspace;
 Key key_tab, key_caps, key_lshift;
@@ -84,7 +85,7 @@ void VG_KB_Init() {
   };
   key_enter = (Key) {
     &key_backslash, &key_rshift, &key_apostrophe, &key_enter,
-    '\0','\0',39,7
+    '\n','\n',39,7
   };
   
   // Tab row
@@ -270,7 +271,23 @@ void VG_KB_Destroy() {
 }
 
 char VG_KB_KeyPress() {
-  return 'a';
+  if(selected_key == &key_lshift || selected_key == &key_rshift) {
+    isShiftOn = !isShiftOn;
+    isCapsOn = 0;
+    return '\0';
+  }else if(selected_key == &key_caps){
+    isShiftOn = 0;
+    isCapsOn = !isCapsOn;
+  }else{
+    if(isCapsOn) {
+      return selected_key->upper;
+    }else if(isShiftOn){
+      isShiftOn = 0;
+      return selected_key->upper;
+    }else{
+    }
+  }
+  return selected_key->lower;
 }
 
 void VG_KB_Up() {
@@ -287,7 +304,14 @@ void VG_KB_Right() {
 }
 
 void VG_KB_Draw(int x, int y, int w, int h) {
-  Image(x,y,1056,384,"images/keyboard_lower.jpg");
+  if(isShiftOn){
+    // img w, h don't matter.
+    Image(x,y,1056,384,"images/keyboard_shift.jpg");
+  }else if(isCapsOn){
+    Image(x,y,1056,384,"images/keyboard_capslock.jpg");
+  }else{
+    Image(x,y,1056,384,"images/keyboard_lower.jpg");
+  }
   Fill(255,255,255,0);
   Stroke(255,255,0,1); 
   StrokeWidth(5);
