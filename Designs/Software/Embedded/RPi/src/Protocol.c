@@ -69,6 +69,24 @@ char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
         sprintf(buffer,"%d:%f",(int)key,value);
     }
     
+	time_t t;
+	srand((unsigned)time(&t));
+	sd->h2o_level = rand() % 256;
+	sd->h2o_stored = rand() % 256;
+	sd->ph_level = rand() % 256;
+	sd->ph_up_stored = rand() % 256;
+	sd->ph_down_stored = rand() % 256;
+	sd->ec_level = rand() % 256;
+	sd->ec_stored = rand() % 256;
+	sd->temp_measured = rand() % 256;
+	sd->flow_measured = rand() % 256;
+	sd->flow_target = rand() % 256;
+	sd->ph_target = 0;//rand() % 256;
+	sd->ec_target = 0;//rand() % 256;
+	sd->h2o_target = 0;//rand() % 256;
+	sd->temp_target = 0;//rand() % 256;
+	strcpy(sd->ProductID, "ABCD1234EFGH5678");
+
     return buffer;
 }
 

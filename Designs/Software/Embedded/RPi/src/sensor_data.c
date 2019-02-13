@@ -1,11 +1,37 @@
-#include "sensor_data.h"
+//This file generates random sensor data and stores it into a sensor data structure.
 
+#include "sensor_data.h"
 #include <time.h> // for random
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 
+
+/**
+ * @function sensor_data_Init(char * input)
+ * @param pointer to a SensorData Structure
+ * @return None
+ * @brief Initializes sensor data structure.
+ * @author Barron Wong 02/08/19
+*/
+void sensor_data_Init(struct SensorData *sd) {
+	sd->h2o_level = 0;
+	sd->h2o_stored = 0;
+	sd->ph_level = 0;
+	sd->ph_up_stored = 0;
+	sd->ph_down_stored = 0;
+	sd->ec_level = 0;
+	sd->ec_stored = 0;
+	sd->temp_measured = 0;
+	sd->flow_measured = 0;
+	sd->flow_target = 0;
+	sd->ph_target = 0;
+	sd->ec_target = 0;
+	sd->h2o_target = 0;
+	sd->temp_target = 0;
+	strcpy(sd->ProductID, "ABCD1234EFGH5678");
+}
 
 
 void setRandomData(struct SensorData *sd) {
@@ -28,6 +54,7 @@ void setRandomData(struct SensorData *sd) {
    strcpy(sd->ProductID,"ABCD1234EFGH5678");
 }
 
+//Produces a random number
 double randomExponentially(double current, double max, double min) {
    double strength = 20.0;
    double randDouble = ((double)rand())/RAND_MAX;
@@ -36,6 +63,7 @@ double randomExponentially(double current, double max, double min) {
    return (randDouble - shift) * strength;
 }
 
+//Adds random walk data to a sensor data structure.
 void randomWalk(struct SensorData *sd) {
    sd->h2o_level +=       randomExponentially(sd->h2o_level,300,10);
    sd->h2o_stored +=      randomExponentially(sd->h2o_stored,245,10);
@@ -52,6 +80,7 @@ void randomWalk(struct SensorData *sd) {
    // sd->h2o_target +=      randomExponentially(sd->h2o_target,245,10);
 }
 
+//Reads sensor data from a file
 int loadData(struct SensorData *sd, char *filename) {
    FILE *save_file = fopen("save_data.dat", "r");
    if(!save_file) {
@@ -138,10 +167,10 @@ int saveData(struct SensorData *sd, char *filename) {
    return 0;
 }
 
+//Gets a string of data.
 void getGETstr(char *buf, struct SensorData *sd) {
    sprintf(
       buf,
-      "ProductID=password&"
       "h2o_level=%f&"
       "h2o_stored=%f&"
       "ph_level=%f&"

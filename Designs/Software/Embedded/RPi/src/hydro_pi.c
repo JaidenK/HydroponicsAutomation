@@ -50,7 +50,7 @@ int clicked = 0;
 char buf[1024];
 
 
-int main(int argc, char *argv[]) {
+int _main(int argc, char *argv[]) {
   // Specify the interrupt handler for ctrl+c
   signal(SIGINT, INThandler);
   

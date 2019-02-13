@@ -1,4 +1,15 @@
 *.mp4
 dbinfo.php
 *.o
+*.log
+*.svd
+*.cyfit
+*.tpbw4321
+*.html
 hydro_pi
+Designs/Software/Embedded/PSoC/HydroponicAutomation.cydsn/CortexM3/
+Designs/Software/Embedded/PSoC/HydroponicAutomation.cydsn/Export/
+Designs/Software/Embedded/PSoC/HydroponicAutomation.cydsn/Generated_Source/
+Designs/Software/Embedded/PSoC/HydroponicAutomation.cydsn/HydroponicAutomation.cycdx
+Designs/Software/Embedded/PSoC/HydroponicAutomation.cydsn/HydroponicAutomation.rpt
+Designs/Software/Embedded/PSoC/HydroponicAutomation.cydsn/codegentemp/
