@@ -5,6 +5,7 @@
 #include <stdint.h> // Integer data types
 #include <math.h> // for sin cos
 #include <string.h>
+#include <time.h> // for debounce clock
 
 // Peripheral libraries
 #include <wiringPi.h>
@@ -20,6 +21,8 @@
 #include "http.h"
 #include "vg_keyboard.h"
 
+#define MIN(a,b) (((a)<(b))?(a):(b))
+
 // Flag for the main loop
 volatile uint8_t isRunning = 1;
 
@@ -32,6 +35,12 @@ void joy_down(void);
 void joy_left(void);
 void joy_right(void);
 void joy_click(void);
+
+// Debouncing
+clock_t t_joyDebounceEvent = 0;
+clock_t t_joyDebounceDuration = CLOCKS_PER_SEC / 2; // 1 second debounce
+// For some reason CLOCKS_PER_SEC seems to be twice the real value?
+int debounce(clock_t *t_lastEvent, clock_t debounceDuration, void (*func)());
 
 enum hydro_states{
   HYDRO_IDLE, WIFI_SELECTING_NETWORK
@@ -48,7 +57,8 @@ int clicked = 0;
 
 // General printing
 char buf[1024];
-
+// Password string for wifi
+char passBuf[256];
 
 int main(int argc, char *argv[]) {
   // Specify the interrupt handler for ctrl+c
@@ -209,28 +219,33 @@ int main(int argc, char *argv[]) {
   
   
   
+  memset(passBuf,0,strlen(passBuf));
   // Main loop
   while(isRunning) {
     Background(0, 0, 0);					// Black background
-    Fill(44, 77, 232, 1);					// Big blue marble
-    Circle(width / 2, 0, width);			// The "world"
-    Fill(255, 255, 255, 1);					// White text
+    // Fill(44, 77, 232, 1);					// Big blue marble
+    // Circle(width / 2, 0, width);			// The "world"
+    // Fill(255, 255, 255, 1);					// White text
     //char buf[100];
     //int pos = QEI_GetPosition();
     //sprintf(buf, "Pos: %d", pos);
     //TextMid((width/2)+(width/2)*cos(-pos/100.0+M_PI/2), (width/2)*sin(-pos/100.0+M_PI/2), buf, SerifTypeface, 10);	// Greetings 
     
     VG_KB_Draw(0,0,width,height);
-    
+    Fill(255, 255, 255, 1);
+    Text(50,height-60,"Enter WiFi password:",SerifTypeface, 40);
+    // X pos offset by the string length if it gets too long, 50 otherwise.
+    Text(50+MIN(0,width-35*(int)strlen(passBuf)),height-120,passBuf,SerifTypeface, 40);
+
     // Color the circles based on the joystick readings.
-    Fill(255,255,255,0.3 + digitalRead(1)*0.7);
-    Circle(width / 2, height/2 + 30, 40);
-    Fill(255,255,255,0.3 + digitalRead(4)*0.7);
-    Circle(width / 2, height/2 - 30, 40);
-    Fill(255,255,255,0.3 + digitalRead(10)*0.7);
-    Circle(width / 2 - 30, height/2, 40);
-    Fill(255,255,255,0.3 + digitalRead(11)*0.7);
-    Circle(width / 2 + 30, height/2, 40);
+    // Fill(255,255,255,0.3 + digitalRead(1)*0.7);
+    // Circle(width / 2, height/2 + 30, 40);
+    // Fill(255,255,255,0.3 + digitalRead(4)*0.7);
+    // Circle(width / 2, height/2 - 30, 40);
+    // Fill(255,255,255,0.3 + digitalRead(10)*0.7);
+    // Circle(width / 2 - 30, height/2, 40);
+    // Fill(255,255,255,0.3 + digitalRead(11)*0.7);
+    // Circle(width / 2 + 30, height/2, 40);
     
       
     // Selection based on QEI
@@ -250,21 +265,21 @@ int main(int argc, char *argv[]) {
     
     
     // Display joystick coords
-    xJoy = JOY_GetXPosition(); 
-    yJoy = JOY_GetYPosition();
-    sprintf(buf, "(%d, %d)", xJoy,yJoy);
-    TextMid((width/2), (height/2)-400, buf, SerifTypeface, 30);	
-    // Grid for joystick as well as selection based on joystick
-    for(int row=0;row<5;row++){
-      for(int col=0;col<10;col++){
-        if((row-2)==-yJoy && (col-5)==xJoy) {
-          Fill(255*clicked,255,255,1);
-        }else{
-          Fill(255,255,255,0.3);
-        }
-        Roundrect(width/2 - 9*20 + 40*col, height/2-200 - 40*row, 30, 30, 5, 5);
-      }
-    }
+    // xJoy = JOY_GetXPosition(); 
+    // yJoy = JOY_GetYPosition();
+    // sprintf(buf, "(%d, %d)", xJoy,yJoy);
+    // TextMid((width/2), (height/2)-400, buf, SerifTypeface, 30);	
+    // // Grid for joystick as well as selection based on joystick
+    // for(int row=0;row<5;row++){
+    //   for(int col=0;col<10;col++){
+    //     if((row-2)==-yJoy && (col-5)==xJoy) {
+    //       Fill(255*clicked,255,255,1);
+    //     }else{
+    //       Fill(255,255,255,0.3);
+    //     }
+    //     Roundrect(width/2 - 9*20 + 40*col, height/2-200 - 40*row, 30, 30, 5, 5);
+    //   }
+    // }
     
     
     
@@ -301,6 +316,24 @@ void joy_right(void){
   VG_KB_Right();
 }
 
+void addKeyToPassword() {
+  int len = strlen(passBuf);
+  char c = VG_KB_KeyPress();
+  printf("VG_KB: %c\n",c);
+  if(c == '\0') {
+    // Do nothing
+  } else if(c == '\b') {
+    // backspace
+    passBuf[len-1] = '\0';
+  } else if(c == '\n') {
+    // enter
+    printf("Password: %s\n", passBuf);
+  } else {
+    passBuf[len] = c;
+    passBuf[len+1] = '\0';
+  }
+}
+
 void joy_click(void) {
   clicked = !clicked;
   switch(hydro_state) {
@@ -310,4 +343,17 @@ void joy_click(void) {
       selectedNetwork = yJoy;
       break;
   }
+  debounce(&t_joyDebounceEvent,t_joyDebounceDuration,addKeyToPassword);
+}
+
+int debounce(clock_t *t_lastEvent, clock_t debounceDuration, void (*func)()) {
+  clock_t now = clock();
+  if(now - *t_lastEvent > debounceDuration) {
+    *t_lastEvent = now;
+    func();
+    return 0;
+  }else{
+    printf("Debounced.\n");
+  }
+  return 1;
 }
