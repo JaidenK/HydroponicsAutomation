@@ -17,6 +17,7 @@
 #define FLOWRATE_CONVERSION_FACTOR 23.0
 #define FALSE 0 
 #define TRUE 1
+#define PWM_MAX 1000
 static uint16_t flowSensorFreq = 0;
 
 static float flow_ref = 0;
@@ -33,7 +34,6 @@ static float flow_ref = 0;
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
     static float dutyCycle = 0.2;
-    float difference = 0;
     float kp = 1;
     static float error = 0;
     
@@ -112,17 +112,16 @@ uint8_t FlowController_SetFlowDutyCycle(float dutyCycle){
  * @author Barron Wong 01/25/19
 */
 uint8_t FlowController_SetFlowReference(float reference){
-    uint16_t pwmCompare = 0;
     if(reference < 0 || reference > 10){
         return ERROR;
     }
-    
     flow_ref = reference;
     return SUCCESS;
 }
 
 
-#ifdef FLOWCONTROLLER_TEST    
+#ifdef FLOWCONTROLLER_TEST
+#define MODULE_TEST
 #define ADC_MAX 37500.0
 
 /*

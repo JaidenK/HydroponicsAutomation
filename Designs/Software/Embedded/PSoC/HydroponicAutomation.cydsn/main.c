@@ -18,6 +18,7 @@
 #include "SerialCom.h"
 #include "USBCom.h"
 #include "Protocol.h"
+#include "pHController.h"
 
 #define FLOW_REF 1
 
@@ -30,8 +31,8 @@ int main(void)
     ADC_DelSig_1_Start();
     FlowController_Init();
     SerialCom_Init();
-    USBCom_Init();
-    
+    //USBCom_Init();
+    pHController_Init();
     
     FlowController_SetFlowReference(FLOW_REF);
     
@@ -45,18 +46,21 @@ int main(void)
         flowRate = FlowController_GetFlowRate();
         
         //Encode and send data
-        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
-        USBCom_SendData(buffer);
+        //Protocol_EncodeOutput(flow_measured, flowRate, buffer);
+        //USBCom_SendData(buffer);
         
         //Check if USB has received data
-        USBCom_CheckRecievedData(buffer);
-        target = Protocol_DecodeInput(buffer);
+        //USBCom_CheckReceivedData(buffer);
+        //target = Protocol_DecodeInput(buffer);
         
         if(target.key != invalid_key)
-            Protocol_PrintMessage(target);
+            //Protocol_PrintMessage(target);
         
-
+        
+        pHController_ReadSensor();
     }
+        
+    
     
 }
 #endif

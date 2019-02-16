@@ -44,7 +44,7 @@ void USBCom_CheckConfiguration(void);
  *        will reenable the output endpoint
  * @author Barron Wong 01/31/19
  */
-int USBCom_CheckRecievedData(char * buffer);
+int USBCom_CheckReceivedData(char * buffer);
 
 /**
  * @function USBCom_SendData(uint8 * buffer)

@@ -11,17 +11,21 @@
  *
  * Created on Janruary 25, 2019
  */
-#include "project.h"
 
-#define PWM_MAX 1000
-#define SUCCESS 1
-#define ERROR -1
 
 //#define FLOWCONTROLLER_TEST
-//#define MODULE_TEST
 
 #ifndef FlowController_H
 #define FlowController_H
+
+#ifdef FLOWCONTROLLER_TEST
+#define MODULE_TEST
+#endif
+
+#include "project.h"
+
+#define SUCCESS 1
+#define ERROR -1
     
 /**
  * @function FlowCounterTimerISRHandler(void)
