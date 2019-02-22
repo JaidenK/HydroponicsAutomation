@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+
+\input{/Users/jaidenking/Documents/Classes/packages.tex}
+\input{/Users/jaidenking/Documents/Classes/macros.tex}
+
+\usepackage{cancel}
+\usepackage{caption}
+
+\newcommand{\pH}{\text{pH}}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+\title{Definitions of Mathematical Models\\\small{As used in the accompanying Matlab simulations.}}
+\date{\today}
+\author{Jaiden King}
+\maketitle
+
+\section{pH Up/Down}
+How does a drop of pH up/down chemical affect the pH of the entire solution? There's an elegant analogy to classical mechanics.
+\\\\
+Consider that pH is a measure of the concentration of H$^+$ atoms. The concentration of these ions in both the water and the control solutions can be called their density $\rho$. Multiplying the volumes $V$ with density $\rho$ gives a sort of ``mass" $m = V\rho$ (separate from the physical mass of the solution).
+\\\\
+If we then want to know the new pH pH$^+$ of a solution, we can average the existing solution with the additional control solution.
+\begin{align*}
+\pH^+ &= \frac{V_1\rho_1\pH_1 + V_0\rho_0\pH_0}{V_1\rho_1 + V_0\rho_0}
+\end{align*}
+The new volume of the solution is simply the addition of the new volume,
+\begin{align*}
+V^+ &= V_1 + V_0
+\end{align*}
+and the new density of the solution can be found from the idea of conservation of ``mass"
+\begin{align*}
+V^+\rho^+ &= V_1\rho_1 + V_0\rho_0 \\\\
+\rho^+ &= \frac{V_1\rho_1 + V_0\rho_0}{V_1 + V_0}
+\end{align*}
+The control solutions likely operate by chemical reaction as opposed to simply being 14 and 0 pH respectively, but I'll let that slide for now.
+
+\section{Mixing the solution}
+A drop of control solution will not immediately diffuse into a homogeneous mixture. It will initially have no effect, but will slowly change the pH of the entire solution as it mixes in. In reality, there would be portions of the water that have different pH as the solution diffuses, but I propose modeling it as a uniform change. To capture the delayed response of the pH, consider it as a mass-spring-damper system as shown in Fig.~\ref{fig:msd_system}.
+\ezfig{msd_system}{A generic mass-spring-damper system that will be used to model the pH of the water as seen by the sensor.} % https://www.12000.org/my_notes/matlab_ODE/
+The differential equation describing the system is
+\begin{align*}
+mx^{\prime\prime}+cx^{\prime}+kx = F(t)
+\end{align*}
+where $F(t)=\pH_{\infty}$ is the theoretical steady-state pH, $c$ is a damping coefficient that represents how slow the water is to mix, and $k=1$ is the spring constant that determines where the equilibrium is. $k=1$ means the final pH will match $\pH_{\infty}$. For this system to make sense, the system should be critically or overdamped, where the critical damping coefficient is given by $c_r = 2\sqrt{km}$. $c$ would be dependent on system parameters such as water flow rate. Fig.~\ref{fig:damping_style_00} and Fig.~\ref{fig:damping_style_01} show a plot of this type of model.
+\\\\
+Fig.~\ref{fig:predefined_input_list} illustrates an alternate model.
+\\\\
+These models show us what we already knew intuitively: we have to wait for some amount of time for the water to mix before we can take another accurate reading. 
+
+\ezfig{damping_style_00}{Modeling the average pH of the solution based on a mass-spring-damper model.}
+\ezfig{damping_style_01}{Modeling the average pH of the solution based on a mass-spring-damper model where the reference changes linearly, as if a motor was pumping in pH up chemicals.}
+\ezfig{predefined_input_list}{Modeling the average pH of the solution as the theoretically perfectly-mixed pH value changes based on an exponential function.}
+
+\section{Feedback control of pH}
+Controlling the pH is done by running one of two separate pumps: pH Up and pH Down. In either case, to move the pH a desired amount we have to run the pump for a certain amount of time and speed. Typically, this will be at maximum speed for a specified amount of time. 
+\\\\
+The first method of controlling the pH is to run a simple proportional controller where the time that the is pump is left on is proportional to the error in the pH. The sampling interval will be a fixed amount of time after the pumping stops.
+\\\\
+If you sample frequently, you have to have a gentle (small $K_p$ or pump strength) controller. If you wait a while between samples, you can have a more aggressive controller (High $K_p$ or pump strength).
+
+
+To-do: Add "acceptable range" to minimize twitchy motors
+
+\end{document}

@@ -34,7 +34,7 @@
     $allData["ph_target"][$i] = new Point($row['time'],$row['ph_target']);
     $allData["ec_level"][$i] = new Point($row['time'],$row['ec_level']);
     $allData["ec_target"][$i] = new Point($row['time'],$row['ec_target']);
-    $allData["flow_level"][$i] = new Point($row['time'],$row['flow_level']);
+    $allData["flow_measured"][$i] = new Point($row['time'],$row['flow_measured']);
     $allData["flow_target"][$i] = new Point($row['time'],$row['flow_target']);
     $i++;
   }

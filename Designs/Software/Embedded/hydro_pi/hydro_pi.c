@@ -6,6 +6,8 @@
 #include <math.h> // for sin cos
 #include <string.h>
 #include <time.h> // for debounce clock
+#include <unistd.h> // getopt
+#include <errno.h> // Error number
 
 // Peripheral libraries
 #include <wiringPi.h>
@@ -29,6 +31,10 @@ volatile uint8_t isRunning = 1;
 // Signal interrupt handler
 void INThandler(int);
 
+// Displays the ip and waits for the joystick to be pressed.
+// return 1 to shut down return 2 to continue
+int displayIP(void);
+
 // Joystick interrupts
 void joy_up(void);
 void joy_down(void);
@@ -43,7 +49,9 @@ clock_t t_joyDebounceDuration = CLOCKS_PER_SEC / 2; // 1 second debounce
 int debounce(clock_t *t_lastEvent, clock_t debounceDuration, void (*func)());
 
 enum hydro_states{
-  HYDRO_IDLE, WIFI_SELECTING_NETWORK
+  HYDRO_IDLE, // Not doing anything in particular
+  WIFI_SELECTING_NETWORK, // Start up, selecting network
+  STARTUP_DISP_IP // On bootup, display IP so I can SSH into it
 } hydro_state;
 
 // Wifi
@@ -55,43 +63,35 @@ int yJoy = 0;
     
 int clicked = 0;
 
+// Screen width and height
+int width, height;
+
 // General printing
 char buf[1024];
 // Password string for wifi
 char passBuf[256];
 
 int main(int argc, char *argv[]) {
+  hydro_state = HYDRO_IDLE;
+
+  // Analyze options
+  int c = 0;
+  while ((c = getopt (argc, argv, "i")) != -1) {
+    switch(c) {
+      case 'i':
+        // Start up in IP display mode. Don't actually run the full program.
+        hydro_state = STARTUP_DISP_IP;
+        break;
+    }
+  }
+
+
   // Specify the interrupt handler for ctrl+c
   signal(SIGINT, INThandler);
   
   // Setup GPIO
   wiringPiSetup();
   
-  // pinMode(9,OUTPUT);
-  // pinMode(3,OUTPUT);
-  // pinMode(2,OUTPUT);
-  // pinMode(0,OUTPUT);
-  // pinMode(7,OUTPUT);
-  
-  // while(1) {
-  //   printf("High\n");
-  //   digitalWrite(9,1);
-  //   digitalWrite(3,1);
-  //   digitalWrite(2,1);
-  //   digitalWrite(0,1);
-  //   digitalWrite(7,1);
-  //   for(unsigned int i =0;i<50000000;i++){}
-  //   printf("Low\n");
-  //   digitalWrite(9,0);
-  //   digitalWrite(3,0);
-  //   digitalWrite(2,0);
-  //   digitalWrite(0,0);
-  //   digitalWrite(7,0);
-  //   for(unsigned int i =0;i<50000000;i++){}
-  // }
-  
-  // Initialize QEI with GPIO Pins 24, 25
-  //QEI_Init( , );
   // Pins for the Y axis of the joystick (op-amp output). 
   // BCM 23, 22, 27, 17, 4, 3
   JOY_Init(3,2,7,0,9,joy_up,joy_down,joy_left,joy_right,joy_click);
@@ -100,23 +100,32 @@ int main(int argc, char *argv[]) {
   VG_KB_Init();
   
   // Setup Graphics
-	int width, height;
   // Graphics
   saveterm(); // Save current screen
   init(&width, &height); // Initialize display and get width and height
   Start(width, height);
   //rawterm(); // Needed to receive control characters from keyboard, such as ESC
   
-  hydro_state = HYDRO_IDLE;
-  
-  
   Background(0, 0, 0);					// Black background
   Fill(255, 255, 255, 1);					// White text
   TextMid((width/2), (height/2), "Testing network connection...", SerifTypeface, height/20);	// Greetings 
   End();
   
-  
-  
+  if(hydro_state == STARTUP_DISP_IP) {
+    // Blocking function will wait until the user presses the joystick
+    // button to exit.
+    while(1) {
+      int returnCode = displayIP();
+      if(returnCode == 1) {
+        // Close program
+        exit(0);
+      }else if(returnCode == 2) {
+        // continue program
+        break;
+      }
+    }
+  }
+
   // To-do just ping. Maybe they have an ethernet cable.
   
   // Wifi connect console command
@@ -223,69 +232,19 @@ int main(int argc, char *argv[]) {
   // Main loop
   while(isRunning) {
     Background(0, 0, 0);					// Black background
-    // Fill(44, 77, 232, 1);					// Big blue marble
-    // Circle(width / 2, 0, width);			// The "world"
-    // Fill(255, 255, 255, 1);					// White text
-    //char buf[100];
-    //int pos = QEI_GetPosition();
-    //sprintf(buf, "Pos: %d", pos);
-    //TextMid((width/2)+(width/2)*cos(-pos/100.0+M_PI/2), (width/2)*sin(-pos/100.0+M_PI/2), buf, SerifTypeface, 10);	// Greetings 
     
+    /*
+    // Keyboard stuff
     VG_KB_Draw(0,0,width,height);
     Fill(255, 255, 255, 1);
     Text(50,height-60,"Enter WiFi password:",SerifTypeface, 40);
     // X pos offset by the string length if it gets too long, 50 otherwise.
     Text(50+MIN(0,width-35*(int)strlen(passBuf)),height-120,passBuf,SerifTypeface, 40);
+    */
 
-    // Color the circles based on the joystick readings.
-    // Fill(255,255,255,0.3 + digitalRead(1)*0.7);
-    // Circle(width / 2, height/2 + 30, 40);
-    // Fill(255,255,255,0.3 + digitalRead(4)*0.7);
-    // Circle(width / 2, height/2 - 30, 40);
-    // Fill(255,255,255,0.3 + digitalRead(10)*0.7);
-    // Circle(width / 2 - 30, height/2, 40);
-    // Fill(255,255,255,0.3 + digitalRead(11)*0.7);
-    // Circle(width / 2 + 30, height/2, 40);
-    
-      
-    // Selection based on QEI
-    // Square on highlighted one
-    //int selected = (abs(pos)/4)%4;
-    //if(pos<0) {
-    //  selected = 3-selected;
-    //}
-    //Fill(255,255,255,1);
-    //Roundrect(width/2 + 200*selected - 305, height/2+95, 50, 50, 15, 15);
-    // Squares
-    //Fill(77,255,255,1);
-    //Roundrect(width/2 - 100, height/2+100, 40, 40, 10, 10);
-    //Roundrect(width/2 - 300, height/2+100, 40, 40, 10, 10);
-    //Roundrect(width/2 + 100, height/2+100, 40, 40, 10, 10);
-    //Roundrect(width/2 + 300, height/2+100, 40, 40, 10, 10);
     
     
-    // Display joystick coords
-    // xJoy = JOY_GetXPosition(); 
-    // yJoy = JOY_GetYPosition();
-    // sprintf(buf, "(%d, %d)", xJoy,yJoy);
-    // TextMid((width/2), (height/2)-400, buf, SerifTypeface, 30);	
-    // // Grid for joystick as well as selection based on joystick
-    // for(int row=0;row<5;row++){
-    //   for(int col=0;col<10;col++){
-    //     if((row-2)==-yJoy && (col-5)==xJoy) {
-    //       Fill(255*clicked,255,255,1);
-    //     }else{
-    //       Fill(255,255,255,0.3);
-    //     }
-    //     Roundrect(width/2 - 9*20 + 40*col, height/2-200 - 40*row, 30, 30, 5, 5);
-    //   }
-    // }
-    
-    
-    
-    
-    
-    
+    // Draw screen
     End();	
   }
   printf("\n");
@@ -342,6 +301,9 @@ void joy_click(void) {
     case WIFI_SELECTING_NETWORK:
       selectedNetwork = yJoy;
       break;
+    case STARTUP_DISP_IP:
+      isRunning = 0;
+      break;
   }
   debounce(&t_joyDebounceEvent,t_joyDebounceDuration,addKeyToPassword);
 }
@@ -356,4 +318,39 @@ int debounce(clock_t *t_lastEvent, clock_t debounceDuration, void (*func)()) {
     printf("Debounced.\n");
   }
   return 1;
+}
+
+int displayIP() {
+  char ipStr[256]; // Surely we wont need 256 chars for the ip string?
+  char line[512]; // line for reading output
+  FILE *console = popen("ifconfig | grep wlan0 -A1","r");
+  if(console==NULL) {
+    printf("Could not make ifconfig system call.\n%s\n",strerror(errno));
+  }
+  // Loop through each line of file
+  while(fgets(line,512,console)!=NULL){
+    char *word = strstr(line,"inet");
+    if(word != NULL) {
+      word += 5; // Move pointer past inet
+      sscanf(word,"%s",ipStr);
+      break;
+    }
+  }
+  pclose(console);
+  printf("%s\n",ipStr);
+
+  Background(0, 0, 0);          // Black background
+  Fill(255, 255, 255, 1);         // White text
+  sprintf(line, "IP: %s",ipStr);
+  TextMid((width/2), (height/2), line, SerifTypeface, height/20);   
+  TextMid((width/2), (height/2)-(2*height/20), "Press Joystick to close.", SerifTypeface, height/20);   
+  End();
+  
+  clock_t now = clock();
+  while(clock() - now < CLOCKS_PER_SEC) {
+    if(isRunning == 0) {
+      return 1;
+    }
+  }
+  return 0;
 }
