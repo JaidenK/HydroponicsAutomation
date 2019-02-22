@@ -449,13 +449,17 @@
       <Data key="e7977a95-4089-4779-8ed7-4e0b93bf4386/edd15f43-b66b-457b-be3a-5342345270c8" value="ADC_DelSig_1_theACLK" />
     </Group>
     <Group key="Pin">
+      <Data key="2eb9bdc7-989d-49ea-aa69-0466a9131261" value="pHControllerDirPin" />
+      <Data key="3a641820-357e-4ef4-a364-bc77eeec9c61" value="pH" />
       <Data key="6b12d123-53a6-48ac-8dc9-c3cccd9d498e" value="Trigger" />
       <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="FlowSensorSig" />
       <Data key="493fce26-7f83-4a83-92ec-191d848a8043/16a808f6-2e13-45b9-bce0-b001c8655113" value="pHADC_Bypass" />
+      <Data key="35016d87-8004-4039-a214-1fa210488325" value="TimerOut" />
       <Data key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5" value="pH" />
       <Data key="893425e2-b901-46a8-80e5-5d2d9917eaf4" value="pHUpPump" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="PWMSpeedSetting" />
+      <Data key="a83fec49-d759-48cd-918c-841203016a01" value="pHDownPump" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="FlowSpeedPWMOut" />
@@ -3546,6 +3550,11 @@
     </Group>
   </Group>
   <Group key="Pin2">
+    <Group key="3a641820-357e-4ef4-a364-bc77eeec9c61">
+      <Group key="0">
+        <Data key="Port Format" value="3,0" />
+      </Group>
+    </Group>
     <Group key="6b12d123-53a6-48ac-8dc9-c3cccd9d498e">
       <Group key="0">
         <Data key="Port Format" value="0,0" />
@@ -3574,6 +3583,16 @@
     <Group key="77715107-f8d5-47e5-a629-0fb83101ac6b">
       <Group key="0">
         <Data key="Port Format" value="0,1" />
+      </Group>
+    </Group>
+    <Group key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c">
+      <Group key="0">
+        <Data key="Port Format" value="15,7" />
+      </Group>
+    </Group>
+    <Group key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42">
+      <Group key="0">
+        <Data key="Port Format" value="15,6" />
       </Group>
     </Group>
     <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">

@@ -21,7 +21,14 @@
 #endif
 
 #include "project.h"
-
+/**
+ * @function FlowCounterTimerISRHandler(void)
+ * @param None
+ * @return None
+ * @brief FlowCounter ISR. Takes reading of flow meter every second
+ * @author Barron Wong 01/25/19
+ */
+CY_ISR_PROTO(pHSampleTimerISRHandler);
 /**
  * @function pHController_Init(void)
  * @param None
@@ -48,6 +55,15 @@ float pHController_ReadSensor(void);
  * @author Barron Wong 02/15/19
 */
 void pHController_SetFlowDutyCycle(float duty);
+
+/**
+ * @function pHController_AdjustpH(float duty)
+ * @param firection up or down
+ * @return None
+ * @brief Adds pH up or down based on dir
+ * @author Barron Wong 02/19/19
+*/
+void pHController_AdjustpH(uint8_t dir, uint8_t drops);
     
 #endif
 /* [] END OF FILE */
