@@ -5,7 +5,6 @@
 #include <stdint.h> // Integer data types
 #include <math.h> // for sin cos
 #include <string.h>
-#include <time.h> // for debounce clock
 #include <unistd.h> // getopt
 #include <errno.h> // Error number
 
@@ -18,10 +17,8 @@
 #include <fontinfo.h>
 
 // My libraries
-#include "QEI.h"
-#include "Joy.h"
 #include "http.h"
-#include "vg_keyboard.h"
+#include "hydro_gui.h"
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
@@ -30,23 +27,6 @@ volatile uint8_t isRunning = 1;
 
 // Signal interrupt handler
 void INThandler(int);
-
-// Displays the ip and waits for the joystick to be pressed.
-// return 1 to shut down return 2 to continue
-int displayIP(void);
-
-// Joystick interrupts
-void joy_up(void);
-void joy_down(void);
-void joy_left(void);
-void joy_right(void);
-void joy_click(void);
-
-// Debouncing
-clock_t t_joyDebounceEvent = 0;
-clock_t t_joyDebounceDuration = CLOCKS_PER_SEC / 2; // 1 second debounce
-// For some reason CLOCKS_PER_SEC seems to be twice the real value?
-int debounce(clock_t *t_lastEvent, clock_t debounceDuration, void (*func)());
 
 enum hydro_states{
   HYDRO_IDLE, // Not doing anything in particular
@@ -58,13 +38,8 @@ enum hydro_states{
 // Used during the GUI screen where they select which network to connect to
 int selectedNetwork = -1;
 
-int xJoy = 0;
-int yJoy = 0;
-    
 int clicked = 0;
 
-// Screen width and height
-int width, height;
 
 // General printing
 char buf[1024];
@@ -91,25 +66,7 @@ int main(int argc, char *argv[]) {
   
   // Setup GPIO
   wiringPiSetup();
-  
-  // Pins for the Y axis of the joystick (op-amp output). 
-  // BCM 23, 22, 27, 17, 4, 3
-  JOY_Init(3,2,7,0,9,joy_up,joy_down,joy_left,joy_right,joy_click);
-  JOY_PreventNegativePositions();
-  
-  VG_KB_Init();
-  
-  // Setup Graphics
-  // Graphics
-  saveterm(); // Save current screen
-  init(&width, &height); // Initialize display and get width and height
-  Start(width, height);
-  //rawterm(); // Needed to receive control characters from keyboard, such as ESC
-  
-  Background(0, 0, 0);					// Black background
-  Fill(255, 255, 255, 1);					// White text
-  TextMid((width/2), (height/2), "Testing network connection...", SerifTypeface, height/20);	// Greetings 
-  End();
+  HYDRO_GUI_Init();
   
   if(hydro_state == STARTUP_DISP_IP) {
     // Blocking function will wait until the user presses the joystick
@@ -125,7 +82,7 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-
+/*
   // To-do just ping. Maybe they have an ethernet cable.
   
   // Wifi connect console command
@@ -211,7 +168,7 @@ int main(int argc, char *argv[]) {
     }
     printf("Selected: %s\n",networks[selectedNetwork]);
   }
-  
+  */
   
   
   
@@ -242,7 +199,7 @@ int main(int argc, char *argv[]) {
     Text(50+MIN(0,width-35*(int)strlen(passBuf)),height-120,passBuf,SerifTypeface, 40);
     */
 
-    
+    HYDRO_GUI_Draw();
     
     // Draw screen
     End();	
@@ -262,95 +219,22 @@ void INThandler(int sig) {
   exit(0);
 }
 
-void joy_up(void) {
-  VG_KB_Up();
-}
-void joy_down(void){
-  VG_KB_Down();
-}
-void joy_left(void){
-  VG_KB_Left();
-}
-void joy_right(void){
-  VG_KB_Right();
-}
+// void addKeyToPassword() {
+//   int len = strlen(passBuf);
+//   char c = VG_KB_KeyPress();
+//   printf("VG_KB: %c\n",c);
+//   if(c == '\0') {
+//     // Do nothing
+//   } else if(c == '\b') {
+//     // backspace
+//     passBuf[len-1] = '\0';
+//   } else if(c == '\n') {
+//     // enter
+//     printf("Password: %s\n", passBuf);
+//   } else {
+//     passBuf[len] = c;
+//     passBuf[len+1] = '\0';
+//   }
+// }
 
-void addKeyToPassword() {
-  int len = strlen(passBuf);
-  char c = VG_KB_KeyPress();
-  printf("VG_KB: %c\n",c);
-  if(c == '\0') {
-    // Do nothing
-  } else if(c == '\b') {
-    // backspace
-    passBuf[len-1] = '\0';
-  } else if(c == '\n') {
-    // enter
-    printf("Password: %s\n", passBuf);
-  } else {
-    passBuf[len] = c;
-    passBuf[len+1] = '\0';
-  }
-}
 
-void joy_click(void) {
-  clicked = !clicked;
-  switch(hydro_state) {
-    case HYDRO_IDLE:
-      break;
-    case WIFI_SELECTING_NETWORK:
-      selectedNetwork = yJoy;
-      break;
-    case STARTUP_DISP_IP:
-      isRunning = 0;
-      break;
-  }
-  debounce(&t_joyDebounceEvent,t_joyDebounceDuration,addKeyToPassword);
-}
-
-int debounce(clock_t *t_lastEvent, clock_t debounceDuration, void (*func)()) {
-  clock_t now = clock();
-  if(now - *t_lastEvent > debounceDuration) {
-    *t_lastEvent = now;
-    func();
-    return 0;
-  }else{
-    printf("Debounced.\n");
-  }
-  return 1;
-}
-
-int displayIP() {
-  char ipStr[256]; // Surely we wont need 256 chars for the ip string?
-  char line[512]; // line for reading output
-  FILE *console = popen("ifconfig | grep wlan0 -A1","r");
-  if(console==NULL) {
-    printf("Could not make ifconfig system call.\n%s\n",strerror(errno));
-  }
-  // Loop through each line of file
-  while(fgets(line,512,console)!=NULL){
-    char *word = strstr(line,"inet");
-    if(word != NULL) {
-      word += 5; // Move pointer past inet
-      sscanf(word,"%s",ipStr);
-      break;
-    }
-  }
-  pclose(console);
-  printf("%s\n",ipStr);
-
-  Background(0, 0, 0);          // Black background
-  Fill(255, 255, 255, 1);         // White text
-  sprintf(line, "IP: %s",ipStr);
-  TextMid((width/2), (height/2), line, SerifTypeface, height/20);   
-  TextMid((width/2), (height/2)-(2*height/20), "Press Joystick to close.", SerifTypeface, height/20);   
-  End();
-  
-  clock_t now = clock();
-  while(clock() - now < CLOCKS_PER_SEC) {
-    if(isRunning == 0) {
-      return 1;
-    }
-  }
-  return 0;
-}
