@@ -66,7 +66,8 @@ int main(int argc, char *argv[]) {
   
   // Setup GPIO
   wiringPiSetup();
-  HYDRO_GUI_Init();
+
+  HYDRO_GUI_Init(1);
   
   if(hydro_state == STARTUP_DISP_IP) {
     // Blocking function will wait until the user presses the joystick
@@ -188,7 +189,6 @@ int main(int argc, char *argv[]) {
   memset(passBuf,0,strlen(passBuf));
   // Main loop
   while(isRunning) {
-    Background(0, 0, 0);					// Black background
     
     /*
     // Keyboard stuff
@@ -199,10 +199,9 @@ int main(int argc, char *argv[]) {
     Text(50+MIN(0,width-35*(int)strlen(passBuf)),height-120,passBuf,SerifTypeface, 40);
     */
 
-    HYDRO_GUI_Draw();
+    // This is now taken care of in a thread.
+    // HYDRO_GUI_Draw();
     
-    // Draw screen
-    End();	
   }
   printf("\n");
   
