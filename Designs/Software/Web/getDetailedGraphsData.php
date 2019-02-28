@@ -1,39 +1,60 @@
 <?php 
 
+// A simple (x,y) point with a function to JSONify it.
+class Point {
+  public $x = 0;
+  public $y = 0;
+  function __construct($x_,$y_) {
+    $this->x = $x_;
+    $this->y = $y_;
+  }
+  function toJSONString() {
+    return "{'x':'$this->x','y':$this->y}";
+  }
+}
+
+// Create a connection
+include "dbinfo.php";
+// The array of points
+$allData = [];
+
+// Product ID unused 
+$ProductID = mysqli_real_escape_string($conn, $_POST["ProductID"]);
+// The column to select
+$valueKey = mysqli_real_escape_string($conn, $_POST["valueKey"]);
+// How far in the past to select data
+$interval = (int) ($_POST["interval"]);
 
 
+$sql = "SELECT '$valueKey', 'time' FROM TestTable WHERE time > date_sub(now(), interval $interval minute);";
+$result = mysqli_query($conn,$sql) or die('Could not get data: ' . mysqli_error());
 
+$i = 0;
+while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+  // $h2o_level[$i] = new Point(strtotime($row['time'])-$now+$sevenHours,$row['h2o_level']);
+  $allData[$valueKey][$i] = new Point($row['time'],$row[$valueKey]);
+  $i++;
+}
 
-$('#editTargetsForm').submit(function(e){
-        // https://www.airpair.com/js/jquery-ajax-post-tutorial
-        $("#editTargetsSaveButton").html('Saving...');
-        $.post(
-          'setTargets.php',
-          $(this).serialize(),
-          function( data, textStatus, jQxhr ){
-            if(data=="success") {
-              $("#editTargetsSaveButtonResponse").html("Settings saved!");
-              $("#editTargetsSaveButtonResponse").removeClass("text-danger");
-              $("#editTargetsSaveButtonResponse").addClass("text-primary");
-            }else{
-              $("#editTargetsSaveButtonResponse").html("Unable to save settings.");
-              $("#editTargetsSaveButtonResponse").addClass("text-danger");
-              $("#editTargetsSaveButtonResponse").removeClass("text-primary");
-              Console.log(data);
-            }
-            $("#editTargetsSaveButtonResponse").show();
-          },
-          'text'
-        ).fail(function() {
-          alert( "Could not update targets." );
-        }).always(function(){
-          $("#editTargetsSaveButton").html('Save Changes');
-          setTimeout(function(){
-            $("#editTargetsSaveButtonResponse").fadeOut();
-          }, 1000);
-        });
+echo "{'points':[";
+// isFirst flag so I can include the comma
+$isFirst = TRUE;
+foreach($allData[$valueKey] as $point) {
+  if(!$isFirst) {
+    echo ",";
+  }
+  $isFirst = FALSE;
+  echo $point->toString();
+}
+echo "]}";
 
-        e.preventDefault();
-      });
+/*
+{
+  "points":[
+    {"x":"asdf","y":"asdf"},
+    {"x":"asdf","y":"asdf"}
+  ]
+}
+*/
 
 ?>

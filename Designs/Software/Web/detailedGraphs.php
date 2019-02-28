@@ -4,6 +4,7 @@
      header("Location: /login.php");
      die();
   }
+
   class Point {
     public $x = 0;
     public $y = 0;
@@ -52,8 +53,6 @@
     }
     
   }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -75,8 +74,7 @@
   <script src="http://momentjs.com/downloads/moment.js"></script>
 
   <script type="text/javascript">
-    $(document).ready(function(){
-      
+    function rebuildCharts() {
       var ctx = $("#myChart1");
       var myChart = new Chart(ctx, {
         type: 'scatter',
@@ -235,6 +233,9 @@
           }
         }
       });
+    }
+    $(document).ready(function(){
+      rebuildCharts();
     })
   </script>
 </head>

@@ -16,7 +16,7 @@
       </li>  -->  
     </ul>
     <?php
-      if (!$_SESSION["isLoggedIn"]) {
+      if (!array_key_exists('isLoggedIn', $_SESSION) or !$_SESSION["isLoggedIn"]) {
         echo' 
           <ul class="navbar-nav ml-auto" id="navLoggedOut">
             <li class="nav-item">
