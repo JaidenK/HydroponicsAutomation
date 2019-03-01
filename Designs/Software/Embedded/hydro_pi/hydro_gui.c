@@ -31,6 +31,9 @@
 
 
 double tempTarget = 12.345;
+double ecTarget = 23.490;
+double phTarget = 7.000;
+double flowTarget = 1.200;
 
 
 
@@ -43,6 +46,9 @@ enum gui_scenes {
 Scene *currentScene;
 Scene *scene_mainMenu;
 Scene *scene_tempTarget;
+Scene *scene_ecTarget;
+Scene *scene_phTarget;
+Scene *scene_flowTarget;
 
 // A pointer to the same struct used in the main program.
 struct SensorData *gui_sd;
@@ -109,6 +115,16 @@ void click_dispIpClose(void *btn_) {
 void click_mainMenu_temp(void *btn_){
   currentScene = sceneTransition(currentScene,scene_tempTarget);
 }
+void click_mainMenu_ec(void *btn_){
+  currentScene = sceneTransition(currentScene,scene_ecTarget);
+}
+void click_mainMenu_ph(void *btn_){
+  currentScene = sceneTransition(currentScene,scene_phTarget);
+}
+void click_mainMenu_flow(void *btn_){
+  currentScene = sceneTransition(currentScene,scene_flowTarget);
+}
+
 void click_tempTarget_back(void *btn_) {
   currentScene = sceneTransition(currentScene,scene_mainMenu);
 }
@@ -116,11 +132,44 @@ void click_tempTarget_ok(void *btn_) {
   tempTarget = ((Flipper *)currentScene->elements[3]->child)->value;
   printf("New temperature target: %f\n", tempTarget);
 }
+void click_ecTarget_back(void *btn_) {
+  currentScene = sceneTransition(currentScene,scene_mainMenu);
+}
+void click_ecTarget_ok(void *btn_) {
+  ecTarget = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New ec target: %f\n", ecTarget);
+}
+void click_phTarget_back(void *btn_) {
+  currentScene = sceneTransition(currentScene,scene_mainMenu);
+}
+void click_phTarget_ok(void *btn_) {
+  phTarget = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New ph target: %f\n", phTarget);
+}
+void click_flowTarget_back(void *btn_) {
+  currentScene = sceneTransition(currentScene,scene_mainMenu);
+}
+void click_flowTarget_ok(void *btn_) {
+  flowTarget = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New flow target: %f\n", flowTarget);
+}
 
 /* ------- SCENE OPENING FUNCTIONS ------- */
 void open_tempTargetScene(void *scene_) {
   Scene *scene = scene_;
   ((Flipper *)scene->elements[3]->child)->value = tempTarget;
+}
+void open_ecTargetScene(void *scene_) {
+  Scene *scene = scene_;
+  ((Flipper *)scene->elements[3]->child)->value = ecTarget;
+}
+void open_phTargetScene(void *scene_) {
+  Scene *scene = scene_;
+  ((Flipper *)scene->elements[3]->child)->value = phTarget;
+}
+void open_flowTargetScene(void *scene_) {
+  Scene *scene = scene_;
+  ((Flipper *)scene->elements[3]->child)->value = flowTarget;
 }
 
 /* ------- SCENE DRAWING FUNCTION ------- */
@@ -133,7 +182,7 @@ void drawMainMenu(void *scene_) {
   TextMid((width/2), (height/2), "Main Menu", SerifTypeface, height/20);  // Greetings 
 
 }
-void drawTempTarget(void *scene_) {
+void draw_tempTarget(void *scene_) {
   Scene *scene = scene_;
   for(int i = 0; i < scene->numElements; i++) {
     scene->elements[i]->draw(scene->elements[i]);
@@ -142,7 +191,36 @@ void drawTempTarget(void *scene_) {
   char buf[64];
   sprintf(buf,"Temp Target: %2.3f", tempTarget);
   Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
-
+}
+void draw_ecTarget(void *scene_) {
+  Scene *scene = scene_;
+  for(int i = 0; i < scene->numElements; i++) {
+    scene->elements[i]->draw(scene->elements[i]);
+  }
+  Fill(255, 255, 255, 1);         // White text
+  char buf[64];
+  sprintf(buf,"EC Target: %2.3f", ecTarget);
+  Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
+}
+void draw_phTarget(void *scene_) {
+  Scene *scene = scene_;
+  for(int i = 0; i < scene->numElements; i++) {
+    scene->elements[i]->draw(scene->elements[i]);
+  }
+  Fill(255, 255, 255, 1);         // White text
+  char buf[64];
+  sprintf(buf,"pH Target: %2.3f", phTarget);
+  Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
+}
+void draw_flowTarget(void *scene_) {
+  Scene *scene = scene_;
+  for(int i = 0; i < scene->numElements; i++) {
+    scene->elements[i]->draw(scene->elements[i]);
+  }
+  Fill(255, 255, 255, 1);         // White text
+  char buf[64];
+  sprintf(buf,"Flow Target: %2.3f", flowTarget);
+  Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
 }
 
 void drawDisplayIP(void *scene_){
@@ -197,6 +275,9 @@ void HYDRO_GUI_Init(int createThread) {
   Button *b3 = newButton(30,180,200,60,"EC");
   Button *b4 = newButton(30,260,200,60,"Temp");
   b4->click = click_mainMenu_temp;
+  b3->click = click_mainMenu_ec;
+  b2->click = click_mainMenu_ph;
+  b1->click = click_mainMenu_flow;
 
   setGuiNeighbors(b1->gui_base, b2->gui_base,         NULL, NULL, NULL);
   setGuiNeighbors(b2->gui_base, b3->gui_base, b1->gui_base, NULL, NULL);
@@ -232,7 +313,76 @@ void HYDRO_GUI_Init(int createThread) {
   elems_tempTarget[3] = flipper_tempTarget->gui_base;
 
   scene_tempTarget = newScene(elems_tempTarget, 4, flipper_tempTarget->gui_base);
-  scene_tempTarget->draw = drawTempTarget;
+  scene_tempTarget->draw = draw_tempTarget;
+  scene_tempTarget->open = open_tempTargetScene;
+
+  /* -------- BEGIN EC TARGET SCENE -------- */
+  Button *button_ecTarget_back = newButton(width-210,height-70,200,60,"Back");
+  button_ecTarget_back->click = click_ecTarget_back;
+  Button *button_ecTarget_ok = newButton(width/2-100,100,200,60,"Apply");
+  button_ecTarget_ok->click = click_ecTarget_ok;
+  Flipper *flipper_ecTarget = newFlipper(width/2-300,height/2-40,600,80,2,3,12.345);
+
+  setGuiNeighbors(button_ecTarget_back->gui_base, NULL, flipper_ecTarget->gui_base, NULL, flipper_ecTarget->gui_base);
+  setGuiNeighbors(flipper_ecTarget->gui_base, NULL, NULL, button_ecTarget_back->gui_base, button_ecTarget_ok->gui_base);
+  setGuiNeighbors(button_ecTarget_ok->gui_base, flipper_ecTarget->gui_base, NULL, flipper_ecTarget->gui_base, NULL);
+
+  GuiElement **elems_ecTarget = malloc(4*sizeof(GuiElement*));
+  elems_ecTarget[0] = boke1->gui_base;
+  elems_ecTarget[1] = button_ecTarget_back->gui_base;
+  elems_ecTarget[2] = button_ecTarget_ok->gui_base;
+  elems_ecTarget[3] = flipper_ecTarget->gui_base;
+
+  scene_ecTarget = newScene(elems_ecTarget, 4, flipper_ecTarget->gui_base);
+  scene_ecTarget->draw = draw_ecTarget;
+  scene_ecTarget->open = open_ecTargetScene;
+
+  /* -------- BEGIN PH TARGET SCENE -------- */
+  Button *button_phTarget_back = newButton(width-210,height-70,200,60,"Back");
+  button_phTarget_back->click = click_phTarget_back;
+  Button *button_phTarget_ok = newButton(width/2-100,100,200,60,"Apply");
+  button_phTarget_ok->click = click_phTarget_ok;
+  Flipper *flipper_phTarget = newFlipper(width/2-300,height/2-40,600,80,2,3,12.345);
+
+  setGuiNeighbors(button_phTarget_back->gui_base, NULL, flipper_phTarget->gui_base, NULL, flipper_phTarget->gui_base);
+  setGuiNeighbors(flipper_phTarget->gui_base, NULL, NULL, button_phTarget_back->gui_base, button_phTarget_ok->gui_base);
+  setGuiNeighbors(button_phTarget_ok->gui_base, flipper_phTarget->gui_base, NULL, flipper_phTarget->gui_base, NULL);
+
+  GuiElement **elems_phTarget = malloc(4*sizeof(GuiElement*));
+  elems_phTarget[0] = boke1->gui_base;
+  elems_phTarget[1] = button_phTarget_back->gui_base;
+  elems_phTarget[2] = button_phTarget_ok->gui_base;
+  elems_phTarget[3] = flipper_phTarget->gui_base;
+
+  scene_phTarget = newScene(elems_phTarget, 4, flipper_phTarget->gui_base);
+  scene_phTarget->draw = draw_phTarget;
+  scene_phTarget->open = open_phTargetScene;
+
+
+  /* -------- BEGIN FLOW TARGET SCENE -------- */
+  Button *button_flowTarget_back = newButton(width-210,height-70,200,60,"Back");
+  button_flowTarget_back->click = click_flowTarget_back;
+  Button *button_flowTarget_ok = newButton(width/2-100,100,200,60,"Apply");
+  button_flowTarget_ok->click = click_flowTarget_ok;
+  Flipper *flipper_flowTarget = newFlipper(width/2-300,height/2-40,600,80,2,3,12.345);
+
+  setGuiNeighbors(button_flowTarget_back->gui_base, NULL, flipper_flowTarget->gui_base, NULL, flipper_flowTarget->gui_base);
+  setGuiNeighbors(flipper_flowTarget->gui_base, NULL, NULL, button_flowTarget_back->gui_base, button_flowTarget_ok->gui_base);
+  setGuiNeighbors(button_flowTarget_ok->gui_base, flipper_flowTarget->gui_base, NULL, flipper_flowTarget->gui_base, NULL);
+
+  GuiElement **elems_flowTarget = malloc(4*sizeof(GuiElement*));
+  elems_flowTarget[0] = boke1->gui_base;
+  elems_flowTarget[1] = button_flowTarget_back->gui_base;
+  elems_flowTarget[2] = button_flowTarget_ok->gui_base;
+  elems_flowTarget[3] = flipper_flowTarget->gui_base;
+
+  scene_flowTarget = newScene(elems_flowTarget, 4, flipper_flowTarget->gui_base);
+  scene_flowTarget->draw = draw_flowTarget;
+  scene_flowTarget->open = open_flowTargetScene;
+
+
+
+
 
   TOUCH(t_lastFrame);
   TOUCH(t_clickDebounceEvent);
