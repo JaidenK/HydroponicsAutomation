@@ -34,7 +34,7 @@ static float flow_ref = 0;
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
     static float dutyCycle = 0.2;
-    float kp = 1;
+    float kp = 0.9;
     static float error = 0;
     
     //Take Reading
@@ -45,6 +45,7 @@ CY_ISR(FlowCounterTimerISRHandler){
     FlowCounterTimerISR_ClearPending();  
     
     dutyCycle = dutyCycle+(kp*error)/100.0;
+    
     FlowController_SetFlowDutyCycle(dutyCycle);
     flowRate = FlowController_GetFlowRate();
     error = flow_ref - flowRate;
@@ -59,10 +60,10 @@ CY_ISR(FlowCounterTimerISRHandler){
 */
 void FlowController_Init(void){
     FlowSpeedPWM_Start();
-    FlowSpeedPWM_WriteCompare1(0);
-    FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
-    FlowCountTimer_Start();
-    FlowSensorCounter_Start();
+    //FlowSpeedPWM_WriteCompare(0);
+    //FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
+    //FlowCountTimer_Start();
+    //FlowSensorCounter_Start();
     flow_ref = 1.5;
 }
 
@@ -100,7 +101,7 @@ uint8_t FlowController_SetFlowDutyCycle(float dutyCycle){
     }
     
     pwmCompare = (uint16_t) (dutyCycle*PWM_MAX);
-    FlowSpeedPWM_WriteCompare1(pwmCompare);
+    FlowSpeedPWM_WriteCompare(pwmCompare);
     
     return SUCCESS;
 }

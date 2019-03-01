@@ -11,24 +11,60 @@
 */
 #include "pHController.h"
 #include "project.h"
+#include "Mixing.h" 
 #include <stdio.h>
 #include <stdlib.h>
-#include "FlowController.h"
-#include "SerialCom.h"
-#include "USBCom.h"
-#include "Protocol.h"
-#define PWM_MAX 255
+#include <math.h>
+
+#define PWM_MAX 255.0
 #define HIST_CNT 1024
 #define DROP_TIME 200
 #define UP 0
 #define DOWN 1
-#define A0 1.59E-6
-#define A1 -0.0101
-#define A2 18.2
+#define A0 -4.40E-3
+#define A1 13.22
+#define UP_PUMP_DROP_PERIOD 200
+#define DOWN_PUMP_DROP_PERIOD 200
+#define UP_PUMP_DROP_CMP 127
+#define DOWN_PUMP_DROP_CMP 100
+#define MARGIN 0.10
+
+static float pHRef = 4.5;
 static float pH = 0;
 static uint16_t phRaw = 0;
 
+/**
+ * @function pHControlISRHandler(void)
+ * @param None
+ * @return None
+ * @brief Handler for pH ISR. Makes pH adjustments every two minutes.
+ * @author Barron Wong 01/25/19
+ */
+CY_ISR_PROTO(pHControlISRHandler){
+    static float kp = 30;
+    static int drops = 0;
+    float error; 
+    
+    pHControlISR_ClearPending();
+    
+    error = pHRef - pH;
 
+    if(fabs(error) > MARGIN){
+        drops = kp*error;
+        Mixing_TurnOn();
+    
+        if(drops < 0){
+            pHController_AdjustpH(UP,drops*-1);
+            //printf("pH up %d pH %0.2f\r\n", drops*-1,pH);
+        }else{
+            pHController_AdjustpH(DOWN,drops);
+            //printf("pH down %d pH %0.2f\r\n", drops, pH);
+        }
+    }else{
+        Mixing_TurnOff();
+    }
+    
+}
 
 /**
  * @function pHSampleTimerISRHandler(void)
@@ -64,7 +100,7 @@ CY_ISR(pHSampleTimerISRHandler){
     phRaw = sum>>10;
 
     
-    pH = A0*phRaw*phRaw + A1*phRaw + A2;
+    pH = A0*phRaw + A1;
    
     
 }
@@ -81,7 +117,11 @@ void pHController_Init(void){
     PeristalticCounter_Start();
     PeristalticCounter_WriteCounter(0);
     pHSampleTimer_Start();
+    pHControlTimer_Start();
+    
+    //ISR Setup
     pHSampleTimerISR_StartEx(pHSampleTimerISRHandler);
+    pHControlISR_StartEx(pHControlISRHandler);
 }
 
 
@@ -98,8 +138,7 @@ float pHController_ReadSensor(void){
     pHADC_StartConvert();
     pHADC_IsEndConversion(pHADC_WAIT_FOR_RESULT);
     result = pHADC_GetResult16();
-    
-    //printf("pH: %d\r\n", result);
+
     return result;
 }
 /**
@@ -122,19 +161,31 @@ void pHController_SetFlowDutyCycle(float duty){
 */
 void pHController_AdjustpH(uint8_t dir, uint8_t drops){
     
-    int duration = drops * 200;
+    int duration;
     
+    
+    if(dir == UP){
+        pHControllerpHDir_Write(UP);
+        duration = drops * UP_PUMP_DROP_PERIOD;
+        PeristalticPWM_WriteCompare(UP_PUMP_DROP_CMP);
+    }
+    else{
+        pHControllerpHDir_Write(DOWN);
+        duration = drops * DOWN_PUMP_DROP_PERIOD;
+        PeristalticPWM_WriteCompare(DOWN_PUMP_DROP_CMP);
+    }
     PeristalticCounter_WritePeriod(duration);
-    
-    if(dir == UP)
-        pHControllerDirPin_Write(UP);
-    else
-        pHControllerDirPin_Write(DOWN);
     PeristalticControl_Write(1);
 }
 
 
-#ifdef PH_CONTROLLER_TEST    
+#ifdef PH_CONTROLLER_TEST   
+    
+#include "FlowController.h"
+#include "SerialCom.h"
+#include "USBCom.h"
+#include "Protocol.h"
+
 #define FLOW_REF 1
     
 int main(void)
@@ -145,14 +196,14 @@ int main(void)
     SerialCom_Init();
     //USBCom_Init();
     pHController_Init();
+    Mixing_Init();
     
-    FlowController_SetFlowReference(FLOW_REF);
+    //FlowController_SetFlowReference(FLOW_REF);
     
     printf("Hydroponic Automation\r\n");
     uint16_t PWMSpeed = 0;
-    message_t target;
-    float x;
     int phadj;
+    int duty;
     uint8_t trig;
     
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
@@ -166,21 +217,8 @@ int main(void)
         //Check if USB has received data
         //USBCom_CheckReceivedData(buffer);
         //target = Protocol_DecodeInput(buffer);
-   
-        
-        PWMSpeed = ADC_DelSig_1_Read16();
-        if(PWMSpeed > 500)
-            PWMSpeed = 0;
-        if(PWMSpeed > PWM_MAX)
-            PWMSpeed = PWM_MAX;
-        trig = Trigger_Read();
-        if(trig)
-            pHController_AdjustpH(UP, 4);
             
-            phadj = (int)(pH*100);
-        
-            
-            printf("%d, %d\r\n", phRaw, phadj);
+        printf("pH %.02f \r\n", pH);
          
     }
         

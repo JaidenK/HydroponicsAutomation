@@ -21,11 +21,21 @@
 #endif
 
 #include "project.h"
+
 /**
- * @function FlowCounterTimerISRHandler(void)
+ * @function pHControlISRHandler(void)
  * @param None
  * @return None
- * @brief FlowCounter ISR. Takes reading of flow meter every second
+ * @brief Handler for pH ISR. Makes pH adjustments every two minutes.
+ * @author Barron Wong 01/25/19
+ */
+CY_ISR_PROTO(pHControlISRHandler);
+
+/**
+ * @function pHSampleTimerISRHandler(void)
+ * @param None
+ * @return None
+ * @brief pHSampling ISR. Takes reading of pH meter every second
  * @author Barron Wong 01/25/19
  */
 CY_ISR_PROTO(pHSampleTimerISRHandler);
