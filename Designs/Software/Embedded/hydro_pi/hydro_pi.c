@@ -5,7 +5,7 @@
 #include <stdint.h> // Integer data types
 #include <math.h> // for sin cos
 #include <string.h>
-#include <unistd.h> // getopt
+#include <unistd.h> // getopt usleep
 #include <errno.h> // Error number
 
 // Peripheral libraries
@@ -201,7 +201,7 @@ int main(int argc, char *argv[]) {
 
     // This is now taken care of in a thread.
     // HYDRO_GUI_Draw();
-    
+    usleep(1000);
   }
   printf("\n");
   

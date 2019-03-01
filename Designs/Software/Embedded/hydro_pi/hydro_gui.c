@@ -3,6 +3,7 @@
 #include "hydro_gui_Button.h"
 #include "hydro_gui_Scene.h"
 #include "hydro_gui_Boke.h"
+#include "hydro_gui_Flipper.h"
 #include "sensor_data.h"
 
 
@@ -12,7 +13,7 @@
 #include <signal.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h> // sleep()
+#include <unistd.h> // usleep()
 #include <math.h>
 #include <sys/time.h> // for debounce clock
 #include <pthread.h> // For automatically deselecting button
@@ -29,6 +30,10 @@
 #include "vg_flipper.h"
 
 
+double tempTarget = 12.345;
+
+
+
 enum gui_scenes {
   IP_DISPLAY
 } gui_scene;
@@ -37,6 +42,7 @@ enum gui_scenes {
 
 Scene *currentScene;
 Scene *scene_mainMenu;
+Scene *scene_tempTarget;
 
 // A pointer to the same struct used in the main program.
 struct SensorData *gui_sd;
@@ -60,6 +66,8 @@ int width, height;
 // Debouncing
 struct timeval t_clickDebounceEvent;
 double t_clickDebounceDuration = 0.5; // Minimum seconds between click events.
+struct timeval t_joyMoveDebounceEvent;
+double t_joyMoveDebounceDuration = 0.2; // Minimum seconds between movement events.
 
 // Visual highlight inactivity delay
 struct timeval t_lastActivity;
@@ -98,8 +106,24 @@ void click_dispIpClose(void *btn_) {
   printf("Closing.\n");
   exit(0);
 }
+void click_mainMenu_temp(void *btn_){
+  currentScene = sceneTransition(currentScene,scene_tempTarget);
+}
+void click_tempTarget_back(void *btn_) {
+  currentScene = sceneTransition(currentScene,scene_mainMenu);
+}
+void click_tempTarget_ok(void *btn_) {
+  tempTarget = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New temperature target: %f\n", tempTarget);
+}
 
-// Scene Drawing functions
+/* ------- SCENE OPENING FUNCTIONS ------- */
+void open_tempTargetScene(void *scene_) {
+  Scene *scene = scene_;
+  ((Flipper *)scene->elements[3]->child)->value = tempTarget;
+}
+
+/* ------- SCENE DRAWING FUNCTION ------- */
 void drawMainMenu(void *scene_) {
   Scene *scene = scene_;
   for(int i = 0; i < scene->numElements; i++) {
@@ -107,6 +131,18 @@ void drawMainMenu(void *scene_) {
   }
   Fill(255, 255, 255, 1);         // White text
   TextMid((width/2), (height/2), "Main Menu", SerifTypeface, height/20);  // Greetings 
+
+}
+void drawTempTarget(void *scene_) {
+  Scene *scene = scene_;
+  for(int i = 0; i < scene->numElements; i++) {
+    scene->elements[i]->draw(scene->elements[i]);
+  }
+  Fill(255, 255, 255, 1);         // White text
+  char buf[64];
+  sprintf(buf,"Temp Target: %2.3f", tempTarget);
+  Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
+
 }
 
 void drawDisplayIP(void *scene_){
@@ -117,6 +153,10 @@ void drawDisplayIP(void *scene_){
   TextMid((width/2), (height/2), ipBuf, SerifTypeface, height/20);   
   TextMid((width/2), (height/2)-(2*height/20), "Press Joystick to close.", SerifTypeface, height/20);   
 }
+
+/* ------- END OF SCENE DRAWING FUNCTIONS ------- */
+
+
 
 
 void HYDRO_GUI_Init(int createThread) {
@@ -147,19 +187,23 @@ void HYDRO_GUI_Init(int createThread) {
   // TextMid((width/2), (height/2), "Testing network connection...", SerifTypeface, height/20);  // Greetings 
   // End();
   // int xMin, int xMax, int yMin, int yMax, double radius, double vX, double vY, double vZ, double vVariance, int R, int G, int B, int count
-  Boke *boke1 = newBoke(-width/2, width/2, height/3, height, 20, 0.0003, 0, 0, 0.000001, 255, 255, 255, 15);
-  Button *b1 = newButton(30,10,200,60,"Flow");
-  Button *b2 = newButton(30,80,200,60,"pH");
-  Button *b3 = newButton(30,150,200,60,"EC");
-  Button *b4 = newButton(30,220,200,60,"Temp");
+  
+
+  /* -------- BEGIN MAIN MENU SCENE -------- */
+
+  Boke *boke1 = newBoke(-width/2, width/2, height/3, height, 20, 0.9, 0, 0, 0.1, 255, 255, 255, 15);
+  Button *b1 = newButton(30,20,200,60,"Flow");
+  Button *b2 = newButton(30,100,200,60,"pH");
+  Button *b3 = newButton(30,180,200,60,"EC");
+  Button *b4 = newButton(30,260,200,60,"Temp");
+  b4->click = click_mainMenu_temp;
 
   setGuiNeighbors(b1->gui_base, b2->gui_base,         NULL, NULL, NULL);
   setGuiNeighbors(b2->gui_base, b3->gui_base, b1->gui_base, NULL, NULL);
   setGuiNeighbors(b3->gui_base, b4->gui_base, b2->gui_base, NULL, NULL);
   setGuiNeighbors(b4->gui_base, NULL        , b3->gui_base, NULL, NULL);
 
-
-  GuiElement **elems = malloc(5*sizeof(GuiElement));
+  GuiElement **elems = malloc(5*sizeof(GuiElement*));
   elems[0] = boke1->gui_base;
   elems[1] = b1->gui_base;
   elems[2] = b2->gui_base;
@@ -170,8 +214,29 @@ void HYDRO_GUI_Init(int createThread) {
   scene_mainMenu->draw = drawMainMenu;
   currentScene = scene_mainMenu;
 
+  /* -------- BEGIN TEMP TARGET SCENE -------- */
+  Button *button_tempTarget_back = newButton(width-210,height-70,200,60,"Back");
+  button_tempTarget_back->click = click_tempTarget_back;
+  Button *button_tempTarget_ok = newButton(width/2-100,100,200,60,"Apply");
+  button_tempTarget_ok->click = click_tempTarget_ok;
+  Flipper *flipper_tempTarget = newFlipper(width/2-300,height/2-40,600,80,2,3,12.345);
+
+  setGuiNeighbors(button_tempTarget_back->gui_base, NULL, flipper_tempTarget->gui_base, NULL, flipper_tempTarget->gui_base);
+  setGuiNeighbors(flipper_tempTarget->gui_base, NULL, NULL, button_tempTarget_back->gui_base, button_tempTarget_ok->gui_base);
+  setGuiNeighbors(button_tempTarget_ok->gui_base, flipper_tempTarget->gui_base, NULL, flipper_tempTarget->gui_base, NULL);
+
+  GuiElement **elems_tempTarget = malloc(4*sizeof(GuiElement*));
+  elems_tempTarget[0] = boke1->gui_base;
+  elems_tempTarget[1] = button_tempTarget_back->gui_base;
+  elems_tempTarget[2] = button_tempTarget_ok->gui_base;
+  elems_tempTarget[3] = flipper_tempTarget->gui_base;
+
+  scene_tempTarget = newScene(elems_tempTarget, 4, flipper_tempTarget->gui_base);
+  scene_tempTarget->draw = drawTempTarget;
+
   TOUCH(t_lastFrame);
   TOUCH(t_clickDebounceEvent);
+  TOUCH(t_joyMoveDebounceEvent);
   TOUCH(t_lastActivity);
 
   // Thread for making selected button unselected after a period of time.
@@ -197,6 +262,7 @@ void HYDRO_GUI_Draw() {
 
   // waitForNextFrame();
   End();
+  usleep(10000);
 }
 
 void *thread_draw(void *foo) {
@@ -262,27 +328,43 @@ int displayIP() {
 
 void joy_up(void) {
   TOUCH(t_lastActivity);
-  VG_KB_Up();
-  VG_FLIPPER_Up();
-  moveUp(currentScene);
+  // VG_KB_Up();
+  // VG_FLIPPER_Up();
+  debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
+    void __fn__ () {
+      moveUp(currentScene);
+    } __fn__;
+  }));
 }
 void joy_down(void){
   TOUCH(t_lastActivity);
-  VG_KB_Down();
-  VG_FLIPPER_Down();
-  moveDown(currentScene);
+  // VG_KB_Down();
+  // VG_FLIPPER_Down();
+  debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
+    void __fn__ () {
+      moveDown(currentScene);
+    } __fn__;
+  }));
 }
 void joy_left(void){
   TOUCH(t_lastActivity);
-  VG_KB_Left();
-  VG_FLIPPER_Left();
-  moveLeft(currentScene);
+  // VG_KB_Left();
+  // VG_FLIPPER_Left();
+  debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
+    void __fn__ () {
+      moveLeft(currentScene);
+    } __fn__;
+  }));
 }
 void joy_right(void){
   TOUCH(t_lastActivity);
-  VG_KB_Right();
-  VG_FLIPPER_Right();
-  moveRight(currentScene);
+  // VG_KB_Right();
+  // VG_FLIPPER_Right();
+  debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
+    void __fn__ () {
+      moveRight(currentScene);
+    } __fn__;
+  }));
 }
 
 

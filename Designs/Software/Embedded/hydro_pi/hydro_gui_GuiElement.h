@@ -10,10 +10,16 @@ typedef struct GuiElement GuiElement;
 struct GuiElement{
   int xPos;
   int yPos;
+  // Pointers to neighbors
   GuiElement *up;
   GuiElement *down;
   GuiElement *left;
   GuiElement *right;
+  // Special actions for movement. By default they'll simply return the neighbor.
+  GuiElement *(*moveUp)(void *self);
+  GuiElement *(*moveDown)(void *self);
+  GuiElement *(*moveLeft)(void *self);
+  GuiElement *(*moveRight)(void *self);
   int isSelected;
   void *child; // Pointer to the object which inherits from this struct
   void (*draw)(void *self); // These functions make it so that you can 

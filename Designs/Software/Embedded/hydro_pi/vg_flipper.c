@@ -46,17 +46,20 @@ void VG_FLIPPER_SetValue(double newValue) {
 }
 
 void VG_FLIPPER_Up() {
+  if(!isEnabled) return;
   if(val + delta < pow(10,flipper_width)) {
     val += delta;
   }
 }
 void VG_FLIPPER_Down() {
+  if(!isEnabled) return;
   val -= delta;
   if(val < 0) {
     val = 0;
   }
 }
 int VG_FLIPPER_Left() {
+  if(!isEnabled) return;
   pos -= 1;
   delta = pow(10,flipper_width-pos-1);
   if (pos < 0) {
@@ -66,6 +69,7 @@ int VG_FLIPPER_Left() {
   return 0;
 }
 int VG_FLIPPER_Right() {
+  if(!isEnabled) return;
   pos += 1;
   delta = pow(10,flipper_width-pos-1);
   if (pos > flipper_width + decimalPlaces - 1) {
@@ -109,4 +113,12 @@ void VG_FLIPPER_Draw(int x, int y, int w, int h) {
   Fill(255,255,255,0);
 
   StrokeWidth(0);  
+}
+
+void VG_FLIPPER_Enable() {
+  isEnabled = 1;
+}
+
+void VG_FLIPPER_Disable() {
+  isEnabled = 0;
 }

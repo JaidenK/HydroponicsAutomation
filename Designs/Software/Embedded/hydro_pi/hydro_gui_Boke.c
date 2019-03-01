@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
-
+#include <unistd.h> // usleep
  
 // Graphics
 #include <fcntl.h>
@@ -76,7 +76,7 @@ void newBokePoint(Boke *boke, BokePoint *bokePoint) {
   bokePoint->vY = boke->vY + (((double)rand())/RAND_MAX-0.5)*boke->vVariance;
   bokePoint->vZ = boke->vZ + (((double)rand())/RAND_MAX-0.5)*boke->vVariance;
   bokePoint->r = boke->radius;
-  bokePoint->opacity = 0.3;
+  bokePoint->opacity = 0;
   bokePoint->lifespan = ((double)rand()/RAND_MAX)*5+5;
   bokePoint->age = 0;
   gettimeofday(&bokePoint->birthday,NULL);
@@ -124,6 +124,7 @@ void *bokeThread(void *foo) {
       currBoke = currBoke->next;
     }   
     bokeFrame++;
+    usleep(10000);
   }
   return NULL;
 }
@@ -146,7 +147,6 @@ void drawBoke2(void *parent) {
 }
 void drawBoke(void *boke_) {
   Boke *boke = boke_;
-
   Stroke(0,0,0,0);
   for(int i = 0; i < boke->count; i++){ 
     BokePoint *p = boke->points[i];

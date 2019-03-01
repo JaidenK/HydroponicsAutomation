@@ -14,9 +14,17 @@ typedef struct {
   GuiElement *selectedElement;
   int numElements;
   void (*draw)(void *self);
+  void (*open)(void *self);
+  void (*close)(void *self);
 } Scene;
 
 Scene *newScene(GuiElement **elements, int numElements, GuiElement *initialSelection);
+
+/**
+ * Closes one scene and opens another.
+ * @return Returns the pointer to nextScene;
+ */
+Scene *sceneTransition(Scene *prevScene, Scene *nextScene);
 
 /**
  * Selects the next GuiElement
