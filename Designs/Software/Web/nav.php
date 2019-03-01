@@ -16,7 +16,8 @@
       </li>  -->  
     </ul>
     <?php
-      if (!$_SESSION["isLoggedIn"]) {
+      // Test all three situations because apparently it errors when the session isn't started
+      if (session_id() == "" or !array_key_exists('isLoggedIn', $_SESSION) or !$_SESSION["isLoggedIn"]) {
         echo' 
           <ul class="navbar-nav ml-auto" id="navLoggedOut">
             <li class="nav-item">
