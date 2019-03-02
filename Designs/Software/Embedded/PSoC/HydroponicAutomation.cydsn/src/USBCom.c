@@ -85,25 +85,26 @@ int USBCom_CheckReceivedData(char * buffer){
     if(USBFS_GetConfiguration() != 0){
         USBCom_CheckConfiguration();
     
+    for(uint i = 0; i < BUFFER_SIZE; i++)
+        buffer[i] = 0;
+        
     /* Check if data was received. */
-     if (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM))
-        {
+        if (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM)){
             /* Read number of received data bytes. */
             length = USBFS_GetEPCount(OUT_EP_NUM);
         
             /* Trigger DMA to copy data from OUT endpoint buffer. */
             USBFS_ReadOutEP(OUT_EP_NUM,(uint8*) buffer, length);
 
-            /* Wait until DMA completes copying data from OUT endpoint buffer. */
-            while (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM))
-            {
-            }
-    }
-    /* Enable OUT endpoint to receive data from host. */
-    USBFS_EnableOutEP(OUT_EP_NUM);
-    if(length == 0){
-        buffer = NULL;
-    }
+                /* Wait until DMA completes copying data from OUT endpoint buffer. */
+            while (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM)){
+             }
+        }
+        /* Enable OUT endpoint to receive data from host. */
+        USBFS_EnableOutEP(OUT_EP_NUM);
+        if(length == 0){
+            buffer = NULL;
+        }
     }
     return length;
 }

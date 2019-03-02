@@ -27,6 +27,9 @@ message_t Protocol_DecodeInput(char * input){
     message_t target;
     uint8_t count = 0;
     
+    target.key = invalid_key;
+    target.key = 0;
+    
     ptr = strtok(input,":");
     
     while(ptr != NULL){

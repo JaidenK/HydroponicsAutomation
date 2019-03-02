@@ -19,8 +19,10 @@
 #include "USBCom.h"
 #include "Protocol.h"
 #include "pHController.h"
+#include "Mixing.h"
 
 #define FLOW_REF 1
+#define PH_REF 4.5
 
 #ifndef MODULE_TEST    
     
@@ -28,17 +30,23 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     char buffer[64];
+  
     ADC_DelSig_1_Start();
     FlowController_Init();
     SerialCom_Init();
-    //USBCom_Init();
+    USBCom_Init();
     pHController_Init();
+    Mixing_Init();
+    
     
     FlowController_SetFlowReference(FLOW_REF);
+    pHController_SetpHReference(PH_REF);
     
     printf("Hydroponic Automation\r\n");
+    float pH = 0;
     float flowRate = 0;
     message_t target;
+    
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
@@ -46,18 +54,33 @@ int main(void)
         flowRate = FlowController_GetFlowRate();
         
         //Encode and send data
-        //Protocol_EncodeOutput(flow_measured, flowRate, buffer);
-        //USBCom_SendData(buffer);
+        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
+        USBCom_SendData(buffer);
         
         //Check if USB has received data
-        //USBCom_CheckReceivedData(buffer);
-        //target = Protocol_DecodeInput(buffer);
+        USBCom_CheckReceivedData(buffer);
+        target = Protocol_DecodeInput(buffer);
         
         if(target.key != invalid_key)
-            //Protocol_PrintMessage(target);
+            Protocol_PrintMessage(target);
         
         
-        pHController_ReadSensor();
+        //Get pH
+        pH = pHController_GetpH();
+        
+        //Encode and send data
+        Protocol_EncodeOutput(ph_measured, pH, buffer);
+        USBCom_SendData(buffer);
+        
+        //Check if USB has received data
+        USBCom_CheckReceivedData(buffer);
+        target = Protocol_DecodeInput(buffer);
+        
+        if(target.key != invalid_key)
+            Protocol_PrintMessage(target);
+            
+        printf("pH: %f\r\n", pHController_GetpH());
+        
     }
         
     

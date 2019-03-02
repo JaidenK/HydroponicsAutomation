@@ -12,7 +12,7 @@
 #ifndef pHController_H
 #define pHController_H
     
-#define PH_CONTROLLER_TEST
+//#define PH_CONTROLLER_TEST
     
 #ifdef PH_CONTROLLER_TEST
 #define MODULE_TEST
@@ -67,13 +67,31 @@ float pHController_ReadSensor(void);
 void pHController_SetFlowDutyCycle(float duty);
 
 /**
- * @function pHController_AdjustpH(float duty)
+ * @function pHController_AdjustpH(uint8_t dir, uint8_t drops)
  * @param firection up or down
  * @return None
  * @brief Adds pH up or down based on dir
  * @author Barron Wong 02/19/19
 */
 void pHController_AdjustpH(uint8_t dir, uint8_t drops);
+
+/**
+ * @function pHController_SetReference(float reference)
+ * @param Sets reference ph
+ * @return None
+ * @brief The reference pH can also interpreted as the target
+ * @author Barron Wong 02/19/19
+*/
+void pHController_SetpHReference(float reference);
+
+/**
+ * @function pHController_GetpH(void)
+ * @param  Nonw
+ * @return pH level
+ * @brief Returns the current pH level
+ * @author Barron Wong 02/19/19
+*/
+float pHController_GetpH(void);
     
 #endif
 /* [] END OF FILE */

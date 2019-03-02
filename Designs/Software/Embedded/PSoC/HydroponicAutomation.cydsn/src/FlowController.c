@@ -60,10 +60,10 @@ CY_ISR(FlowCounterTimerISRHandler){
 */
 void FlowController_Init(void){
     FlowSpeedPWM_Start();
-    //FlowSpeedPWM_WriteCompare(0);
-    //FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
-    //FlowCountTimer_Start();
-    //FlowSensorCounter_Start();
+    FlowSpeedPWM_WriteCompare(0);
+    FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
+    FlowCountTimer_Start();
+    FlowSensorCounter_Start();
     flow_ref = 1.5;
 }
 
