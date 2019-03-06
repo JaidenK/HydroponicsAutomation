@@ -8,6 +8,9 @@
  * A collection of buttons and other GuiElements for easy drawing.
  */
 
+enum SceneTransitionType {
+   ST_EASE_LEFTRIGHT
+};
 
 typedef struct {
   GuiElement **elements;
@@ -24,7 +27,7 @@ Scene *newScene(GuiElement **elements, int numElements, GuiElement *initialSelec
  * Closes one scene and opens another.
  * @return Returns the pointer to nextScene;
  */
-Scene *sceneTransition(Scene *prevScene, Scene *nextScene);
+Scene *sceneTransition(Scene *prevScene, Scene *nextScene, enum SceneTransitionType st_type);
 
 /**
  * Selects the next GuiElement

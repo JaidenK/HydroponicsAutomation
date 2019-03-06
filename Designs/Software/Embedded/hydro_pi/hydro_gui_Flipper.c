@@ -31,7 +31,6 @@ Flipper *newFlipper(int x, int y, int w, int h, int wholeDigits, int decimalDigi
   newObj->w = w;
   newObj->h = h;
   newObj->pos = 0;
-  newObj->delta = 0;
   newObj->value = initialValue;
   newObj->wholeDigits = wholeDigits;
   newObj->decimalDigits = decimalDigits;
@@ -98,6 +97,8 @@ GuiElement *flipperMoveUp(void *self) {
   Flipper *flipper = ((GuiElement *)self)->child;
   if(flipper->value + flipper->delta < pow(10,flipper->wholeDigits)) {
     flipper->value += flipper->delta;
+  }else{
+    printf("Flipper value too high: %f\n", flipper->value + flipper->delta);
   }
   return self;
 }
@@ -112,10 +113,11 @@ GuiElement *flipperMoveDown(void *self) {
 GuiElement *flipperMoveLeft(void *self) {
   Flipper *flipper = ((GuiElement *)self)->child;
   flipper->pos -= 1;
-  flipper->delta = pow(10,flipper->wholeDigits - flipper->pos - 1);
   if (flipper->pos < 0) {
     flipper->pos = 0;
     return ((GuiElement *)self)->left;
+  }else{
+    flipper->delta = pow(10,flipper->wholeDigits - flipper->pos - 1);
   }
   return self;
 }   

@@ -1,8 +1,12 @@
+#include "hydro_gui.h"
 #include "hydro_gui_Scene.h"
 #include "hydro_gui_GuiElement.h"
 
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <sys/time.h>
+#include <unistd.h> // usleep
 
 void drawScene(void *scene);
 void openScene(void *scene);
@@ -19,9 +23,39 @@ Scene *newScene(GuiElement **elements, int numElements, GuiElement *initialSelec
   return newScene;
 }
 
-Scene *sceneTransition(Scene *prevScene, Scene *nextScene) {
+void st_ease_leftright(Scene *prevScene, Scene *nextScene) {
+  /*
+  int easeDurationFrames = 6;
+  int oldX[prevScene->numElements];
+  int oldY[prevScene->numElements];
+  for(int i = 0; i < prevScene->numElements; i++) {
+    oldX[i] = prevScene->elements[i]->xPos;
+    oldY[i] = prevScene->elements[i]->yPos;
+  }
+  for(int i = 0; i < easeDurationFrames; i++) {
+    for(int n = 0; n < prevScene->numElements; n++) {
+      if(oldX[n] < width/2) {
+        prevScene->elements[n]->xPos -= (width/easeDurationFrames);
+      }else{
+        prevScene->elements[n]->xPos += (width/easeDurationFrames);
+      }
+    }
+    usleep(FRAME_PERIOD * 1000000);
+  }
+  for(int i = 0; i < prevScene->numElements; i++) {
+    prevScene->elements[i]->xPos = oldX[i];
+  }
+  */
   prevScene->close(prevScene);
   nextScene->open(nextScene);
+}
+
+Scene *sceneTransition(Scene *prevScene, Scene *nextScene, enum SceneTransitionType st_type) {
+  switch(st_type) {
+    case ST_EASE_LEFTRIGHT:
+      st_ease_leftright(prevScene, nextScene);
+      break;
+  }
   return nextScene;
 }
 
