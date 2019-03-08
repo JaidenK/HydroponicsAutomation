@@ -9,7 +9,7 @@
  */
 
 enum SceneTransitionType {
-   ST_EASE_LEFTRIGHT
+   ST_EASE_LEFTRIGHT, ST_EASE_LEFT, ST_EASE_RIGHT
 };
 
 typedef struct {

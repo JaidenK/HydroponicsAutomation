@@ -7,7 +7,10 @@
 #include "hydro_gui_Flipper.h"
 #include "sensor_data.h"
 
+#include "scene_dashboard.h"
+#include "scene_targetSelect.h"
 
+ 
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,29 +33,18 @@
 #include "vg_keyboard.h"
 #include "vg_flipper.h"
 
-
-double tempTarget = 12.345;
-double ecTarget = 23.490;
-double phTarget = 7.000;
-double flowTarget = 1.200;
-
-
-
 enum gui_scenes {
   IP_DISPLAY
 } gui_scene;
 
 
 
-Scene *currentScene;
 Scene *scene_mainMenu;
 Scene *scene_tempTarget;
 Scene *scene_ecTarget;
 Scene *scene_phTarget;
 Scene *scene_flowTarget;
 
-// A pointer to the same struct used in the main program.
-struct SensorData *gui_sd;
 
 // For displaying IP
 char ipBuf[512];
@@ -70,9 +62,9 @@ int yJoy = 0;
 
 // Debouncing
 struct timeval t_clickDebounceEvent;
-double t_clickDebounceDuration = 0.5; // Minimum seconds between click events.
+double t_clickDebounceDuration = 1; // Minimum seconds between click events.
 struct timeval t_joyMoveDebounceEvent;
-double t_joyMoveDebounceDuration = 0.2; // Minimum seconds between movement events.
+double t_joyMoveDebounceDuration = 0.3; // Minimum seconds between movement events.
 
 // Visual highlight inactivity delay
 struct timeval t_lastActivity;
@@ -133,29 +125,29 @@ void click_tempTarget_back(void *btn_) {
   currentScene = sceneTransition(currentScene,scene_mainMenu,ST_EASE_LEFTRIGHT);
 }
 void click_tempTarget_ok(void *btn_) {
-  tempTarget = ((Flipper *)currentScene->elements[3]->child)->value;
-  printf("New temperature target: %f\n", tempTarget);
+  gui_sd->temp_target = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New temperature target: %f\n", gui_sd->temp_target);
 }
 void click_ecTarget_back(void *btn_) {
   currentScene = sceneTransition(currentScene,scene_mainMenu,ST_EASE_LEFTRIGHT);
 }
 void click_ecTarget_ok(void *btn_) {
-  ecTarget = ((Flipper *)currentScene->elements[3]->child)->value;
-  printf("New ec target: %f\n", ecTarget);
+  gui_sd->ec_target = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New ec target: %f\n", gui_sd->ec_target);
 }
 void click_phTarget_back(void *btn_) {
   currentScene = sceneTransition(currentScene,scene_mainMenu,ST_EASE_LEFTRIGHT);
 }
 void click_phTarget_ok(void *btn_) {
-  phTarget = ((Flipper *)currentScene->elements[3]->child)->value;
-  printf("New ph target: %f\n", phTarget);
+  gui_sd->ph_target = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New ph target: %f\n", gui_sd->ph_target);
 }
 void click_flowTarget_back(void *btn_) {
   currentScene = sceneTransition(currentScene,scene_mainMenu,ST_EASE_LEFTRIGHT);
 }
 void click_flowTarget_ok(void *btn_) {
-  flowTarget = ((Flipper *)currentScene->elements[3]->child)->value;
-  printf("New flow target: %f\n", flowTarget);
+  gui_sd->flow_target = ((Flipper *)currentScene->elements[3]->child)->value;
+  printf("New flow target: %f\n", gui_sd->flow_target);
 }
 
 
@@ -171,19 +163,19 @@ void click_flowTarget_ok(void *btn_) {
 /* ------- SCENE OPENING FUNCTIONS ------- */
 void open_tempTargetScene(void *scene_) {
   Scene *scene = scene_;
-  ((Flipper *)scene->elements[3]->child)->value = tempTarget;
+  ((Flipper *)scene->elements[3]->child)->value = gui_sd->temp_target;
 }
 void open_ecTargetScene(void *scene_) {
   Scene *scene = scene_;
-  ((Flipper *)scene->elements[3]->child)->value = ecTarget;
+  ((Flipper *)scene->elements[3]->child)->value = gui_sd->ec_target;
 }
 void open_phTargetScene(void *scene_) {
   Scene *scene = scene_;
-  ((Flipper *)scene->elements[3]->child)->value = phTarget;
+  ((Flipper *)scene->elements[3]->child)->value = gui_sd->ph_target;
 }
 void open_flowTargetScene(void *scene_) {
   Scene *scene = scene_;
-  ((Flipper *)scene->elements[3]->child)->value = flowTarget;
+  ((Flipper *)scene->elements[3]->child)->value = gui_sd->flow_target;
 }
 
 
@@ -209,7 +201,7 @@ void draw_tempTarget(void *scene_) {
   }
   Fill(255, 255, 255, 1);         // White text
   char buf[64];
-  sprintf(buf,"Temp Target: %2.3f", tempTarget);
+  sprintf(buf,"Temp Target: %2.3f", gui_sd->temp_target);
   Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
 }
 void draw_ecTarget(void *scene_) {
@@ -219,7 +211,7 @@ void draw_ecTarget(void *scene_) {
   }
   Fill(255, 255, 255, 1);         // White text
   char buf[64];
-  sprintf(buf,"EC Target: %2.3f", ecTarget);
+  sprintf(buf,"EC Target: %2.3f", gui_sd->ec_target);
   Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
 }
 void draw_phTarget(void *scene_) {
@@ -229,7 +221,7 @@ void draw_phTarget(void *scene_) {
   }
   Fill(255, 255, 255, 1);         // White text
   char buf[64];
-  sprintf(buf,"pH Target: %2.3f", phTarget);
+  sprintf(buf,"pH Target: %2.3f", gui_sd->ph_target);
   Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
 }
 void draw_flowTarget(void *scene_) {
@@ -239,7 +231,7 @@ void draw_flowTarget(void *scene_) {
   }
   Fill(255, 255, 255, 1);         // White text
   char buf[64];
-  sprintf(buf,"Flow Target: %2.3f", flowTarget);
+  sprintf(buf,"Flow Target: %2.3f", gui_sd->flow_target);
   Text(20, height-40, buf, SerifTypeface, 20);  // Greetings 
 }
 
@@ -263,7 +255,7 @@ void drawDisplayIP(void *scene_){
 
 
 
-void HYDRO_GUI_Init(int createThread) {
+void HYDRO_GUI_Init(int createThread, struct SensorData *sd) {
 
   // Setup Graphics
   saveterm(); // Save current screen
@@ -293,9 +285,12 @@ void HYDRO_GUI_Init(int createThread) {
   // int xMin, int xMax, int yMin, int yMax, double radius, double vX, double vY, double vZ, double vVariance, int R, int G, int B, int count
   
 
+  scene_dashboard_init();
+  currentScene = scene_dashboard;
+  scene_targetSelect_init();
+
   /* -------- BEGIN MAIN MENU SCENE -------- */
 
-  Boke *boke1 = newBoke(-width/2, width/2, height/3, height, 20, 0.9, 0, 0, 0.1, 255, 255, 255, 15);
   Button *b1 = newButton(30,20,200,60,"Flow");
   Button *b2 = newButton(30,100,200,60,"pH");
   Button *b3 = newButton(30,180,200,60,"EC");
@@ -312,7 +307,7 @@ void HYDRO_GUI_Init(int createThread) {
   setGuiNeighbors(b4->gui_base, NULL        , b3->gui_base, NULL, NULL);
 
   GuiElement **elems = malloc(6*sizeof(GuiElement*));
-  elems[0] = boke1->gui_base;
+  elems[0] = boke->gui_base;
   elems[1] = b1->gui_base;
   elems[2] = b2->gui_base;
   elems[3] = b3->gui_base;
@@ -321,7 +316,6 @@ void HYDRO_GUI_Init(int createThread) {
 
   scene_mainMenu = newScene(elems, 6, b1->gui_base);
   scene_mainMenu->draw = drawMainMenu;
-  currentScene = scene_mainMenu;
 
   /* -------- BEGIN TEMP TARGET SCENE -------- */
   Button *button_tempTarget_back = newButton(width-210,height-70,200,60,"Back");
@@ -335,7 +329,7 @@ void HYDRO_GUI_Init(int createThread) {
   setGuiNeighbors(button_tempTarget_ok->gui_base, flipper_tempTarget->gui_base, NULL, flipper_tempTarget->gui_base, NULL);
 
   GuiElement **elems_tempTarget = malloc(4*sizeof(GuiElement*));
-  elems_tempTarget[0] = boke1->gui_base;
+  elems_tempTarget[0] = boke->gui_base;
   elems_tempTarget[1] = button_tempTarget_back->gui_base;
   elems_tempTarget[2] = button_tempTarget_ok->gui_base;
   elems_tempTarget[3] = flipper_tempTarget->gui_base;
@@ -356,7 +350,7 @@ void HYDRO_GUI_Init(int createThread) {
   setGuiNeighbors(button_ecTarget_ok->gui_base, flipper_ecTarget->gui_base, NULL, flipper_ecTarget->gui_base, NULL);
 
   GuiElement **elems_ecTarget = malloc(4*sizeof(GuiElement*));
-  elems_ecTarget[0] = boke1->gui_base;
+  elems_ecTarget[0] = boke->gui_base;
   elems_ecTarget[1] = button_ecTarget_back->gui_base;
   elems_ecTarget[2] = button_ecTarget_ok->gui_base;
   elems_ecTarget[3] = flipper_ecTarget->gui_base;
@@ -377,7 +371,7 @@ void HYDRO_GUI_Init(int createThread) {
   setGuiNeighbors(button_phTarget_ok->gui_base, flipper_phTarget->gui_base, NULL, flipper_phTarget->gui_base, NULL);
 
   GuiElement **elems_phTarget = malloc(4*sizeof(GuiElement*));
-  elems_phTarget[0] = boke1->gui_base;
+  elems_phTarget[0] = boke->gui_base;
   elems_phTarget[1] = button_phTarget_back->gui_base;
   elems_phTarget[2] = button_phTarget_ok->gui_base;
   elems_phTarget[3] = flipper_phTarget->gui_base;
@@ -399,7 +393,7 @@ void HYDRO_GUI_Init(int createThread) {
   setGuiNeighbors(button_flowTarget_ok->gui_base, flipper_flowTarget->gui_base, NULL, flipper_flowTarget->gui_base, NULL);
 
   GuiElement **elems_flowTarget = malloc(4*sizeof(GuiElement*));
-  elems_flowTarget[0] = boke1->gui_base;
+  elems_flowTarget[0] = boke->gui_base;
   elems_flowTarget[1] = button_flowTarget_back->gui_base;
   elems_flowTarget[2] = button_flowTarget_ok->gui_base;
   elems_flowTarget[3] = flipper_flowTarget->gui_base;
@@ -434,8 +428,10 @@ void HYDRO_GUI_SetScene(enum gui_scenes newScene) {
 void HYDRO_GUI_Draw() {
   Background(20,20,120);
 
-  // VG_FLIPPER_Draw(30,30,width,height);
   currentScene->draw(currentScene);
+  if(backgroundScene){
+    backgroundScene->draw(backgroundScene);
+  }
 
   // waitForNextFrame();
   End();
@@ -563,6 +559,7 @@ void joy_click(void) {
   //debounce(&t_joyDebounceEvent,t_joyDebounceDuration,addKeyToPassword);
   debounce(&t_clickDebounceEvent,t_clickDebounceDuration,({
     void __fn__ () {
+      printf("click\n");
       currentScene->selectedElement->click(currentScene->selectedElement);
     } __fn__;
   }));//void(){

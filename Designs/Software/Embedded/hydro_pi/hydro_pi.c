@@ -19,6 +19,7 @@
 // My libraries
 #include "http.h"
 #include "hydro_gui.h"
+#include "sensor_data.h"
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
@@ -40,6 +41,7 @@ int selectedNetwork = -1;
 
 int clicked = 0;
 
+struct SensorData *sd;
 
 // General printing
 char buf[1024];
@@ -67,7 +69,10 @@ int main(int argc, char *argv[]) {
   // Setup GPIO
   wiringPiSetup();
 
-  HYDRO_GUI_Init(1);
+  sd = malloc(sizeof(struct SensorData));
+  setRandomData(sd);
+
+  HYDRO_GUI_Init(1,sd);
   
   if(hydro_state == STARTUP_DISP_IP) {
     // Blocking function will wait until the user presses the joystick
