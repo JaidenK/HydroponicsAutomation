@@ -3,6 +3,10 @@
 #include "hydro_gui_Scene.h"
 #include "scene_dashboard.h"
 #include "scene_targetSelect.h"
+#include "scene_flowTarget.h"
+#include "scene_phTarget.h"
+#include "scene_ecTarget.h"
+#include "scene_waterTarget.h"
 
 // Graphics
 #include <fcntl.h>
@@ -13,6 +17,10 @@
 #include <stdlib.h>
 
 void click_targetSelect_back(void *btn_);
+void click_targetSelect_flow(void *btn_);
+void click_targetSelect_ph(void *btn_);
+void click_targetSelect_ec(void *btn_);
+void click_targetSelect_water(void *btn_);
 void draw_targetSelect(void *scene_);
 
 void scene_targetSelect_init() {
@@ -24,6 +32,10 @@ void scene_targetSelect_init() {
   Button *b5 = newButton(width/2-210,70,420,60,"Back");
   
   b5->click = click_targetSelect_back;
+  b1->click = click_targetSelect_flow;
+  b2->click = click_targetSelect_ph;
+  b3->click = click_targetSelect_ec;
+  b4->click = click_targetSelect_water;
 
   setGuiNeighbors(b1->gui_base, NULL, b3->gui_base, NULL, b2->gui_base);
   setGuiNeighbors(b2->gui_base, NULL, b4->gui_base, b1->gui_base, NULL);
@@ -43,8 +55,19 @@ void scene_targetSelect_init() {
 }
 
 void click_targetSelect_back(void *btn_) {
-  printf("Back\n");
   sceneTransition(currentScene,scene_dashboard,ST_EASE_RIGHT);
+}
+void click_targetSelect_flow(void *btn_) {
+  sceneTransition(currentScene,scene_flowTarget,ST_EASE_LEFT);  
+}
+void click_targetSelect_ph(void *btn_) {
+  sceneTransition(currentScene,scene_phTarget,ST_EASE_LEFT);  
+}
+void click_targetSelect_ec(void *btn_) {
+  sceneTransition(currentScene,scene_ecTarget,ST_EASE_LEFT);  
+}
+void click_targetSelect_water(void *btn_) {
+  sceneTransition(currentScene,scene_waterTarget,ST_EASE_LEFT);  
 }
 
 

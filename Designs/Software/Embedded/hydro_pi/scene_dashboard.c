@@ -31,7 +31,6 @@ void scene_dashboard_init() {
 }
 
 void click_dashboard_targets(void *btn_) {
-  printf("Targets\n");
   sceneTransition(currentScene,scene_targetSelect,ST_EASE_LEFT);
 }
 
