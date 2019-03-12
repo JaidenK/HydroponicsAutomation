@@ -59,7 +59,7 @@ void VG_FLIPPER_Down() {
   }
 }
 int VG_FLIPPER_Left() {
-  if(!isEnabled) return;
+  if(!isEnabled) return 0;
   pos -= 1;
   delta = pow(10,flipper_width-pos-1);
   if (pos < 0) {
@@ -69,7 +69,7 @@ int VG_FLIPPER_Left() {
   return 0;
 }
 int VG_FLIPPER_Right() {
-  if(!isEnabled) return;
+  if(!isEnabled) return 0;
   pos += 1;
   delta = pow(10,flipper_width-pos-1);
   if (pos > flipper_width + decimalPlaces - 1) {
