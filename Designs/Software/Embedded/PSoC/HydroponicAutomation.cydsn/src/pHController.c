@@ -247,7 +247,7 @@ int main(void)
     pHController_Init();
     Mixing_Init();
     
-    //FlowController_SetFlowReference(FLOW_REF);
+    FlowController_SetFlowReference(FLOW_REF);
     
     printf("Hydroponic Automation\r\n");
     uint16_t PWMSpeed = 0;
@@ -258,7 +258,7 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
-        printf("pH %.02f \r\n", pH);    
+        printf("pHRaw: %d pH %.02f Flow %.02f \r\n",phRaw, pH, FlowController_GetFlowRate());    
     }
         
     

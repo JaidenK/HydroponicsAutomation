@@ -1,6 +1,6 @@
 #include "Mixing.h"
-
-static int dutyCycle = 22873;
+#define ADC_MAX 255
+static int dutyCycle = 200;
 /**
  * @function Mixing_Init(void)
  * @param None
@@ -9,7 +9,7 @@ static int dutyCycle = 22873;
  * @author Barron Wong 02/28/19
 */
 void Mixing_Init(){
-    MixingPWM_Start();
+    MixingDAC_Start();
     Mixing_TurnOff();
 }
 
@@ -27,8 +27,7 @@ void Mixing_SetDutyCycle(int newDutyCycle){
         newDutyCycle = 0;
     
     dutyCycle = newDutyCycle;
-    
-    MixingPWM_WriteCompare(dutyCycle);
+    MixingDAC_SetValue(dutyCycle);
 }
 
 /**
@@ -39,7 +38,7 @@ void Mixing_SetDutyCycle(int newDutyCycle){
  * @author Barron Wong 02/28/19
 */
 void Mixing_TurnOff(){
-    MixingPWM_WriteCompare(0);
+    MixingDAC_SetValue(0);
 }
 
 /**
@@ -50,5 +49,45 @@ void Mixing_TurnOff(){
  * @author Barron Wong 02/28/19
 */
 void Mixing_TurnOn(){
-    MixingPWM_WriteCompare(dutyCycle);
+    MixingDAC_SetValue(dutyCycle);
 }
+#ifdef MIXING_TEST   
+    
+#include "FlowController.h"
+#include "SerialCom.h"
+#include "USBCom.h"
+#include "Protocol.h"
+
+#define FLOW_REF 1
+    
+int main(void)
+{
+    CyGlobalIntEnable; /* Enable global interrupts. */
+    ADC_DelSig_1_Start();
+    FlowController_Init();
+    SerialCom_Init();
+    //USBCom_Init();
+    Mixing_Init();
+    
+    FlowController_SetFlowReference(FLOW_REF);
+    
+    printf("Hydroponic Automation\r\n");
+    uint16_t adcReading;
+    /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+    for(;;)
+    {
+        //Check voltage reading from pin 0.1
+        adcReading = ADC_DelSig_1_Read16();
+        if(adcReading > 600)
+            adcReading = 0;
+        if(adcReading > ADC_MAX)
+            adcReading = ADC_MAX;
+        
+        MixingDAC_SetValue(adcReading);
+        printf("DAC %d\r\n", adcReading);
+    }
+        
+    
+    
+}
+#endif

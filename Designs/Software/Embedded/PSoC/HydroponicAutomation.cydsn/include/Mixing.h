@@ -12,9 +12,16 @@
 /* Add an explicit reference to the floating point printf library to allow
 the usage of floating point conversion specifier */
 
+//#define MIXING_TEST
+#ifdef MIXING_TEST
+#define MODULE_TEST
+#endif
+
 #ifndef Mixing_H
 #define Mixing_H
-#define MIXING_DUTY_MAX 65535.0
+    
+    
+#define MIXING_DUTY_MAX 255.0
     
 #include <project.h>
 #include <stdio.h>

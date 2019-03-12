@@ -79,7 +79,7 @@ int main(void)
         if(target.key != invalid_key)
             Protocol_PrintMessage(target);
             
-        printf("pH: %f\r\n", pHController_GetpH());
+        printf("pH: %f Flow: %f\r\n", pH,flowRate);
         
     }
         

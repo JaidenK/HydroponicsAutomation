@@ -452,7 +452,9 @@
       <Data key="2eb9bdc7-989d-49ea-aa69-0466a9131261" value="pHControllerDirPin" />
       <Data key="3a641820-357e-4ef4-a364-bc77eeec9c61" value="pH" />
       <Data key="6b12d123-53a6-48ac-8dc9-c3cccd9d498e" value="Trigger" />
+      <Data key="8bab369d-6bff-4e1e-bc14-2d92e70a04e1" value="MixingMotorOut" />
       <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="FlowSensorSig" />
+      <Data key="9ae7d2f5-319e-48f4-a6b6-1c5f23844489" value="FlowSpeedVOut" />
       <Data key="493fce26-7f83-4a83-92ec-191d848a8043/16a808f6-2e13-45b9-bce0-b001c8655113" value="pHADC_Bypass" />
       <Data key="35016d87-8004-4039-a214-1fa210488325" value="TimerOut" />
       <Data key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5" value="pH" />
@@ -3566,9 +3568,19 @@
         <Data key="Port Format" value="0,0" />
       </Group>
     </Group>
+    <Group key="8bab369d-6bff-4e1e-bc14-2d92e70a04e1">
+      <Group key="0">
+        <Data key="Port Format" value="2,6" />
+      </Group>
+    </Group>
     <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
       <Group key="0">
         <Data key="Port Format" value="0,7" />
+      </Group>
+    </Group>
+    <Group key="9ae7d2f5-319e-48f4-a6b6-1c5f23844489">
+      <Group key="0">
+        <Data key="Port Format" value="2,0" />
       </Group>
     </Group>
     <Group key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5">
@@ -3608,7 +3620,7 @@
     </Group>
     <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
       <Group key="0">
-        <Data key="Port Format" value="2,0" />
+        <Data key="Port Format" value="1,6" />
       </Group>
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">

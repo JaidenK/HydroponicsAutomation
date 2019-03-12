@@ -17,7 +17,7 @@
 #define FLOWRATE_CONVERSION_FACTOR 23.0
 #define FALSE 0 
 #define TRUE 1
-#define PWM_MAX 1000
+#define ADC_MAX 255
 static uint16_t flowSensorFreq = 0;
 
 static float flow_ref = 0;
@@ -33,7 +33,7 @@ static float flow_ref = 0;
  */
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
-    static float dutyCycle = 0.2;
+    static float dutyCycle = 0.5;
     float kp = 0.9;
     static float error = 0;
     
@@ -59,8 +59,7 @@ CY_ISR(FlowCounterTimerISRHandler){
  * @author Barron Wong 01/25/19
 */
 void FlowController_Init(void){
-    FlowSpeedPWM_Start();
-    FlowSpeedPWM_WriteCompare(0);
+    FlowSpeedDAC_Start();
     FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
     FlowCountTimer_Start();
     FlowSensorCounter_Start();
@@ -95,13 +94,13 @@ float FlowController_GetFlowRate(){
  * @author Barron Wong 01/25/19
 */
 uint8_t FlowController_SetFlowDutyCycle(float dutyCycle){
-    uint16_t pwmCompare = 0;
+    uint16_t vout = 0;
     if(dutyCycle < 0 || dutyCycle > 1){
         return ERROR;
     }
     
-    pwmCompare = (uint16_t) (dutyCycle*PWM_MAX);
-    FlowSpeedPWM_WriteCompare(pwmCompare);
+    vout = (uint16_t) (dutyCycle*ADC_MAX);
+    FlowSpeedDAC_SetValue(vout);
     
     return SUCCESS;
 }
@@ -120,11 +119,8 @@ uint8_t FlowController_SetFlowReference(float reference){
     return SUCCESS;
 }
 
-
 #ifdef FLOWCONTROLLER_TEST
 #define MODULE_TEST
-#define ADC_MAX 37500.0
-
 /*
     Test Harness for checking FlowController Library.
     The test should enable an analog value on pin 0.1.
@@ -133,7 +129,7 @@ uint8_t FlowController_SetFlowReference(float reference){
     4.347.
     
 */
-
+#include "pHController.h"
  
     
 int main(void)
@@ -142,7 +138,7 @@ int main(void)
     ADC_DelSig_1_Start();
     FlowController_Init();
     SerialCom_Init();
-    USBFS_Init();
+    //USBFS_Init();
     
     uint16_t adcReading = 0;;
     uint16_t adcPrev = 0;
@@ -157,13 +153,15 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
+        
         //Check voltage reading from pin 0.1
-//        dutyCycle = dutyCycle+(kp*error)/100.0;
-//        FlowController_SetFlowDutyCycle(dutyCycle);
-//        flowRate = FlowController_GetFlowRate();
-//        error = FLOW_REF - flowRate;
-//        
-//        printf("Flow Rate: %2.3fLPM PWM Duty Cycle: %3.3f\r\n", flowRate, dutyCycle*100);
+        adcReading = ADC_DelSig_1_Read16();
+        if(adcReading > 600)
+            adcReading = 0;
+        if(adcReading > ADC_MAX)
+            adcReading = ADC_MAX;
+        
+
     }
     
 }
