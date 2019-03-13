@@ -206,7 +206,8 @@ int main(int argc, char *argv[]) {
 
     // This is now taken care of in a thread.
     // HYDRO_GUI_Draw();
-    usleep(1000);
+    randomWalk(sd);
+    usleep(200000);
   }
   printf("\n");
   

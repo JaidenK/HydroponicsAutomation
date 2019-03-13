@@ -12,6 +12,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+char buf_dashboard[32];
 
 void click_dashboard_targets(void *btn_);
 void draw_dashboard(void *scene_);
@@ -40,5 +43,16 @@ void draw_dashboard(void *scene_) {
     scene->elements[i]->draw(scene->elements[i]);
   }
   Fill(255, 255, 255, 1);         // White text
-  TextMid((width/2), height - 40, "Main Menu", SerifTypeface, 30);  // Greetings 
+  TextMid((width/2), height - 40, "Main Menu", SerifTypeface, 30);  
+  sprintf(buf_dashboard,"Flow: %.2f",gui_sd->flow_measured);
+  Text(20, height - 100, buf_dashboard, SerifTypeface, 30);  
+  sprintf(buf_dashboard,"pH: %.2f",gui_sd->ph_level);
+  Text(width/2, height - 100, buf_dashboard, SerifTypeface, 30);  
+  sprintf(buf_dashboard,"EC: %.2f",gui_sd->ec_level);
+  Text(20, height - 200, buf_dashboard, SerifTypeface, 30);   
+  sprintf(buf_dashboard,"H2O: %.2f",gui_sd->h2o_level);
+  Text(width/2, height - 200, buf_dashboard, SerifTypeface, 30);  
+  sprintf(buf_dashboard,"Temp: %.2f",gui_sd->temp_measured);
+  Text(20, height - 300, buf_dashboard, SerifTypeface, 30);  
+  
 }

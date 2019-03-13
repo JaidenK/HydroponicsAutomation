@@ -45,11 +45,12 @@ void randomWalk(struct SensorData *sd) {
    sd->ec_level +=        randomExponentially(sd->ec_level,500,10);
    sd->ec_stored +=       randomExponentially(sd->ec_stored,245,10);
    sd->temp_measured +=   randomExponentially(sd->temp_measured,80,10);
-   sd->flow_measured +=   randomExponentially(sd->flow_measured,245,10);
+   // sd->flow_measured +=   randomExponentially(sd->flow_measured,245,10);
    // sd->flow_target +=     randomExponentially(sd->flow_target,245,10);
    // sd->ph_target +=       randomExponentially(sd->ph_target,245,10);
    // sd->ec_target +=       randomExponentially(sd->ec_target,245,10);
    // sd->h2o_target +=      randomExponentially(sd->h2o_target,245,10);
+   sd->flow_measured += 0.07 * (sd->flow_target - sd->flow_measured);
 }
 
 int loadData(struct SensorData *sd, char *filename) {
