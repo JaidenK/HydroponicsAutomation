@@ -20,6 +20,7 @@
 #include "http.h"
 #include "hydro_gui.h"
 #include "sensor_data.h"
+#include "threaded_input.h"
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
@@ -48,6 +49,15 @@ char buf[1024];
 // Password string for wifi
 char passBuf[256];
 
+void parseCmd(char *cmd, double val) {
+  if(strcmp(cmd,"flow")==0) {
+    printf("Flow target changed from %f to %f.\n", sd->flow_target, val);
+    sd->flow_target = val;
+  }else{
+    printf("Invalid command: %s\n", cmd);
+  }
+}
+
 int main(int argc, char *argv[]) {
   hydro_state = HYDRO_IDLE;
 
@@ -73,6 +83,7 @@ int main(int argc, char *argv[]) {
   setRandomData(sd);
 
   HYDRO_GUI_Init(1,sd);
+  ThreadedInput_Init();
   
   if(hydro_state == STARTUP_DISP_IP) {
     // Blocking function will wait until the user presses the joystick
@@ -207,6 +218,13 @@ int main(int argc, char *argv[]) {
     // This is now taken care of in a thread.
     // HYDRO_GUI_Draw();
     randomWalk(sd);
+    if(getstr_nonblocking(buf)) {
+      char cmd[16];
+      // char val[16];
+      double val_d = 0;
+      sscanf(buf,"%s %lf",cmd,&val_d);
+      parseCmd(cmd,val_d);
+    }
     usleep(200000);
   }
   printf("\n");

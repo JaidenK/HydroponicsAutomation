@@ -138,8 +138,8 @@ void HYDRO_GUI_Init(int createThread, struct SensorData *sd) {
   JOY_Init(3,2,7,0,9,joy_up,joy_down,joy_left,joy_right,joy_click);
   JOY_PreventNegativePositions();
   
-  VG_KB_Init();
-  VG_FLIPPER_Init(2,3,12.345);
+  // VG_KB_Init();
+  // VG_FLIPPER_Init(2,3,12.345);
   
   // // Setup Graphics
   // // Graphics
