@@ -53,6 +53,15 @@ void parseCmd(char *cmd, double val) {
   if(strcmp(cmd,"flow")==0) {
     printf("Flow target changed from %f to %f.\n", sd->flow_target, val);
     sd->flow_target = val;
+  }else if(strcmp(cmd,"ph")==0) {
+    printf("pH target changed from %f to %f.\n", sd->ph_target, val);
+    sd->ph_target = val;
+  }else if(strcmp(cmd,"ec")==0) {
+    printf("EC target changed from %f to %f.\n", sd->ec_target, val);
+    sd->ec_target = val;
+  }else if(strcmp(cmd,"water")==0) {
+    printf("Water level target changed from %f to %f.\n", sd->h2o_target, val);
+    sd->h2o_target = val;
   }else{
     printf("Invalid command: %s\n", cmd);
   }
