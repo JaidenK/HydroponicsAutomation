@@ -449,24 +449,34 @@
       <Data key="e7977a95-4089-4779-8ed7-4e0b93bf4386/edd15f43-b66b-457b-be3a-5342345270c8" value="ADC_DelSig_1_theACLK" />
     </Group>
     <Group key="Pin">
+      <Data key="01fb91db-638e-46d7-b242-0bf842db35a2" value="pHDownEcho" />
+      <Data key="2bb17829-8184-440f-9152-d2c60af368b5" value="NutsEcho" />
       <Data key="2eb9bdc7-989d-49ea-aa69-0466a9131261" value="pHControllerDirPin" />
       <Data key="3a641820-357e-4ef4-a364-bc77eeec9c61" value="pH" />
+      <Data key="4d68f60b-b521-426d-ba49-921794f35a39" value="TestTrig" />
       <Data key="6b12d123-53a6-48ac-8dc9-c3cccd9d498e" value="Trigger" />
+      <Data key="8ae33fbe-d05d-4a6d-8c13-1df988193343" value="pHUpEcho" />
       <Data key="8bab369d-6bff-4e1e-bc14-2d92e70a04e1" value="MixingMotorOut" />
       <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="FlowSensorSig" />
       <Data key="9ae7d2f5-319e-48f4-a6b6-1c5f23844489" value="FlowSpeedVOut" />
+      <Data key="9fed8531-b1d5-464b-9bf0-b3d733ec5766" value="WaterEcho" />
+      <Data key="019d2344-5756-4737-88cd-fc56f9743a75" value="Echo" />
       <Data key="493fce26-7f83-4a83-92ec-191d848a8043/16a808f6-2e13-45b9-bce0-b001c8655113" value="pHADC_Bypass" />
+      <Data key="2885c429-5932-4155-917a-0938783b4618" value="NutsTrig" />
+      <Data key="7081a449-5876-4437-a055-ced157b3fac6" value="pHDownTrig" />
       <Data key="35016d87-8004-4039-a214-1fa210488325" value="TimerOut" />
       <Data key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5" value="pH" />
       <Data key="893425e2-b901-46a8-80e5-5d2d9917eaf4" value="pHUpPump" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
+      <Data key="5353893c-cc68-42be-af72-898688c538a0" value="pHUpTrig" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="PWMSpeedSetting" />
       <Data key="a83fec49-d759-48cd-918c-841203016a01" value="pHDownPump" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
-      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="FlowSpeedPWMOut" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="TestEcho" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="Tx_1" />
       <Data key="f2593d42-36fc-44df-94be-aefb946f0deb" value="MixingMotor" />
+      <Data key="fab91bcc-aff1-402c-9737-4ce088bf4033" value="WaterTrig" />
     </Group>
   </Group>
   <Group key="EEPROM">
@@ -3553,6 +3563,16 @@
     </Group>
   </Group>
   <Group key="Pin2">
+    <Group key="01fb91db-638e-46d7-b242-0bf842db35a2">
+      <Group key="0">
+        <Data key="Port Format" value="15,1" />
+      </Group>
+    </Group>
+    <Group key="2bb17829-8184-440f-9152-d2c60af368b5">
+      <Group key="0">
+        <Data key="Port Format" value="3,7" />
+      </Group>
+    </Group>
     <Group key="2eb9bdc7-989d-49ea-aa69-0466a9131261">
       <Group key="0">
         <Data key="Port Format" value="3,2" />
@@ -3566,6 +3586,11 @@
     <Group key="6b12d123-53a6-48ac-8dc9-c3cccd9d498e">
       <Group key="0">
         <Data key="Port Format" value="0,0" />
+      </Group>
+    </Group>
+    <Group key="8ae33fbe-d05d-4a6d-8c13-1df988193343">
+      <Group key="0">
+        <Data key="Port Format" value="15,3" />
       </Group>
     </Group>
     <Group key="8bab369d-6bff-4e1e-bc14-2d92e70a04e1">
@@ -3583,6 +3608,21 @@
         <Data key="Port Format" value="2,0" />
       </Group>
     </Group>
+    <Group key="9fed8531-b1d5-464b-9bf0-b3d733ec5766">
+      <Group key="0">
+        <Data key="Port Format" value="15,5" />
+      </Group>
+    </Group>
+    <Group key="2885c429-5932-4155-917a-0938783b4618">
+      <Group key="0">
+        <Data key="Port Format" value="3,6" />
+      </Group>
+    </Group>
+    <Group key="7081a449-5876-4437-a055-ced157b3fac6">
+      <Group key="0">
+        <Data key="Port Format" value="15,0" />
+      </Group>
+    </Group>
     <Group key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5">
       <Group key="0">
         <Data key="Port Format" value="3,0" />
@@ -3596,6 +3636,11 @@
     <Group key="1425177d-0d0e-4468-8bcc-e638e5509a9b">
       <Group key="0">
         <Data key="Port Format" value="12,6" />
+      </Group>
+    </Group>
+    <Group key="5353893c-cc68-42be-af72-898688c538a0">
+      <Group key="0">
+        <Data key="Port Format" value="15,2" />
       </Group>
     </Group>
     <Group key="77715107-f8d5-47e5-a629-0fb83101ac6b">
@@ -3620,7 +3665,7 @@
     </Group>
     <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
       <Group key="0">
-        <Data key="Port Format" value="1,6" />
+        <Data key="Port Format" value="3,6" />
       </Group>
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
@@ -3633,7 +3678,20 @@
         <Data key="Port Format" value="2,6" />
       </Group>
     </Group>
-    <Group key="UnAssigned Pins" />
+    <Group key="fab91bcc-aff1-402c-9737-4ce088bf4033">
+      <Group key="0">
+        <Data key="Port Format" value="15,4" />
+      </Group>
+    </Group>
+    <Group key="UnAssigned Pins">
+      <Group key="4d68f60b-b521-426d-ba49-921794f35a39">
+        <Data key="0" value="131987405583008152" />
+      </Group>
+      <Group key="019d2344-5756-4737-88cd-fc56f9743a75">
+        <Data key="0" value="131987242809657033" />
+      </Group>
+    </Group>
+    <Group key="Unlocked Pins" />
   </Group>
   <Group key="PlaceDir">
     <Data key="count" value="0" />

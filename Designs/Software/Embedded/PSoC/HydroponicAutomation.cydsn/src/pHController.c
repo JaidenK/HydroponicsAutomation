@@ -64,6 +64,11 @@ CY_ISR_PROTO(pHControlISRHandler){
         Mixing_TurnOff();
     }
     
+    //Adding for integration testing
+    //Keep Mixing Motor On
+    //Needs Remove
+    error = PH_UPPERBOUND + 1;
+    
     //Hystersis bound for error
     if(!adjust){
         if(error > PH_UPPERBOUND){

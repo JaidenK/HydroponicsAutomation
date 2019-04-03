@@ -20,6 +20,7 @@
 #include "Protocol.h"
 #include "pHController.h"
 #include "Mixing.h"
+#include "PingSensor.h"
 
 #define FLOW_REF 1
 #define PH_REF 4.5
@@ -34,7 +35,7 @@ int main(void)
     ADC_DelSig_1_Start();
     FlowController_Init();
     SerialCom_Init();
-    USBCom_Init();
+    //USBCom_Init();
     pHController_Init();
     Mixing_Init();
     
@@ -53,31 +54,31 @@ int main(void)
         //Get Flow Rate
         flowRate = FlowController_GetFlowRate();
         
-        //Encode and send data
-        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
-        USBCom_SendData(buffer);
-        
-        //Check if USB has received data
-        USBCom_CheckReceivedData(buffer);
-        target = Protocol_DecodeInput(buffer);
-        
-        if(target.key != invalid_key)
-            Protocol_PrintMessage(target);
+//        //Encode and send data
+//        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
+//        USBCom_SendData(buffer);
+//        
+//        //Check if USB has received data
+//        USBCom_CheckReceivedData(buffer);
+//        target = Protocol_DecodeInput(buffer);
+//        
+//        if(target.key != invalid_key)
+//            Protocol_PrintMessage(target);
         
         
         //Get pH
         pH = pHController_GetpH();
         
-        //Encode and send data
-        Protocol_EncodeOutput(ph_measured, pH, buffer);
-        USBCom_SendData(buffer);
-        
-        //Check if USB has received data
-        USBCom_CheckReceivedData(buffer);
-        target = Protocol_DecodeInput(buffer);
-        
-        if(target.key != invalid_key)
-            Protocol_PrintMessage(target);
+//        //Encode and send data
+//        Protocol_EncodeOutput(ph_measured, pH, buffer);
+//        USBCom_SendData(buffer);
+//        
+//        //Check if USB has received data
+//        USBCom_CheckReceivedData(buffer);
+//        target = Protocol_DecodeInput(buffer);
+//        
+//        if(target.key != invalid_key)
+//            Protocol_PrintMessage(target);
             
         printf("pH: %f Flow: %f\r\n", pH,flowRate);
         
