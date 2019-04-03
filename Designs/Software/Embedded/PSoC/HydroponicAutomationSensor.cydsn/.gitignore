@@ -1,0 +1,7 @@
+CortexM3/
+Export/
+Generated_Source/
+HydroponicAutomationSensor.cycdx
+HydroponicAutomationSensor.rpt
+codegentemp/
+cyapicallbacks.h
