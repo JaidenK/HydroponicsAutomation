@@ -14,11 +14,11 @@
 #include "project.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "FlowSense.h"
+#include "FlowController.h"
 #include "SerialCom.h"
 #include "USBCom.h"
 #include "Protocol.h"
-#include "pHSense.h"
+#include "pHController.h"
 #include "Mixing.h"
 #include "PingSensor.h"
 

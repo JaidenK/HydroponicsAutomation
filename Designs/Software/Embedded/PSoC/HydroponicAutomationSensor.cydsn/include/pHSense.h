@@ -12,7 +12,7 @@
 #ifndef pHSense_H
 #define pHSense_H
     
-#define PH_SENSE_TEST
+//#define PH_SENSE_TEST
     
 #ifdef PH_SENSE_TEST
 #define MODULE_TEST
