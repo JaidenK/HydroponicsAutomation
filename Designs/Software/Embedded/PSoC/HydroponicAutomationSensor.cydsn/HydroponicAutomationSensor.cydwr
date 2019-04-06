@@ -466,6 +466,7 @@
       <Data key="7081a449-5876-4437-a055-ced157b3fac6" value="pHDownTrig" />
       <Data key="35016d87-8004-4039-a214-1fa210488325" value="TimerOut" />
       <Data key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5" value="pH" />
+      <Data key="605176ba-3189-451c-ac0e-10aa2ed1a8bb" value="DataComRx" />
       <Data key="893425e2-b901-46a8-80e5-5d2d9917eaf4" value="pHUpPump" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
       <Data key="5353893c-cc68-42be-af72-898688c538a0" value="pHUpTrig" />
@@ -3626,6 +3627,11 @@
     <Group key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5">
       <Group key="0">
         <Data key="Port Format" value="3,0" />
+      </Group>
+    </Group>
+    <Group key="605176ba-3189-451c-ac0e-10aa2ed1a8bb">
+      <Group key="0">
+        <Data key="Port Format" value="1,6" />
       </Group>
     </Group>
     <Group key="893425e2-b901-46a8-80e5-5d2d9917eaf4">

@@ -13,13 +13,13 @@
  */
 
 
-#define FLOWSENSE_TEST
+//#define FLOWSENSE_TEST
 
 #ifndef FlowSense_H
 #define FlowSense_H
 
 #ifdef FLOWSENSE_TEST
-#define MODULE_TEST
+    #define MODULE_TEST
 #endif
 
 #include "project.h"

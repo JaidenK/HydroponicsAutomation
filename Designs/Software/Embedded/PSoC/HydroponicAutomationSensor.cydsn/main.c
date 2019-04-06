@@ -21,6 +21,7 @@
 #include "pHSense.h"
 #include "Mixing.h"
 #include "PingSensor.h"
+#include "SensorComTx.h"
 
 #define FLOW_REF 1
 #define PH_REF 4.5

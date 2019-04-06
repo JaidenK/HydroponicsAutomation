@@ -18,8 +18,8 @@
 /**
  * @function Protocol_DecodeInput(char * input)
  * @param None
- * @return Takes an incoming data transmission and decodes it
- * @brief Converts the current frequency and returns flow rate
+ * @return decoded input stored in a message_t structure
+ * @brief Takes an incoming data transmission and decodes it
  * @author Barron Wong 02/08/19
 */
 message_t Protocol_DecodeInput(char * input){
@@ -58,7 +58,7 @@ message_t Protocol_DecodeInput(char * input){
  * @function Protocol_EncodeOutput(char * input)
  * @param key, value, and buffer
  * @return String pointer ready for output
- * @brief Takes a key and a parameter and get it read for output
+ * @brief Takes a key and a value and get it read for output
  * @author Barron Wong 02/08/19
 */
 char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
@@ -69,7 +69,7 @@ char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
         buffer[0] = 0;
     }
     if(key > invalid_key && key <= flow_measured){
-        sprintf(buffer,"%d:%f",(int)key,value);
+        sprintf(buffer,"%d:%0.3f",(int)key,value);
     }
     
     return buffer;

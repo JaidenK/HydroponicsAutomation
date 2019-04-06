@@ -12,7 +12,7 @@
 /* Add an explicit reference to the floating point printf library to allow
 the usage of floating point conversion specifier */
 
-#define PING_TEST
+//#define PING_TEST
 #ifdef PING_TEST
 #define MODULE_TEST
 #endif

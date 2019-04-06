@@ -471,6 +471,7 @@
       <Data key="5353893c-cc68-42be-af72-898688c538a0" value="pHUpTrig" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="PWMSpeedSetting" />
       <Data key="a83fec49-d759-48cd-918c-841203016a01" value="pHDownPump" />
+      <Data key="b0eb9169-74fc-4a32-a6c9-5f4fce5e72bc" value="DataComRx" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="TestEcho" />
@@ -3651,6 +3652,11 @@
     <Group key="a83fec49-d759-48cd-918c-841203016a01">
       <Group key="0">
         <Data key="Port Format" value="2,3" />
+      </Group>
+    </Group>
+    <Group key="b0eb9169-74fc-4a32-a6c9-5f4fce5e72bc">
+      <Group key="0">
+        <Data key="Port Format" value="2,2" />
       </Group>
     </Group>
     <Group key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c">
