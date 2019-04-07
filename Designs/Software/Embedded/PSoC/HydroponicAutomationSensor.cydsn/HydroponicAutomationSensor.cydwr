@@ -466,7 +466,7 @@
       <Data key="7081a449-5876-4437-a055-ced157b3fac6" value="pHDownTrig" />
       <Data key="35016d87-8004-4039-a214-1fa210488325" value="TimerOut" />
       <Data key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5" value="pH" />
-      <Data key="605176ba-3189-451c-ac0e-10aa2ed1a8bb" value="DataComRx" />
+      <Data key="605176ba-3189-451c-ac0e-10aa2ed1a8bb" value="DataComTx" />
       <Data key="893425e2-b901-46a8-80e5-5d2d9917eaf4" value="pHUpPump" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
       <Data key="5353893c-cc68-42be-af72-898688c538a0" value="pHUpTrig" />
@@ -474,7 +474,7 @@
       <Data key="a83fec49-d759-48cd-918c-841203016a01" value="pHDownPump" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
-      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="TestEcho" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="DataComTxInv" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="Tx_1" />
       <Data key="f2593d42-36fc-44df-94be-aefb946f0deb" value="MixingMotor" />
       <Data key="fab91bcc-aff1-402c-9737-4ce088bf4033" value="WaterTrig" />
@@ -3631,7 +3631,7 @@
     </Group>
     <Group key="605176ba-3189-451c-ac0e-10aa2ed1a8bb">
       <Group key="0">
-        <Data key="Port Format" value="1,6" />
+        <Data key="Port Format" value="1,7" />
       </Group>
     </Group>
     <Group key="893425e2-b901-46a8-80e5-5d2d9917eaf4">
@@ -3671,7 +3671,7 @@
     </Group>
     <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
       <Group key="0">
-        <Data key="Port Format" value="3,6" />
+        <Data key="Port Format" value="1,6" />
       </Group>
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
