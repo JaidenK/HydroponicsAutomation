@@ -22,27 +22,33 @@
 #include "Mixing.h"
 #include "PingSensor.h"
 #include "SensorComTx.h"
+#include "sensor_data.h"
 
 #define FLOW_REF 1
 #define PH_REF 4.5
 
-#ifndef MODULE_TEST    
+#ifndef MODULE_TEST   
+
+struct SensorData sd;
     
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     char buffer[64];
+    
   
     ADC_DelSig_1_Start();
-    FlowController_Init();
+    FlowSense_Init();
     SerialCom_Init();
     //USBCom_Init();
-    pHController_Init();
-    Mixing_Init();
+    pHSense_Init();
+    PingSensor_Init();
+
     
+    //Sensor Transmit
+    SensorComTx_Init();
+    sensor_data_init(&sd);
     
-    FlowController_SetFlowReference(FLOW_REF);
-    pHController_SetpHReference(PH_REF);
     
     printf("Hydroponic Automation\r\n");
     float pH = 0;
@@ -52,37 +58,23 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
-        //Get Flow Rate
-        flowRate = FlowController_GetFlowRate();
+        //Update Sensor Readings
+        sd.h2o_level = PingSensor_GetWaterLevel();
+        sd.h2o_stored = 0;
+        sd.ph_level = pHSense_GetpH();
+	    sd.ph_up_stored = PingSensor_GetpHUpLevel();
+	    sd.ph_down_stored = PingSensor_GetpHDownLevel();
+	    sd.ec_level = 0;
+	    sd.ec_stored = PingSensor_GetNutLevel();
+	    sd.temp_measured = 0;
+	    sd.flow_measured = FlowSense_GetFlowRate();
         
-//        //Encode and send data
-//        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
-//        USBCom_SendData(buffer);
-//        
-//        //Check if USB has received data
-//        USBCom_CheckReceivedData(buffer);
-//        target = Protocol_DecodeInput(buffer);
-//        
-//        if(target.key != invalid_key)
-//            Protocol_PrintMessage(target);
-        
-        
-        //Get pH
-        pH = pHController_GetpH();
-        
-//        //Encode and send data
-//        Protocol_EncodeOutput(ph_measured, pH, buffer);
-//        USBCom_SendData(buffer);
-//        
-//        //Check if USB has received data
-//        USBCom_CheckReceivedData(buffer);
-//        target = Protocol_DecodeInput(buffer);
-//        
-//        if(target.key != invalid_key)
-//            Protocol_PrintMessage(target);
-            
-        printf("pH: %f Flow: %f\r\n", pH,flowRate);
-        
+        //Set Targets
+	    sd.flow_target = 0;
+	    sd.ph_target = 0;
+	    sd.ec_target = 0;
+	    sd.h2o_target = 0;
+	    sd.temp_target = 0;
     }
         
     

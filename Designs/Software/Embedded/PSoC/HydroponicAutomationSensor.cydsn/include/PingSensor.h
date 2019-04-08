@@ -23,6 +23,7 @@ the usage of floating point conversion specifier */
     
 #include <project.h>
 #include <stdio.h>
+    
 typedef enum{
     LEVEL_WATER,
     LEVEL_pH_UP,
@@ -30,12 +31,27 @@ typedef enum{
     LEVEL_NUTS,
 }Level;
 
+//Getters
+double PingSensor_GetWaterLevel();
+double PingSensor_GetpHUpLevel();
+double PingSensor_GetpHDownLevel();
+double PingSensor_GetNutLevel();
+
+/**
+ * @function PingSensorSampleTimerISRHandler(void)
+ * @param None
+ * @return None
+ * @brief Timeout for level sense. Takes level readings every 100ms
+ * @author Barron Wong 04/07/19
+ */
+CY_ISR_PROTO(PingSensorSampleTimerISRHandler);
+
 /**
  * @function PingSensorEchoISRHandler(void)
  * @param None
  * @return None
  * @brief ISR Handler for Echo Pin
- * @author Barron Wong 01/25/19
+ * @author Barron Wong 03/30/19
  */
 CY_ISR_PROTO(PingSensorEchoISRHandler);
 
@@ -44,7 +60,7 @@ CY_ISR_PROTO(PingSensorEchoISRHandler);
  * @param None
  * @return None
  * @brief ISR Handler for Trig Pin
- * @author Barron Wong 01/25/19
+ * @author Barron Wong 03/30/19
  */
 CY_ISR_PROTO(PingSensorTrigISRHandler);
 

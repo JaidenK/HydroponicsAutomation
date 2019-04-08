@@ -10,7 +10,7 @@
  * ========================================
 */
 
-#define SENSOR_COM_TX_TEST
+//#define SENSOR_COM_TX_TEST
 #ifdef SENSOR_COM_TX_TEST
     #define MODULE_TEST
 #endif
@@ -53,7 +53,8 @@ void SensorComTx_SendMessage(char* msg);
  * @function SensorDataComISRHandler(void)
  * @param None
  * @return None
- * @brief ISR handler for sensor data transmission
+ * @brief ISR handler for sensor data transmission. Sends updated
+ *        SensorData every 200ms
  * @author Barron Wong 04/05/19
  */
 CY_ISR_PROTO(SensorDataComISRHandler);

@@ -20,40 +20,36 @@
 #include "Protocol.h"
 #include "pHController.h"
 #include "Mixing.h"
-#include "PingSensor.h"
 #include "SensorRxCom.h"
 
 #define FLOW_REF 1
 #define PH_REF 4.5
 
-#ifndef MODULE_TEST    
+#ifndef MODULE_TEST 
+    
+struct SensorData sd;
     
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     char buffer[64];
   
-    ADC_DelSig_1_Start();
     FlowController_Init();
     SerialCom_Init();
     //USBCom_Init();
     pHController_Init();
     Mixing_Init();
+    SensorComRx_Init();
     
     
     FlowController_SetFlowReference(FLOW_REF);
     pHController_SetpHReference(PH_REF);
     
     printf("Hydroponic Automation\r\n");
-    float pH = 0;
-    float flowRate = 0;
-    message_t target;
     
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
-        //Get Flow Rate
-        flowRate = FlowController_GetFlowRate();
         
 //        //Encode and send data
 //        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
@@ -67,9 +63,6 @@ int main(void)
 //            Protocol_PrintMessage(target);
         
         
-        //Get pH
-        pH = pHController_GetpH();
-        
 //        //Encode and send data
 //        Protocol_EncodeOutput(ph_measured, pH, buffer);
 //        USBCom_SendData(buffer);
@@ -80,8 +73,17 @@ int main(void)
 //        
 //        if(target.key != invalid_key)
 //            Protocol_PrintMessage(target);
-            
-        printf("pH: %f Flow: %f\r\n", pH,flowRate);
+            if(SensorComRx_CheckStatus()){
+                //printf("h20_level: %d\r\n", (int) (sd.flow_target*100));
+                //printf("h20_stored: %d\r\n", (int) (sd.h2o_stored*100));
+                //printf("ph_measured: %d\r\n", (int)(sd.ph_level*100));
+                //printf("ph_up_stored: %d\r\n", (int) (sd.ph_up_stored*100));
+                //printf("ph_down_stored: %d\r\n", (int) (sd.ph_down_stored*100));
+                //printf("ec_measured: %d\r\n", (int) (sd.ec_level*100));
+                //printf("ec_stored: %d\r\n", (int) (sd.ec_stored*100));
+                //printf("temp_measured: %d\r\n", (int) (sd.temp_measured*100));
+                printf("flow_measured: %d\r\n", (int) (sd.flow_measured*100));
+            }
         
     }
         

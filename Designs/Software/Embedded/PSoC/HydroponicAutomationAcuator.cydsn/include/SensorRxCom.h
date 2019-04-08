@@ -10,7 +10,7 @@
  * ========================================
 */
 
-#define SENSOR_COM_RX_TEST
+//#define SENSOR_COM_RX_TEST
 #ifdef SENSOR_COM_RX_TEST
     #define MODULE_TEST
 #endif
@@ -20,7 +20,20 @@
 
 #include "sensor_data.h"
 #include "project.h"
-
+    
+#define BUFF_SIZE 255
+#define FALSE 0
+#define TRUE 1
+    
+/**
+ * @function SensorComRx_CheckStatus()
+ * @param None
+ * @return TRUE or FALSE
+ * @brief Returns TRUE if new data is avaiable, FALSE if not
+ * @author Barron Wong 04/05/19
+ */   
+uint8_t SensorComRx_CheckStatus();
+    
 /**
  * @function SensorComRx_Init()
  * @param None
