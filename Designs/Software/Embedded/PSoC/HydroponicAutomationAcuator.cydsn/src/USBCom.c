@@ -28,6 +28,7 @@
 */
 
 char buffer[BUFFER_SIZE];
+uint8_t USBConfigured = 0;
 
 
 /**
@@ -42,12 +43,10 @@ void USBCom_Init(void){
     USBFS_Start(USBFS_DEVICE, USBFS_5V_OPERATION);
 
     /* Wait until device is enumerated by host. */
-    while (0u == USBFS_GetConfiguration())
-    {
-    }
-
+    while(USBFS_GetConfiguration() == 0){}
     /* Enable OUT endpoint to receive data from host. */
-    USBFS_EnableOutEP(OUT_EP_NUM);;
+    USBFS_EnableOutEP(OUT_EP_NUM);
+    
 }
 
 /**
@@ -55,7 +54,8 @@ void USBCom_Init(void){
  * @param None
  * @return None
  * @brief Checks to see if configuration has changed. If it has it 
- *        will reenable the output endpoint
+ *        will reenable the output endpoint. Used by USBCom_Init()
+ *        and USBCom_CheckRecievedData()
  * @author Barron Wong 01/31/19
  */
 void USBCom_CheckConfiguration(void){
@@ -75,33 +75,36 @@ void USBCom_CheckConfiguration(void){
  * @function USBCom_CheckConfiguration(void)
  * @param None
  * @return None
- * @brief Checks to see if configuration has changed. If it has it 
+ * @brief Must Call USBCom_Init() before using. Checks to see if configuration has changed. If it has it 
  *        will reenable the output endpoint
  * @author Barron Wong 01/31/19
  */
-int USBCom_CheckRecievedData(char * buffer){
+int USBCom_CheckReceivedData(char * buffer){
 
     uint16 length = 0;
+    if(USBFS_GetConfiguration() != 0){
+        USBCom_CheckConfiguration();
     
-    
-    /* Check if data was received. */
-    if (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM))
-    {
-        /* Read number of received data bytes. */
-        length = USBFS_GetEPCount(OUT_EP_NUM);
+    for(uint i = 0; i < BUFFER_SIZE; i++)
+        buffer[i] = 0;
         
-        /* Trigger DMA to copy data from OUT endpoint buffer. */
-        USBFS_ReadOutEP(OUT_EP_NUM,(uint8*) buffer, length);
+    /* Check if data was received. */
+        if (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM)){
+            /* Read number of received data bytes. */
+            length = USBFS_GetEPCount(OUT_EP_NUM);
+        
+            /* Trigger DMA to copy data from OUT endpoint buffer. */
+            USBFS_ReadOutEP(OUT_EP_NUM,(uint8*) buffer, length);
 
-        /* Wait until DMA completes copying data from OUT endpoint buffer. */
-        while (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM))
-        {
+                /* Wait until DMA completes copying data from OUT endpoint buffer. */
+            while (USBFS_OUT_BUFFER_FULL == USBFS_GetEPState(OUT_EP_NUM)){
+             }
         }
-    }
-    /* Enable OUT endpoint to receive data from host. */
-    USBFS_EnableOutEP(OUT_EP_NUM);
-    if(length == 0){
-        buffer = NULL;
+        /* Enable OUT endpoint to receive data from host. */
+        USBFS_EnableOutEP(OUT_EP_NUM);
+        if(length == 0){
+            buffer = NULL;
+        }
     }
     return length;
 }
@@ -110,7 +113,7 @@ int USBCom_CheckRecievedData(char * buffer){
  * @function USBCom_SendData(void)
  * @param None
  * @return None
- * @brief Checks to see if configuration has changed. If it has it 
+ * @brief Must Call USBCom_Init() before using. Checks to see if configuration has changed. If it has it 
  *        will reenable the output endpoint
  * @author Barron Wong 01/31/19
  */

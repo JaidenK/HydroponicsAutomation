@@ -21,6 +21,7 @@
 #define PH_DEFAULT_REF 5
 #define PWM_MAX 255.0
 #define HIST_CNT 1024
+#define SHIFT_CNT 10
 #define DROP_TIME 200
 #define UP 0
 #define DOWN 1
@@ -41,6 +42,8 @@
 static float pHRef = 4.5;
 static float pH = 0;
 static uint16_t phRaw = 0;
+static uint16_t phHistory[HIST_CNT] = {0};
+static uint32_t sum = 0;
 
 
 /**
@@ -57,26 +60,22 @@ CY_ISR(pHSampleTimerISRHandler){
     
     static uint16_t index;
     
-    static uint16_t phHistory[HIST_CNT] = {0};
-    static uint32_t sum = 0;
-    
-    pHSampleTimerISR_ClearPending();
     pHADCSample = pHSense_ReadSensor();
     pHSampleTimer_Start();
     
-
+    //Removed Average stability issues
     //Subtract oldest value
     sum -= phHistory[index]; 
     phHistory[index] = pHADCSample;
     //Add newest value
     sum += pHADCSample;
     //Increment Index
-    index = (index + 1) % (HIST_CNT + 1);
+    index = (index + 1) % (HIST_CNT);
     
-    phRaw = sum>>10;
-
+    phRaw = sum>>SHIFT_CNT;
     pH = A0*phRaw + A1;
-   
+    
+    pHSampleTimerISR_ClearPending();
     
 }
 /**
@@ -147,7 +146,7 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
-        printf("pHRaw: %d pH %.02f\r\n",phRaw, pH);    
+        printf("pHRaw: %d pH %.02f\r\n",phRaw, pHSense_GetpH());    
     }
         
     
