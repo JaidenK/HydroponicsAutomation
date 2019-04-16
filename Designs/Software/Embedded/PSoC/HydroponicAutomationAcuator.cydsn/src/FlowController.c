@@ -101,7 +101,7 @@ uint8_t FlowController_SetFlowDutyCycle(float dutyCycle){
     }
     
     vout = (uint16_t) (dutyCycle*ADC_MAX);
-    FlowSpeedDAC_SetValue(vout);
+    //FlowSpeedDAC_SetValue(vout);
     //FlowSpeedPWM_WriteCompare(dutyCycle*ADC_MAX);
     
     
