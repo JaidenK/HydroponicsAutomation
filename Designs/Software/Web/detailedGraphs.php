@@ -27,6 +27,7 @@
   <script type="text/javascript">
     $(document).ready(function(){
       var updateInterval;
+      var historyInterval = 30;
 
       var h2oCtx = $("#h2oChart");
       var h2oChart;
@@ -278,6 +279,26 @@
         clearInterval(updateInterval);
         updateInterval = setInterval(updateCharts,$("#frequency").val()*1000);
         console.log("New update interval: "+$("#frequency").val());
+        var newHistoryInterval = $("#interval").val()
+        if(newHistoryInterval != historyInterval) {
+          historyInterval = newHistoryInterval;
+
+          h2oChart.destroy();
+          phChart.destroy();
+          ecChart.destroy();
+          flowChart.destroy();
+
+          h2o_level_data = [];
+          h2o_stored_data = [];
+          ph_level_data = [];
+          ph_target_data = [];
+          ec_level_data = [];
+          ec_target_data = [];
+          flow_measured_data = [];
+          flow_target_data = [];
+
+          buildCharts();
+        }
       }).submit(function(e){
         e.preventDefault();
       });

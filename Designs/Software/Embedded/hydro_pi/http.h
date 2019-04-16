@@ -11,6 +11,30 @@ Descriptions
 
 #include "sensor_data.h"
 
+typedef enum {
+    HTTP_INIT,
+    HTTP_IDLE,
+    HTTP_OPENING_SOCKET,
+    HTTP_CONNECTING,
+    HTTP_SENDING_MESSAGE,
+    HTTP_RECEIVING_MESSAGE,
+    HTTP_CLOSING_SOCKET,
+    HTTP_ERROR,
+    HTTP_NUMBER_OF_STATUSES,
+} HTTPStatus_t;
+
+static const char *HTTP_StatusNames[] = {
+    "HTTP_INIT",
+    "HTTP_IDLE",
+    "HTTP_OPENING_SOCKET",
+    "HTTP_CONNECTING",
+    "HTTP_SENDING_MESSAGE",
+    "HTTP_RECEIVING_MESSAGE",
+    "HTTP_CLOSING_SOCKET",
+    "HTTP_ERROR",
+    "HTTP_NUMBER_OF_STATUSES",
+};
+
 /** Initializes the HTTP library with a particular host and automatically 
     sets the message format to a GET with that site.
     @note This function should be called before any other HTTP library functions
@@ -43,8 +67,16 @@ int HTTP_SetMessageFormat(char *message_format);
     @param[out] response String where the complete HTTP reponse will be stored.
     @param[in] size Maximum number of bytes to store in response.
 */
-int HTTP_Get(char *page, char *data, char *response, unsigned int size);
+int HTTP_Get(char *page, char *data);
 
+/** If data is ready, copies it into response. 
+    @return 1 If data was ready and read, 0 otherwise.
+*/
+int HTTP_GetResponse(char *response);
+
+HTTPStatus_t HTTP_getStatus();
+void HTTP_setStatus(HTTPStatus_t newStatus);
+const char *HTTP_getStatusString();
 
 #endif
 

@@ -43,6 +43,4 @@ void HYDRO_GUI_Init(int createThread, struct SensorData *sd);
  */
 void HYDRO_GUI_Draw();
 
-int displayIP();
-
 #endif

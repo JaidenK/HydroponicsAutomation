@@ -37,6 +37,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/controlPanel.php">Control Panel</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/detailedGraphs.php">History Graphs</a>
+            </li>
             <li class="navbar-text" id="navUsername">
                 Username
             </li>
