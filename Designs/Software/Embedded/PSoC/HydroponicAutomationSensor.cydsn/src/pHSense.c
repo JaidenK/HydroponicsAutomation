@@ -20,8 +20,6 @@
 #define PH_MIN_REF 2
 #define PH_DEFAULT_REF 5
 #define PWM_MAX 255.0
-#define HIST_CNT 1024
-#define SHIFT_CNT 10
 #define DROP_TIME 200
 #define UP 0
 #define DOWN 1
@@ -38,6 +36,9 @@
 
 #define PH_UPPERBOUND pHRef*MARGIN
 #define PH_LOWERBOUND -pHRef*MARGIN
+
+#define HIST_CNT 1
+#define SHIFT_CNT 0
 
 static float pHRef = 4.5;
 static float pH = 0;
