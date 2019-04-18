@@ -2,6 +2,7 @@
 #include "hydro_gui_Boke.h"
 #include "hydro_gui_Button.h"
 #include "hydro_gui_Scene.h"
+// #include "hydro_gui_Graph.h"
 #include "scene_dashboard.h"
 #include "scene_targetSelect.h"
 
@@ -17,6 +18,7 @@
 char buf_dashboard[32];
 
 void click_dashboard_targets(void *btn_);
+void click_dashboard_reboot(void *btn_);
 void draw_dashboard(void *scene_);
 
 void scene_dashboard_init() {
@@ -25,16 +27,29 @@ void scene_dashboard_init() {
   Button *b1 = newButton(30,20,200,60,"Targets");
   b1->click = click_dashboard_targets;
 
-  GuiElement **elems = malloc(2*sizeof(GuiElement*));
+  Button *b2 = newButton(width-230,20,200,60,"Reboot");
+  b2->click = click_dashboard_reboot;
+
+  // Graph *graph = newGraph(10, 10, 200, 100);
+
+  setGuiNeighbors(b1->gui_base, NULL, NULL, NULL, b2->gui_base);
+  setGuiNeighbors(b2->gui_base, NULL, NULL, b1->gui_base, NULL);
+
+  GuiElement **elems = malloc(3*sizeof(GuiElement*));
   elems[0] = boke->gui_base;
   elems[1] = b1->gui_base;
+  elems[2] = b2->gui_base;
 
-  scene_dashboard = newScene(elems, 2, b1->gui_base);
+  scene_dashboard = newScene(elems, 3, b1->gui_base);
   scene_dashboard->draw = draw_dashboard;
 }
 
 void click_dashboard_targets(void *btn_) {
   sceneTransition(currentScene,scene_targetSelect,ST_EASE_LEFT);
+}
+
+void click_dashboard_reboot(void *btn_) {
+  popen("reboot now","r");
 }
 
 void draw_dashboard(void *scene_) {

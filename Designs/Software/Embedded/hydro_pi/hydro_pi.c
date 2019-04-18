@@ -20,8 +20,11 @@
 #include "http.h"
 #include "hydro_gui.h"
 #include "sensor_data.h"
+#include "threaded_input.h"
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
+
+#define MAIN_DELAY 200000
 
 // Flag for the main loop
 volatile uint8_t isRunning = 1;
@@ -37,31 +40,53 @@ enum hydro_states{
 
 // Wifi
 // Used during the GUI screen where they select which network to connect to
-int selectedNetwork = -1;
+// static int selectedNetwork = -1;
 
-int clicked = 0;
+// static int clicked = 0;
 
 struct SensorData *sd;
 
 // General printing
-char buf[1024];
+#define BUF_SIZE 1024
+static char buf[BUF_SIZE];
 // Password string for wifi
-char passBuf[256];
+// static char passBuf[256];
+
+unsigned int loopCount = 0;
+
+void parseCmd(char *cmd, double val) {
+  if(strcmp(cmd,"flow")==0) {
+    printf("Flow target changed from %f to %f.\n", sd->flow_target, val);
+    sd->flow_target = val;
+  }else if(strcmp(cmd,"ph")==0) {
+    printf("pH target changed from %f to %f.\n", sd->ph_target, val);
+    sd->ph_target = val;
+  }else if(strcmp(cmd,"ec")==0) {
+    printf("EC target changed from %f to %f.\n", sd->ec_target, val);
+    sd->ec_target = val;
+  }else if(strcmp(cmd,"water")==0) {
+    printf("Water level target changed from %f to %f.\n", sd->h2o_target, val);
+    sd->h2o_target = val;
+  }else if(strcmp(cmd,"q")==0) {
+    INThandler(15);
+  }else{
+    printf("Invalid command: %s\n", cmd);
+  }
+}
 
 int main(int argc, char *argv[]) {
   hydro_state = HYDRO_IDLE;
 
   // Analyze options
-  int c = 0;
-  while ((c = getopt (argc, argv, "i")) != -1) {
-    switch(c) {
-      case 'i':
-        // Start up in IP display mode. Don't actually run the full program.
-        hydro_state = STARTUP_DISP_IP;
-        break;
-    }
-  }
-
+  // int c = 0;
+  // while ((c = getopt (argc, argv, "i")) != -1) {
+  //   switch(c) {
+  //     case 'i':
+  //       // Start up in IP display mode. Don't actually run the full program.
+  //       hydro_state = STARTUP_DISP_IP;
+  //       break;
+  //   }
+  // }
 
   // Specify the interrupt handler for ctrl+c
   signal(SIGINT, INThandler);
@@ -73,22 +98,25 @@ int main(int argc, char *argv[]) {
   setRandomData(sd);
 
   HYDRO_GUI_Init(1,sd);
+  ThreadedInput_Init();
+
+
   
-  if(hydro_state == STARTUP_DISP_IP) {
-    // Blocking function will wait until the user presses the joystick
-    // button to exit.
-    while(1) {
-      int returnCode = displayIP();
-      if(returnCode == 1) {
-        // Close program
-        exit(0);
-      }else if(returnCode == 2) {
-        // continue program
-        break;
-      }
-    }
-  }
 /*
+  // if(hydro_state == STARTUP_DISP_IP) {
+  //   // Blocking function will wait until the user presses the joystick
+  //   // button to exit.
+  //   while(1) {
+  //     int returnCode = displayIP();
+  //     if(returnCode == 1) {
+  //       // Close program
+  //       exit(0);
+  //     }else if(returnCode == 2) {
+  //       // continue program
+  //       break;
+  //     }
+  //   }
+  // }
   // To-do just ping. Maybe they have an ethernet cable.
   
   // Wifi connect console command
@@ -174,24 +202,15 @@ int main(int argc, char *argv[]) {
     }
     printf("Selected: %s\n",networks[selectedNetwork]);
   }
-  */
-  
-  
-  
-  
-  
-  
+*/
+  printf("Waiting (to allow network to connect).\n");
+  usleep(2000000);
+    
   // Initialize HTTP library
-  // HTTP_Init("sdp.ballistaline.com");
-  // char response[1024];
-  //HTTP_Get("dataReceiver.php", "ProductID=25258&foo=bar", response, 1024);
-  //printf("Response:\n%s\n",response);
-  // HTTP_Get("dataReceiver.php", "ProductID=264&foo=bar", response, 1024);
-  // printf("Response:\n%s\n",response);
+  HTTP_Init("sdp.ballistaline.com");
+  char response[1024];  
   
-  
-  
-  memset(passBuf,0,strlen(passBuf));
+  // memset(passBuf,0,strlen(passBuf));
   // Main loop
   while(isRunning) {
     
@@ -204,10 +223,38 @@ int main(int argc, char *argv[]) {
     Text(50+MIN(0,width-35*(int)strlen(passBuf)),height-120,passBuf,SerifTypeface, 40);
     */
 
-    // This is now taken care of in a thread.
-    // HYDRO_GUI_Draw();
     randomWalk(sd);
-    usleep(200000);
+    logData(sd,"logfile.dat");
+
+    // Upload the data ocassionally 
+    if(loopCount % (10*1000000/MAIN_DELAY) == 0) {
+      if(HTTP_getStatus() != HTTP_IDLE) {
+        printf("Warning: HTTP busy. %s\n", HTTP_getStatusString());
+      }else{
+        // Load the sensor data as a formatted string into a char buffer
+        memset(buf,0,BUF_SIZE);
+        getGETstr(buf,sd);
+        // Upload the data to the website
+        HTTP_Get("dataReceiver.php",buf);
+      }
+    }
+
+    // Once the http response is ready, print it out.
+    if(HTTP_GetResponse(response)) {
+      printf("Response received.\n");
+      // printf("%s\n", response);
+    }
+
+    // Test for user input
+    if(getstr_nonblocking(buf)) {
+      char cmd[16];
+      // char val[16];
+      double val_d = 0;
+      sscanf(buf,"%s %lf",cmd,&val_d);
+      parseCmd(cmd,val_d);
+    }
+    loopCount++;
+    usleep(MAIN_DELAY);
   }
   printf("\n");
   
@@ -219,27 +266,7 @@ int main(int argc, char *argv[]) {
 
 void INThandler(int sig) {
   isRunning = 0;
-  finish(); // Graphics cleanup
-  restoreterm(); 
-  exit(0);
+  // finish(); // Graphics cleanup
+  // restoreterm(); 
+  // exit(0);
 }
-
-// void addKeyToPassword() {
-//   int len = strlen(passBuf);
-//   char c = VG_KB_KeyPress();
-//   printf("VG_KB: %c\n",c);
-//   if(c == '\0') {
-//     // Do nothing
-//   } else if(c == '\b') {
-//     // backspace
-//     passBuf[len-1] = '\0';
-//   } else if(c == '\n') {
-//     // enter
-//     printf("Password: %s\n", passBuf);
-//   } else {
-//     passBuf[len] = c;
-//     passBuf[len+1] = '\0';
-//   }
-// }
-
-
