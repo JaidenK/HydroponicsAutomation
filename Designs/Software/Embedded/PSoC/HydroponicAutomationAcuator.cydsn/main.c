@@ -21,6 +21,7 @@
 #include "pHController.h"
 #include "Mixing.h"
 #include "SensorRxCom.h"
+#include "AD.h"
 
 #define FLOW_REF 1.5
 #define PH_REF 4.5
@@ -33,13 +34,18 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     char buffer[64];
+    uint16_t adc_val;
+    
   
     FlowController_Init();
     SerialCom_Init();
     //USBCom_Init();
+    AD_Init();
     pHController_Init();
     Mixing_Init();
     SensorComRx_Init();
+    
+    
     
     
     FlowController_SetFlowReference(FLOW_REF);
@@ -50,6 +56,8 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
+        adc_val = AD_GetADCValue();
+        FlowSpeedDAC_SetValue(adc_val);
         
 //        //Encode and send data
 //        Protocol_EncodeOutput(flow_measured, flowRate, buffer);
@@ -61,7 +69,6 @@ int main(void)
 //        
 //        if(target.key != invalid_key)
 //            Protocol_PrintMessage(target);
-        
         
 //        //Encode and send data
 //        Protocol_EncodeOutput(ph_measured, pH, buffer);
@@ -82,7 +89,7 @@ int main(void)
                 //printf("ec_measured: %d\r\n", (int) (sd.ec_level*100));
                 //printf("ec_stored: %d\r\n", (int) (sd.ec_stored*100));
                 //printf("temp_measured: %d\r\n", (int) (sd.temp_measured*100));
-                printf("flow_measured: %d ph_measured: %d\r\n", (int) (sd.flow_measured*100),(int)(sd.ph_level*100));
+                printf("flow_measured: %d ph_measured: %d ADC: %d\r\n", (int) (sd.flow_measured*100),(int)(sd.ph_level*100), adc_val);
             }
         
     }
