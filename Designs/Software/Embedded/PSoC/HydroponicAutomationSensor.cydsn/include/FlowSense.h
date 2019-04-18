@@ -26,7 +26,16 @@
 
 #define SUCCESS 1
 #define ERROR -1
-    
+
+/**
+ * @function FlowCounterTimerISRHandler(void)
+ * @param None
+ * @return None
+ * @brief Computes time elapsed since last capture
+ * @author Barron Wong 01/25/19
+ */
+CY_ISR_PROTO(FlowSenseCaptureISRHandler);
+
 /**
  * @function FlowCounterTimerISRHandler(void)
  * @param None

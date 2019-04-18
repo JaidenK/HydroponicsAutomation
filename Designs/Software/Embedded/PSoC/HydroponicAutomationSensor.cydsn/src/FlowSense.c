@@ -18,48 +18,53 @@
 #define FALSE 0 
 #define TRUE 1
 #define ADC_MAX 255
+#define FREE_TIMER_MAX 4294967296
+#define MEGA 100000.0
+
+#define NEW_HIST_CNT 16
+#define NEW_SHIFT_CNT 4
 
 #define HIST_CNT 4
 #define SHIFT_CNT 2
 
-static uint16_t flowSensorFreqHistory[HIST_CNT] = {0};
+static uint16_t flowSensorPeriodHistory[NEW_HIST_CNT] = {0};
 
-static uint16_t flowSensorFreq = 0;
+static uint32_t flowSensorPeriod = 0;
 
 /**
  * @function FlowCounterTimerISRHandler(void)
  * @param None
- * @return void
- * @brief FlowCounter ISR. Takes reading of flow meter every second
+ * @return None
+ * @brief Computes time elapsed since last capture
  * @author Barron Wong 01/25/19
  */
-CY_ISR(FlowCounterTimerISRHandler){
-    
+CY_ISR(FlowSenseCaptureISRHandler){
+    static uint32_t prev; 
     static uint16_t index = 0;
-    static uint32_t sum = 0;
-    uint16_t flowSensorSample = 0;
+    static uint32_t sum;
+    static uint16_t time_elapsed;
+    uint32_t current;
     
-    //Take Reading
-    flowSensorSample = FlowSensorCounter_ReadCounter();
-    //Start Next Conversion
-    FlowControlRegister_Write(1);
-    //Clear Interrupt
-    FlowCounterTimerISR_ClearPending();  
+    current = FREE_TIMER_MAX - FreeRunningTimer_ReadCounter();
     
+    time_elapsed = current - prev;
+    prev = current;
     
-     //Removed Average stability issues
+    //Removed Average stability issues
     //Subtract oldest value
-    sum -= flowSensorFreqHistory[index]; 
-    flowSensorFreqHistory[index] = flowSensorSample;
+    sum -= flowSensorPeriodHistory[index]; 
+    flowSensorPeriodHistory[index] = time_elapsed;
     //Add newest value
-    sum += flowSensorSample;
+    sum += time_elapsed;
     //Increment Index
-    index = (index + 1) % (HIST_CNT);
+    index = (index + 1) % (NEW_HIST_CNT);
     
-    flowSensorFreq = sum>>SHIFT_CNT;
-
+    flowSensorPeriod = sum>>NEW_SHIFT_CNT;
     
+    
+    FlowSenseCaptureISR_ClearPending();
 }
+
 
 /**
  * @function FlowSense_Init(void)
@@ -69,27 +74,20 @@ CY_ISR(FlowCounterTimerISRHandler){
  * @author Barron Wong 01/25/19
 */
 void FlowSense_Init(void){
-    FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
-    FlowCountTimer_Start();
-    FlowSensorCounter_Start();
+    FlowSenseCaptureISR_StartEx(FlowSenseCaptureISRHandler);
+    FreeRunningTimer_Start();
 }
 
 #define SLOPE 1.1763
 #define BIAS 0.131
-/**
- * @function FlowSense_GetFlowRate(void)
- * @param None
- * @return Flow rate in liters per minute
- * @brief Converts the current frequency and returns flow rate
- * @author Barron Wong 01/25/19
-*/
+
 float FlowSense_GetFlowRate(){
     
-    uint16_t reading = 0;
-    float flowRate;
+    double flowRate;
     
-    reading = flowSensorFreq;
-    flowRate = SLOPE*(reading/FLOWRATE_CONVERSION_FACTOR) + BIAS;
+    double freq = 1.0/(flowSensorPeriod/MEGA);
+    
+    flowRate = SLOPE*(freq/FLOWRATE_CONVERSION_FACTOR) + BIAS;
     
     return flowRate;
 }
@@ -108,7 +106,7 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
-        printf("Flow Rate %f \r\n", FlowSense_GetFlowRate());
+        printf("Old %f New %f Period %d \r\n",FlowSense_GetFlowRate2(), FlowSense_GetFlowRate(),flowSensorPeriod);
     }
     
 }

@@ -21,7 +21,6 @@
 #define TRUE 1
 #define ADC_MAX 255
 #define MARGIN 0.05
-static uint16_t flowSensorFreq = 0;
 
 static float flow_ref = 0;
 
@@ -38,8 +37,8 @@ extern struct SensorData sd;
  */
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
-    static float dutyCycle = 0.5;
-    float kp = 0.2;
+    static float dutyCycle = 0.3;
+    float kp = 0.9;
     float error = 0;
      
     
@@ -49,7 +48,6 @@ CY_ISR(FlowCounterTimerISRHandler){
     if(fabs(error) > flow_ref*MARGIN){
         dutyCycle = dutyCycle+(kp*error)/100.0;
         FlowController_SetFlowDutyCycle(dutyCycle);
-        //printf("Duty Cycle %d Error: %f\r\n", (int)(dutyCycle*100), error);
     }
     
     
@@ -67,7 +65,6 @@ CY_ISR(FlowCounterTimerISRHandler){
  * @author Barron Wong 01/25/19
 */
 void FlowController_Init(void){
-    FlowSpeedDAC_Start();
     FlowSpeedPWM_Start();
     FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
     FlowCountTimer_Start();
@@ -84,7 +81,6 @@ void FlowController_Init(void){
  * @author Barron Wong 01/25/19
 */
 float FlowController_GetFlowRate(){
-    
     return sd.flow_measured;
 }
 /**
@@ -95,15 +91,10 @@ float FlowController_GetFlowRate(){
  * @author Barron Wong 01/25/19
 */
 uint8_t FlowController_SetFlowDutyCycle(float dutyCycle){
-    uint16_t vout = 0;
     if(dutyCycle < 0 || dutyCycle > 1){
         return ERROR;
     }
-    
-    vout = (uint16_t) (dutyCycle*ADC_MAX);
-    //FlowSpeedDAC_SetValue(vout);
-    //FlowSpeedPWM_WriteCompare(dutyCycle*ADC_MAX);
-    
+    FlowSpeedPWM_WriteCompare(dutyCycle*ADC_MAX);
     
     return SUCCESS;
 }
