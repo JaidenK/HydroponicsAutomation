@@ -42,6 +42,18 @@ uint8_t xStepperInit();
  * @author Eric Lery 04/15/19
  */   
 uint8_t zStepperInit();     
+
+
+/**
+ * @function xMove(uint8_t xSteps);
+ * @param None
+ * @return TRUE or FALSE
+ * @brief Returns TRUE after steps are compleated, FALSE if not
+ * @author Eric Lery 04/15/19
+ */   
+uint8_t xMove(uint8_t xSteps);
+
+uint8_t zMove(uint8_t zSteps);
     
 /**
  * @function SensorComRx_Init()
