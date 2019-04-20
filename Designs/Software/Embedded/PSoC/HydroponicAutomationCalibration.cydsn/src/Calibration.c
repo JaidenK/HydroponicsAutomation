@@ -83,9 +83,11 @@ static enum {
     Z_AXIS_ZERO_PH10,
 }Ph10State=X_AXIS_MOVE_PH10; 
 
-
-int  X_AXIS_MOVE_FINISHED=1001;
-int  AXIS_MOVE_FINISHED=1000;
+static enum {
+    X_AXIS_MOVE_FINISHED,
+    Z_AXIS_MOVE_FINISHED,
+    Z_AXIS_ZERO_FINISHED,
+}finishedState=X_AXIS_MOVE_PH10; 
 
 
 int xStepsToMove=FULL_X_LENGTH_STEPS;
@@ -482,6 +484,7 @@ int main(void)
                 }
                 break;
             case FINISHED:
+                switch(finishedState){
                 case X_AXIS_MOVE_FINISHED:
                     if(X_pos!=X_target){
                             X_START;
@@ -490,7 +493,12 @@ int main(void)
                             Ph7State=Z_AXIS_MOVE_PH10;
                             Z_target=TOP_TO_CALIBRATE;
                         }
-                break;
+                        break;
+                        default:
+                            break;
+                       
+                }
+            break;
             default:
                 break;
         }
