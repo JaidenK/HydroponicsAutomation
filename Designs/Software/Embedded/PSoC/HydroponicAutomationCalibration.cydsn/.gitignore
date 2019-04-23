@@ -5,4 +5,11 @@ HydroponicAutomationAcuator.cycdx
 HydroponicAutomationAcuator.rpt
 codegentemp/
 cyapicallbacks.h
+HydroponicAutomationCalibration.cycdx
+HydroponicAutomationCalibration.cyprj.leryj
+HydroponicAutomationCalibration.rpt
+../HydroponicAutomation.cywrk
+../HydroponicAutomationAcuator.cydsn/HydroponicAutomationAcuator.cyprj
+../HydroponicAutomation.cywrk.leryj
+../HydroponicAutomationAcuator.cydsn/HydroponicAutomationAcuator.cyprj.leryj
 
