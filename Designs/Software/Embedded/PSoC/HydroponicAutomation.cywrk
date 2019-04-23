@@ -11,6 +11,7 @@
 <v>.\HydroponicAutomationSensor.cydsn\HydroponicAutomationSensor.cyprj</v>
 <v>.\HydroponicAutomationAcuator.cydsn\HydroponicAutomationAcuator.cyprj</v>
 <v>.\SwitchingPowerSupply.cydsn\SwitchingPowerSupply.cyprj</v>
+<v>.\HydroponicAutomationCalibration.cydsn\HydroponicAutomationCalibration.cyprj</v>
 </projects>
 <workspace_id v="16233c4f-51f9-4612-bd5d-f3921b329e29" />
 <WriteAppVersionLastSavedWith v="4.2.0.641" />
