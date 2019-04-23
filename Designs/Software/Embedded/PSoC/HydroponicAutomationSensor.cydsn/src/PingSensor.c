@@ -65,10 +65,12 @@ CY_ISR(PingSensorSampleTimerISRHandler){
 */
 CY_ISR(PingSensorEchoISRHandler){
     uint32_t time;
-    uint8_t echo_select = (PingSelector - 1) % LEVEL_SENSE_CNT;
+    uint8_t echo_select = (PingSelector - 1);
+    
+    echo_select %= LEVEL_SENSE_CNT;
     PingSensorEchoISR_ClearPending();
     time = ECHO_TIMER_MAX - PingSensorEchoTimer_ReadCapture();
-    SupplyLevel[echo_select] = (time/MEGA * 340)/2;;
+    SupplyLevel[echo_select] = (time/MEGA * 340)/2;
     PingSensorEchoTimer_ClearFIFO();
 }
 /**

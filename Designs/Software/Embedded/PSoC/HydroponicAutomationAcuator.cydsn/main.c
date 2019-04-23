@@ -23,8 +23,8 @@
 #include "SensorRxCom.h"
 #include "AD.h"
 
-#define FLOW_REF 1
-#define PH_REF 4.5
+#define FLOW_REF 1.5
+#define PH_REF 7
 
 #ifndef MODULE_TEST 
     
@@ -79,15 +79,17 @@ int main(void)
 //        if(target.key != invalid_key)
 //            Protocol_PrintMessage(target);
             if(SensorComRx_CheckStatus()){
-                //printf("h20_level: %d\r\n", (int) (sd.h2o_level*100));
-                //printf("h20_stored: %d\r\n", (int) (sd.h2o_stored*100));
-                //printf("ph_measured: %d\r\n", (int)(sd.ph_level*100));
-                //printf("ph_up_stored: %d\r\n", (int) (sd.ph_up_stored*100));
-                //printf("ph_down_stored: %d\r\n", (int) (sd.ph_down_stored*100));
-                //printf("ec_measured: %d\r\n", (int) (sd.ec_level*100));
-                //printf("ec_stored: %d\r\n", (int) (sd.ec_stored*100));
-                //printf("temp_measured: %d\r\n", (int) (sd.temp_measured*100));
-                printf("flow_measured: %d ph_measured: %d\r\n", (int) (sd.flow_measured*100),(int)(sd.ph_level*100));
+                printf("\r\n\r\n\r\n\r\n\r\n");
+                printf("ph_measured: %d\r\n", (int)(sd.ph_level*100));
+                printf("ec_measured: %d\r\n", (int) (sd.ec_level*100));
+                printf("temp_measured: %d\r\n", (int) (sd.temp_measured*100));
+                printf("flow_measured: %d\r\n", (int) (sd.flow_measured*100));
+                printf("h20_level: %d\r\n", (int) (sd.h2o_level*100));
+                printf("h20_stored: %d\r\n", (int) (sd.h2o_stored*100));
+                printf("ph_up_stored: %d\r\n", (int) (sd.ph_up_stored*100));
+                printf("ph_down_stored: %d\r\n", (int) (sd.ph_down_stored*100));
+                printf("ec_stored: %d\r\n", (int) (sd.ec_stored*100));
+                
             }
         
     }

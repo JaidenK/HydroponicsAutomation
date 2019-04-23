@@ -37,8 +37,8 @@
 #define PH_UPPERBOUND pHRef*MARGIN
 #define PH_LOWERBOUND -pHRef*MARGIN
 
-#define HIST_CNT 1
-#define SHIFT_CNT 0
+#define HIST_CNT 32
+#define SHIFT_CNT 5
 
 static float pHRef = 4.5;
 static float pH = 0;

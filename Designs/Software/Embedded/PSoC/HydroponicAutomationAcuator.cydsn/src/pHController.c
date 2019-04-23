@@ -59,18 +59,13 @@ CY_ISR_PROTO(pHControlISRHandler){
     float error; 
     
     pHControlISR_ClearPending();
-    
     error = pHRef - sd.ph_level;
-
+    
+    
     if(fabs(error) < MARGIN){
         adjust = FALSE;
         Mixing_TurnOff();
     }
-    
-    //Adding for integration testing
-    //Keep Mixing Motor On
-    //Needs Remove
-    error = PH_UPPERBOUND + 1;
     
     //Hystersis bound for error
     if(!adjust){
@@ -86,10 +81,13 @@ CY_ISR_PROTO(pHControlISRHandler){
     
     if(adjust){
         drops = kp*error;
-        if(drops < 0){
-            pHController_AdjustpH(UP,drops*-1);
+        //printf("ph_ref: %f ph_level: %f error: %f\r\n",pHRef, sd.ph_level, error);
+        if(drops > 0){
+            //printf("pH up\r\n");
+            pHController_AdjustpH(UP,drops);
         }else{
-            pHController_AdjustpH(DOWN,drops);
+            //printf("pH down\r\n");
+            pHController_AdjustpH(DOWN,drops*-1);
         }
     }
     

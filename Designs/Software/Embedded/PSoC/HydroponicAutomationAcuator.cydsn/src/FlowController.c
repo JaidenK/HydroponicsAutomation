@@ -20,7 +20,7 @@
 #define FALSE 0 
 #define TRUE 1
 #define ADC_MAX 255
-#define MARGIN 0.05
+#define MARGIN 0.00
 
 static float flow_ref = 0;
 
@@ -38,7 +38,7 @@ extern struct SensorData sd;
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
     static float dutyCycle = 0.3;
-    float kp = 0.9;
+    float kp = 2.0;
     float error = 0;
      
     

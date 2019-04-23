@@ -82,7 +82,7 @@ char * SensorComTx_EncodeMessage(struct SensorData sd, char * buffer){
     buffer[strlen(buffer)]= ',';
     
     //ec_stored
-    strcat(buffer,Protocol_EncodeOutput(ec_stored, sd.ec_level, data_buffer));
+    strcat(buffer,Protocol_EncodeOutput(ec_stored, sd.ec_stored, data_buffer));
     buffer[strlen(buffer)]= ',';
     
     //temp_measured
