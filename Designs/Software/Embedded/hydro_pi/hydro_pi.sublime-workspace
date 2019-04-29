@@ -523,7 +523,7 @@
 			"file": "hydro_pi.c",
 			"settings":
 			{
-				"buffer_size": 8234,
+				"buffer_size": 8230,
 				"line_ending": "Unix"
 			}
 		},
@@ -608,6 +608,7 @@
 	},
 	"file_history":
 	[
+		"/Users/jaidenking/Documents/Classes/CE 118/CanvasDownload/Labs/LabGeneral/CMPE118/include/RC_Servo.h",
 		"/Users/jaidenking/Documents/Classes/CE 118/CanvasDownload/Labs/LabGeneral/CMPE118/include/roach.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui.c",
 		"/Users/jaidenking/Documents/PythonScripts/ES_Framework_helper/thisIsAnFSM.c",
@@ -734,8 +735,7 @@
 		"/Users/jaidenking/Documents/Classes/CE 121/git/jaaking/project/raspi/logicAnalyzer/src/main.c",
 		"/Users/jaidenking/Documents/Classes/CE 129A/HydroponicsAutomation/Designs/Electrical/images/quick_sketches/Readme.txt",
 		"/Users/jaidenking/Documents/Classes/CE 167/CE167/lab0/Lab0.X/instrumentMain.c",
-		"/Users/jaidenking/Desktop/loops.c",
-		"/Users/jaidenking/Desktop/foo"
+		"/Users/jaidenking/Desktop/loops.c"
 	],
 	"find":
 	{
@@ -743,7 +743,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 117.0,
+		"height": 0.0,
 		"where_history":
 		[
 			""
@@ -914,15 +914,15 @@
 					"file": "hydro_pi.c",
 					"settings":
 					{
-						"buffer_size": 8234,
+						"buffer_size": 8230,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7341,
-								7341
+								7076,
+								7076
 							]
 						],
 						"settings":
@@ -932,7 +932,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 653.0,
+						"translation.y": 6467.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -960,7 +960,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4181.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -988,7 +988,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1408.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1098,7 +1098,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 16.0,
-						"translation.y": 1105.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
