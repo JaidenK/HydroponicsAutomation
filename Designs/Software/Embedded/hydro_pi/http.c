@@ -168,7 +168,7 @@ int receiveResponse() {
 
 void *http_get_thread(void *foo) {  
   status = HTTP_OPENING_SOCKET;
-  printf("Opening socket -> \n");
+  // printf("Opening socket -> \n");
   /* create the socket */
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if (sockfd < 0) {
@@ -192,7 +192,7 @@ void *http_get_thread(void *foo) {
   memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
 
   status = HTTP_CONNECTING;
-  printf("Connecting -> \n");
+  // printf("Connecting -> \n");
 
   /* connect the socket */
   if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0) {
@@ -202,23 +202,23 @@ void *http_get_thread(void *foo) {
   }
 
   status = HTTP_SENDING_MESSAGE;
-  printf("Sending message -> \n");
+  // printf("Sending message -> \n");
 
   sendMessage();
 
   status = HTTP_RECEIVING_MESSAGE;
-  printf("Receiving message -> \n");
+  // printf("Receiving message -> \n");
 
   receiveResponse();
 
   status = HTTP_CLOSING_SOCKET;
-  printf("Closing -> \n");
+  // printf("Closing -> \n");
 
   /* close the socket */
   close(sockfd);
 
   status = HTTP_IDLE;
-  printf("Done.\n");
+  // printf("Done.\n");
 
   isResponseReady = 1;
 

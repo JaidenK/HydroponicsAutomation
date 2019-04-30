@@ -70,10 +70,12 @@ if ($conn->query($sql) === TRUE) {
 $sql = "SELECT * FROM `MachineConfig` WHERE `ProductID` = '$ProductID'";
 $result = mysqli_query($conn,$sql) or die(mysql_error());
 while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-  echo "water_target=".$row['water']."\n";
-  echo "ph_target=".$row['ph']."\n";
-  echo "ec_target=".$row['ec']."\n";
-  echo "flow_target=".$row['flow']."\n";
-  echo "temp_target=".$row['temp']."\n";
+  echo "water_target ".$row['water']."\n";
+  echo "ph_target ".$row['ph']."\n";
+  echo "ec_target ".$row['ec']."\n";
+  echo "flow_target ".$row['flow']."\n";
+  echo "temp_target ".$row['temp']."\n";
 }
+$sql = "UPDATE `MachineConfig` SET water=0, ph=0, ec=0, flow=0, temp=0 WHERE `ProductID` = '$ProductID'";
+$result = mysqli_query($conn,$sql) or die(mysql_error());
 ?> 
