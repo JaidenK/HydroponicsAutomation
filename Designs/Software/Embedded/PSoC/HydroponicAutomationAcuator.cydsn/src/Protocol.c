@@ -14,6 +14,11 @@
 #include <stdlib.h>
 #include "Protocol.h"
 #include "project.h"
+#include "sensor_data.h"
+
+#define BUFF_SIZE 255
+
+extern struct SensorData sd;
 
 /**
  * @function Protocol_DecodeInput(char * input)
@@ -24,34 +29,34 @@
 */
 message_t Protocol_DecodeInput(char * input){
     char * ptr;
-    message_t target;
+    message_t message;
     uint8_t count = 0;
     
-    target.key = invalid_key;
-    target.key = 0;
+    message.key = invalid_key;
+    message.key = 0;
     
     ptr = strtok(input,":");
     
     while(ptr != NULL){
         switch(count){
             case 0:{
-                target.key = atoi(ptr);
+                message.key = atoi(ptr);
             break;
             }
             case 1:{
-                target.value = atof(ptr);
+                message.value = atof(ptr);
             break;
             }
             default:{
-                target.key = invalid_key;
-                target.value = -1;
+                message.key = invalid_key;
+                message.value = -1;
             }
         }
         count++;
         ptr = strtok(NULL,":");
     }
     
-    return target;
+    return message;
     
 }
 /**
@@ -74,6 +79,64 @@ char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
     
     return buffer;
 }
+
+/**
+ * @function SensorComTx_EncodeMessage()
+ * @param SensorData structure, buffer
+ * @return None
+ * @brief Takes in a SensorData structure and returns
+ *        a string in nmea0183 format
+ * @author Barron Wong 04/04/19
+ */
+char * Protocol_EncodeMessage(char * buffer){
+    int len;
+    int checksum;
+    char data_buffer[BUFF_SIZE];
+    
+    //Clear buffer
+    len = strlen(buffer);
+    for(int i = 0; i < len; i++){
+        buffer[i] = 0;
+    }
+    
+    //h20_level
+    strcat(buffer,Protocol_EncodeOutput(h20_level, sd.h2o_level, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //h20_stored
+    strcat(buffer,Protocol_EncodeOutput(h20_stored, sd.h2o_stored, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //ph_measured
+    strcat(buffer,Protocol_EncodeOutput(ph_measured, sd.ph_level, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //ph_up_stored
+    strcat(buffer,Protocol_EncodeOutput(ph_up_stored, sd.ph_up_stored, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //ph_down_stored
+    strcat(buffer,Protocol_EncodeOutput(ph_down_stored, sd.ph_down_stored, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //ec_measured
+    strcat(buffer,Protocol_EncodeOutput(ec_measured, sd.ec_level, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //ec_stored
+    strcat(buffer,Protocol_EncodeOutput(ec_stored, sd.ec_stored, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //temp_measured
+    strcat(buffer,Protocol_EncodeOutput(temp_measured, sd.temp_measured, data_buffer));
+    buffer[strlen(buffer)]= ',';
+    
+    //flow_measured
+    strcat(buffer,Protocol_EncodeOutput(flow_measured, sd.flow_measured, data_buffer));
+    
+    return buffer;
+}
+
 /**
  * @function Protocol_PrintMessage(char * input)
  * @param target_t
