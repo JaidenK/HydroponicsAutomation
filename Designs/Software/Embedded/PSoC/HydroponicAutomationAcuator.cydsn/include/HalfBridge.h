@@ -13,7 +13,7 @@
  */
 
 
-#define HALFBRIDGE_TEST
+//#define HALFBRIDGE_TEST
 
 #ifndef HalfBridge_H
 #define HalfBridge_H
