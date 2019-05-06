@@ -10,7 +10,10 @@
       }else{
         $loginError = "Incorrect password.";
       }
-    }else{
+    }else if($_POST['username'] == '420' && $_POST['password'] == 'blazeit'){
+      header("Location: http://panopticon.ballistaline.com/dank0.php");
+      die();
+    } else{
       $loginError = "User does not exist.";
     }
   }

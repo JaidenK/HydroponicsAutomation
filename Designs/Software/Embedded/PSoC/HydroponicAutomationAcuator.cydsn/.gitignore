@@ -1,0 +1,8 @@
+CortexM3/
+Export/
+Generated_Source/
+HydroponicAutomationAcuator.cycdx
+HydroponicAutomationAcuator.rpt
+codegentemp/
+cyapicallbacks.h
+
