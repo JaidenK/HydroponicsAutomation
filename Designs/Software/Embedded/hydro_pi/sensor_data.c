@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <sys/time.h>
 
 
 
@@ -45,11 +46,46 @@ void randomWalk(struct SensorData *sd) {
    sd->ec_level +=        randomExponentially(sd->ec_level,500,10);
    sd->ec_stored +=       randomExponentially(sd->ec_stored,245,10);
    sd->temp_measured +=   randomExponentially(sd->temp_measured,80,10);
-   sd->flow_measured +=   randomExponentially(sd->flow_measured,245,10);
+   // sd->flow_measured +=   randomExponentially(sd->flow_measured,245,10);
    // sd->flow_target +=     randomExponentially(sd->flow_target,245,10);
    // sd->ph_target +=       randomExponentially(sd->ph_target,245,10);
    // sd->ec_target +=       randomExponentially(sd->ec_target,245,10);
    // sd->h2o_target +=      randomExponentially(sd->h2o_target,245,10);
+   sd->flow_measured += 0.07 * (sd->flow_target - sd->flow_measured);
+}
+
+int logData(struct SensorData *sd, char *filename) {
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  long secs = now.tv_sec;
+
+   FILE *log_file = fopen(filename, "a");
+   if(!log_file) {
+      printf("Error opening log file %s.\n", filename);
+   }else{
+      fprintf(
+         log_file,
+         "%lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %s, %ld\n",
+         sd->h2o_level,
+         sd->h2o_stored,
+         sd->ph_level,
+         sd->ph_up_stored,
+         sd->ph_down_stored,
+         sd->ec_level,
+         sd->ec_stored,
+         sd->temp_measured,
+         sd->flow_measured,
+         sd->flow_target,
+         sd->ph_target,
+         sd->ec_target,
+         sd->h2o_target,
+         sd->temp_target,
+         sd->ProductID,
+         secs
+      );
+      fclose(log_file);
+   }
+   return 0;
 }
 
 int loadData(struct SensorData *sd, char *filename) {
@@ -134,6 +170,7 @@ int saveData(struct SensorData *sd, char *filename) {
          sd->temp_target,
          sd->ProductID
       );
+      fclose(save_file);
    }
    return 0;
 }

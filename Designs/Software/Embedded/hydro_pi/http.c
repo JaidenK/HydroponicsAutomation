@@ -1,6 +1,11 @@
+/*
+ * File: http.c
+ * Author: Jaiden King
+ */
+
+/* MODULE #INCLUDES */
 #include "http.h"
 #include "sensor_data.h"
-
 #include <stdio.h> /* printf, sprintf */
 #include <stdlib.h> /* exit */
 #include <unistd.h> /* read, write, close */
@@ -8,8 +13,22 @@
 #include <sys/socket.h> /* socket, connect */
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
 #include <netdb.h> /* struct hostent, gethostbyname */
+#include <pthread.h>
 
 #include <ctype.h> // isspace()
+
+/* MODULE #DEFINES */
+#define RESPONSE_SIZE 2048
+
+/* PRIVATE FUNCTION PROTOTYPES */
+int sendMessage();
+int receiveResponse();
+void *http_get_thread(void *foo);
+
+void error(const char *msg);
+
+/* PRIVATE MODULE VARIABLES */
+int isResponseReady = 0;
 
 // Data received during the HTTP request
 char httpGETdata[2048];
@@ -20,6 +39,7 @@ int portno = 80;
 char host[1024];// =        "sdp.ballistaline.com";
 // The format of the http message to be sent. A simple GET request.
 char message_fmt[1024];// = "GET http://sdp.ballistaline.com/dataReceiver.php?%s HTTP/1.0\r\n\r\n";
+char message[4096];
 
 // Will store the details about the server, like it's IP, given a URL
 struct hostent *server;
@@ -27,15 +47,18 @@ struct hostent *server;
 struct sockaddr_in serv_addr;
 int sockfd;
 
-int sendMessage();
-int receiveResponse();
+static char response[RESPONSE_SIZE];
 
-void error(const char *msg) { perror(msg); exit(0); }
+static HTTPStatus_t status;
+
+/* PUBLIC FUNCTIONS */
 
 int HTTP_Init(char *host_) {
+  status = HTTP_INIT;
   printf("Initializing HTTP.\n");
   HTTP_SetHost(host_);
   sprintf(message_fmt,"GET http://%s/%%s?%%s HTTP/1.0\r\n\r\n",host);
+  status = HTTP_IDLE;
   return 0;
 }
 
@@ -53,44 +76,45 @@ int HTTP_SetMessageFormat(char *message_fmt_) {
   return 0;
 }
 
-int HTTP_Get(char *page, char *data, char *response, unsigned int size) {
-   /* create the socket */
-   sockfd = socket(AF_INET, SOCK_STREAM, 0);
-   if (sockfd < 0) error("ERROR opening socket");
-
-   /* lookup the ip address */
-   server = gethostbyname(host);
-   if (server == NULL) error("ERROR, no such host");
-
-   /* fill in the parameters */
-   // Clear the message so that garbage doesn't go on the end.
-   char message[4096];
-   memset(message,0,sizeof(message));
-   sprintf(message,message_fmt,page,data);
-   printf("HTTP GET Request:\n%s\n",message);
-
-   /* fill in the structure */
-   memset(&serv_addr,0,sizeof(serv_addr));
-   serv_addr.sin_family = AF_INET; // Address Family
-   serv_addr.sin_port = htons(portno);
-   memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
-
-   /* connect the socket */
-   if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0)
-   error("ERROR connecting");
-
-   sendMessage(message);
-
-   receiveResponse(response, size);
-
-   /* close the socket */
-   close(sockfd);
-
-   return 0;
+HTTPStatus_t HTTP_getStatus() {
+  return status;
+}
+void HTTP_setStatus(HTTPStatus_t newStatus) {
+  status = newStatus;
 }
 
+const char *HTTP_getStatusString() {
+  return HTTP_StatusNames[status];
+}
 
-int sendMessage(char *message) {
+int HTTP_Get(char *page, char *data) {
+  /* fill in the parameters */
+  // Clear the message so that garbage doesn't go on the end.
+  memset(message,0,sizeof(message));
+  sprintf(message,message_fmt,page,data);
+  // printf("HTTP GET Request:\n%s\n",message);
+  pthread_t tid_http_get;
+  pthread_create(&tid_http_get, NULL, http_get_thread, NULL);
+
+  return 0;
+}
+
+int HTTP_GetResponse(char *dest) {
+  if(isResponseReady) {
+    strcpy(dest, response);
+    isResponseReady = 0;
+    return 1;
+  }
+  return 0;
+}
+
+/* PRIVATE FUNCTIONS */
+void error(const char *msg) { 
+  printf("%s\n", msg);
+  status = HTTP_ERROR;
+}
+
+int sendMessage() {
    /* send the request */
    // Total number of bytes in the message
    int total = strlen(message);
@@ -100,7 +124,9 @@ int sendMessage(char *message) {
    do {
       bytes = write(sockfd,message+sent,total-sent);
       if (bytes < 0) {
-         error("ERROR writing message to socket");
+        error("ERROR writing message to socket");
+        close(sockfd);
+        return 0;
       }
       if (bytes == 0) {
          break;
@@ -111,28 +137,90 @@ int sendMessage(char *message) {
    return 0;
 }
 
-int receiveResponse(char *response, unsigned int size) {
-   /* receive the response */
-   // Clear the old data
-   memset(response,0,size);
-   // Bytes received
-   int received = 0;
-   int bytes = 0;
-   do {
-      bytes = read(sockfd,response+received,size-received);
-      if (bytes < 0) {
-         error("ERROR reading response from socket");
-      }
-      if (bytes == 0) {
-         break;
-      }
-      received+=bytes;
-   } while (received < size);
+int receiveResponse() {
+  /* receive the response */
+  // Clear the old data
+  memset(response,0,RESPONSE_SIZE);
+  // Bytes received
+  int received = 0;
+  int bytes = 0;
+  do {
+    bytes = read(sockfd,response+received,RESPONSE_SIZE-received);
+    if (bytes < 0) {
+      error("ERROR reading response from socket");
+      close(sockfd);
+      return 0;
+    }
+    if (bytes == 0) {
+      break;
+    }
+    received+=bytes;
+  } while (received < RESPONSE_SIZE);
 
-   // Receive buffer full
-   if (received == size) {
-      error("ERROR storing complete response from socket");
-   }
+  // Receive buffer full
+  if (received == RESPONSE_SIZE) {
+    error("ERROR storing complete response from socket");
+    close(sockfd);
+    return 0;
+  }
+  return 0;
+}
 
-   return 0;
+void *http_get_thread(void *foo) {  
+  status = HTTP_OPENING_SOCKET;
+  // printf("Opening socket -> \n");
+  /* create the socket */
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);
+  if (sockfd < 0) {
+    error("ERROR opening socket");
+    return NULL;
+  }
+
+  /* lookup the ip address */
+  server = gethostbyname(host);
+  if (server == NULL) {
+    error("ERROR, no such host");
+    close(sockfd);
+    return NULL;
+  }
+
+
+  /* fill in the structure */
+  memset(&serv_addr,0,sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET; // Address Family
+  serv_addr.sin_port = htons(portno);
+  memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
+
+  status = HTTP_CONNECTING;
+  // printf("Connecting -> \n");
+
+  /* connect the socket */
+  if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0) {
+    error("ERROR connecting");
+    close(sockfd);
+    return NULL;
+  }
+
+  status = HTTP_SENDING_MESSAGE;
+  // printf("Sending message -> \n");
+
+  sendMessage();
+
+  status = HTTP_RECEIVING_MESSAGE;
+  // printf("Receiving message -> \n");
+
+  receiveResponse();
+
+  status = HTTP_CLOSING_SOCKET;
+  // printf("Closing -> \n");
+
+  /* close the socket */
+  close(sockfd);
+
+  status = HTTP_IDLE;
+  // printf("Done.\n");
+
+  isResponseReady = 1;
+
+  return NULL;
 }

@@ -5,6 +5,8 @@
 #include <stdint.h> // Integer data types
 #include <math.h> // for sin cos
 #include <string.h>
+#include <unistd.h> // getopt usleep
+#include <errno.h> // Error number
 
 // Peripheral libraries
 #include <wiringPi.h>
@@ -15,10 +17,14 @@
 #include <fontinfo.h>
 
 // My libraries
-#include "QEI.h"
-#include "Joy.h"
 #include "http.h"
-#include "vg_keyboard.h"
+#include "hydro_gui.h"
+#include "sensor_data.h"
+#include "threaded_input.h"
+
+#define MIN(a,b) (((a)<(b))?(a):(b))
+
+#define MAIN_DELAY 200000
 
 // Flag for the main loop
 volatile uint8_t isRunning = 1;
@@ -26,87 +32,89 @@ volatile uint8_t isRunning = 1;
 // Signal interrupt handler
 void INThandler(int);
 
-// Joystick interrupts
-void joy_up(void);
-void joy_down(void);
-void joy_left(void);
-void joy_right(void);
-void joy_click(void);
-
 enum hydro_states{
-  HYDRO_IDLE, WIFI_SELECTING_NETWORK
+  HYDRO_IDLE, // Not doing anything in particular
+  WIFI_SELECTING_NETWORK, // Start up, selecting network
+  STARTUP_DISP_IP // On bootup, display IP so I can SSH into it
 } hydro_state;
 
 // Wifi
 // Used during the GUI screen where they select which network to connect to
-int selectedNetwork = -1;
+// static int selectedNetwork = -1;
 
-int xJoy = 0;
-int yJoy = 0;
-    
-int clicked = 0;
+// static int clicked = 0;
+
+struct SensorData *sd;
 
 // General printing
-char buf[1024];
+#define BUF_SIZE 1024
+static char buf[BUF_SIZE];
+// Password string for wifi
+// static char passBuf[256];
 
+unsigned int loopCount = 0;
+
+void parseCmd(char *cmd, double val) {
+  if(strcmp(cmd,"flow")==0) {
+    printf("Flow target changed from %f to %f.\n", sd->flow_target, val);
+    sd->flow_target = val;
+  }else if(strcmp(cmd,"ph")==0) {
+    printf("pH target changed from %f to %f.\n", sd->ph_target, val);
+    sd->ph_target = val;
+  }else if(strcmp(cmd,"ec")==0) {
+    printf("EC target changed from %f to %f.\n", sd->ec_target, val);
+    sd->ec_target = val;
+  }else if(strcmp(cmd,"water")==0) {
+    printf("Water level target changed from %f to %f.\n", sd->h2o_target, val);
+    sd->h2o_target = val;
+  }else if(strcmp(cmd,"q")==0) {
+    INThandler(15);
+  }else{
+    printf("Invalid command: %s\n", cmd);
+  }
+}
 
 int main(int argc, char *argv[]) {
+  hydro_state = HYDRO_IDLE;
+
+  // Analyze options
+  // int c = 0;
+  // while ((c = getopt (argc, argv, "i")) != -1) {
+  //   switch(c) {
+  //     case 'i':
+  //       // Start up in IP display mode. Don't actually run the full program.
+  //       hydro_state = STARTUP_DISP_IP;
+  //       break;
+  //   }
+  // }
+
   // Specify the interrupt handler for ctrl+c
   signal(SIGINT, INThandler);
   
   // Setup GPIO
   wiringPiSetup();
+
+  sd = malloc(sizeof(struct SensorData));
+  setRandomData(sd);
+
+  HYDRO_GUI_Init(1,sd);
+  ThreadedInput_Init();
   
-  pinMode(9,OUTPUT);
-  pinMode(3,OUTPUT);
-  pinMode(2,OUTPUT);
-  pinMode(0,OUTPUT);
-  pinMode(7,OUTPUT);
-  
-  while(1) {
-    printf("High\n");
-    digitalWrite(9,1);
-    digitalWrite(3,1);
-    digitalWrite(2,1);
-    digitalWrite(0,1);
-    digitalWrite(7,1);
-    for(unsigned int i =0;i<500000000;i++){}
-    printf("Low\n");
-    digitalWrite(9,0);
-    digitalWrite(3,0);
-    digitalWrite(2,0);
-    digitalWrite(0,0);
-    digitalWrite(7,0);
-    for(unsigned int i =0;i<500000000;i++){}
-  }
-  
-  // Initialize QEI with GPIO Pins 24, 25
-  //QEI_Init( , );
-  // Pins for the Y axis of the joystick (op-amp output). 
-  // BCM 23, 22, 27, 17, 4, 3
-  JOY_Init(4,3,2,0,9,joy_up,joy_down,joy_left,joy_right,joy_click);
-  JOY_PreventNegativePositions();
-  
-  VG_KB_Init();
-  
-  // Setup Graphics
-	int width, height;
-  // Graphics
-  saveterm(); // Save current screen
-  init(&width, &height); // Initialize display and get width and height
-  Start(width, height);
-  //rawterm(); // Needed to receive control characters from keyboard, such as ESC
-  
-  hydro_state = HYDRO_IDLE;
-  
-  
-  Background(0, 0, 0);					// Black background
-  Fill(255, 255, 255, 1);					// White text
-  TextMid((width/2), (height/2), "Testing network connection...", SerifTypeface, height/20);	// Greetings 
-  End();
-  
-  
-  
+/*
+  // if(hydro_state == STARTUP_DISP_IP) {
+  //   // Blocking function will wait until the user presses the joystick
+  //   // button to exit.
+  //   while(1) {
+  //     int returnCode = displayIP();
+  //     if(returnCode == 1) {
+  //       // Close program
+  //       exit(0);
+  //     }else if(returnCode == 2) {
+  //       // continue program
+  //       break;
+  //     }
+  //   }
+  // }
   // To-do just ping. Maybe they have an ethernet cable.
   
   // Wifi connect console command
@@ -192,86 +200,94 @@ int main(int argc, char *argv[]) {
     }
     printf("Selected: %s\n",networks[selectedNetwork]);
   }
-  
-  
-  
-  
-  
-  
-  
+*/
+
+  printf("Waiting (to allow network to connect).\n");
+  usleep(2000000);
+    
   // Initialize HTTP library
-  //HTTP_Init("sdp.ballistaline.com");
-  //char response[1024];
-  //HTTP_Get("dataReceiver.php", "ProductID=25258&foo=bar", response, 1024);
-  //printf("Response:\n%s\n",response);
-  //HTTP_Get("dataReceiver.php", "ProductID=264&foo=bar", response, 1024);
-  //printf("Response:\n%s\n",response);
+  HTTP_Init("sdp.ballistaline.com");
+  char response[1024];  
   
-  
-  
+  // memset(passBuf,0,strlen(passBuf));
   // Main loop
   while(isRunning) {
-    Background(0, 0, 0);					// Black background
-    Fill(44, 77, 232, 1);					// Big blue marble
-    Circle(width / 2, 0, width);			// The "world"
-    Fill(255, 255, 255, 1);					// White text
-    //char buf[100];
-    //int pos = QEI_GetPosition();
-    //sprintf(buf, "Pos: %d", pos);
-    //TextMid((width/2)+(width/2)*cos(-pos/100.0+M_PI/2), (width/2)*sin(-pos/100.0+M_PI/2), buf, SerifTypeface, 10);	// Greetings 
     
+    /*
+    // Keyboard stuff
     VG_KB_Draw(0,0,width,height);
-    
-    // Color the circles based on the joystick readings.
-    Fill(255,255,255,0.3 + digitalRead(1)*0.7);
-    Circle(width / 2, height/2 + 30, 40);
-    Fill(255,255,255,0.3 + digitalRead(4)*0.7);
-    Circle(width / 2, height/2 - 30, 40);
-    Fill(255,255,255,0.3 + digitalRead(10)*0.7);
-    Circle(width / 2 - 30, height/2, 40);
-    Fill(255,255,255,0.3 + digitalRead(11)*0.7);
-    Circle(width / 2 + 30, height/2, 40);
-    
-      
-    // Selection based on QEI
-    // Square on highlighted one
-    //int selected = (abs(pos)/4)%4;
-    //if(pos<0) {
-    //  selected = 3-selected;
-    //}
-    //Fill(255,255,255,1);
-    //Roundrect(width/2 + 200*selected - 305, height/2+95, 50, 50, 15, 15);
-    // Squares
-    //Fill(77,255,255,1);
-    //Roundrect(width/2 - 100, height/2+100, 40, 40, 10, 10);
-    //Roundrect(width/2 - 300, height/2+100, 40, 40, 10, 10);
-    //Roundrect(width/2 + 100, height/2+100, 40, 40, 10, 10);
-    //Roundrect(width/2 + 300, height/2+100, 40, 40, 10, 10);
-    
-    
-    // Display joystick coords
-    xJoy = JOY_GetXPosition(); 
-    yJoy = JOY_GetYPosition();
-    sprintf(buf, "(%d, %d)", xJoy,yJoy);
-    TextMid((width/2), (height/2)-400, buf, SerifTypeface, 30);	
-    // Grid for joystick as well as selection based on joystick
-    for(int row=0;row<5;row++){
-      for(int col=0;col<10;col++){
-        if((row-2)==-yJoy && (col-5)==xJoy) {
-          Fill(255*clicked,255,255,1);
-        }else{
-          Fill(255,255,255,0.3);
-        }
-        Roundrect(width/2 - 9*20 + 40*col, height/2-200 - 40*row, 30, 30, 5, 5);
+    Fill(255, 255, 255, 1);
+    Text(50,height-60,"Enter WiFi password:",SerifTypeface, 40);
+    // X pos offset by the string length if it gets too long, 50 otherwise.
+    Text(50+MIN(0,width-35*(int)strlen(passBuf)),height-120,passBuf,SerifTypeface, 40);
+    */
+
+    randomWalk(sd);
+    logData(sd,"logfile.dat");
+
+    // Upload the data ocassionally 
+    if(loopCount % (10*1000000/MAIN_DELAY) == 0) {
+      if(HTTP_getStatus() != HTTP_IDLE) {
+        printf("Warning: HTTP busy. %s\n", HTTP_getStatusString());
+      }else{
+        // Load the sensor data as a formatted string into a char buffer
+        memset(buf,0,BUF_SIZE);
+        getGETstr(buf,sd);
+        // Upload the data to the website
+        HTTP_Get("dataReceiver.php",buf);
       }
     }
-    
-    
-    
-    
-    
-    
-    End();	
+
+    // Once the http response is ready, print it out.
+    if(HTTP_GetResponse(response)) {
+      printf("Response received.\n");
+      // printf("%s\n", response);
+      // Returns a line
+      char* line = strtok(response, "\n"); 
+      // loops through each line.
+      while (line != NULL) { 
+        char key[256];
+        double value = 0;
+        sscanf(line,"%s %lf",key,&value);
+        if(strcmp(key,"flow_target")==0) {
+          if(value > 0) {
+            sd->flow_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        if(strcmp(key,"ph_target")==0) {
+          if(value > 0) {
+            sd->ph_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        if(strcmp(key,"ec_target")==0) {
+          if(value > 0) {
+            sd->ec_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        if(strcmp(key,"water_target")==0) {
+          if(value > 0) {
+            sd->h2o_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        // printf("line: %s\n", token); 
+        line = strtok(NULL, "\n"); 
+      } 
+    }
+
+    // Test for user input
+    if(getstr_nonblocking(buf)) {
+      char cmd[16];
+      // char val[16];
+      double val_d = 0;
+      sscanf(buf,"%s %lf",cmd,&val_d);
+      parseCmd(cmd,val_d);
+    }
+    loopCount++;
+    usleep(MAIN_DELAY);
   }
   printf("\n");
   
@@ -283,31 +299,7 @@ int main(int argc, char *argv[]) {
 
 void INThandler(int sig) {
   isRunning = 0;
-  finish(); // Graphics cleanup
-  restoreterm(); 
-  exit(0);
-}
-
-void joy_up(void) {
-  VG_KB_Up();
-}
-void joy_down(void){
-  VG_KB_Down();
-}
-void joy_left(void){
-  VG_KB_Left();
-}
-void joy_right(void){
-  VG_KB_Right();
-}
-
-void joy_click(void) {
-  clicked = !clicked;
-  switch(hydro_state) {
-    case HYDRO_IDLE:
-      break;
-    case WIFI_SELECTING_NETWORK:
-      selectedNetwork = yJoy;
-      break;
-  }
+  // finish(); // Graphics cleanup
+  // restoreterm(); 
+  // exit(0);
 }
