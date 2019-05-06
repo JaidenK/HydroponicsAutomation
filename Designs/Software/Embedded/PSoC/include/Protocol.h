@@ -10,16 +10,15 @@
  * ========================================
 */
 
-//#define PROTOCOL_TEST
-//#define MODULE_TEST
+#define PROTOCOL_TEST
+#define MODULE_TEST
 
 #ifndef Protocol_h
 #define Protocol_h
-    
+
 typedef enum pkey_t{
-    invalid_key,
-    
     //Client Side incoming
+    invalid_key,
     flow_target,
     ph_target,
     ec_target,
@@ -37,40 +36,10 @@ typedef enum pkey_t{
     flow_measured,
 }pkey_t;
 
-static const char * pkey_const[] = {
-    //Client Side incoming
-    "invalid_key",
-    "flow_target",
-    "ph_target",
-    "ec_target",
-    "h20_level_target",
-    
-    //Client Side outgoing
-    "h20_level",
-    "h20_stored",
-    "ph_measured",
-    "ph_up_stored",
-    "ph_down_stored",
-    "ec_measured",
-    "ec_stored",
-    "temp_measured",
-    "flow_measured"
-};
-
-typedef struct message_t{
+typedef struct target_t{
     pkey_t key;
     float value;
-}message_t;
-
-/*
- * @function SensorComTx_EncodeMessage()
- * @param SensorData structure, buffer
- * @return None
- * @brief Takes in a SensorData structure and returns
- *        a string in nmea0183 format
- * @author Barron Wong 04/24/19
- */
-char * Protocol_EncodeMessage(char * buffer);
+}target_t;
 
 /**
  * @function Protocol_DecodeInput(char * input)
@@ -78,8 +47,8 @@ char * Protocol_EncodeMessage(char * buffer);
  * @return Takes an incoming data transmission and decodes it
  * @brief Converts the current frequency and returns flow rate
  * @author Barron Wong 02/08/19
- */
-message_t Protocol_DecodeInput(char * input);
+*/
+target_t Protocol_DecodeInput(char * input);
 
 /**
  * @function Protocol_EncodeOutput(char * input)
@@ -87,17 +56,8 @@ message_t Protocol_DecodeInput(char * input);
  * @return String pointer ready for output
  * @brief Takes a key and a parameter and get it read for output
  * @author Barron Wong 02/08/19
- */
+*/
 char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer);
-
-/**
- * @function Protocol_PrintMessage(char * input)
- * @param target_t
- * @return none
- * @brief Prints a message and its value
- * @author Barron Wong 02/08/19
- */
-void Protocol_PrintMessage(message_t message);
 
 #endif
 /* [] END OF FILE */

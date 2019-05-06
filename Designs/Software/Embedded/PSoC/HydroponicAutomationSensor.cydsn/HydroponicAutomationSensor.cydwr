@@ -480,7 +480,9 @@
       <Data key="9ae7d2f5-319e-48f4-a6b6-1c5f23844489" value="FlowSpeedVOut" />
       <Data key="9fed8531-b1d5-464b-9bf0-b3d733ec5766" value="WaterEcho" />
       <Data key="019d2344-5756-4737-88cd-fc56f9743a75" value="Echo" />
+      <Data key="38afc59f-fef9-4233-bd5b-7d011ef1817e" value="HalfBridgeSW1" />
       <Data key="493fce26-7f83-4a83-92ec-191d848a8043/16a808f6-2e13-45b9-bce0-b001c8655113" value="pHADC_Bypass" />
+      <Data key="995ca484-61f2-423c-9047-6e3179a7643a" value="HalfBridgeSW2" />
       <Data key="2885c429-5932-4155-917a-0938783b4618" value="NutsTrig" />
       <Data key="7081a449-5876-4437-a055-ced157b3fac6" value="pHDownTrig" />
       <Data key="35016d87-8004-4039-a214-1fa210488325" value="TimerOut" />
@@ -489,8 +491,9 @@
       <Data key="893425e2-b901-46a8-80e5-5d2d9917eaf4" value="pHUpPump" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
       <Data key="5353893c-cc68-42be-af72-898688c538a0" value="pHUpTrig" />
-      <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="PWMSpeedSetting" />
+      <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="ECPos" />
       <Data key="a83fec49-d759-48cd-918c-841203016a01" value="pHDownPump" />
+      <Data key="cdcafb18-a71a-4ba8-acc4-02ff0f67c309" value="ECNeg" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="DataComTxInv" />
@@ -3663,6 +3666,16 @@
         <Data key="Port Format" value="15,5" />
       </Group>
     </Group>
+    <Group key="38afc59f-fef9-4233-bd5b-7d011ef1817e">
+      <Group key="0">
+        <Data key="Port Format" value="12,2" />
+      </Group>
+    </Group>
+    <Group key="995ca484-61f2-423c-9047-6e3179a7643a">
+      <Group key="0">
+        <Data key="Port Format" value="12,3" />
+      </Group>
+    </Group>
     <Group key="2885c429-5932-4155-917a-0938783b4618">
       <Group key="0">
         <Data key="Port Format" value="0,6" />
@@ -3700,12 +3713,17 @@
     </Group>
     <Group key="77715107-f8d5-47e5-a629-0fb83101ac6b">
       <Group key="0">
-        <Data key="Port Format" value="0,6" />
+        <Data key="Port Format" value="3,3" />
       </Group>
     </Group>
     <Group key="a83fec49-d759-48cd-918c-841203016a01">
       <Group key="0">
         <Data key="Port Format" value="2,3" />
+      </Group>
+    </Group>
+    <Group key="cdcafb18-a71a-4ba8-acc4-02ff0f67c309">
+      <Group key="0">
+        <Data key="Port Format" value="3,4" />
       </Group>
     </Group>
     <Group key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c">

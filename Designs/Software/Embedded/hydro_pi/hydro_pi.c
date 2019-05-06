@@ -99,8 +99,6 @@ int main(int argc, char *argv[]) {
 
   HYDRO_GUI_Init(1,sd);
   ThreadedInput_Init();
-
-
   
 /*
   // if(hydro_state == STARTUP_DISP_IP) {
@@ -203,6 +201,7 @@ int main(int argc, char *argv[]) {
     printf("Selected: %s\n",networks[selectedNetwork]);
   }
 */
+
   printf("Waiting (to allow network to connect).\n");
   usleep(2000000);
     
@@ -243,6 +242,40 @@ int main(int argc, char *argv[]) {
     if(HTTP_GetResponse(response)) {
       printf("Response received.\n");
       // printf("%s\n", response);
+      // Returns a line
+      char* line = strtok(response, "\n"); 
+      // loops through each line.
+      while (line != NULL) { 
+        char key[256];
+        double value = 0;
+        sscanf(line,"%s %lf",key,&value);
+        if(strcmp(key,"flow_target")==0) {
+          if(value > 0) {
+            sd->flow_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        if(strcmp(key,"ph_target")==0) {
+          if(value > 0) {
+            sd->ph_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        if(strcmp(key,"ec_target")==0) {
+          if(value > 0) {
+            sd->ec_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        if(strcmp(key,"water_target")==0) {
+          if(value > 0) {
+            sd->h2o_target = value;
+            printf("%s -> %f\n", key, value);
+          }
+        }
+        // printf("line: %s\n", token); 
+        line = strtok(NULL, "\n"); 
+      } 
     }
 
     // Test for user input

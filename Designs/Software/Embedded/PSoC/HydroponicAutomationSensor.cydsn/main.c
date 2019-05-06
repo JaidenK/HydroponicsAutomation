@@ -16,13 +16,13 @@
 #include <stdlib.h>
 #include "FlowSense.h"
 #include "SerialCom.h"
-#include "USBCom.h"
 #include "Protocol.h"
 #include "pHSense.h"
 #include "Mixing.h"
 #include "PingSensor.h"
 #include "SensorComTx.h"
 #include "sensor_data.h"
+#include "HalfBridge.h"
 
 #define FLOW_REF 2.0
 #define PH_REF 4.5

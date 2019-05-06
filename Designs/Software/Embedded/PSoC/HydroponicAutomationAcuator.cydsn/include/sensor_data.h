@@ -1,5 +1,6 @@
 #ifndef _SENSOR_DATA_H
 #define _SENSOR_DATA_H
+
 #include "Protocol.h"
 
 struct SensorData {
