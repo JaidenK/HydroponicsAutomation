@@ -574,6 +574,47 @@
 				"buffer_size": 2737,
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "Joy.h",
+			"settings":
+			{
+				"buffer_size": 845,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "hydro_gui.c",
+			"settings":
+			{
+				"buffer_size": 7342,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Joy.c",
+			"settings":
+			{
+				"buffer_size": 2262,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab4/Lab4.X/lab4_main.c",
+			"settings":
+			{
+				"buffer_size": 17034,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "˙˜¨∆ˆµ˚ø≤",
+			"settings":
+			{
+				"buffer_size": 9,
+				"line_ending": "Unix",
+				"name": "˙˜¨∆ˆµ˚ø≤"
+			}
 		}
 	],
 	"build_system": "",
@@ -754,6 +795,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"int wait",
+			"waitFor",
 			"new_record",
 			"return",
 			"responseMaxSize",
@@ -879,9 +922,7 @@
 			"xMax",
 			"x",
 			"xMax",
-			"drawButton",
-			"int",
-			"y"
+			"drawButton"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -906,7 +947,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 11,
 			"sheets":
 			[
 				{
@@ -932,7 +973,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6467.0,
+						"translation.y": 5582.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -960,7 +1001,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 410.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1098,6 +1139,142 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 16.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Joy.h",
+					"settings":
+					{
+						"buffer_size": 845,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								658,
+								658
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 113.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "hydro_gui.c",
+					"settings":
+					{
+						"buffer_size": 7342,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5495,
+								5495
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4678.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Joy.c",
+					"settings":
+					{
+						"buffer_size": 2262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1539,
+								1641
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1011.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab4/Lab4.X/lab4_main.c",
+					"settings":
+					{
+						"buffer_size": 17034,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4316,
+								4316
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4398.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"settings":
+					{
+						"buffer_size": 9,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								1
+							]
+						],
+						"settings":
+						{
+							"auto_name": "˙˜¨∆ˆµ˚ø≤",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
