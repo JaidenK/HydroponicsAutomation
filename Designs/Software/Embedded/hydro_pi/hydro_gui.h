@@ -15,7 +15,7 @@
 int width, height;
 
 // A pointer to the same struct used in the main program.
-struct SensorData *gui_sd;
+SensorData *gui_sd;
 
 // We reuse this boke between multiple scenes, so just make it global
 Boke *boke;
