@@ -7,7 +7,10 @@
 #include <string.h>
 #include <sys/time.h>
 
+#include "notifications.h"
 
+
+char notificationStr[256];
 
 void setRandomData(struct SensorData *sd) {
    time_t t;
@@ -176,6 +179,9 @@ int saveData(struct SensorData *sd, char *filename) {
 }
 
 void getGETstr(char *buf, struct SensorData *sd) {
+   if(getNotification(sd,notificationStr) > 1) {
+      printf("Warning: Multiple notifications cannot be sent simultaneously.\n");
+   }
    sprintf(
       buf,
       "ProductID=password&"
@@ -194,7 +200,7 @@ void getGETstr(char *buf, struct SensorData *sd) {
       "h2o_target=%f&"
       "temp_target=%f&"
       "ProductID=%s&"
-      "",
+      "notify=%s",
       sd->h2o_level,
       sd->h2o_stored,
       sd->ph_level,
@@ -209,6 +215,7 @@ void getGETstr(char *buf, struct SensorData *sd) {
       sd->ec_target,
       sd->h2o_target,
       sd->temp_target,
-      sd->ProductID
+      sd->ProductID,
+      notificationStr
    );
 }
