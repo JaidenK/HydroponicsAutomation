@@ -15,6 +15,8 @@
 #include <pthread.h>
 
 struct SensorData sd;
+static char rx_data[64]; // Receive data block
+static 	message_t msg;
 
 void * httpThread(void *vargp){
 	
@@ -36,6 +38,19 @@ void * httpThread(void *vargp){
 		}
 	}
 }
+void *sdThread(void * vargp){
+	while(1){
+		for (int i = 0; i < 64; i++)
+			rx_data[i] = 0;
+
+		if (USBCom_CheckReceivedData(rx_data)) {
+			msg = Protocol_DecodeInput(rx_data);
+			updateSensors(&msg, &sd);
+			Protocol_PrintMessage(&msg);
+			//printf("SD Flow Value: %f\n",sd.flow_measured);
+		}
+	}
+}
 
 int main(int argc, char * argv[]) {
 
@@ -48,7 +63,8 @@ int main(int argc, char * argv[]) {
 	message_t msg;
 	time_t timestamp;
 	
-	pthread_t thread_id;
+	pthread_t thread_http;
+	pthread_t thread_sd;
 
 	sensor_data_init(&sd);
 	
@@ -64,26 +80,11 @@ int main(int argc, char * argv[]) {
 	// Set up data block 
 	strcpy(tx_data, "1:432.12\r\n");
 
-	pthread_create(&thread_id, NULL, httpThread, NULL);
+	pthread_create(&thread_http, NULL, httpThread, NULL);
+	pthread_create(&thread_sd, NULL, sdThread, NULL);
 
 	while (1) {
 
-
-		//return_val = USBCom_SendData(tx_data);
-
-		//if (return_val != 0) {
-		//	printf("Did Not Recieve Data");
-		//}
-
-		for (int i = 0; i < 64; i++)
-			rx_data[i] = 0;
-
-		if (USBCom_CheckReceivedData(rx_data)) {
-			msg = Protocol_DecodeInput(rx_data);
-			updateSensors(&msg, &sd);
-			Protocol_PrintMessage(&msg);
-			//printf("SD Flow Value: %f\n",sd.flow_measured);
-		}
 
 	}
 }

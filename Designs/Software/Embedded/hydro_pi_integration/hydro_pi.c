@@ -7,6 +7,8 @@
 #include <string.h>
 #include <unistd.h> // getopt usleep
 #include <errno.h> // Error number
+#include <time.h>
+#include <libusb.h> //libusb
 
 // Peripheral libraries
 #include <wiringPi.h>
@@ -21,6 +23,10 @@
 #include "hydro_gui.h"
 #include "sensor_data.h"
 #include "threaded_input.h"
+
+#include "USBCom.h"
+#include "sensor_data.h"
+#include "Protocol.h"
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
@@ -44,7 +50,10 @@ enum hydro_states{
 
 // static int clicked = 0;
 
-struct SensorData *sd;
+struct SensorData sd;
+static char rx_data[64]; // Receive data block
+static 	message_t msg;   // message data
+
 
 // General printing
 #define BUF_SIZE 1024
@@ -56,17 +65,17 @@ unsigned int loopCount = 0;
 
 void parseCmd(char *cmd, double val) {
   if(strcmp(cmd,"flow")==0) {
-    printf("Flow target changed from %f to %f.\n", sd->flow_target, val);
-    sd->flow_target = val;
+    printf("Flow target changed from %f to %f.\n", sd.flow_target, val);
+    sd.flow_target = val;
   }else if(strcmp(cmd,"ph")==0) {
-    printf("pH target changed from %f to %f.\n", sd->ph_target, val);
-    sd->ph_target = val;
+    printf("pH target changed from %f to %f.\n", sd.ph_target, val);
+    sd.ph_target = val;
   }else if(strcmp(cmd,"ec")==0) {
-    printf("EC target changed from %f to %f.\n", sd->ec_target, val);
-    sd->ec_target = val;
+    printf("EC target changed from %f to %f.\n", sd.ec_target, val);
+    sd.ec_target = val;
   }else if(strcmp(cmd,"water")==0) {
-    printf("Water level target changed from %f to %f.\n", sd->h2o_target, val);
-    sd->h2o_target = val;
+    printf("Water level target changed from %f to %f.\n", sd.h2o_target, val);
+    sd.h2o_target = val;
   }else if(strcmp(cmd,"q")==0) {
     INThandler(15);
   }else{
@@ -74,19 +83,75 @@ void parseCmd(char *cmd, double val) {
   }
 }
 
+static libusb_device_handle* dev; // Pointer to data structure representing USB device
+
+void *sdThread(void * vargp){
+	while(1){
+		
+		while (dev == NULL) {
+			dev = USBCom_Init();
+			if (dev == NULL) {
+				printf("Unable to claim USB device\n");
+			}
+		}
+		
+		for (int i = 0; i < 64; i++)
+			rx_data[i] = 0;
+
+		if (USBCom_CheckReceivedData(rx_data)) {
+			msg = Protocol_DecodeInput(rx_data);
+			updateSensors(&msg, &sd);
+			//Protocol_PrintMessage(&msg);
+		}
+	}
+}
+
+void * httpThread(void *vargp){
+	
+	time_t timestamp;
+	static struct SensorData prevSD;
+	
+	//Initialize HTTP library
+	HTTP_Init("sdp.ballistaline.com");
+	char request[1024];
+	char response[1024];
+	char buffer[1024];
+	
+	timestamp = time(NULL);
+	
+	while(1){
+		if (difftime(time(NULL), timestamp) > 60) {
+			timestamp = time(NULL);
+			getGETstr(request, &sd);
+			HTTP_Get("dataReceiver.php", request, response, 1024);
+			
+			//update targets
+			prevSD = sd;
+			if(HTTP_ParseResponse(response, &sd)){
+				if(prevSD.h2o_target != sd.h2o_target){
+					Protocol_EncodeOutput(h20_level_target, sd.h2o_target,buffer);
+					USBCom_SendData(buffer);
+				}
+				if(prevSD.flow_target != sd.flow_target){
+					Protocol_EncodeOutput(flow_target, sd.flow_target,buffer);
+					USBCom_SendData(buffer);
+				}
+				if(prevSD.ph_target != sd.ph_target){
+					Protocol_EncodeOutput(ph_target, sd.ph_target,buffer);
+					USBCom_SendData(buffer);
+				}
+				if(prevSD.ec_target != sd.ec_target){
+					Protocol_EncodeOutput(ec_target, sd.ec_target,buffer);
+					USBCom_SendData(buffer);
+				}	
+			}
+		}
+	}
+}
+
 int main(int argc, char *argv[]) {
   hydro_state = HYDRO_IDLE;
 
-  // Analyze options
-  // int c = 0;
-  // while ((c = getopt (argc, argv, "i")) != -1) {
-  //   switch(c) {
-  //     case 'i':
-  //       // Start up in IP display mode. Don't actually run the full program.
-  //       hydro_state = STARTUP_DISP_IP;
-  //       break;
-  //   }
-  // }
 
   // Specify the interrupt handler for ctrl+c
   signal(SIGINT, INThandler);
@@ -94,189 +159,28 @@ int main(int argc, char *argv[]) {
   // Setup GPIO
   wiringPiSetup();
 
-  sd = malloc(sizeof(struct SensorData));
-  setRandomData(sd);
-
-  HYDRO_GUI_Init(1,sd);
+  HYDRO_GUI_Init(1,&sd);
   ThreadedInput_Init();
   
-/*
-  // if(hydro_state == STARTUP_DISP_IP) {
-  //   // Blocking function will wait until the user presses the joystick
-  //   // button to exit.
-  //   while(1) {
-  //     int returnCode = displayIP();
-  //     if(returnCode == 1) {
-  //       // Close program
-  //       exit(0);
-  //     }else if(returnCode == 2) {
-  //       // continue program
-  //       break;
-  //     }
-  //   }
-  // }
-  // To-do just ping. Maybe they have an ethernet cable.
+  //Sensor data thread
+  sensor_data_init(&sd);
+  pthread_t thread_sd;
+  pthread_create(&thread_sd, NULL, sdThread, NULL);
   
-  // Wifi connect console command
-  char line[512]; // line
-  if(system("iw wlan0 link > console.log")) {
-    printf("Error making iw system call.\n");
-    exit(1);
-  }
-  FILE *f = fopen("console.log","r");
-  if(f==NULL){
-    printf("Error opening file.\n");
-      exit(1);
-  }
-  printf("File contents first line:\n");
-  if(fgets(line,512,f)==NULL){
-    printf("File should not be empty!\n");
-      exit(1);
-  };
-  puts(line);
-  fclose(f);
+  //HTTP ThreadedInput_Init
+  pthread_t thread_http;
+  pthread_create(&thread_http, NULL, httpThread, NULL);
   
-  // Parse the results of the iw wlan0 link
-  int isConnected = 0;
-  if(strncmp(line,"Not connected.",14)==0) {
-    // They're not connected.
-    printf("You're not connected to a WiFi network.\n");
-    Background(0,0,0);
-    TextMid((width/2), (height/2), "Searching for networks...", SerifTypeface, height/20);	// Greetings 
-    End();
-  }else if(strncmp(line,"Connected",9)==0) {
-    printf("You appear to be connected to a network.\n");
-    isConnected = 1;
-    Background(0,0,0);
-    TextMid((width/2), (height/2), "You appear to be connected to a network.", SerifTypeface, height/20);	// Greetings 
-    End();
-  }else{
-    printf("I can't tell if you're connected to a network or not.\n");
-    exit(1);
-  }
   
-  // They need to connect to a network
-  if(!isConnected) {
-    if(system("iw wlan0 scan > console.log")) {
-      printf("Error making iw system call.\n");
-      exit(1);
-    }
-    f = fopen("console.log","r");
-    if(f==NULL){
-      printf("Error opening file.\n");
-      exit(1);
-    }
-    char networks[10][256]; // 10 possible networks each 256 chars long
-    int numNetworks = 0;
-    while(fgets(line,512,f)!=NULL){
-      char *word = strstr(line,"SSID:");
-      if(word != NULL) {
-        word += 6; // Move pointer past SSID
-        word[strlen(word)-1] = '\0'; // remove newline character
-        int networkAlreadyExists = 0;
-        for(int i = 0; i < numNetworks; i++) {
-          if(strcmp(networks[i],word)==0){
-            networkAlreadyExists = 1;
-            break;
-          }
-        }
-        if(!networkAlreadyExists) {
-          sprintf(networks[numNetworks],"%s",word);
-          puts(networks[numNetworks]);
-          numNetworks++;
-        }
-      }
-    }
-    fclose(f);
-    hydro_state = WIFI_SELECTING_NETWORK;
-    while(isRunning && selectedNetwork<0) {
-      Background(0,0,0);
-      yJoy = JOY_GetYPosition();
-      for(int i = 0; i < numNetworks; i++){
-        Fill(255, 255, 255, 0.5 + (0.5*(yJoy==i)));
-        Text(10, i * (height/15)+30, networks[i], SerifTypeface, height/20);	
-      }
-      End();
-    }
-    printf("Selected: %s\n",networks[selectedNetwork]);
-  }
-*/
-
+  
   printf("Waiting (to allow network to connect).\n");
   usleep(2000000);
-    
-  // Initialize HTTP library
-  HTTP_Init("sdp.ballistaline.com");
-  char response[1024];  
   
   // memset(passBuf,0,strlen(passBuf));
   // Main loop
   while(isRunning) {
-    
-    /*
-    // Keyboard stuff
-    VG_KB_Draw(0,0,width,height);
-    Fill(255, 255, 255, 1);
-    Text(50,height-60,"Enter WiFi password:",SerifTypeface, 40);
-    // X pos offset by the string length if it gets too long, 50 otherwise.
-    Text(50+MIN(0,width-35*(int)strlen(passBuf)),height-120,passBuf,SerifTypeface, 40);
-    */
 
-    randomWalk(sd);
-    logData(sd,"logfile.dat");
-
-    // Upload the data ocassionally 
-    if(loopCount % (10*1000000/MAIN_DELAY) == 0) {
-      if(HTTP_getStatus() != HTTP_IDLE) {
-        printf("Warning: HTTP busy. %s\n", HTTP_getStatusString());
-      }else{
-        // Load the sensor data as a formatted string into a char buffer
-        memset(buf,0,BUF_SIZE);
-        getGETstr(buf,sd);
-        // Upload the data to the website
-        HTTP_Get("dataReceiver.php",buf);
-      }
-    }
-
-    // Once the http response is ready, print it out.
-    if(HTTP_GetResponse(response)) {
-      printf("Response received.\n");
-      // printf("%s\n", response);
-      // Returns a line
-      char* line = strtok(response, "\n"); 
-      // loops through each line.
-      while (line != NULL) { 
-        char key[256];
-        double value = 0;
-        sscanf(line,"%s %lf",key,&value);
-        if(strcmp(key,"flow_target")==0) {
-          if(value > 0) {
-            sd->flow_target = value;
-            printf("%s -> %f\n", key, value);
-          }
-        }
-        if(strcmp(key,"ph_target")==0) {
-          if(value > 0) {
-            sd->ph_target = value;
-            printf("%s -> %f\n", key, value);
-          }
-        }
-        if(strcmp(key,"ec_target")==0) {
-          if(value > 0) {
-            sd->ec_target = value;
-            printf("%s -> %f\n", key, value);
-          }
-        }
-        if(strcmp(key,"water_target")==0) {
-          if(value > 0) {
-            sd->h2o_target = value;
-            printf("%s -> %f\n", key, value);
-          }
-        }
-        // printf("line: %s\n", token); 
-        line = strtok(NULL, "\n"); 
-      } 
-    }
+    //logData(sd,"logfile.dat");
 
     // Test for user input
     if(getstr_nonblocking(buf)) {

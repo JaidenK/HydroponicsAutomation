@@ -126,7 +126,7 @@ void HYDRO_GUI_Init(int createThread, struct SensorData *sd) {
   scene_ecTarget_init();
   scene_waterTarget_init();
 
-  currentScene = scene_displayIP;
+  currentScene = scene_dashboard;
 
   TOUCH(t_lastFrame);
   TOUCH(t_clickDebounceEvent);

@@ -1,5 +1,6 @@
 #ifndef _SENSOR_DATA_H
 #define _SENSOR_DATA_H
+#include "Protocol.h"
 
 struct SensorData {
    double h2o_level;
@@ -21,10 +22,13 @@ struct SensorData {
 void getGETstr(char *buf, struct SensorData *sd);
 void setRandomData(struct SensorData *sd);
 void randomWalk(struct SensorData *sd);
+void sensor_data_init(struct SensorData *sd);
 
 int logData(struct SensorData *sd, char *filename);
 int loadData(struct SensorData *sd, char *filename);
 int saveData(struct SensorData *sd, char *filename);
+int updateSensors(message_t * msg, struct SensorData *sd);
+
 
 #endif
 
