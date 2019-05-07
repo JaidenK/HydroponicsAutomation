@@ -29,6 +29,7 @@ typedef enum{
     LEVEL_pH_UP,
     LEVEL_pH_DOWN,
     LEVEL_NUTS,
+    LEVEL_WATER_RES,
 }Level;
 
 //Getters
@@ -36,6 +37,7 @@ double PingSensor_GetWaterLevel();
 double PingSensor_GetpHUpLevel();
 double PingSensor_GetpHDownLevel();
 double PingSensor_GetNutLevel();
+double PingSensor_GetWaterResLevel();
 
 /**
  * @function PingSensorSampleTimerISRHandler(void)

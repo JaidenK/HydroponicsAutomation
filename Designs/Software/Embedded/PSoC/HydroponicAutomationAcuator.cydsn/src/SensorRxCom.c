@@ -156,6 +156,8 @@ CY_ISR(DataComRxISR){
     static uint8_t count = 0;
     static uint8_t remainder = 0; 
     
+    DataComRxISR_ClearPending();
+    
     //Set ready to false 
     //If ready is TRUE and we are in this ISR, 
     //then a new transmission is incoming

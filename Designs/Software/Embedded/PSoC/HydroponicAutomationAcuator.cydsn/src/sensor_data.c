@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+
+#define SUCCESS 1
+#define ERROR   0
 //struct SensorData {
 //	double h2o_level;
 //	double h2o_stored;
@@ -66,6 +69,29 @@ int updateSensors(message_t * msg, struct SensorData * sd) {
 	}
 	return return_val;
 }
+
+int SensorData_UpdateTarget(message_t target, struct SensorData * sd){
+    
+    switch(target.key){
+        case h20_level_target:
+        sd->h2o_target = target.value;
+        break;
+        case flow_target:
+        sd->flow_target = target.value;
+        break;
+        case ph_target:
+        sd->ph_target = target.value;
+        break;
+        case ec_target:
+        sd->ec_target = target.value;
+        break;
+        default:
+        return ERROR;
+    }
+    
+    return SUCCESS;
+}
+
 /**
  * @function sensor_data_Init(char * input)
  * @param pointer to a SensorData Structure
