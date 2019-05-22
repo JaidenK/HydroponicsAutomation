@@ -24,6 +24,22 @@
 #define DECON_TO_TARGET1 1375 // 57.5mm one target to the next X-axis
 #define TARGET1_TO_DECON 1375
 #define PH4_TO_RINSE 2200
+
+//new and improved position macros
+//X positions
+#define RINSE_POSITION 100
+#define SPONGE_POSITION 1000
+#define PH4_POSITION 2300
+#define PH7_POSITION 3700
+#define PH10_POSITION 5800
+//Z positions
+#define BOTTOM_POSITION 3000
+#define CALIBRATION_POSITION 1600
+
+//Timekeeping
+#define FIVE_SECONDS 1000000
+#define TWO_MINUITES 24000000
+
 #define ERROR 0
 #define LEFT X_Step_Control_Write(0b01)
 #define RIGHT X_Step_Control_Write(0b11)
@@ -86,8 +102,7 @@ static enum {
 static enum {
     X_AXIS_MOVE_FINISHED,
     Z_AXIS_MOVE_FINISHED,
-    Z_AXIS_ZERO_FINISHED,
-}finishedState=X_AXIS_MOVE_PH10; 
+}finishedState=X_AXIS_MOVE_FINISHED; 
 
 
 int xStepsToMove=FULL_X_LENGTH_STEPS;
@@ -110,6 +125,9 @@ uint8_t zMoveFlag=0;
 uint8_t Ph4;
 uint8_t Ph7;
 uint8_t Ph10;
+uint32_t startTime;
+uint32_t finishTime;
+
 
 CY_ISR(X_Step_ISR){
         switch(gantryState){
@@ -197,10 +215,10 @@ CY_ISR(Z_Step_ISR){
                 break;
             case FINISHED:
                 if(Z_pos>Z_target){
-                    LEFT;
+                    UP;
                     Z_pos--;
                 }else{
-                    RIGHT;
+                    DOWN;
                     Z_pos++;
                 }
                 break;
@@ -266,7 +284,8 @@ uint8_t zStepperInit(){
 int main(void)
 {
     CyGlobalIntEnable;
-    
+    FreeRunningTimer_Init();
+    FreeRunningTimer_Start();
     SerialCom_Init();
     xStepperInit();
     zStepperInit();
@@ -279,6 +298,7 @@ int main(void)
     {   
         switch(gantryState){
             case ZERO:
+                //printf("ZERO\r\n");
                 switch(zeroState){
                     case Z_AXIS_ZERO:
                         if(!zLimitflag){
@@ -295,7 +315,7 @@ int main(void)
                             X_STOP;
                             zeroState=Z_AXIS_ZERO;
                             gantryState=SPONGE; 
-                            X_target=INITIAL_TO_DECON;
+                            X_target=SPONGE_POSITION;
                             Ph4=0;
                             Ph7=0;
                             Ph10=0;
@@ -306,6 +326,7 @@ int main(void)
                 }        
                 break;
             case SPONGE:
+                //printf("SPONGE\r\n");
                 switch(spongeState){
                     case X_AXIS_MOVE_SPONGE:
                         if(X_pos != X_target){
@@ -313,7 +334,7 @@ int main(void)
                         }else{
                             X_STOP;
                             spongeState=Z_AXIS_MOVE_SPONGE;
-                            Z_target=TOP_TO_CALIBRATE;
+                            Z_target=CALIBRATION_POSITION;//TOP_TO_CALIBRATE
                         }    
                         break;
                     case Z_AXIS_MOVE_SPONGE:
@@ -325,8 +346,7 @@ int main(void)
                             zLimitflag=0;
                             //printf("before ISR ENABLE\r\n");
                             zLimitInitFlag=0;
-                            Z_Limit_ISR_Enable();
-                            
+                            Z_Limit_ISR_Enable();      
                         }
                         break;
                     case Z_AXIS_ZERO_SPONGE:
@@ -334,24 +354,26 @@ int main(void)
                             Z_START;
                         }else{
                             Z_STOP;
+                            spongeState=X_AXIS_MOVE_SPONGE; //reset to initial sponge state
                             if(!Ph4){
                                 gantryState=PH4;
-                                X_target=DECON_TO_TARGET1;
+                                X_target=PH4_POSITION;
                             }else if(Ph4&&!Ph7){
                                 gantryState=PH7;
-                                X_target=DECON_TO_TARGET1*2; 
+                                X_target=PH7_POSITION; 
                             }else if(Ph4&&Ph7){
                                 gantryState=PH10;
-                                X_target=DECON_TO_TARGET1*3;
+                                X_target=PH10_POSITION;
                             }
                         }  
                         break;
                 }   
                 break;
             case PH4:
+                //printf("PH4\r\n");
                 switch(Ph4State){
                     case X_AXIS_MOVE_PH4:
-                        if(X_pos!=X_target){
+                        if(X_pos != X_target){
                             X_START;
                         }else{
                             X_STOP;
@@ -362,12 +384,15 @@ int main(void)
                     case Z_AXIS_MOVE_PH4:
                         if(Z_pos != Z_target){
                             Z_START;
+                            startTime=FreeRunningTimer_ReadCounter();
                         }else{
                             Z_STOP;
-                            Ph4State=Z_AXIS_ZERO_PH4;
-                            zLimitflag=0;
-                            zLimitInitFlag=0;
-                            Z_Limit_ISR_Enable();                          
+                            if(startTime-FreeRunningTimer_ReadCounter()>FIVE_SECONDS){
+                                Ph4State=Z_AXIS_ZERO_PH4;
+                                zLimitflag=0;
+                                zLimitInitFlag=0;
+                                Z_Limit_ISR_Enable();                          
+                            }
                         }
                         break;
                     case Z_AXIS_ZERO_PH4:
@@ -377,20 +402,21 @@ int main(void)
                             Z_STOP;
                             Ph4=1;
                             gantryState=RINSE;
-                            X_target=PH4_TO_RINSE;
+                            X_target=RINSE_POSITION;
                         }  
                         break;
                 }    
                 break;
             case RINSE:
+                //printf("RINSE\r\n");
                 switch(rinseState){
                     case X_AXIS_MOVE_RINSE:
-                        if(X_pos!=X_target){
+                        if(X_pos != X_target){
                             X_START;
                         }else{
                             X_STOP;
                             rinseState=Z_AXIS_MOVE_RINSE;
-                            Z_target=TOP_TO_BOTTOM;
+                            Z_target=BOTTOM_POSITION;
                         }
                         break;
                     case Z_AXIS_MOVE_RINSE:
@@ -411,31 +437,35 @@ int main(void)
                             Z_STOP;
                             gantryState=SPONGE;
                             rinseState=X_AXIS_MOVE_RINSE;
-                            X_target=INITIAL_TO_DECON-100;
+                            X_target=SPONGE_POSITION;
                         }  
                         break;
                 }
                 break;
             case PH7:
+                //printf("PH7\r\n");
                 switch(Ph7State){
                     case X_AXIS_MOVE_PH7:
-                        if(X_pos!=X_target){
+                        if(X_pos != X_target){
                             X_START;
                         }else{
                             X_STOP;
                             Ph7State=Z_AXIS_MOVE_PH7;
-                            Z_target=TOP_TO_CALIBRATE;
+                            Z_target=CALIBRATION_POSITION;
                         }
                         break;
                     case Z_AXIS_MOVE_PH7:
                          if(Z_pos != Z_target){
                             Z_START;
+                            startTime=FreeRunningTimer_ReadCounter();
                         }else{
                             Z_STOP;
-                            Ph7State=Z_AXIS_ZERO_PH7;
-                            zLimitflag=0;
-                            zLimitInitFlag=0;
-                            Z_Limit_ISR_Enable();                          
+                            if(startTime-FreeRunningTimer_ReadCounter()>FIVE_SECONDS){
+                                Ph7State=Z_AXIS_ZERO_PH7;
+                                zLimitflag=0;
+                                zLimitInitFlag=0;
+                                Z_Limit_ISR_Enable();
+                            }
                         }
                         break;
                     case Z_AXIS_ZERO_PH7:
@@ -444,32 +474,36 @@ int main(void)
                         }else{
                             Z_STOP;
                             gantryState=RINSE;
-                            X_target=DECON_TO_TARGET1*3;
+                            X_target=RINSE_POSITION;
                             Ph7=1;
                         }  
                         break;
                 }
                 break;
             case PH10:
+                //printf("PH10\r\n");
                 switch(Ph10State){
                     case X_AXIS_MOVE_PH10:
                         if(X_pos!=X_target){
                             X_START;
                         }else{
                             X_STOP;
-                            Ph7State=Z_AXIS_MOVE_PH10;
-                            Z_target=TOP_TO_CALIBRATE;
+                            Ph10State=Z_AXIS_MOVE_PH10;
+                            Z_target=CALIBRATION_POSITION;
                         }
                         break;
                     case Z_AXIS_MOVE_PH10:
                          if(Z_pos != Z_target){
                             Z_START;
+                            startTime=FreeRunningTimer_ReadCounter();
                         }else{
                             Z_STOP;
-                            Ph7State=Z_AXIS_ZERO_PH10;
-                            zLimitflag=0;
-                            zLimitInitFlag=0;
-                            Z_Limit_ISR_Enable();                          
+                            if(startTime-FreeRunningTimer_ReadCounter()>FIVE_SECONDS){
+                                Ph10State=Z_AXIS_ZERO_PH10;
+                                zLimitflag=0;
+                                zLimitInitFlag=0;
+                                Z_Limit_ISR_Enable();   
+                            }
                         }
                         break;
                     case Z_AXIS_ZERO_PH10:
@@ -478,27 +512,37 @@ int main(void)
                         }else{
                             Z_STOP;
                             gantryState=FINISHED;
-                            X_target=DECON_TO_TARGET1*4;
+                            X_target=RINSE_POSITION;
                         }  
                         break;
                 }
                 break;
             case FINISHED:
+                //printf("FINISHED\r\n");
                 switch(finishedState){
-                case X_AXIS_MOVE_FINISHED:
-                    if(X_pos!=X_target){
+                    case X_AXIS_MOVE_FINISHED:
+                        if(X_pos!=X_target){
                             X_START;
                         }else{
                             X_STOP;
-                            Ph7State=Z_AXIS_MOVE_PH10;
-                            Z_target=TOP_TO_CALIBRATE;
+                           // finishedState=X_AXIS_MOVE_FINISHED;
+                            finishedState=Z_AXIS_MOVE_FINISHED;
+                            Z_target=TOP_TO_BOTTOM;
                         }
                         break;
-                        default:
-                            break;
+                    case Z_AXIS_MOVE_FINISHED:
+                         if(Z_pos != Z_target){
+                            Z_START;
+                        }else{
+                            Z_STOP;                        
+                        }
+                        break;
+                    default:
+                        break;
+                        
                        
                 }
-            break;
+                break;
             default:
                 break;
         }
