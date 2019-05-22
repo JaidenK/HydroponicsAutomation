@@ -1,9 +1,9 @@
 Connected to 70:4f:57:3b:8e:05 (on wlan0)
 	SSID: CE121 5GHz
 	freq: 5745
-	RX: 854060 bytes (5676 packets)
-	TX: 3723962 bytes (4564 packets)
-	signal: -56 dBm
+	RX: 2510204 bytes (22184 packets)
+	TX: 2818236 bytes (21132 packets)
+	signal: -53 dBm
 	tx bitrate: 24.0 MBit/s
 
 	bss flags:	short-slot-time

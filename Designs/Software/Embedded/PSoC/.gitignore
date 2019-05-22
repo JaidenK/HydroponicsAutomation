@@ -1,8 +1,9 @@
 Data
-<<<<<<< HEAD
 HydroponicAutomation.cywrk.leryj
 HydroponicAutomationAcuator.cydsn/HydroponicAutomationAcuator.cyprj.leryj
 
-=======
 HydroponicAutomation.cywrk
->>>>>>> b64afb4fb08b9879dd5280aba57dfab045f055ad
+HydroponicAutomation.cywrk
+HydroponicAutomationCalibration.cydsn/HydroponicAutomationCalibration.cyprj
+HydroponicAutomationAcuator.cydsn/TopDesign/TopDesign.cysch
+

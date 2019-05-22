@@ -1,0 +1,1257 @@
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"pHSense.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.data
+  20              		.align	2
+  21              		.type	pHRef, %object
+  22              		.size	pHRef, 4
+  23              	pHRef:
+  24 0000 00009040 		.word	1083179008
+  25              		.bss
+  26              		.align	2
+  27              	pH:
+  28 0000 00000000 		.space	4
+  29              		.align	1
+  30              	phRaw:
+  31 0004 0000     		.space	2
+  32 0006 0000     		.align	2
+  33              	phHistory:
+  34 0008 00000000 		.space	2048
+  34      00000000 
+  34      00000000 
+  34      00000000 
+  34      00000000 
+  35              		.align	2
+  36              	sum:
+  37 0808 00000000 		.space	4
+  38              		.global	__aeabi_f2uiz
+  39              		.global	__aeabi_i2d
+  40              		.global	__aeabi_dmul
+  41              		.global	__aeabi_dadd
+  42              		.global	__aeabi_d2f
+  43              		.section	.text.pHSampleTimerISRHandler,"ax",%progbits
+  44              		.align	2
+  45              		.global	pHSampleTimerISRHandler
+  46              		.thumb
+  47              		.thumb_func
+  48              		.type	pHSampleTimerISRHandler, %function
+  49              	pHSampleTimerISRHandler:
+  50              	.LFB64:
+  51              		.file 1 "src\\pHSense.c"
+   1:src/pHSense.c **** /* ========================================
+   2:src/pHSense.c ****  *
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 2
+
+
+   3:src/pHSense.c ****  * Copyright YOUR COMPANY, THE YEAR
+   4:src/pHSense.c ****  * All Rights Reserved
+   5:src/pHSense.c ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:src/pHSense.c ****  *
+   7:src/pHSense.c ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:src/pHSense.c ****  * WHICH IS THE PROPERTY OF your company.
+   9:src/pHSense.c ****  *
+  10:src/pHSense.c ****  * ========================================
+  11:src/pHSense.c **** */
+  12:src/pHSense.c **** #include "pHSense.h"
+  13:src/pHSense.c **** #include "project.h"
+  14:src/pHSense.c **** #include <stdio.h>
+  15:src/pHSense.c **** #include <stdlib.h>
+  16:src/pHSense.c **** #include <math.h>
+  17:src/pHSense.c **** 
+  18:src/pHSense.c **** #define PH_MAX_REF 10
+  19:src/pHSense.c **** #define PH_MIN_REF 2
+  20:src/pHSense.c **** #define PH_DEFAULT_REF 5
+  21:src/pHSense.c **** #define PWM_MAX 255.0
+  22:src/pHSense.c **** #define DROP_TIME 200
+  23:src/pHSense.c **** #define UP 0
+  24:src/pHSense.c **** #define DOWN 1
+  25:src/pHSense.c **** #define A0 -4.40E-3
+  26:src/pHSense.c **** #define A1 13.22
+  27:src/pHSense.c **** #define UP_PUMP_DROP_PERIOD 200
+  28:src/pHSense.c **** #define DOWN_PUMP_DROP_PERIOD 200
+  29:src/pHSense.c **** #define UP_PUMP_DROP_CMP 127
+  30:src/pHSense.c **** #define DOWN_PUMP_DROP_CMP 100
+  31:src/pHSense.c **** #define MARGIN 0.05
+  32:src/pHSense.c **** 
+  33:src/pHSense.c **** #define FALSE 0
+  34:src/pHSense.c **** #define TRUE 1
+  35:src/pHSense.c **** 
+  36:src/pHSense.c **** #define PH_UPPERBOUND pHRef*MARGIN
+  37:src/pHSense.c **** #define PH_LOWERBOUND -pHRef*MARGIN
+  38:src/pHSense.c **** 
+  39:src/pHSense.c **** #define HIST_CNT 1024
+  40:src/pHSense.c **** #define SHIFT_CNT 10
+  41:src/pHSense.c **** 
+  42:src/pHSense.c **** static float pHRef = 4.5;
+  43:src/pHSense.c **** static float pH = 0;
+  44:src/pHSense.c **** static uint16_t phRaw = 0;
+  45:src/pHSense.c **** static uint16_t phHistory[HIST_CNT] = {0};
+  46:src/pHSense.c **** static uint32_t sum = 0;
+  47:src/pHSense.c **** 
+  48:src/pHSense.c **** 
+  49:src/pHSense.c **** /**
+  50:src/pHSense.c ****  * @function pHSampleTimerISRHandler(void)
+  51:src/pHSense.c ****  * @param None
+  52:src/pHSense.c ****  * @return void
+  53:src/pHSense.c ****  * @brief pH Controller ISR. Takes reading of flow meter every milisecond.
+  54:src/pHSense.c ****  *        Readings are averaged accrossed 1024 data points.
+  55:src/pHSense.c ****  * @author Barron Wong 01/25/19
+  56:src/pHSense.c ****  */
+  57:src/pHSense.c **** CY_ISR(pHSampleTimerISRHandler){
+  52              		.loc 1 57 0
+  53              		.cfi_startproc
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 3
+
+
+  54              		@ args = 0, pretend = 0, frame = 8
+  55              		@ frame_needed = 1, uses_anonymous_args = 0
+  56 0000 90B5     		push	{r4, r7, lr}
+  57              		.cfi_def_cfa_offset 12
+  58              		.cfi_offset 4, -12
+  59              		.cfi_offset 7, -8
+  60              		.cfi_offset 14, -4
+  61 0002 83B0     		sub	sp, sp, #12
+  62              		.cfi_def_cfa_offset 24
+  63 0004 00AF     		add	r7, sp, #0
+  64              		.cfi_def_cfa_register 7
+  58:src/pHSense.c ****     
+  59:src/pHSense.c ****     uint16_t pHADCSample;
+  60:src/pHSense.c ****     
+  61:src/pHSense.c ****     static uint16_t index;
+  62:src/pHSense.c ****     
+  63:src/pHSense.c ****     pHADCSample = pHSense_ReadSensor();
+  65              		.loc 1 63 0
+  66 0006 FFF7FEFF 		bl	pHSense_ReadSensor
+  67 000a 0346     		mov	r3, r0
+  68 000c 1846     		mov	r0, r3
+  69 000e FFF7FEFF 		bl	__aeabi_f2uiz
+  70 0012 0346     		mov	r3, r0
+  71 0014 FB80     		strh	r3, [r7, #6]	@ movhi
+  64:src/pHSense.c ****     pHSampleTimer_Start();
+  72              		.loc 1 64 0
+  73 0016 FFF7FEFF 		bl	pHSampleTimer_Start
+  65:src/pHSense.c ****     
+  66:src/pHSense.c ****     //Removed Average stability issues
+  67:src/pHSense.c ****     //Subtract oldest value
+  68:src/pHSense.c ****     sum -= phHistory[index]; 
+  74              		.loc 1 68 0
+  75 001a 2D4B     		ldr	r3, .L3+16
+  76 001c 1B68     		ldr	r3, [r3]
+  77 001e 2D4A     		ldr	r2, .L3+20
+  78 0020 1288     		ldrh	r2, [r2]
+  79 0022 1146     		mov	r1, r2
+  80 0024 2C4A     		ldr	r2, .L3+24
+  81 0026 32F81120 		ldrh	r2, [r2, r1, lsl #1]
+  82 002a 9B1A     		subs	r3, r3, r2
+  83 002c 284A     		ldr	r2, .L3+16
+  84 002e 1360     		str	r3, [r2]
+  69:src/pHSense.c ****     phHistory[index] = pHADCSample;
+  85              		.loc 1 69 0
+  86 0030 284B     		ldr	r3, .L3+20
+  87 0032 1B88     		ldrh	r3, [r3]
+  88 0034 1946     		mov	r1, r3
+  89 0036 284A     		ldr	r2, .L3+24
+  90 0038 FB88     		ldrh	r3, [r7, #6]	@ movhi
+  91 003a 22F81130 		strh	r3, [r2, r1, lsl #1]	@ movhi
+  70:src/pHSense.c ****     //Add newest value
+  71:src/pHSense.c ****     sum += pHADCSample;
+  92              		.loc 1 71 0
+  93 003e FA88     		ldrh	r2, [r7, #6]
+  94 0040 234B     		ldr	r3, .L3+16
+  95 0042 1B68     		ldr	r3, [r3]
+  96 0044 1344     		add	r3, r3, r2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 4
+
+
+  97 0046 224A     		ldr	r2, .L3+16
+  98 0048 1360     		str	r3, [r2]
+  72:src/pHSense.c ****     //Increment Index
+  73:src/pHSense.c ****     index = (index + 1) % (HIST_CNT);
+  99              		.loc 1 73 0
+ 100 004a 224B     		ldr	r3, .L3+20
+ 101 004c 1B88     		ldrh	r3, [r3]
+ 102 004e 5A1C     		adds	r2, r3, #1
+ 103 0050 224B     		ldr	r3, .L3+28
+ 104 0052 1340     		ands	r3, r3, r2
+ 105 0054 002B     		cmp	r3, #0
+ 106 0056 05DA     		bge	.L2
+ 107 0058 013B     		subs	r3, r3, #1
+ 108 005a 6FEA8353 		mvn	r3, r3, lsl #22
+ 109 005e 6FEA9353 		mvn	r3, r3, lsr #22
+ 110 0062 0133     		adds	r3, r3, #1
+ 111              	.L2:
+ 112 0064 9AB2     		uxth	r2, r3
+ 113 0066 1B4B     		ldr	r3, .L3+20
+ 114 0068 1A80     		strh	r2, [r3]	@ movhi
+  74:src/pHSense.c ****     
+  75:src/pHSense.c ****     phRaw = sum>>SHIFT_CNT;
+ 115              		.loc 1 75 0
+ 116 006a 194B     		ldr	r3, .L3+16
+ 117 006c 1B68     		ldr	r3, [r3]
+ 118 006e 9B0A     		lsrs	r3, r3, #10
+ 119 0070 9AB2     		uxth	r2, r3
+ 120 0072 1B4B     		ldr	r3, .L3+32
+ 121 0074 1A80     		strh	r2, [r3]	@ movhi
+  76:src/pHSense.c ****     pH = A0*phRaw + A1;
+ 122              		.loc 1 76 0
+ 123 0076 1A4B     		ldr	r3, .L3+32
+ 124 0078 1B88     		ldrh	r3, [r3]
+ 125 007a 1846     		mov	r0, r3
+ 126 007c FFF7FEFF 		bl	__aeabi_i2d
+ 127 0080 0FA3     		adr	r3, .L3
+ 128 0082 D3E90023 		ldrd	r2, [r3]
+ 129 0086 FFF7FEFF 		bl	__aeabi_dmul
+ 130 008a 0346     		mov	r3, r0
+ 131 008c 0C46     		mov	r4, r1
+ 132 008e 1846     		mov	r0, r3
+ 133 0090 2146     		mov	r1, r4
+ 134 0092 0DA3     		adr	r3, .L3+8
+ 135 0094 D3E90023 		ldrd	r2, [r3]
+ 136 0098 FFF7FEFF 		bl	__aeabi_dadd
+ 137 009c 0346     		mov	r3, r0
+ 138 009e 0C46     		mov	r4, r1
+ 139 00a0 1846     		mov	r0, r3
+ 140 00a2 2146     		mov	r1, r4
+ 141 00a4 FFF7FEFF 		bl	__aeabi_d2f
+ 142 00a8 0246     		mov	r2, r0
+ 143 00aa 0E4B     		ldr	r3, .L3+36
+ 144 00ac 1A60     		str	r2, [r3]	@ float
+  77:src/pHSense.c ****     
+  78:src/pHSense.c ****     pHSampleTimerISR_ClearPending();
+ 145              		.loc 1 78 0
+ 146 00ae FFF7FEFF 		bl	pHSampleTimerISR_ClearPending
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 5
+
+
+  79:src/pHSense.c ****     
+  80:src/pHSense.c **** }
+ 147              		.loc 1 80 0
+ 148 00b2 00BF     		nop
+ 149 00b4 0C37     		adds	r7, r7, #12
+ 150              		.cfi_def_cfa_offset 12
+ 151 00b6 BD46     		mov	sp, r7
+ 152              		.cfi_def_cfa_register 13
+ 153              		@ sp needed
+ 154 00b8 90BD     		pop	{r4, r7, pc}
+ 155              	.L4:
+ 156 00ba 00BFAFF3 		.align	3
+ 156      0080
+ 157              	.L3:
+ 158 00c0 2F6EA301 		.word	27487791
+ 159 00c4 BC0572BF 		.word	-1083046468
+ 160 00c8 713D0AD7 		.word	-687194767
+ 161 00cc A3702A40 		.word	1076523171
+ 162 00d0 08080000 		.word	sum
+ 163 00d4 0C080000 		.word	index.8539
+ 164 00d8 08000000 		.word	phHistory
+ 165 00dc FF030080 		.word	-2147482625
+ 166 00e0 04000000 		.word	phRaw
+ 167 00e4 00000000 		.word	pH
+ 168              		.cfi_endproc
+ 169              	.LFE64:
+ 170              		.size	pHSampleTimerISRHandler, .-pHSampleTimerISRHandler
+ 171              		.section	.text.pHSense_Init,"ax",%progbits
+ 172              		.align	2
+ 173              		.global	pHSense_Init
+ 174              		.thumb
+ 175              		.thumb_func
+ 176              		.type	pHSense_Init, %function
+ 177              	pHSense_Init:
+ 178              	.LFB65:
+  81:src/pHSense.c **** /**
+  82:src/pHSense.c ****  * @function pHSense_Init(void)
+  83:src/pHSense.c ****  * @param None
+  84:src/pHSense.c ****  * @return None
+  85:src/pHSense.c ****  * @brief Initializes hardware components necessary for pH Control.
+  86:src/pHSense.c ****  *        Sets default reference to 5
+  87:src/pHSense.c ****  * @author Barron Wong 01/25/19
+  88:src/pHSense.c **** */
+  89:src/pHSense.c **** void pHSense_Init(void){
+ 179              		.loc 1 89 0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 1, uses_anonymous_args = 0
+ 183 0000 80B5     		push	{r7, lr}
+ 184              		.cfi_def_cfa_offset 8
+ 185              		.cfi_offset 7, -8
+ 186              		.cfi_offset 14, -4
+ 187 0002 00AF     		add	r7, sp, #0
+ 188              		.cfi_def_cfa_register 7
+  90:src/pHSense.c ****     
+  91:src/pHSense.c ****     pHADC_Start();
+ 189              		.loc 1 91 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 6
+
+
+ 190 0004 FFF7FEFF 		bl	pHADC_Start
+  92:src/pHSense.c ****     pHSampleTimer_Start();
+ 191              		.loc 1 92 0
+ 192 0008 FFF7FEFF 		bl	pHSampleTimer_Start
+  93:src/pHSense.c ****     
+  94:src/pHSense.c ****     //ISR Setup
+  95:src/pHSense.c ****     pHSampleTimerISR_StartEx(pHSampleTimerISRHandler);
+ 193              		.loc 1 95 0
+ 194 000c 0248     		ldr	r0, .L6
+ 195 000e FFF7FEFF 		bl	pHSampleTimerISR_StartEx
+  96:src/pHSense.c **** }
+ 196              		.loc 1 96 0
+ 197 0012 00BF     		nop
+ 198 0014 80BD     		pop	{r7, pc}
+ 199              	.L7:
+ 200 0016 00BF     		.align	2
+ 201              	.L6:
+ 202 0018 00000000 		.word	pHSampleTimerISRHandler
+ 203              		.cfi_endproc
+ 204              	.LFE65:
+ 205              		.size	pHSense_Init, .-pHSense_Init
+ 206              		.global	__aeabi_ui2f
+ 207              		.section	.text.pHSense_ReadSensor,"ax",%progbits
+ 208              		.align	2
+ 209              		.global	pHSense_ReadSensor
+ 210              		.thumb
+ 211              		.thumb_func
+ 212              		.type	pHSense_ReadSensor, %function
+ 213              	pHSense_ReadSensor:
+ 214              	.LFB66:
+  97:src/pHSense.c **** 
+  98:src/pHSense.c **** 
+  99:src/pHSense.c **** /**
+ 100:src/pHSense.c ****  * @function pHSense_ReadSensor(void)
+ 101:src/pHSense.c ****  * @param  None
+ 102:src/pHSense.c ****  * @return pH Sensor reading
+ 103:src/pHSense.c ****  * @brief  Readings are in ADC values; 
+ 104:src/pHSense.c ****  * @author Barron Wong 01/25/19
+ 105:src/pHSense.c **** */
+ 106:src/pHSense.c **** float pHSense_ReadSensor(void){
+ 215              		.loc 1 106 0
+ 216              		.cfi_startproc
+ 217              		@ args = 0, pretend = 0, frame = 8
+ 218              		@ frame_needed = 1, uses_anonymous_args = 0
+ 219 0000 80B5     		push	{r7, lr}
+ 220              		.cfi_def_cfa_offset 8
+ 221              		.cfi_offset 7, -8
+ 222              		.cfi_offset 14, -4
+ 223 0002 82B0     		sub	sp, sp, #8
+ 224              		.cfi_def_cfa_offset 16
+ 225 0004 00AF     		add	r7, sp, #0
+ 226              		.cfi_def_cfa_register 7
+ 107:src/pHSense.c ****     uint16_t result;
+ 108:src/pHSense.c ****     
+ 109:src/pHSense.c ****     pHADC_StartConvert();
+ 227              		.loc 1 109 0
+ 228 0006 FFF7FEFF 		bl	pHADC_StartConvert
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 7
+
+
+ 110:src/pHSense.c ****     pHADC_IsEndConversion(pHADC_WAIT_FOR_RESULT);
+ 229              		.loc 1 110 0
+ 230 000a 0020     		movs	r0, #0
+ 231 000c FFF7FEFF 		bl	pHADC_IsEndConversion
+ 111:src/pHSense.c ****     result = pHADC_GetResult16();
+ 232              		.loc 1 111 0
+ 233 0010 FFF7FEFF 		bl	pHADC_GetResult16
+ 234 0014 0346     		mov	r3, r0
+ 235 0016 FB80     		strh	r3, [r7, #6]	@ movhi
+ 112:src/pHSense.c **** 
+ 113:src/pHSense.c ****     return result;
+ 236              		.loc 1 113 0
+ 237 0018 FB88     		ldrh	r3, [r7, #6]
+ 238 001a 1846     		mov	r0, r3
+ 239 001c FFF7FEFF 		bl	__aeabi_ui2f
+ 240 0020 0346     		mov	r3, r0
+ 114:src/pHSense.c **** }
+ 241              		.loc 1 114 0
+ 242 0022 1846     		mov	r0, r3
+ 243 0024 0837     		adds	r7, r7, #8
+ 244              		.cfi_def_cfa_offset 8
+ 245 0026 BD46     		mov	sp, r7
+ 246              		.cfi_def_cfa_register 13
+ 247              		@ sp needed
+ 248 0028 80BD     		pop	{r7, pc}
+ 249              		.cfi_endproc
+ 250              	.LFE66:
+ 251              		.size	pHSense_ReadSensor, .-pHSense_ReadSensor
+ 252 002a 00BF     		.section	.text.pHSense_GetpH,"ax",%progbits
+ 253              		.align	2
+ 254              		.global	pHSense_GetpH
+ 255              		.thumb
+ 256              		.thumb_func
+ 257              		.type	pHSense_GetpH, %function
+ 258              	pHSense_GetpH:
+ 259              	.LFB67:
+ 115:src/pHSense.c **** 
+ 116:src/pHSense.c **** /**
+ 117:src/pHSense.c ****  * @function pHSense_GetpH(void)
+ 118:src/pHSense.c ****  * @param  Nonw
+ 119:src/pHSense.c ****  * @return pH level
+ 120:src/pHSense.c ****  * @brief Returns the current pH level
+ 121:src/pHSense.c ****  * @author Barron Wong 02/19/19
+ 122:src/pHSense.c **** */
+ 123:src/pHSense.c **** float pHSense_GetpH(void){
+ 260              		.loc 1 123 0
+ 261              		.cfi_startproc
+ 262              		@ args = 0, pretend = 0, frame = 0
+ 263              		@ frame_needed = 1, uses_anonymous_args = 0
+ 264              		@ link register save eliminated.
+ 265 0000 80B4     		push	{r7}
+ 266              		.cfi_def_cfa_offset 4
+ 267              		.cfi_offset 7, -4
+ 268 0002 00AF     		add	r7, sp, #0
+ 269              		.cfi_def_cfa_register 7
+ 124:src/pHSense.c ****     return pH;
+ 270              		.loc 1 124 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 8
+
+
+ 271 0004 024B     		ldr	r3, .L12
+ 272 0006 1B68     		ldr	r3, [r3]	@ float
+ 125:src/pHSense.c **** }
+ 273              		.loc 1 125 0
+ 274 0008 1846     		mov	r0, r3
+ 275 000a BD46     		mov	sp, r7
+ 276              		.cfi_def_cfa_register 13
+ 277              		@ sp needed
+ 278 000c 80BC     		pop	{r7}
+ 279              		.cfi_restore 7
+ 280              		.cfi_def_cfa_offset 0
+ 281 000e 7047     		bx	lr
+ 282              	.L13:
+ 283              		.align	2
+ 284              	.L12:
+ 285 0010 00000000 		.word	pH
+ 286              		.cfi_endproc
+ 287              	.LFE67:
+ 288              		.size	pHSense_GetpH, .-pHSense_GetpH
+ 289              		.section	.text.pHSense_TurnOff,"ax",%progbits
+ 290              		.align	2
+ 291              		.global	pHSense_TurnOff
+ 292              		.thumb
+ 293              		.thumb_func
+ 294              		.type	pHSense_TurnOff, %function
+ 295              	pHSense_TurnOff:
+ 296              	.LFB68:
+ 126:src/pHSense.c **** /**
+ 127:src/pHSense.c ****  * @function pHSense_TurnOff(void)
+ 128:src/pHSense.c ****  * @param None
+ 129:src/pHSense.c ****  * @return None
+ 130:src/pHSense.c ****  * @brief Disables updating for pH
+ 131:src/pHSense.c ****  * @author Barron Wong 05/21/19
+ 132:src/pHSense.c **** */
+ 133:src/pHSense.c **** void pHSense_TurnOff(void){
+ 297              		.loc 1 133 0
+ 298              		.cfi_startproc
+ 299              		@ args = 0, pretend = 0, frame = 0
+ 300              		@ frame_needed = 1, uses_anonymous_args = 0
+ 301 0000 80B5     		push	{r7, lr}
+ 302              		.cfi_def_cfa_offset 8
+ 303              		.cfi_offset 7, -8
+ 304              		.cfi_offset 14, -4
+ 305 0002 00AF     		add	r7, sp, #0
+ 306              		.cfi_def_cfa_register 7
+ 134:src/pHSense.c ****     pHSampleTimerISR_Disable();
+ 307              		.loc 1 134 0
+ 308 0004 FFF7FEFF 		bl	pHSampleTimerISR_Disable
+ 135:src/pHSense.c **** }
+ 309              		.loc 1 135 0
+ 310 0008 00BF     		nop
+ 311 000a 80BD     		pop	{r7, pc}
+ 312              		.cfi_endproc
+ 313              	.LFE68:
+ 314              		.size	pHSense_TurnOff, .-pHSense_TurnOff
+ 315              		.section	.text.pHSense_TurnOn,"ax",%progbits
+ 316              		.align	2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 9
+
+
+ 317              		.global	pHSense_TurnOn
+ 318              		.thumb
+ 319              		.thumb_func
+ 320              		.type	pHSense_TurnOn, %function
+ 321              	pHSense_TurnOn:
+ 322              	.LFB69:
+ 136:src/pHSense.c **** 
+ 137:src/pHSense.c **** /**
+ 138:src/pHSense.c ****  * @function pHSense_TurnOn(void)
+ 139:src/pHSense.c ****  * @param None
+ 140:src/pHSense.c ****  * @return None
+ 141:src/pHSense.c ****  * @brief Enables updating for pH
+ 142:src/pHSense.c ****  * @author Barron Wong 05/21/19
+ 143:src/pHSense.c **** */
+ 144:src/pHSense.c **** void pHSense_TurnOn(void){
+ 323              		.loc 1 144 0
+ 324              		.cfi_startproc
+ 325              		@ args = 0, pretend = 0, frame = 0
+ 326              		@ frame_needed = 1, uses_anonymous_args = 0
+ 327 0000 80B5     		push	{r7, lr}
+ 328              		.cfi_def_cfa_offset 8
+ 329              		.cfi_offset 7, -8
+ 330              		.cfi_offset 14, -4
+ 331 0002 00AF     		add	r7, sp, #0
+ 332              		.cfi_def_cfa_register 7
+ 145:src/pHSense.c ****     pHSampleTimerISR_Enable();
+ 333              		.loc 1 145 0
+ 334 0004 FFF7FEFF 		bl	pHSampleTimerISR_Enable
+ 146:src/pHSense.c ****     pHSampleTimer_Start();
+ 335              		.loc 1 146 0
+ 336 0008 FFF7FEFF 		bl	pHSampleTimer_Start
+ 147:src/pHSense.c **** }
+ 337              		.loc 1 147 0
+ 338 000c 00BF     		nop
+ 339 000e 80BD     		pop	{r7, pc}
+ 340              		.cfi_endproc
+ 341              	.LFE69:
+ 342              		.size	pHSense_TurnOn, .-pHSense_TurnOn
+ 343              		.bss
+ 344              		.align	1
+ 345              	index.8539:
+ 346 080c 0000     		.space	2
+ 347              		.text
+ 348              	.Letext0:
+ 349              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 350              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 351              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 352              		.section	.debug_info,"",%progbits
+ 353              	.Ldebug_info0:
+ 354 0000 E8010000 		.4byte	0x1e8
+ 355 0004 0400     		.2byte	0x4
+ 356 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 357 000a 04       		.byte	0x4
+ 358 000b 01       		.uleb128 0x1
+ 359 000c 15000000 		.4byte	.LASF29
+ 360 0010 0C       		.byte	0xc
+ 361 0011 A3000000 		.4byte	.LASF30
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 10
+
+
+ 362 0015 D5000000 		.4byte	.LASF31
+ 363 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 364 001d 00000000 		.4byte	0
+ 365 0021 00000000 		.4byte	.Ldebug_line0
+ 366 0025 02       		.uleb128 0x2
+ 367 0026 01       		.byte	0x1
+ 368 0027 06       		.byte	0x6
+ 369 0028 9B020000 		.4byte	.LASF0
+ 370 002c 02       		.uleb128 0x2
+ 371 002d 01       		.byte	0x1
+ 372 002e 08       		.byte	0x8
+ 373 002f 86010000 		.4byte	.LASF1
+ 374 0033 02       		.uleb128 0x2
+ 375 0034 02       		.byte	0x2
+ 376 0035 05       		.byte	0x5
+ 377 0036 5E020000 		.4byte	.LASF2
+ 378 003a 03       		.uleb128 0x3
+ 379 003b BD010000 		.4byte	.LASF4
+ 380 003f 02       		.byte	0x2
+ 381 0040 2B       		.byte	0x2b
+ 382 0041 45000000 		.4byte	0x45
+ 383 0045 02       		.uleb128 0x2
+ 384 0046 02       		.byte	0x2
+ 385 0047 07       		.byte	0x7
+ 386 0048 BB000000 		.4byte	.LASF3
+ 387 004c 03       		.uleb128 0x3
+ 388 004d B1000000 		.4byte	.LASF5
+ 389 0051 02       		.byte	0x2
+ 390 0052 3F       		.byte	0x3f
+ 391 0053 57000000 		.4byte	0x57
+ 392 0057 02       		.uleb128 0x2
+ 393 0058 04       		.byte	0x4
+ 394 0059 05       		.byte	0x5
+ 395 005a 86020000 		.4byte	.LASF6
+ 396 005e 03       		.uleb128 0x3
+ 397 005f D8010000 		.4byte	.LASF7
+ 398 0063 02       		.byte	0x2
+ 399 0064 41       		.byte	0x41
+ 400 0065 69000000 		.4byte	0x69
+ 401 0069 02       		.uleb128 0x2
+ 402 006a 04       		.byte	0x4
+ 403 006b 07       		.byte	0x7
+ 404 006c 94010000 		.4byte	.LASF8
+ 405 0070 02       		.uleb128 0x2
+ 406 0071 08       		.byte	0x8
+ 407 0072 05       		.byte	0x5
+ 408 0073 3F020000 		.4byte	.LASF9
+ 409 0077 02       		.uleb128 0x2
+ 410 0078 08       		.byte	0x8
+ 411 0079 07       		.byte	0x7
+ 412 007a F0010000 		.4byte	.LASF10
+ 413 007e 04       		.uleb128 0x4
+ 414 007f 04       		.byte	0x4
+ 415 0080 05       		.byte	0x5
+ 416 0081 696E7400 		.ascii	"int\000"
+ 417 0085 02       		.uleb128 0x2
+ 418 0086 04       		.byte	0x4
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 11
+
+
+ 419 0087 07       		.byte	0x7
+ 420 0088 E3010000 		.4byte	.LASF11
+ 421 008c 03       		.uleb128 0x3
+ 422 008d 68020000 		.4byte	.LASF12
+ 423 0091 03       		.byte	0x3
+ 424 0092 24       		.byte	0x24
+ 425 0093 3A000000 		.4byte	0x3a
+ 426 0097 03       		.uleb128 0x3
+ 427 0098 2E020000 		.4byte	.LASF13
+ 428 009c 03       		.byte	0x3
+ 429 009d 2C       		.byte	0x2c
+ 430 009e 4C000000 		.4byte	0x4c
+ 431 00a2 03       		.uleb128 0x3
+ 432 00a3 7D020000 		.4byte	.LASF14
+ 433 00a7 03       		.byte	0x3
+ 434 00a8 30       		.byte	0x30
+ 435 00a9 5E000000 		.4byte	0x5e
+ 436 00ad 02       		.uleb128 0x2
+ 437 00ae 04       		.byte	0x4
+ 438 00af 04       		.byte	0x4
+ 439 00b0 68010000 		.4byte	.LASF15
+ 440 00b4 02       		.uleb128 0x2
+ 441 00b5 08       		.byte	0x8
+ 442 00b6 04       		.byte	0x4
+ 443 00b7 CE000000 		.4byte	.LASF16
+ 444 00bb 02       		.uleb128 0x2
+ 445 00bc 01       		.byte	0x1
+ 446 00bd 08       		.byte	0x8
+ 447 00be 4D020000 		.4byte	.LASF17
+ 448 00c2 02       		.uleb128 0x2
+ 449 00c3 08       		.byte	0x8
+ 450 00c4 04       		.byte	0x4
+ 451 00c5 8F020000 		.4byte	.LASF18
+ 452 00c9 02       		.uleb128 0x2
+ 453 00ca 04       		.byte	0x4
+ 454 00cb 07       		.byte	0x7
+ 455 00cc 36020000 		.4byte	.LASF19
+ 456 00d0 05       		.uleb128 0x5
+ 457 00d1 6E010000 		.4byte	.LASF32
+ 458 00d5 01       		.byte	0x1
+ 459 00d6 39       		.byte	0x39
+ 460 00d7 00000000 		.4byte	.LFB64
+ 461 00db E8000000 		.4byte	.LFE64-.LFB64
+ 462 00df 01       		.uleb128 0x1
+ 463 00e0 9C       		.byte	0x9c
+ 464 00e1 05010000 		.4byte	0x105
+ 465 00e5 06       		.uleb128 0x6
+ 466 00e6 52020000 		.4byte	.LASF20
+ 467 00ea 01       		.byte	0x1
+ 468 00eb 3B       		.byte	0x3b
+ 469 00ec 8C000000 		.4byte	0x8c
+ 470 00f0 02       		.uleb128 0x2
+ 471 00f1 91       		.byte	0x91
+ 472 00f2 6E       		.sleb128 -18
+ 473 00f3 06       		.uleb128 0x6
+ 474 00f4 77020000 		.4byte	.LASF21
+ 475 00f8 01       		.byte	0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 12
+
+
+ 476 00f9 3D       		.byte	0x3d
+ 477 00fa 8C000000 		.4byte	0x8c
+ 478 00fe 05       		.uleb128 0x5
+ 479 00ff 03       		.byte	0x3
+ 480 0100 0C080000 		.4byte	index.8539
+ 481 0104 00       		.byte	0
+ 482 0105 07       		.uleb128 0x7
+ 483 0106 21020000 		.4byte	.LASF23
+ 484 010a 01       		.byte	0x1
+ 485 010b 59       		.byte	0x59
+ 486 010c 00000000 		.4byte	.LFB65
+ 487 0110 1C000000 		.4byte	.LFE65-.LFB65
+ 488 0114 01       		.uleb128 0x1
+ 489 0115 9C       		.byte	0x9c
+ 490 0116 08       		.uleb128 0x8
+ 491 0117 07020000 		.4byte	.LASF33
+ 492 011b 01       		.byte	0x1
+ 493 011c 6A       		.byte	0x6a
+ 494 011d AD000000 		.4byte	0xad
+ 495 0121 00000000 		.4byte	.LFB66
+ 496 0125 2A000000 		.4byte	.LFE66-.LFB66
+ 497 0129 01       		.uleb128 0x1
+ 498 012a 9C       		.byte	0x9c
+ 499 012b 3E010000 		.4byte	0x13e
+ 500 012f 06       		.uleb128 0x6
+ 501 0130 1A020000 		.4byte	.LASF22
+ 502 0134 01       		.byte	0x1
+ 503 0135 6B       		.byte	0x6b
+ 504 0136 8C000000 		.4byte	0x8c
+ 505 013a 02       		.uleb128 0x2
+ 506 013b 91       		.byte	0x91
+ 507 013c 76       		.sleb128 -10
+ 508 013d 00       		.byte	0
+ 509 013e 09       		.uleb128 0x9
+ 510 013f 5A010000 		.4byte	.LASF34
+ 511 0143 01       		.byte	0x1
+ 512 0144 7B       		.byte	0x7b
+ 513 0145 AD000000 		.4byte	0xad
+ 514 0149 00000000 		.4byte	.LFB67
+ 515 014d 14000000 		.4byte	.LFE67-.LFB67
+ 516 0151 01       		.uleb128 0x1
+ 517 0152 9C       		.byte	0x9c
+ 518 0153 07       		.uleb128 0x7
+ 519 0154 C8010000 		.4byte	.LASF24
+ 520 0158 01       		.byte	0x1
+ 521 0159 85       		.byte	0x85
+ 522 015a 00000000 		.4byte	.LFB68
+ 523 015e 0C000000 		.4byte	.LFE68-.LFB68
+ 524 0162 01       		.uleb128 0x1
+ 525 0163 9C       		.byte	0x9c
+ 526 0164 07       		.uleb128 0x7
+ 527 0165 06000000 		.4byte	.LASF25
+ 528 0169 01       		.byte	0x1
+ 529 016a 90       		.byte	0x90
+ 530 016b 00000000 		.4byte	.LFB69
+ 531 016f 10000000 		.4byte	.LFE69-.LFB69
+ 532 0173 01       		.uleb128 0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 13
+
+
+ 533 0174 9C       		.byte	0x9c
+ 534 0175 06       		.uleb128 0x6
+ 535 0176 00000000 		.4byte	.LASF26
+ 536 017a 01       		.byte	0x1
+ 537 017b 2A       		.byte	0x2a
+ 538 017c AD000000 		.4byte	0xad
+ 539 0180 05       		.uleb128 0x5
+ 540 0181 03       		.byte	0x3
+ 541 0182 00000000 		.4byte	pHRef
+ 542 0186 0A       		.uleb128 0xa
+ 543 0187 704800   		.ascii	"pH\000"
+ 544 018a 01       		.byte	0x1
+ 545 018b 2B       		.byte	0x2b
+ 546 018c AD000000 		.4byte	0xad
+ 547 0190 05       		.uleb128 0x5
+ 548 0191 03       		.byte	0x3
+ 549 0192 00000000 		.4byte	pH
+ 550 0196 06       		.uleb128 0x6
+ 551 0197 71020000 		.4byte	.LASF27
+ 552 019b 01       		.byte	0x1
+ 553 019c 2C       		.byte	0x2c
+ 554 019d 8C000000 		.4byte	0x8c
+ 555 01a1 05       		.uleb128 0x5
+ 556 01a2 03       		.byte	0x3
+ 557 01a3 04000000 		.4byte	phRaw
+ 558 01a7 0B       		.uleb128 0xb
+ 559 01a8 8C000000 		.4byte	0x8c
+ 560 01ac B8010000 		.4byte	0x1b8
+ 561 01b0 0C       		.uleb128 0xc
+ 562 01b1 C9000000 		.4byte	0xc9
+ 563 01b5 FF03     		.2byte	0x3ff
+ 564 01b7 00       		.byte	0
+ 565 01b8 06       		.uleb128 0x6
+ 566 01b9 A6010000 		.4byte	.LASF28
+ 567 01bd 01       		.byte	0x1
+ 568 01be 2D       		.byte	0x2d
+ 569 01bf A7010000 		.4byte	0x1a7
+ 570 01c3 05       		.uleb128 0x5
+ 571 01c4 03       		.byte	0x3
+ 572 01c5 08000000 		.4byte	phHistory
+ 573 01c9 0A       		.uleb128 0xa
+ 574 01ca 73756D00 		.ascii	"sum\000"
+ 575 01ce 01       		.byte	0x1
+ 576 01cf 2E       		.byte	0x2e
+ 577 01d0 A2000000 		.4byte	0xa2
+ 578 01d4 05       		.uleb128 0x5
+ 579 01d5 03       		.byte	0x3
+ 580 01d6 08080000 		.4byte	sum
+ 581 01da 0D       		.uleb128 0xd
+ 582 01db B0010000 		.4byte	.LASF35
+ 583 01df 04       		.byte	0x4
+ 584 01e0 1207     		.2byte	0x712
+ 585 01e2 E6010000 		.4byte	0x1e6
+ 586 01e6 0E       		.uleb128 0xe
+ 587 01e7 97000000 		.4byte	0x97
+ 588 01eb 00       		.byte	0
+ 589              		.section	.debug_abbrev,"",%progbits
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 14
+
+
+ 590              	.Ldebug_abbrev0:
+ 591 0000 01       		.uleb128 0x1
+ 592 0001 11       		.uleb128 0x11
+ 593 0002 01       		.byte	0x1
+ 594 0003 25       		.uleb128 0x25
+ 595 0004 0E       		.uleb128 0xe
+ 596 0005 13       		.uleb128 0x13
+ 597 0006 0B       		.uleb128 0xb
+ 598 0007 03       		.uleb128 0x3
+ 599 0008 0E       		.uleb128 0xe
+ 600 0009 1B       		.uleb128 0x1b
+ 601 000a 0E       		.uleb128 0xe
+ 602 000b 55       		.uleb128 0x55
+ 603 000c 17       		.uleb128 0x17
+ 604 000d 11       		.uleb128 0x11
+ 605 000e 01       		.uleb128 0x1
+ 606 000f 10       		.uleb128 0x10
+ 607 0010 17       		.uleb128 0x17
+ 608 0011 00       		.byte	0
+ 609 0012 00       		.byte	0
+ 610 0013 02       		.uleb128 0x2
+ 611 0014 24       		.uleb128 0x24
+ 612 0015 00       		.byte	0
+ 613 0016 0B       		.uleb128 0xb
+ 614 0017 0B       		.uleb128 0xb
+ 615 0018 3E       		.uleb128 0x3e
+ 616 0019 0B       		.uleb128 0xb
+ 617 001a 03       		.uleb128 0x3
+ 618 001b 0E       		.uleb128 0xe
+ 619 001c 00       		.byte	0
+ 620 001d 00       		.byte	0
+ 621 001e 03       		.uleb128 0x3
+ 622 001f 16       		.uleb128 0x16
+ 623 0020 00       		.byte	0
+ 624 0021 03       		.uleb128 0x3
+ 625 0022 0E       		.uleb128 0xe
+ 626 0023 3A       		.uleb128 0x3a
+ 627 0024 0B       		.uleb128 0xb
+ 628 0025 3B       		.uleb128 0x3b
+ 629 0026 0B       		.uleb128 0xb
+ 630 0027 49       		.uleb128 0x49
+ 631 0028 13       		.uleb128 0x13
+ 632 0029 00       		.byte	0
+ 633 002a 00       		.byte	0
+ 634 002b 04       		.uleb128 0x4
+ 635 002c 24       		.uleb128 0x24
+ 636 002d 00       		.byte	0
+ 637 002e 0B       		.uleb128 0xb
+ 638 002f 0B       		.uleb128 0xb
+ 639 0030 3E       		.uleb128 0x3e
+ 640 0031 0B       		.uleb128 0xb
+ 641 0032 03       		.uleb128 0x3
+ 642 0033 08       		.uleb128 0x8
+ 643 0034 00       		.byte	0
+ 644 0035 00       		.byte	0
+ 645 0036 05       		.uleb128 0x5
+ 646 0037 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 15
+
+
+ 647 0038 01       		.byte	0x1
+ 648 0039 3F       		.uleb128 0x3f
+ 649 003a 19       		.uleb128 0x19
+ 650 003b 03       		.uleb128 0x3
+ 651 003c 0E       		.uleb128 0xe
+ 652 003d 3A       		.uleb128 0x3a
+ 653 003e 0B       		.uleb128 0xb
+ 654 003f 3B       		.uleb128 0x3b
+ 655 0040 0B       		.uleb128 0xb
+ 656 0041 27       		.uleb128 0x27
+ 657 0042 19       		.uleb128 0x19
+ 658 0043 11       		.uleb128 0x11
+ 659 0044 01       		.uleb128 0x1
+ 660 0045 12       		.uleb128 0x12
+ 661 0046 06       		.uleb128 0x6
+ 662 0047 40       		.uleb128 0x40
+ 663 0048 18       		.uleb128 0x18
+ 664 0049 9642     		.uleb128 0x2116
+ 665 004b 19       		.uleb128 0x19
+ 666 004c 01       		.uleb128 0x1
+ 667 004d 13       		.uleb128 0x13
+ 668 004e 00       		.byte	0
+ 669 004f 00       		.byte	0
+ 670 0050 06       		.uleb128 0x6
+ 671 0051 34       		.uleb128 0x34
+ 672 0052 00       		.byte	0
+ 673 0053 03       		.uleb128 0x3
+ 674 0054 0E       		.uleb128 0xe
+ 675 0055 3A       		.uleb128 0x3a
+ 676 0056 0B       		.uleb128 0xb
+ 677 0057 3B       		.uleb128 0x3b
+ 678 0058 0B       		.uleb128 0xb
+ 679 0059 49       		.uleb128 0x49
+ 680 005a 13       		.uleb128 0x13
+ 681 005b 02       		.uleb128 0x2
+ 682 005c 18       		.uleb128 0x18
+ 683 005d 00       		.byte	0
+ 684 005e 00       		.byte	0
+ 685 005f 07       		.uleb128 0x7
+ 686 0060 2E       		.uleb128 0x2e
+ 687 0061 00       		.byte	0
+ 688 0062 3F       		.uleb128 0x3f
+ 689 0063 19       		.uleb128 0x19
+ 690 0064 03       		.uleb128 0x3
+ 691 0065 0E       		.uleb128 0xe
+ 692 0066 3A       		.uleb128 0x3a
+ 693 0067 0B       		.uleb128 0xb
+ 694 0068 3B       		.uleb128 0x3b
+ 695 0069 0B       		.uleb128 0xb
+ 696 006a 27       		.uleb128 0x27
+ 697 006b 19       		.uleb128 0x19
+ 698 006c 11       		.uleb128 0x11
+ 699 006d 01       		.uleb128 0x1
+ 700 006e 12       		.uleb128 0x12
+ 701 006f 06       		.uleb128 0x6
+ 702 0070 40       		.uleb128 0x40
+ 703 0071 18       		.uleb128 0x18
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 16
+
+
+ 704 0072 9642     		.uleb128 0x2116
+ 705 0074 19       		.uleb128 0x19
+ 706 0075 00       		.byte	0
+ 707 0076 00       		.byte	0
+ 708 0077 08       		.uleb128 0x8
+ 709 0078 2E       		.uleb128 0x2e
+ 710 0079 01       		.byte	0x1
+ 711 007a 3F       		.uleb128 0x3f
+ 712 007b 19       		.uleb128 0x19
+ 713 007c 03       		.uleb128 0x3
+ 714 007d 0E       		.uleb128 0xe
+ 715 007e 3A       		.uleb128 0x3a
+ 716 007f 0B       		.uleb128 0xb
+ 717 0080 3B       		.uleb128 0x3b
+ 718 0081 0B       		.uleb128 0xb
+ 719 0082 27       		.uleb128 0x27
+ 720 0083 19       		.uleb128 0x19
+ 721 0084 49       		.uleb128 0x49
+ 722 0085 13       		.uleb128 0x13
+ 723 0086 11       		.uleb128 0x11
+ 724 0087 01       		.uleb128 0x1
+ 725 0088 12       		.uleb128 0x12
+ 726 0089 06       		.uleb128 0x6
+ 727 008a 40       		.uleb128 0x40
+ 728 008b 18       		.uleb128 0x18
+ 729 008c 9642     		.uleb128 0x2116
+ 730 008e 19       		.uleb128 0x19
+ 731 008f 01       		.uleb128 0x1
+ 732 0090 13       		.uleb128 0x13
+ 733 0091 00       		.byte	0
+ 734 0092 00       		.byte	0
+ 735 0093 09       		.uleb128 0x9
+ 736 0094 2E       		.uleb128 0x2e
+ 737 0095 00       		.byte	0
+ 738 0096 3F       		.uleb128 0x3f
+ 739 0097 19       		.uleb128 0x19
+ 740 0098 03       		.uleb128 0x3
+ 741 0099 0E       		.uleb128 0xe
+ 742 009a 3A       		.uleb128 0x3a
+ 743 009b 0B       		.uleb128 0xb
+ 744 009c 3B       		.uleb128 0x3b
+ 745 009d 0B       		.uleb128 0xb
+ 746 009e 27       		.uleb128 0x27
+ 747 009f 19       		.uleb128 0x19
+ 748 00a0 49       		.uleb128 0x49
+ 749 00a1 13       		.uleb128 0x13
+ 750 00a2 11       		.uleb128 0x11
+ 751 00a3 01       		.uleb128 0x1
+ 752 00a4 12       		.uleb128 0x12
+ 753 00a5 06       		.uleb128 0x6
+ 754 00a6 40       		.uleb128 0x40
+ 755 00a7 18       		.uleb128 0x18
+ 756 00a8 9742     		.uleb128 0x2117
+ 757 00aa 19       		.uleb128 0x19
+ 758 00ab 00       		.byte	0
+ 759 00ac 00       		.byte	0
+ 760 00ad 0A       		.uleb128 0xa
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 17
+
+
+ 761 00ae 34       		.uleb128 0x34
+ 762 00af 00       		.byte	0
+ 763 00b0 03       		.uleb128 0x3
+ 764 00b1 08       		.uleb128 0x8
+ 765 00b2 3A       		.uleb128 0x3a
+ 766 00b3 0B       		.uleb128 0xb
+ 767 00b4 3B       		.uleb128 0x3b
+ 768 00b5 0B       		.uleb128 0xb
+ 769 00b6 49       		.uleb128 0x49
+ 770 00b7 13       		.uleb128 0x13
+ 771 00b8 02       		.uleb128 0x2
+ 772 00b9 18       		.uleb128 0x18
+ 773 00ba 00       		.byte	0
+ 774 00bb 00       		.byte	0
+ 775 00bc 0B       		.uleb128 0xb
+ 776 00bd 01       		.uleb128 0x1
+ 777 00be 01       		.byte	0x1
+ 778 00bf 49       		.uleb128 0x49
+ 779 00c0 13       		.uleb128 0x13
+ 780 00c1 01       		.uleb128 0x1
+ 781 00c2 13       		.uleb128 0x13
+ 782 00c3 00       		.byte	0
+ 783 00c4 00       		.byte	0
+ 784 00c5 0C       		.uleb128 0xc
+ 785 00c6 21       		.uleb128 0x21
+ 786 00c7 00       		.byte	0
+ 787 00c8 49       		.uleb128 0x49
+ 788 00c9 13       		.uleb128 0x13
+ 789 00ca 2F       		.uleb128 0x2f
+ 790 00cb 05       		.uleb128 0x5
+ 791 00cc 00       		.byte	0
+ 792 00cd 00       		.byte	0
+ 793 00ce 0D       		.uleb128 0xd
+ 794 00cf 34       		.uleb128 0x34
+ 795 00d0 00       		.byte	0
+ 796 00d1 03       		.uleb128 0x3
+ 797 00d2 0E       		.uleb128 0xe
+ 798 00d3 3A       		.uleb128 0x3a
+ 799 00d4 0B       		.uleb128 0xb
+ 800 00d5 3B       		.uleb128 0x3b
+ 801 00d6 05       		.uleb128 0x5
+ 802 00d7 49       		.uleb128 0x49
+ 803 00d8 13       		.uleb128 0x13
+ 804 00d9 3F       		.uleb128 0x3f
+ 805 00da 19       		.uleb128 0x19
+ 806 00db 3C       		.uleb128 0x3c
+ 807 00dc 19       		.uleb128 0x19
+ 808 00dd 00       		.byte	0
+ 809 00de 00       		.byte	0
+ 810 00df 0E       		.uleb128 0xe
+ 811 00e0 35       		.uleb128 0x35
+ 812 00e1 00       		.byte	0
+ 813 00e2 49       		.uleb128 0x49
+ 814 00e3 13       		.uleb128 0x13
+ 815 00e4 00       		.byte	0
+ 816 00e5 00       		.byte	0
+ 817 00e6 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 18
+
+
+ 818              		.section	.debug_aranges,"",%progbits
+ 819 0000 44000000 		.4byte	0x44
+ 820 0004 0200     		.2byte	0x2
+ 821 0006 00000000 		.4byte	.Ldebug_info0
+ 822 000a 04       		.byte	0x4
+ 823 000b 00       		.byte	0
+ 824 000c 0000     		.2byte	0
+ 825 000e 0000     		.2byte	0
+ 826 0010 00000000 		.4byte	.LFB64
+ 827 0014 E8000000 		.4byte	.LFE64-.LFB64
+ 828 0018 00000000 		.4byte	.LFB65
+ 829 001c 1C000000 		.4byte	.LFE65-.LFB65
+ 830 0020 00000000 		.4byte	.LFB66
+ 831 0024 2A000000 		.4byte	.LFE66-.LFB66
+ 832 0028 00000000 		.4byte	.LFB67
+ 833 002c 14000000 		.4byte	.LFE67-.LFB67
+ 834 0030 00000000 		.4byte	.LFB68
+ 835 0034 0C000000 		.4byte	.LFE68-.LFB68
+ 836 0038 00000000 		.4byte	.LFB69
+ 837 003c 10000000 		.4byte	.LFE69-.LFB69
+ 838 0040 00000000 		.4byte	0
+ 839 0044 00000000 		.4byte	0
+ 840              		.section	.debug_ranges,"",%progbits
+ 841              	.Ldebug_ranges0:
+ 842 0000 00000000 		.4byte	.LFB64
+ 843 0004 E8000000 		.4byte	.LFE64
+ 844 0008 00000000 		.4byte	.LFB65
+ 845 000c 1C000000 		.4byte	.LFE65
+ 846 0010 00000000 		.4byte	.LFB66
+ 847 0014 2A000000 		.4byte	.LFE66
+ 848 0018 00000000 		.4byte	.LFB67
+ 849 001c 14000000 		.4byte	.LFE67
+ 850 0020 00000000 		.4byte	.LFB68
+ 851 0024 0C000000 		.4byte	.LFE68
+ 852 0028 00000000 		.4byte	.LFB69
+ 853 002c 10000000 		.4byte	.LFE69
+ 854 0030 00000000 		.4byte	0
+ 855 0034 00000000 		.4byte	0
+ 856              		.section	.debug_line,"",%progbits
+ 857              	.Ldebug_line0:
+ 858 0000 C6010000 		.section	.debug_str,"MS",%progbits,1
+ 858      02004601 
+ 858      00000201 
+ 858      FB0E0D00 
+ 858      01010101 
+ 859              	.LASF26:
+ 860 0000 70485265 		.ascii	"pHRef\000"
+ 860      6600
+ 861              	.LASF25:
+ 862 0006 70485365 		.ascii	"pHSense_TurnOn\000"
+ 862      6E73655F 
+ 862      5475726E 
+ 862      4F6E00
+ 863              	.LASF29:
+ 864 0015 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 864      43313120 
+ 864      352E342E 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 19
+
+
+ 864      31203230 
+ 864      31363036 
+ 865 0048 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 865      20726576 
+ 865      6973696F 
+ 865      6E203233 
+ 865      37373135 
+ 866 007b 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 866      66756E63 
+ 866      74696F6E 
+ 866      2D736563 
+ 866      74696F6E 
+ 867              	.LASF30:
+ 868 00a3 7372635C 		.ascii	"src\\pHSense.c\000"
+ 868      70485365 
+ 868      6E73652E 
+ 868      6300
+ 869              	.LASF5:
+ 870 00b1 5F5F696E 		.ascii	"__int32_t\000"
+ 870      7433325F 
+ 870      7400
+ 871              	.LASF3:
+ 872 00bb 73686F72 		.ascii	"short unsigned int\000"
+ 872      7420756E 
+ 872      7369676E 
+ 872      65642069 
+ 872      6E7400
+ 873              	.LASF16:
+ 874 00ce 646F7562 		.ascii	"double\000"
+ 874      6C6500
+ 875              	.LASF31:
+ 876 00d5 433A5C55 		.ascii	"C:\\Users\\tpbw4321\\AppData\\Roaming\\SPB_Data\\Hy"
+ 876      73657273 
+ 876      5C747062 
+ 876      77343332 
+ 876      315C4170 
+ 877 0102 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
+ 877      6F6E6963 
+ 877      73417574 
+ 877      6F6D6174 
+ 877      696F6E5C 
+ 878 0131 536F435C 		.ascii	"SoC\\HydroponicAutomationSensorPerf.cydsn\000"
+ 878      48796472 
+ 878      6F706F6E 
+ 878      69634175 
+ 878      746F6D61 
+ 879              	.LASF34:
+ 880 015a 70485365 		.ascii	"pHSense_GetpH\000"
+ 880      6E73655F 
+ 880      47657470 
+ 880      4800
+ 881              	.LASF15:
+ 882 0168 666C6F61 		.ascii	"float\000"
+ 882      7400
+ 883              	.LASF32:
+ 884 016e 70485361 		.ascii	"pHSampleTimerISRHandler\000"
+ 884      6D706C65 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 20
+
+
+ 884      54696D65 
+ 884      72495352 
+ 884      48616E64 
+ 885              	.LASF1:
+ 886 0186 756E7369 		.ascii	"unsigned char\000"
+ 886      676E6564 
+ 886      20636861 
+ 886      7200
+ 887              	.LASF8:
+ 888 0194 6C6F6E67 		.ascii	"long unsigned int\000"
+ 888      20756E73 
+ 888      69676E65 
+ 888      6420696E 
+ 888      7400
+ 889              	.LASF28:
+ 890 01a6 70684869 		.ascii	"phHistory\000"
+ 890      73746F72 
+ 890      7900
+ 891              	.LASF35:
+ 892 01b0 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 892      52784275 
+ 892      66666572 
+ 892      00
+ 893              	.LASF4:
+ 894 01bd 5F5F7569 		.ascii	"__uint16_t\000"
+ 894      6E743136 
+ 894      5F7400
+ 895              	.LASF24:
+ 896 01c8 70485365 		.ascii	"pHSense_TurnOff\000"
+ 896      6E73655F 
+ 896      5475726E 
+ 896      4F666600 
+ 897              	.LASF7:
+ 898 01d8 5F5F7569 		.ascii	"__uint32_t\000"
+ 898      6E743332 
+ 898      5F7400
+ 899              	.LASF11:
+ 900 01e3 756E7369 		.ascii	"unsigned int\000"
+ 900      676E6564 
+ 900      20696E74 
+ 900      00
+ 901              	.LASF10:
+ 902 01f0 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 902      206C6F6E 
+ 902      6720756E 
+ 902      7369676E 
+ 902      65642069 
+ 903              	.LASF33:
+ 904 0207 70485365 		.ascii	"pHSense_ReadSensor\000"
+ 904      6E73655F 
+ 904      52656164 
+ 904      53656E73 
+ 904      6F7200
+ 905              	.LASF22:
+ 906 021a 72657375 		.ascii	"result\000"
+ 906      6C7400
+ 907              	.LASF23:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccQrxvJF.s 			page 21
+
+
+ 908 0221 70485365 		.ascii	"pHSense_Init\000"
+ 908      6E73655F 
+ 908      496E6974 
+ 908      00
+ 909              	.LASF13:
+ 910 022e 696E7433 		.ascii	"int32_t\000"
+ 910      325F7400 
+ 911              	.LASF19:
+ 912 0236 73697A65 		.ascii	"sizetype\000"
+ 912      74797065 
+ 912      00
+ 913              	.LASF9:
+ 914 023f 6C6F6E67 		.ascii	"long long int\000"
+ 914      206C6F6E 
+ 914      6720696E 
+ 914      7400
+ 915              	.LASF17:
+ 916 024d 63686172 		.ascii	"char\000"
+ 916      00
+ 917              	.LASF20:
+ 918 0252 70484144 		.ascii	"pHADCSample\000"
+ 918      4353616D 
+ 918      706C6500 
+ 919              	.LASF2:
+ 920 025e 73686F72 		.ascii	"short int\000"
+ 920      7420696E 
+ 920      7400
+ 921              	.LASF12:
+ 922 0268 75696E74 		.ascii	"uint16_t\000"
+ 922      31365F74 
+ 922      00
+ 923              	.LASF27:
+ 924 0271 70685261 		.ascii	"phRaw\000"
+ 924      7700
+ 925              	.LASF21:
+ 926 0277 696E6465 		.ascii	"index\000"
+ 926      7800
+ 927              	.LASF14:
+ 928 027d 75696E74 		.ascii	"uint32_t\000"
+ 928      33325F74 
+ 928      00
+ 929              	.LASF6:
+ 930 0286 6C6F6E67 		.ascii	"long int\000"
+ 930      20696E74 
+ 930      00
+ 931              	.LASF18:
+ 932 028f 6C6F6E67 		.ascii	"long double\000"
+ 932      20646F75 
+ 932      626C6500 
+ 933              	.LASF0:
+ 934 029b 7369676E 		.ascii	"signed char\000"
+ 934      65642063 
+ 934      68617200 
+ 935              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

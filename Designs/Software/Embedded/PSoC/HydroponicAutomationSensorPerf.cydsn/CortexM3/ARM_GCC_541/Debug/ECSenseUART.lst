@@ -1,0 +1,2819 @@
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"ECSenseUART.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	ECSenseUART_initVar
+  20              		.bss
+  21              		.type	ECSenseUART_initVar, %object
+  22              		.size	ECSenseUART_initVar, 1
+  23              	ECSenseUART_initVar:
+  24 0000 00       		.space	1
+  25              		.section	.text.ECSenseUART_Start,"ax",%progbits
+  26              		.align	2
+  27              		.global	ECSenseUART_Start
+  28              		.thumb
+  29              		.thumb_func
+  30              		.type	ECSenseUART_Start, %function
+  31              	ECSenseUART_Start:
+  32              	.LFB0:
+  33              		.file 1 "Generated_Source\\PSoC5\\ECSenseUART.c"
+   1:Generated_Source\PSoC5/ECSenseUART.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/ECSenseUART.c **** * File Name: ECSenseUART.c
+   3:Generated_Source\PSoC5/ECSenseUART.c **** * Version 2.50
+   4:Generated_Source\PSoC5/ECSenseUART.c **** *
+   5:Generated_Source\PSoC5/ECSenseUART.c **** * Description:
+   6:Generated_Source\PSoC5/ECSenseUART.c **** *  This file provides all API functionality of the UART component
+   7:Generated_Source\PSoC5/ECSenseUART.c **** *
+   8:Generated_Source\PSoC5/ECSenseUART.c **** * Note:
+   9:Generated_Source\PSoC5/ECSenseUART.c **** *
+  10:Generated_Source\PSoC5/ECSenseUART.c **** ********************************************************************************
+  11:Generated_Source\PSoC5/ECSenseUART.c **** * Copyright 2008-2015, Cypress Semiconductor Corporation.  All rights reserved.
+  12:Generated_Source\PSoC5/ECSenseUART.c **** * You may use this file only in accordance with the license, terms, conditions,
+  13:Generated_Source\PSoC5/ECSenseUART.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  14:Generated_Source\PSoC5/ECSenseUART.c **** * the software package with which this file was provided.
+  15:Generated_Source\PSoC5/ECSenseUART.c **** *******************************************************************************/
+  16:Generated_Source\PSoC5/ECSenseUART.c **** 
+  17:Generated_Source\PSoC5/ECSenseUART.c **** #include "ECSenseUART.h"
+  18:Generated_Source\PSoC5/ECSenseUART.c **** #if (ECSenseUART_INTERNAL_CLOCK_USED)
+  19:Generated_Source\PSoC5/ECSenseUART.c ****     #include "ECSenseUART_IntClock.h"
+  20:Generated_Source\PSoC5/ECSenseUART.c **** #endif /* End ECSenseUART_INTERNAL_CLOCK_USED */
+  21:Generated_Source\PSoC5/ECSenseUART.c **** 
+  22:Generated_Source\PSoC5/ECSenseUART.c **** 
+  23:Generated_Source\PSoC5/ECSenseUART.c **** /***************************************
+  24:Generated_Source\PSoC5/ECSenseUART.c **** * Global data allocation
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 2
+
+
+  25:Generated_Source\PSoC5/ECSenseUART.c **** ***************************************/
+  26:Generated_Source\PSoC5/ECSenseUART.c **** 
+  27:Generated_Source\PSoC5/ECSenseUART.c **** uint8 ECSenseUART_initVar = 0u;
+  28:Generated_Source\PSoC5/ECSenseUART.c **** 
+  29:Generated_Source\PSoC5/ECSenseUART.c **** #if (ECSenseUART_TX_INTERRUPT_ENABLED && ECSenseUART_TX_ENABLED)
+  30:Generated_Source\PSoC5/ECSenseUART.c ****     volatile uint8 ECSenseUART_txBuffer[ECSenseUART_TX_BUFFER_SIZE];
+  31:Generated_Source\PSoC5/ECSenseUART.c ****     volatile uint8 ECSenseUART_txBufferRead = 0u;
+  32:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 ECSenseUART_txBufferWrite = 0u;
+  33:Generated_Source\PSoC5/ECSenseUART.c **** #endif /* (ECSenseUART_TX_INTERRUPT_ENABLED && ECSenseUART_TX_ENABLED) */
+  34:Generated_Source\PSoC5/ECSenseUART.c **** 
+  35:Generated_Source\PSoC5/ECSenseUART.c **** #if (ECSenseUART_RX_INTERRUPT_ENABLED && (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED))
+  36:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 ECSenseUART_errorStatus = 0u;
+  37:Generated_Source\PSoC5/ECSenseUART.c ****     volatile uint8 ECSenseUART_rxBuffer[ECSenseUART_RX_BUFFER_SIZE];
+  38:Generated_Source\PSoC5/ECSenseUART.c ****     volatile uint8 ECSenseUART_rxBufferRead  = 0u;
+  39:Generated_Source\PSoC5/ECSenseUART.c ****     volatile uint8 ECSenseUART_rxBufferWrite = 0u;
+  40:Generated_Source\PSoC5/ECSenseUART.c ****     volatile uint8 ECSenseUART_rxBufferLoopDetect = 0u;
+  41:Generated_Source\PSoC5/ECSenseUART.c ****     volatile uint8 ECSenseUART_rxBufferOverflow   = 0u;
+  42:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RXHW_ADDRESS_ENABLED)
+  43:Generated_Source\PSoC5/ECSenseUART.c ****         volatile uint8 ECSenseUART_rxAddressMode = ECSenseUART_RX_ADDRESS_MODE;
+  44:Generated_Source\PSoC5/ECSenseUART.c ****         volatile uint8 ECSenseUART_rxAddressDetected = 0u;
+  45:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RXHW_ADDRESS_ENABLED) */
+  46:Generated_Source\PSoC5/ECSenseUART.c **** #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED && (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED)) 
+  47:Generated_Source\PSoC5/ECSenseUART.c **** 
+  48:Generated_Source\PSoC5/ECSenseUART.c **** 
+  49:Generated_Source\PSoC5/ECSenseUART.c **** /*******************************************************************************
+  50:Generated_Source\PSoC5/ECSenseUART.c **** * Function Name: ECSenseUART_Start
+  51:Generated_Source\PSoC5/ECSenseUART.c **** ********************************************************************************
+  52:Generated_Source\PSoC5/ECSenseUART.c **** *
+  53:Generated_Source\PSoC5/ECSenseUART.c **** * Summary:
+  54:Generated_Source\PSoC5/ECSenseUART.c **** *  This is the preferred method to begin component operation.
+  55:Generated_Source\PSoC5/ECSenseUART.c **** *  ECSenseUART_Start() sets the initVar variable, calls the
+  56:Generated_Source\PSoC5/ECSenseUART.c **** *  ECSenseUART_Init() function, and then calls the
+  57:Generated_Source\PSoC5/ECSenseUART.c **** *  ECSenseUART_Enable() function.
+  58:Generated_Source\PSoC5/ECSenseUART.c **** *
+  59:Generated_Source\PSoC5/ECSenseUART.c **** * Parameters:
+  60:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+  61:Generated_Source\PSoC5/ECSenseUART.c **** *
+  62:Generated_Source\PSoC5/ECSenseUART.c **** * Return:
+  63:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+  64:Generated_Source\PSoC5/ECSenseUART.c **** *
+  65:Generated_Source\PSoC5/ECSenseUART.c **** * Global variables:
+  66:Generated_Source\PSoC5/ECSenseUART.c **** *  The ECSenseUART_intiVar variable is used to indicate initial
+  67:Generated_Source\PSoC5/ECSenseUART.c **** *  configuration of this component. The variable is initialized to zero (0u)
+  68:Generated_Source\PSoC5/ECSenseUART.c **** *  and set to one (1u) the first time ECSenseUART_Start() is called. This
+  69:Generated_Source\PSoC5/ECSenseUART.c **** *  allows for component initialization without re-initialization in all
+  70:Generated_Source\PSoC5/ECSenseUART.c **** *  subsequent calls to the ECSenseUART_Start() routine.
+  71:Generated_Source\PSoC5/ECSenseUART.c **** *
+  72:Generated_Source\PSoC5/ECSenseUART.c **** * Reentrant:
+  73:Generated_Source\PSoC5/ECSenseUART.c **** *  No.
+  74:Generated_Source\PSoC5/ECSenseUART.c **** *
+  75:Generated_Source\PSoC5/ECSenseUART.c **** *******************************************************************************/
+  76:Generated_Source\PSoC5/ECSenseUART.c **** void ECSenseUART_Start(void) 
+  77:Generated_Source\PSoC5/ECSenseUART.c **** {
+  34              		.loc 1 77 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 0
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 3
+
+
+  38 0000 80B5     		push	{r7, lr}
+  39              		.cfi_def_cfa_offset 8
+  40              		.cfi_offset 7, -8
+  41              		.cfi_offset 14, -4
+  42 0002 00AF     		add	r7, sp, #0
+  43              		.cfi_def_cfa_register 7
+  78:Generated_Source\PSoC5/ECSenseUART.c ****     /* If not initialized then initialize all required hardware and software */
+  79:Generated_Source\PSoC5/ECSenseUART.c ****     if(ECSenseUART_initVar == 0u)
+  44              		.loc 1 79 0
+  45 0004 064B     		ldr	r3, .L3
+  46 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  47 0008 002B     		cmp	r3, #0
+  48 000a 04D1     		bne	.L2
+  80:Generated_Source\PSoC5/ECSenseUART.c ****     {
+  81:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_Init();
+  49              		.loc 1 81 0
+  50 000c FFF7FEFF 		bl	ECSenseUART_Init
+  82:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_initVar = 1u;
+  51              		.loc 1 82 0
+  52 0010 034B     		ldr	r3, .L3
+  53 0012 0122     		movs	r2, #1
+  54 0014 1A70     		strb	r2, [r3]
+  55              	.L2:
+  83:Generated_Source\PSoC5/ECSenseUART.c ****     }
+  84:Generated_Source\PSoC5/ECSenseUART.c **** 
+  85:Generated_Source\PSoC5/ECSenseUART.c ****     ECSenseUART_Enable();
+  56              		.loc 1 85 0
+  57 0016 FFF7FEFF 		bl	ECSenseUART_Enable
+  86:Generated_Source\PSoC5/ECSenseUART.c **** }
+  58              		.loc 1 86 0
+  59 001a 00BF     		nop
+  60 001c 80BD     		pop	{r7, pc}
+  61              	.L4:
+  62 001e 00BF     		.align	2
+  63              	.L3:
+  64 0020 00000000 		.word	ECSenseUART_initVar
+  65              		.cfi_endproc
+  66              	.LFE0:
+  67              		.size	ECSenseUART_Start, .-ECSenseUART_Start
+  68              		.section	.text.ECSenseUART_Init,"ax",%progbits
+  69              		.align	2
+  70              		.global	ECSenseUART_Init
+  71              		.thumb
+  72              		.thumb_func
+  73              		.type	ECSenseUART_Init, %function
+  74              	ECSenseUART_Init:
+  75              	.LFB1:
+  87:Generated_Source\PSoC5/ECSenseUART.c **** 
+  88:Generated_Source\PSoC5/ECSenseUART.c **** 
+  89:Generated_Source\PSoC5/ECSenseUART.c **** /*******************************************************************************
+  90:Generated_Source\PSoC5/ECSenseUART.c **** * Function Name: ECSenseUART_Init
+  91:Generated_Source\PSoC5/ECSenseUART.c **** ********************************************************************************
+  92:Generated_Source\PSoC5/ECSenseUART.c **** *
+  93:Generated_Source\PSoC5/ECSenseUART.c **** * Summary:
+  94:Generated_Source\PSoC5/ECSenseUART.c **** *  Initializes or restores the component according to the customizer Configure
+  95:Generated_Source\PSoC5/ECSenseUART.c **** *  dialog settings. It is not necessary to call ECSenseUART_Init() because
+  96:Generated_Source\PSoC5/ECSenseUART.c **** *  the ECSenseUART_Start() API calls this function and is the preferred
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 4
+
+
+  97:Generated_Source\PSoC5/ECSenseUART.c **** *  method to begin component operation.
+  98:Generated_Source\PSoC5/ECSenseUART.c **** *
+  99:Generated_Source\PSoC5/ECSenseUART.c **** * Parameters:
+ 100:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 101:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 102:Generated_Source\PSoC5/ECSenseUART.c **** * Return:
+ 103:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 104:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 105:Generated_Source\PSoC5/ECSenseUART.c **** *******************************************************************************/
+ 106:Generated_Source\PSoC5/ECSenseUART.c **** void ECSenseUART_Init(void) 
+ 107:Generated_Source\PSoC5/ECSenseUART.c **** {
+  76              		.loc 1 107 0
+  77              		.cfi_startproc
+  78              		@ args = 0, pretend = 0, frame = 0
+  79              		@ frame_needed = 1, uses_anonymous_args = 0
+  80              		@ link register save eliminated.
+  81 0000 80B4     		push	{r7}
+  82              		.cfi_def_cfa_offset 4
+  83              		.cfi_offset 7, -4
+  84 0002 00AF     		add	r7, sp, #0
+  85              		.cfi_def_cfa_register 7
+ 108:Generated_Source\PSoC5/ECSenseUART.c ****     #if(ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED)
+ 109:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 110:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 111:Generated_Source\PSoC5/ECSenseUART.c ****             /* Set RX interrupt vector and priority */
+ 112:Generated_Source\PSoC5/ECSenseUART.c ****             (void) CyIntSetVector(ECSenseUART_RX_VECT_NUM, &ECSenseUART_RXISR);
+ 113:Generated_Source\PSoC5/ECSenseUART.c ****             CyIntSetPriority(ECSenseUART_RX_VECT_NUM, ECSenseUART_RX_PRIOR_NUM);
+ 114:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_errorStatus = 0u;
+ 115:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 116:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 117:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_RXHW_ADDRESS_ENABLED)
+ 118:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_SetRxAddressMode(ECSenseUART_RX_ADDRESS_MODE);
+ 119:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_SetRxAddress1(ECSenseUART_RX_HW_ADDRESS1);
+ 120:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_SetRxAddress2(ECSenseUART_RX_HW_ADDRESS2);
+ 121:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* End ECSenseUART_RXHW_ADDRESS_ENABLED */
+ 122:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 123:Generated_Source\PSoC5/ECSenseUART.c ****         /* Init Count7 period */
+ 124:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXBITCTR_PERIOD_REG = ECSenseUART_RXBITCTR_INIT;
+  86              		.loc 1 124 0
+  87 0004 044B     		ldr	r3, .L6
+  88 0006 7222     		movs	r2, #114
+  89 0008 1A70     		strb	r2, [r3]
+ 125:Generated_Source\PSoC5/ECSenseUART.c ****         /* Configure the Initial RX interrupt mask */
+ 126:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXSTATUS_MASK_REG  = ECSenseUART_INIT_RX_INTERRUPTS_MASK;
+  90              		.loc 1 126 0
+  91 000a 044B     		ldr	r3, .L6+4
+  92 000c 3E22     		movs	r2, #62
+  93 000e 1A70     		strb	r2, [r3]
+ 127:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* End ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED*/
+ 128:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 129:Generated_Source\PSoC5/ECSenseUART.c ****     #if(ECSenseUART_TX_ENABLED)
+ 130:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_TX_INTERRUPT_ENABLED)
+ 131:Generated_Source\PSoC5/ECSenseUART.c ****             /* Set TX interrupt vector and priority */
+ 132:Generated_Source\PSoC5/ECSenseUART.c ****             (void) CyIntSetVector(ECSenseUART_TX_VECT_NUM, &ECSenseUART_TXISR);
+ 133:Generated_Source\PSoC5/ECSenseUART.c ****             CyIntSetPriority(ECSenseUART_TX_VECT_NUM, ECSenseUART_TX_PRIOR_NUM);
+ 134:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* (ECSenseUART_TX_INTERRUPT_ENABLED) */
+ 135:Generated_Source\PSoC5/ECSenseUART.c **** 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 5
+
+
+ 136:Generated_Source\PSoC5/ECSenseUART.c ****         /* Write Counter Value for TX Bit Clk Generator*/
+ 137:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_TXCLKGEN_DP)
+ 138:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_TXBITCLKGEN_CTR_REG = ECSenseUART_BIT_CENTER;
+ 139:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_TXBITCLKTX_COMPLETE_REG = ((ECSenseUART_NUMBER_OF_DATA_BITS +
+ 140:Generated_Source\PSoC5/ECSenseUART.c ****                         ECSenseUART_NUMBER_OF_START_BIT) * ECSenseUART_OVER_SAMPLE_COUNT) - 1u;
+ 141:Generated_Source\PSoC5/ECSenseUART.c ****         #else
+ 142:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_TXBITCTR_PERIOD_REG = ((ECSenseUART_NUMBER_OF_DATA_BITS +
+ 143:Generated_Source\PSoC5/ECSenseUART.c ****                         ECSenseUART_NUMBER_OF_START_BIT) * ECSenseUART_OVER_SAMPLE_8) - 1u;
+ 144:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* End ECSenseUART_TXCLKGEN_DP */
+ 145:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 146:Generated_Source\PSoC5/ECSenseUART.c ****         /* Configure the Initial TX interrupt mask */
+ 147:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_TX_INTERRUPT_ENABLED)
+ 148:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_TXSTATUS_MASK_REG = ECSenseUART_TX_STS_FIFO_EMPTY;
+ 149:Generated_Source\PSoC5/ECSenseUART.c ****         #else
+ 150:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_TXSTATUS_MASK_REG = ECSenseUART_INIT_TX_INTERRUPTS_MASK;
+ 151:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /*End ECSenseUART_TX_INTERRUPT_ENABLED*/
+ 152:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 153:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* End ECSenseUART_TX_ENABLED */
+ 154:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 155:Generated_Source\PSoC5/ECSenseUART.c ****     #if(ECSenseUART_PARITY_TYPE_SW)  /* Write Parity to Control Register */
+ 156:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_WriteControlRegister( \
+ 157:Generated_Source\PSoC5/ECSenseUART.c ****             (ECSenseUART_ReadControlRegister() & (uint8)~ECSenseUART_CTRL_PARITY_TYPE_MASK) | \
+ 158:Generated_Source\PSoC5/ECSenseUART.c ****             (uint8)(ECSenseUART_PARITY_TYPE << ECSenseUART_CTRL_PARITY_TYPE0_SHIFT) );
+ 159:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* End ECSenseUART_PARITY_TYPE_SW */
+ 160:Generated_Source\PSoC5/ECSenseUART.c **** }
+  94              		.loc 1 160 0
+  95 0010 00BF     		nop
+  96 0012 BD46     		mov	sp, r7
+  97              		.cfi_def_cfa_register 13
+  98              		@ sp needed
+  99 0014 80BC     		pop	{r7}
+ 100              		.cfi_restore 7
+ 101              		.cfi_def_cfa_offset 0
+ 102 0016 7047     		bx	lr
+ 103              	.L7:
+ 104              		.align	2
+ 105              	.L6:
+ 106 0018 86640040 		.word	1073767558
+ 107 001c 84640040 		.word	1073767556
+ 108              		.cfi_endproc
+ 109              	.LFE1:
+ 110              		.size	ECSenseUART_Init, .-ECSenseUART_Init
+ 111              		.section	.text.ECSenseUART_Enable,"ax",%progbits
+ 112              		.align	2
+ 113              		.global	ECSenseUART_Enable
+ 114              		.thumb
+ 115              		.thumb_func
+ 116              		.type	ECSenseUART_Enable, %function
+ 117              	ECSenseUART_Enable:
+ 118              	.LFB2:
+ 161:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 162:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 163:Generated_Source\PSoC5/ECSenseUART.c **** /*******************************************************************************
+ 164:Generated_Source\PSoC5/ECSenseUART.c **** * Function Name: ECSenseUART_Enable
+ 165:Generated_Source\PSoC5/ECSenseUART.c **** ********************************************************************************
+ 166:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 167:Generated_Source\PSoC5/ECSenseUART.c **** * Summary:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 6
+
+
+ 168:Generated_Source\PSoC5/ECSenseUART.c **** *  Activates the hardware and begins component operation. It is not necessary
+ 169:Generated_Source\PSoC5/ECSenseUART.c **** *  to call ECSenseUART_Enable() because the ECSenseUART_Start() API
+ 170:Generated_Source\PSoC5/ECSenseUART.c **** *  calls this function, which is the preferred method to begin component
+ 171:Generated_Source\PSoC5/ECSenseUART.c **** *  operation.
+ 172:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 173:Generated_Source\PSoC5/ECSenseUART.c **** * Parameters:
+ 174:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 175:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 176:Generated_Source\PSoC5/ECSenseUART.c **** * Return:
+ 177:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 178:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 179:Generated_Source\PSoC5/ECSenseUART.c **** * Global Variables:
+ 180:Generated_Source\PSoC5/ECSenseUART.c **** *  ECSenseUART_rxAddressDetected - set to initial state (0).
+ 181:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 182:Generated_Source\PSoC5/ECSenseUART.c **** *******************************************************************************/
+ 183:Generated_Source\PSoC5/ECSenseUART.c **** void ECSenseUART_Enable(void) 
+ 184:Generated_Source\PSoC5/ECSenseUART.c **** {
+ 119              		.loc 1 184 0
+ 120              		.cfi_startproc
+ 121              		@ args = 0, pretend = 0, frame = 8
+ 122              		@ frame_needed = 1, uses_anonymous_args = 0
+ 123 0000 80B5     		push	{r7, lr}
+ 124              		.cfi_def_cfa_offset 8
+ 125              		.cfi_offset 7, -8
+ 126              		.cfi_offset 14, -4
+ 127 0002 82B0     		sub	sp, sp, #8
+ 128              		.cfi_def_cfa_offset 16
+ 129 0004 00AF     		add	r7, sp, #0
+ 130              		.cfi_def_cfa_register 7
+ 185:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 enableInterrupts;
+ 186:Generated_Source\PSoC5/ECSenseUART.c ****     enableInterrupts = CyEnterCriticalSection();
+ 131              		.loc 1 186 0
+ 132 0006 FFF7FEFF 		bl	CyEnterCriticalSection
+ 133 000a 0346     		mov	r3, r0
+ 134 000c FB71     		strb	r3, [r7, #7]
+ 187:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 188:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED)
+ 189:Generated_Source\PSoC5/ECSenseUART.c ****         /* RX Counter (Count7) Enable */
+ 190:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXBITCTR_CONTROL_REG |= ECSenseUART_CNTR_ENABLE;
+ 135              		.loc 1 190 0
+ 136 000e 0D4A     		ldr	r2, .L9
+ 137 0010 0C4B     		ldr	r3, .L9
+ 138 0012 1B78     		ldrb	r3, [r3]
+ 139 0014 DBB2     		uxtb	r3, r3
+ 140 0016 43F02003 		orr	r3, r3, #32
+ 141 001a DBB2     		uxtb	r3, r3
+ 142 001c 1370     		strb	r3, [r2]
+ 191:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 192:Generated_Source\PSoC5/ECSenseUART.c ****         /* Enable the RX Interrupt */
+ 193:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXSTATUS_ACTL_REG  |= ECSenseUART_INT_ENABLE;
+ 143              		.loc 1 193 0
+ 144 001e 0A4A     		ldr	r2, .L9+4
+ 145 0020 094B     		ldr	r3, .L9+4
+ 146 0022 1B78     		ldrb	r3, [r3]
+ 147 0024 DBB2     		uxtb	r3, r3
+ 148 0026 43F01003 		orr	r3, r3, #16
+ 149 002a DBB2     		uxtb	r3, r3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 7
+
+
+ 150 002c 1370     		strb	r3, [r2]
+ 194:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 195:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 196:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_EnableRxInt();
+ 197:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 198:Generated_Source\PSoC5/ECSenseUART.c ****             #if (ECSenseUART_RXHW_ADDRESS_ENABLED)
+ 199:Generated_Source\PSoC5/ECSenseUART.c ****                 ECSenseUART_rxAddressDetected = 0u;
+ 200:Generated_Source\PSoC5/ECSenseUART.c ****             #endif /* (ECSenseUART_RXHW_ADDRESS_ENABLED) */
+ 201:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 202:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED) */
+ 203:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 204:Generated_Source\PSoC5/ECSenseUART.c ****     #if(ECSenseUART_TX_ENABLED)
+ 205:Generated_Source\PSoC5/ECSenseUART.c ****         /* TX Counter (DP/Count7) Enable */
+ 206:Generated_Source\PSoC5/ECSenseUART.c ****         #if(!ECSenseUART_TXCLKGEN_DP)
+ 207:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_TXBITCTR_CONTROL_REG |= ECSenseUART_CNTR_ENABLE;
+ 208:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* End ECSenseUART_TXCLKGEN_DP */
+ 209:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 210:Generated_Source\PSoC5/ECSenseUART.c ****         /* Enable the TX Interrupt */
+ 211:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_TXSTATUS_ACTL_REG |= ECSenseUART_INT_ENABLE;
+ 212:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_TX_INTERRUPT_ENABLED)
+ 213:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_ClearPendingTxInt(); /* Clear history of TX_NOT_EMPTY */
+ 214:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_EnableTxInt();
+ 215:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* (ECSenseUART_TX_INTERRUPT_ENABLED) */
+ 216:Generated_Source\PSoC5/ECSenseUART.c ****      #endif /* (ECSenseUART_TX_INTERRUPT_ENABLED) */
+ 217:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 218:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_INTERNAL_CLOCK_USED)
+ 219:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_IntClock_Start();  /* Enable the clock */
+ 151              		.loc 1 219 0
+ 152 002e FFF7FEFF 		bl	ECSenseUART_IntClock_Start
+ 220:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_INTERNAL_CLOCK_USED) */
+ 221:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 222:Generated_Source\PSoC5/ECSenseUART.c ****     CyExitCriticalSection(enableInterrupts);
+ 153              		.loc 1 222 0
+ 154 0032 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 155 0034 1846     		mov	r0, r3
+ 156 0036 FFF7FEFF 		bl	CyExitCriticalSection
+ 223:Generated_Source\PSoC5/ECSenseUART.c **** }
+ 157              		.loc 1 223 0
+ 158 003a 00BF     		nop
+ 159 003c 0837     		adds	r7, r7, #8
+ 160              		.cfi_def_cfa_offset 8
+ 161 003e BD46     		mov	sp, r7
+ 162              		.cfi_def_cfa_register 13
+ 163              		@ sp needed
+ 164 0040 80BD     		pop	{r7, pc}
+ 165              	.L10:
+ 166 0042 00BF     		.align	2
+ 167              	.L9:
+ 168 0044 96640040 		.word	1073767574
+ 169 0048 94640040 		.word	1073767572
+ 170              		.cfi_endproc
+ 171              	.LFE2:
+ 172              		.size	ECSenseUART_Enable, .-ECSenseUART_Enable
+ 173              		.section	.text.ECSenseUART_Stop,"ax",%progbits
+ 174              		.align	2
+ 175              		.global	ECSenseUART_Stop
+ 176              		.thumb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 8
+
+
+ 177              		.thumb_func
+ 178              		.type	ECSenseUART_Stop, %function
+ 179              	ECSenseUART_Stop:
+ 180              	.LFB3:
+ 224:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 225:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 226:Generated_Source\PSoC5/ECSenseUART.c **** /*******************************************************************************
+ 227:Generated_Source\PSoC5/ECSenseUART.c **** * Function Name: ECSenseUART_Stop
+ 228:Generated_Source\PSoC5/ECSenseUART.c **** ********************************************************************************
+ 229:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 230:Generated_Source\PSoC5/ECSenseUART.c **** * Summary:
+ 231:Generated_Source\PSoC5/ECSenseUART.c **** *  Disables the UART operation.
+ 232:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 233:Generated_Source\PSoC5/ECSenseUART.c **** * Parameters:
+ 234:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 235:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 236:Generated_Source\PSoC5/ECSenseUART.c **** * Return:
+ 237:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 238:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 239:Generated_Source\PSoC5/ECSenseUART.c **** *******************************************************************************/
+ 240:Generated_Source\PSoC5/ECSenseUART.c **** void ECSenseUART_Stop(void) 
+ 241:Generated_Source\PSoC5/ECSenseUART.c **** {
+ 181              		.loc 1 241 0
+ 182              		.cfi_startproc
+ 183              		@ args = 0, pretend = 0, frame = 8
+ 184              		@ frame_needed = 1, uses_anonymous_args = 0
+ 185 0000 80B5     		push	{r7, lr}
+ 186              		.cfi_def_cfa_offset 8
+ 187              		.cfi_offset 7, -8
+ 188              		.cfi_offset 14, -4
+ 189 0002 82B0     		sub	sp, sp, #8
+ 190              		.cfi_def_cfa_offset 16
+ 191 0004 00AF     		add	r7, sp, #0
+ 192              		.cfi_def_cfa_register 7
+ 242:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 enableInterrupts;
+ 243:Generated_Source\PSoC5/ECSenseUART.c ****     enableInterrupts = CyEnterCriticalSection();
+ 193              		.loc 1 243 0
+ 194 0006 FFF7FEFF 		bl	CyEnterCriticalSection
+ 195 000a 0346     		mov	r3, r0
+ 196 000c FB71     		strb	r3, [r7, #7]
+ 244:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 245:Generated_Source\PSoC5/ECSenseUART.c ****     /* Write Bit Counter Disable */
+ 246:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED)
+ 247:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXBITCTR_CONTROL_REG &= (uint8) ~ECSenseUART_CNTR_ENABLE;
+ 197              		.loc 1 247 0
+ 198 000e 0D4A     		ldr	r2, .L12
+ 199 0010 0C4B     		ldr	r3, .L12
+ 200 0012 1B78     		ldrb	r3, [r3]
+ 201 0014 DBB2     		uxtb	r3, r3
+ 202 0016 23F02003 		bic	r3, r3, #32
+ 203 001a DBB2     		uxtb	r3, r3
+ 204 001c 1370     		strb	r3, [r2]
+ 248:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED) */
+ 249:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 250:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_TX_ENABLED)
+ 251:Generated_Source\PSoC5/ECSenseUART.c ****         #if(!ECSenseUART_TXCLKGEN_DP)
+ 252:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_TXBITCTR_CONTROL_REG &= (uint8) ~ECSenseUART_CNTR_ENABLE;
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 9
+
+
+ 253:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* (!ECSenseUART_TXCLKGEN_DP) */
+ 254:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_TX_ENABLED) */
+ 255:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 256:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_INTERNAL_CLOCK_USED)
+ 257:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_IntClock_Stop();   /* Disable the clock */
+ 205              		.loc 1 257 0
+ 206 001e FFF7FEFF 		bl	ECSenseUART_IntClock_Stop
+ 258:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_INTERNAL_CLOCK_USED) */
+ 259:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 260:Generated_Source\PSoC5/ECSenseUART.c ****     /* Disable internal interrupt component */
+ 261:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED)
+ 262:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXSTATUS_ACTL_REG  &= (uint8) ~ECSenseUART_INT_ENABLE;
+ 207              		.loc 1 262 0
+ 208 0022 094A     		ldr	r2, .L12+4
+ 209 0024 084B     		ldr	r3, .L12+4
+ 210 0026 1B78     		ldrb	r3, [r3]
+ 211 0028 DBB2     		uxtb	r3, r3
+ 212 002a 23F01003 		bic	r3, r3, #16
+ 213 002e DBB2     		uxtb	r3, r3
+ 214 0030 1370     		strb	r3, [r2]
+ 263:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 264:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 265:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_DisableRxInt();
+ 266:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 267:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED) */
+ 268:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 269:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_TX_ENABLED)
+ 270:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_TXSTATUS_ACTL_REG &= (uint8) ~ECSenseUART_INT_ENABLE;
+ 271:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 272:Generated_Source\PSoC5/ECSenseUART.c ****         #if (ECSenseUART_TX_INTERRUPT_ENABLED)
+ 273:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_DisableTxInt();
+ 274:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* (ECSenseUART_TX_INTERRUPT_ENABLED) */
+ 275:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_TX_ENABLED) */
+ 276:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 277:Generated_Source\PSoC5/ECSenseUART.c ****     CyExitCriticalSection(enableInterrupts);
+ 215              		.loc 1 277 0
+ 216 0032 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 217 0034 1846     		mov	r0, r3
+ 218 0036 FFF7FEFF 		bl	CyExitCriticalSection
+ 278:Generated_Source\PSoC5/ECSenseUART.c **** }
+ 219              		.loc 1 278 0
+ 220 003a 00BF     		nop
+ 221 003c 0837     		adds	r7, r7, #8
+ 222              		.cfi_def_cfa_offset 8
+ 223 003e BD46     		mov	sp, r7
+ 224              		.cfi_def_cfa_register 13
+ 225              		@ sp needed
+ 226 0040 80BD     		pop	{r7, pc}
+ 227              	.L13:
+ 228 0042 00BF     		.align	2
+ 229              	.L12:
+ 230 0044 96640040 		.word	1073767574
+ 231 0048 94640040 		.word	1073767572
+ 232              		.cfi_endproc
+ 233              	.LFE3:
+ 234              		.size	ECSenseUART_Stop, .-ECSenseUART_Stop
+ 235              		.section	.text.ECSenseUART_ReadControlRegister,"ax",%progbits
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 10
+
+
+ 236              		.align	2
+ 237              		.global	ECSenseUART_ReadControlRegister
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.type	ECSenseUART_ReadControlRegister, %function
+ 241              	ECSenseUART_ReadControlRegister:
+ 242              	.LFB4:
+ 279:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 280:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 281:Generated_Source\PSoC5/ECSenseUART.c **** /*******************************************************************************
+ 282:Generated_Source\PSoC5/ECSenseUART.c **** * Function Name: ECSenseUART_ReadControlRegister
+ 283:Generated_Source\PSoC5/ECSenseUART.c **** ********************************************************************************
+ 284:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 285:Generated_Source\PSoC5/ECSenseUART.c **** * Summary:
+ 286:Generated_Source\PSoC5/ECSenseUART.c **** *  Returns the current value of the control register.
+ 287:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 288:Generated_Source\PSoC5/ECSenseUART.c **** * Parameters:
+ 289:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 290:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 291:Generated_Source\PSoC5/ECSenseUART.c **** * Return:
+ 292:Generated_Source\PSoC5/ECSenseUART.c **** *  Contents of the control register.
+ 293:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 294:Generated_Source\PSoC5/ECSenseUART.c **** *******************************************************************************/
+ 295:Generated_Source\PSoC5/ECSenseUART.c **** uint8 ECSenseUART_ReadControlRegister(void) 
+ 296:Generated_Source\PSoC5/ECSenseUART.c **** {
+ 243              		.loc 1 296 0
+ 244              		.cfi_startproc
+ 245              		@ args = 0, pretend = 0, frame = 0
+ 246              		@ frame_needed = 1, uses_anonymous_args = 0
+ 247              		@ link register save eliminated.
+ 248 0000 80B4     		push	{r7}
+ 249              		.cfi_def_cfa_offset 4
+ 250              		.cfi_offset 7, -4
+ 251 0002 00AF     		add	r7, sp, #0
+ 252              		.cfi_def_cfa_register 7
+ 297:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_CONTROL_REG_REMOVED)
+ 298:Generated_Source\PSoC5/ECSenseUART.c ****         return(0u);
+ 253              		.loc 1 298 0
+ 254 0004 0023     		movs	r3, #0
+ 299:Generated_Source\PSoC5/ECSenseUART.c ****     #else
+ 300:Generated_Source\PSoC5/ECSenseUART.c ****         return(ECSenseUART_CONTROL_REG);
+ 301:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_CONTROL_REG_REMOVED) */
+ 302:Generated_Source\PSoC5/ECSenseUART.c **** }
+ 255              		.loc 1 302 0
+ 256 0006 1846     		mov	r0, r3
+ 257 0008 BD46     		mov	sp, r7
+ 258              		.cfi_def_cfa_register 13
+ 259              		@ sp needed
+ 260 000a 80BC     		pop	{r7}
+ 261              		.cfi_restore 7
+ 262              		.cfi_def_cfa_offset 0
+ 263 000c 7047     		bx	lr
+ 264              		.cfi_endproc
+ 265              	.LFE4:
+ 266              		.size	ECSenseUART_ReadControlRegister, .-ECSenseUART_ReadControlRegister
+ 267 000e 00BF     		.section	.text.ECSenseUART_WriteControlRegister,"ax",%progbits
+ 268              		.align	2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 11
+
+
+ 269              		.global	ECSenseUART_WriteControlRegister
+ 270              		.thumb
+ 271              		.thumb_func
+ 272              		.type	ECSenseUART_WriteControlRegister, %function
+ 273              	ECSenseUART_WriteControlRegister:
+ 274              	.LFB5:
+ 303:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 304:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 305:Generated_Source\PSoC5/ECSenseUART.c **** /*******************************************************************************
+ 306:Generated_Source\PSoC5/ECSenseUART.c **** * Function Name: ECSenseUART_WriteControlRegister
+ 307:Generated_Source\PSoC5/ECSenseUART.c **** ********************************************************************************
+ 308:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 309:Generated_Source\PSoC5/ECSenseUART.c **** * Summary:
+ 310:Generated_Source\PSoC5/ECSenseUART.c **** *  Writes an 8-bit value into the control register
+ 311:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 312:Generated_Source\PSoC5/ECSenseUART.c **** * Parameters:
+ 313:Generated_Source\PSoC5/ECSenseUART.c **** *  control:  control register value
+ 314:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 315:Generated_Source\PSoC5/ECSenseUART.c **** * Return:
+ 316:Generated_Source\PSoC5/ECSenseUART.c **** *  None.
+ 317:Generated_Source\PSoC5/ECSenseUART.c **** *
+ 318:Generated_Source\PSoC5/ECSenseUART.c **** *******************************************************************************/
+ 319:Generated_Source\PSoC5/ECSenseUART.c **** void  ECSenseUART_WriteControlRegister(uint8 control) 
+ 320:Generated_Source\PSoC5/ECSenseUART.c **** {
+ 275              		.loc 1 320 0
+ 276              		.cfi_startproc
+ 277              		@ args = 0, pretend = 0, frame = 8
+ 278              		@ frame_needed = 1, uses_anonymous_args = 0
+ 279              		@ link register save eliminated.
+ 280 0000 80B4     		push	{r7}
+ 281              		.cfi_def_cfa_offset 4
+ 282              		.cfi_offset 7, -4
+ 283 0002 83B0     		sub	sp, sp, #12
+ 284              		.cfi_def_cfa_offset 16
+ 285 0004 00AF     		add	r7, sp, #0
+ 286              		.cfi_def_cfa_register 7
+ 287 0006 0346     		mov	r3, r0
+ 288 0008 FB71     		strb	r3, [r7, #7]
+ 321:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_CONTROL_REG_REMOVED)
+ 322:Generated_Source\PSoC5/ECSenseUART.c ****         if(0u != control)
+ 323:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 324:Generated_Source\PSoC5/ECSenseUART.c ****             /* Suppress compiler warning */
+ 325:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 326:Generated_Source\PSoC5/ECSenseUART.c ****     #else
+ 327:Generated_Source\PSoC5/ECSenseUART.c ****        ECSenseUART_CONTROL_REG = control;
+ 328:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_CONTROL_REG_REMOVED) */
+ 329:Generated_Source\PSoC5/ECSenseUART.c **** }
+ 289              		.loc 1 329 0
+ 290 000a 00BF     		nop
+ 291 000c 0C37     		adds	r7, r7, #12
+ 292              		.cfi_def_cfa_offset 4
+ 293 000e BD46     		mov	sp, r7
+ 294              		.cfi_def_cfa_register 13
+ 295              		@ sp needed
+ 296 0010 80BC     		pop	{r7}
+ 297              		.cfi_restore 7
+ 298              		.cfi_def_cfa_offset 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 12
+
+
+ 299 0012 7047     		bx	lr
+ 300              		.cfi_endproc
+ 301              	.LFE5:
+ 302              		.size	ECSenseUART_WriteControlRegister, .-ECSenseUART_WriteControlRegister
+ 303              		.section	.text.ECSenseUART_SetRxInterruptMode,"ax",%progbits
+ 304              		.align	2
+ 305              		.global	ECSenseUART_SetRxInterruptMode
+ 306              		.thumb
+ 307              		.thumb_func
+ 308              		.type	ECSenseUART_SetRxInterruptMode, %function
+ 309              	ECSenseUART_SetRxInterruptMode:
+ 310              	.LFB6:
+ 330:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 331:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 332:Generated_Source\PSoC5/ECSenseUART.c **** #if(ECSenseUART_RX_ENABLED || ECSenseUART_HD_ENABLED)
+ 333:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 334:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_SetRxInterruptMode
+ 335:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 336:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 337:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 338:Generated_Source\PSoC5/ECSenseUART.c ****     *  Configures the RX interrupt sources enabled.
+ 339:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 340:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 341:Generated_Source\PSoC5/ECSenseUART.c ****     *  IntSrc:  Bit field containing the RX interrupts to enable. Based on the 
+ 342:Generated_Source\PSoC5/ECSenseUART.c ****     *  bit-field arrangement of the status register. This value must be a 
+ 343:Generated_Source\PSoC5/ECSenseUART.c ****     *  combination of status register bit-masks shown below:
+ 344:Generated_Source\PSoC5/ECSenseUART.c ****     *      ECSenseUART_RX_STS_FIFO_NOTEMPTY    Interrupt on byte received.
+ 345:Generated_Source\PSoC5/ECSenseUART.c ****     *      ECSenseUART_RX_STS_PAR_ERROR        Interrupt on parity error.
+ 346:Generated_Source\PSoC5/ECSenseUART.c ****     *      ECSenseUART_RX_STS_STOP_ERROR       Interrupt on stop error.
+ 347:Generated_Source\PSoC5/ECSenseUART.c ****     *      ECSenseUART_RX_STS_BREAK            Interrupt on break.
+ 348:Generated_Source\PSoC5/ECSenseUART.c ****     *      ECSenseUART_RX_STS_OVERRUN          Interrupt on overrun error.
+ 349:Generated_Source\PSoC5/ECSenseUART.c ****     *      ECSenseUART_RX_STS_ADDR_MATCH       Interrupt on address match.
+ 350:Generated_Source\PSoC5/ECSenseUART.c ****     *      ECSenseUART_RX_STS_MRKSPC           Interrupt on address detect.
+ 351:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 352:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 353:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 354:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 355:Generated_Source\PSoC5/ECSenseUART.c ****     * Theory:
+ 356:Generated_Source\PSoC5/ECSenseUART.c ****     *  Enables the output of specific status bits to the interrupt controller
+ 357:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 358:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 359:Generated_Source\PSoC5/ECSenseUART.c ****     void ECSenseUART_SetRxInterruptMode(uint8 intSrc) 
+ 360:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 311              		.loc 1 360 0
+ 312              		.cfi_startproc
+ 313              		@ args = 0, pretend = 0, frame = 8
+ 314              		@ frame_needed = 1, uses_anonymous_args = 0
+ 315              		@ link register save eliminated.
+ 316 0000 80B4     		push	{r7}
+ 317              		.cfi_def_cfa_offset 4
+ 318              		.cfi_offset 7, -4
+ 319 0002 83B0     		sub	sp, sp, #12
+ 320              		.cfi_def_cfa_offset 16
+ 321 0004 00AF     		add	r7, sp, #0
+ 322              		.cfi_def_cfa_register 7
+ 323 0006 0346     		mov	r3, r0
+ 324 0008 FB71     		strb	r3, [r7, #7]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 13
+
+
+ 361:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXSTATUS_MASK_REG  = intSrc;
+ 325              		.loc 1 361 0
+ 326 000a 044A     		ldr	r2, .L18
+ 327 000c FB79     		ldrb	r3, [r7, #7]
+ 328 000e 1370     		strb	r3, [r2]
+ 362:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 329              		.loc 1 362 0
+ 330 0010 00BF     		nop
+ 331 0012 0C37     		adds	r7, r7, #12
+ 332              		.cfi_def_cfa_offset 4
+ 333 0014 BD46     		mov	sp, r7
+ 334              		.cfi_def_cfa_register 13
+ 335              		@ sp needed
+ 336 0016 80BC     		pop	{r7}
+ 337              		.cfi_restore 7
+ 338              		.cfi_def_cfa_offset 0
+ 339 0018 7047     		bx	lr
+ 340              	.L19:
+ 341 001a 00BF     		.align	2
+ 342              	.L18:
+ 343 001c 84640040 		.word	1073767556
+ 344              		.cfi_endproc
+ 345              	.LFE6:
+ 346              		.size	ECSenseUART_SetRxInterruptMode, .-ECSenseUART_SetRxInterruptMode
+ 347              		.section	.text.ECSenseUART_ReadRxData,"ax",%progbits
+ 348              		.align	2
+ 349              		.global	ECSenseUART_ReadRxData
+ 350              		.thumb
+ 351              		.thumb_func
+ 352              		.type	ECSenseUART_ReadRxData, %function
+ 353              	ECSenseUART_ReadRxData:
+ 354              	.LFB7:
+ 363:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 364:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 365:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 366:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_ReadRxData
+ 367:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 368:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 369:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 370:Generated_Source\PSoC5/ECSenseUART.c ****     *  Returns the next byte of received data. This function returns data without
+ 371:Generated_Source\PSoC5/ECSenseUART.c ****     *  checking the status. You must check the status separately.
+ 372:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 373:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 374:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 375:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 376:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 377:Generated_Source\PSoC5/ECSenseUART.c ****     *  Received data from RX register
+ 378:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 379:Generated_Source\PSoC5/ECSenseUART.c ****     * Global Variables:
+ 380:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBuffer - RAM buffer pointer for save received data.
+ 381:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferWrite - cyclic index for write to rxBuffer,
+ 382:Generated_Source\PSoC5/ECSenseUART.c ****     *     checked to identify new data.
+ 383:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferRead - cyclic index for read from rxBuffer,
+ 384:Generated_Source\PSoC5/ECSenseUART.c ****     *     incremented after each byte has been read from buffer.
+ 385:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferLoopDetect - cleared if loop condition was detected
+ 386:Generated_Source\PSoC5/ECSenseUART.c ****     *     in RX ISR.
+ 387:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 14
+
+
+ 388:Generated_Source\PSoC5/ECSenseUART.c ****     * Reentrant:
+ 389:Generated_Source\PSoC5/ECSenseUART.c ****     *  No.
+ 390:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 391:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 392:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 ECSenseUART_ReadRxData(void) 
+ 393:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 355              		.loc 1 393 0
+ 356              		.cfi_startproc
+ 357              		@ args = 0, pretend = 0, frame = 8
+ 358              		@ frame_needed = 1, uses_anonymous_args = 0
+ 359              		@ link register save eliminated.
+ 360 0000 80B4     		push	{r7}
+ 361              		.cfi_def_cfa_offset 4
+ 362              		.cfi_offset 7, -4
+ 363 0002 83B0     		sub	sp, sp, #12
+ 364              		.cfi_def_cfa_offset 16
+ 365 0004 00AF     		add	r7, sp, #0
+ 366              		.cfi_def_cfa_register 7
+ 394:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 rxData;
+ 395:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 396:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 397:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 398:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 locRxBufferRead;
+ 399:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 locRxBufferWrite;
+ 400:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 401:Generated_Source\PSoC5/ECSenseUART.c ****         /* Protect variables that could change on interrupt */
+ 402:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_DisableRxInt();
+ 403:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 404:Generated_Source\PSoC5/ECSenseUART.c ****         locRxBufferRead  = ECSenseUART_rxBufferRead;
+ 405:Generated_Source\PSoC5/ECSenseUART.c ****         locRxBufferWrite = ECSenseUART_rxBufferWrite;
+ 406:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 407:Generated_Source\PSoC5/ECSenseUART.c ****         if( (ECSenseUART_rxBufferLoopDetect != 0u) || (locRxBufferRead != locRxBufferWrite) )
+ 408:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 409:Generated_Source\PSoC5/ECSenseUART.c ****             rxData = ECSenseUART_rxBuffer[locRxBufferRead];
+ 410:Generated_Source\PSoC5/ECSenseUART.c ****             locRxBufferRead++;
+ 411:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 412:Generated_Source\PSoC5/ECSenseUART.c ****             if(locRxBufferRead >= ECSenseUART_RX_BUFFER_SIZE)
+ 413:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 414:Generated_Source\PSoC5/ECSenseUART.c ****                 locRxBufferRead = 0u;
+ 415:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 416:Generated_Source\PSoC5/ECSenseUART.c ****             /* Update the real pointer */
+ 417:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_rxBufferRead = locRxBufferRead;
+ 418:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 419:Generated_Source\PSoC5/ECSenseUART.c ****             if(ECSenseUART_rxBufferLoopDetect != 0u)
+ 420:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 421:Generated_Source\PSoC5/ECSenseUART.c ****                 ECSenseUART_rxBufferLoopDetect = 0u;
+ 422:Generated_Source\PSoC5/ECSenseUART.c ****                 #if ((ECSenseUART_RX_INTERRUPT_ENABLED) && (ECSenseUART_FLOW_CONTROL != 0u))
+ 423:Generated_Source\PSoC5/ECSenseUART.c ****                     /* When Hardware Flow Control selected - return RX mask */
+ 424:Generated_Source\PSoC5/ECSenseUART.c ****                     #if( ECSenseUART_HD_ENABLED )
+ 425:Generated_Source\PSoC5/ECSenseUART.c ****                         if((ECSenseUART_CONTROL_REG & ECSenseUART_CTRL_HD_SEND) == 0u)
+ 426:Generated_Source\PSoC5/ECSenseUART.c ****                         {   /* In Half duplex mode return RX mask only in RX
+ 427:Generated_Source\PSoC5/ECSenseUART.c ****                             *  configuration set, otherwise
+ 428:Generated_Source\PSoC5/ECSenseUART.c ****                             *  mask will be returned in LoadRxConfig() API.
+ 429:Generated_Source\PSoC5/ECSenseUART.c ****                             */
+ 430:Generated_Source\PSoC5/ECSenseUART.c ****                             ECSenseUART_RXSTATUS_MASK_REG  |= ECSenseUART_RX_STS_FIFO_NOTEMPTY;
+ 431:Generated_Source\PSoC5/ECSenseUART.c ****                         }
+ 432:Generated_Source\PSoC5/ECSenseUART.c ****                     #else
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 15
+
+
+ 433:Generated_Source\PSoC5/ECSenseUART.c ****                         ECSenseUART_RXSTATUS_MASK_REG  |= ECSenseUART_RX_STS_FIFO_NOTEMPTY;
+ 434:Generated_Source\PSoC5/ECSenseUART.c ****                     #endif /* end ECSenseUART_HD_ENABLED */
+ 435:Generated_Source\PSoC5/ECSenseUART.c ****                 #endif /* ((ECSenseUART_RX_INTERRUPT_ENABLED) && (ECSenseUART_FLOW_CONTROL != 0u)) 
+ 436:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 437:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 438:Generated_Source\PSoC5/ECSenseUART.c ****         else
+ 439:Generated_Source\PSoC5/ECSenseUART.c ****         {   /* Needs to check status for RX_STS_FIFO_NOTEMPTY bit */
+ 440:Generated_Source\PSoC5/ECSenseUART.c ****             rxData = ECSenseUART_RXDATA_REG;
+ 441:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 442:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 443:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_EnableRxInt();
+ 444:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 445:Generated_Source\PSoC5/ECSenseUART.c ****     #else
+ 446:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 447:Generated_Source\PSoC5/ECSenseUART.c ****         /* Needs to check status for RX_STS_FIFO_NOTEMPTY bit */
+ 448:Generated_Source\PSoC5/ECSenseUART.c ****         rxData = ECSenseUART_RXDATA_REG;
+ 367              		.loc 1 448 0
+ 368 0006 044B     		ldr	r3, .L22
+ 369 0008 1B78     		ldrb	r3, [r3]
+ 370 000a FB71     		strb	r3, [r7, #7]
+ 449:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 450:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 451:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 452:Generated_Source\PSoC5/ECSenseUART.c ****         return(rxData);
+ 371              		.loc 1 452 0
+ 372 000c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 453:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 373              		.loc 1 453 0
+ 374 000e 1846     		mov	r0, r3
+ 375 0010 0C37     		adds	r7, r7, #12
+ 376              		.cfi_def_cfa_offset 4
+ 377 0012 BD46     		mov	sp, r7
+ 378              		.cfi_def_cfa_register 13
+ 379              		@ sp needed
+ 380 0014 80BC     		pop	{r7}
+ 381              		.cfi_restore 7
+ 382              		.cfi_def_cfa_offset 0
+ 383 0016 7047     		bx	lr
+ 384              	.L23:
+ 385              		.align	2
+ 386              	.L22:
+ 387 0018 47650040 		.word	1073767751
+ 388              		.cfi_endproc
+ 389              	.LFE7:
+ 390              		.size	ECSenseUART_ReadRxData, .-ECSenseUART_ReadRxData
+ 391              		.section	.text.ECSenseUART_ReadRxStatus,"ax",%progbits
+ 392              		.align	2
+ 393              		.global	ECSenseUART_ReadRxStatus
+ 394              		.thumb
+ 395              		.thumb_func
+ 396              		.type	ECSenseUART_ReadRxStatus, %function
+ 397              	ECSenseUART_ReadRxStatus:
+ 398              	.LFB8:
+ 454:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 455:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 456:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 457:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_ReadRxStatus
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 16
+
+
+ 458:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 459:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 460:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 461:Generated_Source\PSoC5/ECSenseUART.c ****     *  Returns the current state of the receiver status register and the software
+ 462:Generated_Source\PSoC5/ECSenseUART.c ****     *  buffer overflow status.
+ 463:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 464:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 465:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 466:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 467:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 468:Generated_Source\PSoC5/ECSenseUART.c ****     *  Current state of the status register.
+ 469:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 470:Generated_Source\PSoC5/ECSenseUART.c ****     * Side Effect:
+ 471:Generated_Source\PSoC5/ECSenseUART.c ****     *  All status register bits are clear-on-read except
+ 472:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_RX_STS_FIFO_NOTEMPTY.
+ 473:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_RX_STS_FIFO_NOTEMPTY clears immediately after RX data
+ 474:Generated_Source\PSoC5/ECSenseUART.c ****     *  register read.
+ 475:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 476:Generated_Source\PSoC5/ECSenseUART.c ****     * Global Variables:
+ 477:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferOverflow - used to indicate overload condition.
+ 478:Generated_Source\PSoC5/ECSenseUART.c ****     *   It set to one in RX interrupt when there isn't free space in
+ 479:Generated_Source\PSoC5/ECSenseUART.c ****     *   ECSenseUART_rxBufferRead to write new data. This condition returned
+ 480:Generated_Source\PSoC5/ECSenseUART.c ****     *   and cleared to zero by this API as an
+ 481:Generated_Source\PSoC5/ECSenseUART.c ****     *   ECSenseUART_RX_STS_SOFT_BUFF_OVER bit along with RX Status register
+ 482:Generated_Source\PSoC5/ECSenseUART.c ****     *   bits.
+ 483:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 484:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 485:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 ECSenseUART_ReadRxStatus(void) 
+ 486:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 399              		.loc 1 486 0
+ 400              		.cfi_startproc
+ 401              		@ args = 0, pretend = 0, frame = 8
+ 402              		@ frame_needed = 1, uses_anonymous_args = 0
+ 403              		@ link register save eliminated.
+ 404 0000 80B4     		push	{r7}
+ 405              		.cfi_def_cfa_offset 4
+ 406              		.cfi_offset 7, -4
+ 407 0002 83B0     		sub	sp, sp, #12
+ 408              		.cfi_def_cfa_offset 16
+ 409 0004 00AF     		add	r7, sp, #0
+ 410              		.cfi_def_cfa_register 7
+ 487:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 status;
+ 488:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 489:Generated_Source\PSoC5/ECSenseUART.c ****         status = ECSenseUART_RXSTATUS_REG & ECSenseUART_RX_HW_MASK;
+ 411              		.loc 1 489 0
+ 412 0006 064B     		ldr	r3, .L26
+ 413 0008 1B78     		ldrb	r3, [r3]
+ 414 000a DBB2     		uxtb	r3, r3
+ 415 000c 03F07F03 		and	r3, r3, #127
+ 416 0010 FB71     		strb	r3, [r7, #7]
+ 490:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 491:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 492:Generated_Source\PSoC5/ECSenseUART.c ****         if(ECSenseUART_rxBufferOverflow != 0u)
+ 493:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 494:Generated_Source\PSoC5/ECSenseUART.c ****             status |= ECSenseUART_RX_STS_SOFT_BUFF_OVER;
+ 495:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_rxBufferOverflow = 0u;
+ 496:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 17
+
+
+ 497:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 498:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 499:Generated_Source\PSoC5/ECSenseUART.c ****         return(status);
+ 417              		.loc 1 499 0
+ 418 0012 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 500:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 419              		.loc 1 500 0
+ 420 0014 1846     		mov	r0, r3
+ 421 0016 0C37     		adds	r7, r7, #12
+ 422              		.cfi_def_cfa_offset 4
+ 423 0018 BD46     		mov	sp, r7
+ 424              		.cfi_def_cfa_register 13
+ 425              		@ sp needed
+ 426 001a 80BC     		pop	{r7}
+ 427              		.cfi_restore 7
+ 428              		.cfi_def_cfa_offset 0
+ 429 001c 7047     		bx	lr
+ 430              	.L27:
+ 431 001e 00BF     		.align	2
+ 432              	.L26:
+ 433 0020 64640040 		.word	1073767524
+ 434              		.cfi_endproc
+ 435              	.LFE8:
+ 436              		.size	ECSenseUART_ReadRxStatus, .-ECSenseUART_ReadRxStatus
+ 437              		.section	.text.ECSenseUART_GetChar,"ax",%progbits
+ 438              		.align	2
+ 439              		.global	ECSenseUART_GetChar
+ 440              		.thumb
+ 441              		.thumb_func
+ 442              		.type	ECSenseUART_GetChar, %function
+ 443              	ECSenseUART_GetChar:
+ 444              	.LFB9:
+ 501:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 502:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 503:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 504:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_GetChar
+ 505:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 506:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 507:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 508:Generated_Source\PSoC5/ECSenseUART.c ****     *  Returns the last received byte of data. ECSenseUART_GetChar() is
+ 509:Generated_Source\PSoC5/ECSenseUART.c ****     *  designed for ASCII characters and returns a uint8 where 1 to 255 are values
+ 510:Generated_Source\PSoC5/ECSenseUART.c ****     *  for valid characters and 0 indicates an error occurred or no data is present.
+ 511:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 512:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 513:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 514:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 515:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 516:Generated_Source\PSoC5/ECSenseUART.c ****     *  Character read from UART RX buffer. ASCII characters from 1 to 255 are valid.
+ 517:Generated_Source\PSoC5/ECSenseUART.c ****     *  A returned zero signifies an error condition or no data available.
+ 518:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 519:Generated_Source\PSoC5/ECSenseUART.c ****     * Global Variables:
+ 520:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBuffer - RAM buffer pointer for save received data.
+ 521:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferWrite - cyclic index for write to rxBuffer,
+ 522:Generated_Source\PSoC5/ECSenseUART.c ****     *     checked to identify new data.
+ 523:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferRead - cyclic index for read from rxBuffer,
+ 524:Generated_Source\PSoC5/ECSenseUART.c ****     *     incremented after each byte has been read from buffer.
+ 525:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferLoopDetect - cleared if loop condition was detected
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 18
+
+
+ 526:Generated_Source\PSoC5/ECSenseUART.c ****     *     in RX ISR.
+ 527:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 528:Generated_Source\PSoC5/ECSenseUART.c ****     * Reentrant:
+ 529:Generated_Source\PSoC5/ECSenseUART.c ****     *  No.
+ 530:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 531:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 532:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 ECSenseUART_GetChar(void) 
+ 533:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 445              		.loc 1 533 0
+ 446              		.cfi_startproc
+ 447              		@ args = 0, pretend = 0, frame = 8
+ 448              		@ frame_needed = 1, uses_anonymous_args = 0
+ 449              		@ link register save eliminated.
+ 450 0000 80B4     		push	{r7}
+ 451              		.cfi_def_cfa_offset 4
+ 452              		.cfi_offset 7, -4
+ 453 0002 83B0     		sub	sp, sp, #12
+ 454              		.cfi_def_cfa_offset 16
+ 455 0004 00AF     		add	r7, sp, #0
+ 456              		.cfi_def_cfa_register 7
+ 534:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 rxData = 0u;
+ 457              		.loc 1 534 0
+ 458 0006 0023     		movs	r3, #0
+ 459 0008 FB71     		strb	r3, [r7, #7]
+ 535:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 rxStatus;
+ 536:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 537:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 538:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 locRxBufferRead;
+ 539:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 locRxBufferWrite;
+ 540:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 541:Generated_Source\PSoC5/ECSenseUART.c ****         /* Protect variables that could change on interrupt */
+ 542:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_DisableRxInt();
+ 543:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 544:Generated_Source\PSoC5/ECSenseUART.c ****         locRxBufferRead  = ECSenseUART_rxBufferRead;
+ 545:Generated_Source\PSoC5/ECSenseUART.c ****         locRxBufferWrite = ECSenseUART_rxBufferWrite;
+ 546:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 547:Generated_Source\PSoC5/ECSenseUART.c ****         if( (ECSenseUART_rxBufferLoopDetect != 0u) || (locRxBufferRead != locRxBufferWrite) )
+ 548:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 549:Generated_Source\PSoC5/ECSenseUART.c ****             rxData = ECSenseUART_rxBuffer[locRxBufferRead];
+ 550:Generated_Source\PSoC5/ECSenseUART.c ****             locRxBufferRead++;
+ 551:Generated_Source\PSoC5/ECSenseUART.c ****             if(locRxBufferRead >= ECSenseUART_RX_BUFFER_SIZE)
+ 552:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 553:Generated_Source\PSoC5/ECSenseUART.c ****                 locRxBufferRead = 0u;
+ 554:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 555:Generated_Source\PSoC5/ECSenseUART.c ****             /* Update the real pointer */
+ 556:Generated_Source\PSoC5/ECSenseUART.c ****             ECSenseUART_rxBufferRead = locRxBufferRead;
+ 557:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 558:Generated_Source\PSoC5/ECSenseUART.c ****             if(ECSenseUART_rxBufferLoopDetect != 0u)
+ 559:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 560:Generated_Source\PSoC5/ECSenseUART.c ****                 ECSenseUART_rxBufferLoopDetect = 0u;
+ 561:Generated_Source\PSoC5/ECSenseUART.c ****                 #if( (ECSenseUART_RX_INTERRUPT_ENABLED) && (ECSenseUART_FLOW_CONTROL != 0u) )
+ 562:Generated_Source\PSoC5/ECSenseUART.c ****                     /* When Hardware Flow Control selected - return RX mask */
+ 563:Generated_Source\PSoC5/ECSenseUART.c ****                     #if( ECSenseUART_HD_ENABLED )
+ 564:Generated_Source\PSoC5/ECSenseUART.c ****                         if((ECSenseUART_CONTROL_REG & ECSenseUART_CTRL_HD_SEND) == 0u)
+ 565:Generated_Source\PSoC5/ECSenseUART.c ****                         {   /* In Half duplex mode return RX mask only if
+ 566:Generated_Source\PSoC5/ECSenseUART.c ****                             *  RX configuration set, otherwise
+ 567:Generated_Source\PSoC5/ECSenseUART.c ****                             *  mask will be returned in LoadRxConfig() API.
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 19
+
+
+ 568:Generated_Source\PSoC5/ECSenseUART.c ****                             */
+ 569:Generated_Source\PSoC5/ECSenseUART.c ****                             ECSenseUART_RXSTATUS_MASK_REG |= ECSenseUART_RX_STS_FIFO_NOTEMPTY;
+ 570:Generated_Source\PSoC5/ECSenseUART.c ****                         }
+ 571:Generated_Source\PSoC5/ECSenseUART.c ****                     #else
+ 572:Generated_Source\PSoC5/ECSenseUART.c ****                         ECSenseUART_RXSTATUS_MASK_REG |= ECSenseUART_RX_STS_FIFO_NOTEMPTY;
+ 573:Generated_Source\PSoC5/ECSenseUART.c ****                     #endif /* end ECSenseUART_HD_ENABLED */
+ 574:Generated_Source\PSoC5/ECSenseUART.c ****                 #endif /* ECSenseUART_RX_INTERRUPT_ENABLED and Hardware flow control*/
+ 575:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 576:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 577:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 578:Generated_Source\PSoC5/ECSenseUART.c ****         else
+ 579:Generated_Source\PSoC5/ECSenseUART.c ****         {   rxStatus = ECSenseUART_RXSTATUS_REG;
+ 580:Generated_Source\PSoC5/ECSenseUART.c ****             if((rxStatus & ECSenseUART_RX_STS_FIFO_NOTEMPTY) != 0u)
+ 581:Generated_Source\PSoC5/ECSenseUART.c ****             {   /* Read received data from FIFO */
+ 582:Generated_Source\PSoC5/ECSenseUART.c ****                 rxData = ECSenseUART_RXDATA_REG;
+ 583:Generated_Source\PSoC5/ECSenseUART.c ****                 /*Check status on error*/
+ 584:Generated_Source\PSoC5/ECSenseUART.c ****                 if((rxStatus & (ECSenseUART_RX_STS_BREAK | ECSenseUART_RX_STS_PAR_ERROR |
+ 585:Generated_Source\PSoC5/ECSenseUART.c ****                                 ECSenseUART_RX_STS_STOP_ERROR | ECSenseUART_RX_STS_OVERRUN)) != 0u)
+ 586:Generated_Source\PSoC5/ECSenseUART.c ****                 {
+ 587:Generated_Source\PSoC5/ECSenseUART.c ****                     rxData = 0u;
+ 588:Generated_Source\PSoC5/ECSenseUART.c ****                 }
+ 589:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 590:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 591:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 592:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_EnableRxInt();
+ 593:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 594:Generated_Source\PSoC5/ECSenseUART.c ****     #else
+ 595:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 596:Generated_Source\PSoC5/ECSenseUART.c ****         rxStatus =ECSenseUART_RXSTATUS_REG;
+ 460              		.loc 1 596 0
+ 461 000a 0C4B     		ldr	r3, .L31
+ 462 000c 1B78     		ldrb	r3, [r3]
+ 463 000e BB71     		strb	r3, [r7, #6]
+ 597:Generated_Source\PSoC5/ECSenseUART.c ****         if((rxStatus & ECSenseUART_RX_STS_FIFO_NOTEMPTY) != 0u)
+ 464              		.loc 1 597 0
+ 465 0010 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 466 0012 03F02003 		and	r3, r3, #32
+ 467 0016 002B     		cmp	r3, #0
+ 468 0018 09D0     		beq	.L29
+ 598:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 599:Generated_Source\PSoC5/ECSenseUART.c ****             /* Read received data from FIFO */
+ 600:Generated_Source\PSoC5/ECSenseUART.c ****             rxData = ECSenseUART_RXDATA_REG;
+ 469              		.loc 1 600 0
+ 470 001a 094B     		ldr	r3, .L31+4
+ 471 001c 1B78     		ldrb	r3, [r3]
+ 472 001e FB71     		strb	r3, [r7, #7]
+ 601:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 602:Generated_Source\PSoC5/ECSenseUART.c ****             /*Check status on error*/
+ 603:Generated_Source\PSoC5/ECSenseUART.c ****             if((rxStatus & (ECSenseUART_RX_STS_BREAK | ECSenseUART_RX_STS_PAR_ERROR |
+ 604:Generated_Source\PSoC5/ECSenseUART.c ****                             ECSenseUART_RX_STS_STOP_ERROR | ECSenseUART_RX_STS_OVERRUN)) != 0u)
+ 473              		.loc 1 604 0
+ 474 0020 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 475 0022 03F01E03 		and	r3, r3, #30
+ 603:Generated_Source\PSoC5/ECSenseUART.c ****                             ECSenseUART_RX_STS_STOP_ERROR | ECSenseUART_RX_STS_OVERRUN)) != 0u)
+ 476              		.loc 1 603 0
+ 477 0026 002B     		cmp	r3, #0
+ 478 0028 01D0     		beq	.L29
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 20
+
+
+ 605:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 606:Generated_Source\PSoC5/ECSenseUART.c ****                 rxData = 0u;
+ 479              		.loc 1 606 0
+ 480 002a 0023     		movs	r3, #0
+ 481 002c FB71     		strb	r3, [r7, #7]
+ 482              	.L29:
+ 607:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 608:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 609:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 610:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 611:Generated_Source\PSoC5/ECSenseUART.c ****         return(rxData);
+ 483              		.loc 1 611 0
+ 484 002e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 612:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 485              		.loc 1 612 0
+ 486 0030 1846     		mov	r0, r3
+ 487 0032 0C37     		adds	r7, r7, #12
+ 488              		.cfi_def_cfa_offset 4
+ 489 0034 BD46     		mov	sp, r7
+ 490              		.cfi_def_cfa_register 13
+ 491              		@ sp needed
+ 492 0036 80BC     		pop	{r7}
+ 493              		.cfi_restore 7
+ 494              		.cfi_def_cfa_offset 0
+ 495 0038 7047     		bx	lr
+ 496              	.L32:
+ 497 003a 00BF     		.align	2
+ 498              	.L31:
+ 499 003c 64640040 		.word	1073767524
+ 500 0040 47650040 		.word	1073767751
+ 501              		.cfi_endproc
+ 502              	.LFE9:
+ 503              		.size	ECSenseUART_GetChar, .-ECSenseUART_GetChar
+ 504              		.section	.text.ECSenseUART_GetByte,"ax",%progbits
+ 505              		.align	2
+ 506              		.global	ECSenseUART_GetByte
+ 507              		.thumb
+ 508              		.thumb_func
+ 509              		.type	ECSenseUART_GetByte, %function
+ 510              	ECSenseUART_GetByte:
+ 511              	.LFB10:
+ 613:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 614:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 615:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 616:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_GetByte
+ 617:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 618:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 619:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 620:Generated_Source\PSoC5/ECSenseUART.c ****     *  Reads UART RX buffer immediately, returns received character and error
+ 621:Generated_Source\PSoC5/ECSenseUART.c ****     *  condition.
+ 622:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 623:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 624:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 625:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 626:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 627:Generated_Source\PSoC5/ECSenseUART.c ****     *  MSB contains status and LSB contains UART RX data. If the MSB is nonzero,
+ 628:Generated_Source\PSoC5/ECSenseUART.c ****     *  an error has occurred.
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 21
+
+
+ 629:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 630:Generated_Source\PSoC5/ECSenseUART.c ****     * Reentrant:
+ 631:Generated_Source\PSoC5/ECSenseUART.c ****     *  No.
+ 632:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 633:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 634:Generated_Source\PSoC5/ECSenseUART.c ****     uint16 ECSenseUART_GetByte(void) 
+ 635:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 512              		.loc 1 635 0
+ 513              		.cfi_startproc
+ 514              		@ args = 0, pretend = 0, frame = 0
+ 515              		@ frame_needed = 1, uses_anonymous_args = 0
+ 516 0000 98B5     		push	{r3, r4, r7, lr}
+ 517              		.cfi_def_cfa_offset 16
+ 518              		.cfi_offset 3, -16
+ 519              		.cfi_offset 4, -12
+ 520              		.cfi_offset 7, -8
+ 521              		.cfi_offset 14, -4
+ 522 0002 00AF     		add	r7, sp, #0
+ 523              		.cfi_def_cfa_register 7
+ 636:Generated_Source\PSoC5/ECSenseUART.c ****         
+ 637:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 638:Generated_Source\PSoC5/ECSenseUART.c ****         uint16 locErrorStatus;
+ 639:Generated_Source\PSoC5/ECSenseUART.c ****         /* Protect variables that could change on interrupt */
+ 640:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_DisableRxInt();
+ 641:Generated_Source\PSoC5/ECSenseUART.c ****         locErrorStatus = (uint16)ECSenseUART_errorStatus;
+ 642:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_errorStatus = 0u;
+ 643:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_EnableRxInt();
+ 644:Generated_Source\PSoC5/ECSenseUART.c ****         return ( (uint16)(locErrorStatus << 8u) | ECSenseUART_ReadRxData() );
+ 645:Generated_Source\PSoC5/ECSenseUART.c ****     #else
+ 646:Generated_Source\PSoC5/ECSenseUART.c ****         return ( ((uint16)ECSenseUART_ReadRxStatus() << 8u) | ECSenseUART_ReadRxData() );
+ 524              		.loc 1 646 0
+ 525 0004 FFF7FEFF 		bl	ECSenseUART_ReadRxStatus
+ 526 0008 0346     		mov	r3, r0
+ 527 000a 1B02     		lsls	r3, r3, #8
+ 528 000c 1CB2     		sxth	r4, r3
+ 529 000e FFF7FEFF 		bl	ECSenseUART_ReadRxData
+ 530 0012 0346     		mov	r3, r0
+ 531 0014 1BB2     		sxth	r3, r3
+ 532 0016 2343     		orrs	r3, r3, r4
+ 533 0018 1BB2     		sxth	r3, r3
+ 534 001a 9BB2     		uxth	r3, r3
+ 647:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* ECSenseUART_RX_INTERRUPT_ENABLED */
+ 648:Generated_Source\PSoC5/ECSenseUART.c ****         
+ 649:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 535              		.loc 1 649 0
+ 536 001c 1846     		mov	r0, r3
+ 537 001e 98BD     		pop	{r3, r4, r7, pc}
+ 538              		.cfi_endproc
+ 539              	.LFE10:
+ 540              		.size	ECSenseUART_GetByte, .-ECSenseUART_GetByte
+ 541              		.section	.text.ECSenseUART_GetRxBufferSize,"ax",%progbits
+ 542              		.align	2
+ 543              		.global	ECSenseUART_GetRxBufferSize
+ 544              		.thumb
+ 545              		.thumb_func
+ 546              		.type	ECSenseUART_GetRxBufferSize, %function
+ 547              	ECSenseUART_GetRxBufferSize:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 22
+
+
+ 548              	.LFB11:
+ 650:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 651:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 652:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 653:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_GetRxBufferSize
+ 654:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 655:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 656:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 657:Generated_Source\PSoC5/ECSenseUART.c ****     *  Returns the number of received bytes available in the RX buffer.
+ 658:Generated_Source\PSoC5/ECSenseUART.c ****     *  * RX software buffer is disabled (RX Buffer Size parameter is equal to 4): 
+ 659:Generated_Source\PSoC5/ECSenseUART.c ****     *    returns 0 for empty RX FIFO or 1 for not empty RX FIFO.
+ 660:Generated_Source\PSoC5/ECSenseUART.c ****     *  * RX software buffer is enabled: returns the number of bytes available in 
+ 661:Generated_Source\PSoC5/ECSenseUART.c ****     *    the RX software buffer. Bytes available in the RX FIFO do not take to 
+ 662:Generated_Source\PSoC5/ECSenseUART.c ****     *    account.
+ 663:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 664:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 665:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 666:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 667:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 668:Generated_Source\PSoC5/ECSenseUART.c ****     *  uint8: Number of bytes in the RX buffer. 
+ 669:Generated_Source\PSoC5/ECSenseUART.c ****     *    Return value type depends on RX Buffer Size parameter.
+ 670:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 671:Generated_Source\PSoC5/ECSenseUART.c ****     * Global Variables:
+ 672:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferWrite - used to calculate left bytes.
+ 673:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferRead - used to calculate left bytes.
+ 674:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferLoopDetect - checked to decide left bytes amount.
+ 675:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 676:Generated_Source\PSoC5/ECSenseUART.c ****     * Reentrant:
+ 677:Generated_Source\PSoC5/ECSenseUART.c ****     *  No.
+ 678:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 679:Generated_Source\PSoC5/ECSenseUART.c ****     * Theory:
+ 680:Generated_Source\PSoC5/ECSenseUART.c ****     *  Allows the user to find out how full the RX Buffer is.
+ 681:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 682:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 683:Generated_Source\PSoC5/ECSenseUART.c ****     uint8 ECSenseUART_GetRxBufferSize(void)
+ 684:Generated_Source\PSoC5/ECSenseUART.c ****                                                             
+ 685:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 549              		.loc 1 685 0
+ 550              		.cfi_startproc
+ 551              		@ args = 0, pretend = 0, frame = 8
+ 552              		@ frame_needed = 1, uses_anonymous_args = 0
+ 553              		@ link register save eliminated.
+ 554 0000 80B4     		push	{r7}
+ 555              		.cfi_def_cfa_offset 4
+ 556              		.cfi_offset 7, -4
+ 557 0002 83B0     		sub	sp, sp, #12
+ 558              		.cfi_def_cfa_offset 16
+ 559 0004 00AF     		add	r7, sp, #0
+ 560              		.cfi_def_cfa_register 7
+ 686:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 size;
+ 687:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 688:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 689:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 690:Generated_Source\PSoC5/ECSenseUART.c ****         /* Protect variables that could change on interrupt */
+ 691:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_DisableRxInt();
+ 692:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 693:Generated_Source\PSoC5/ECSenseUART.c ****         if(ECSenseUART_rxBufferRead == ECSenseUART_rxBufferWrite)
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 23
+
+
+ 694:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 695:Generated_Source\PSoC5/ECSenseUART.c ****             if(ECSenseUART_rxBufferLoopDetect != 0u)
+ 696:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 697:Generated_Source\PSoC5/ECSenseUART.c ****                 size = ECSenseUART_RX_BUFFER_SIZE;
+ 698:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 699:Generated_Source\PSoC5/ECSenseUART.c ****             else
+ 700:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 701:Generated_Source\PSoC5/ECSenseUART.c ****                 size = 0u;
+ 702:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 703:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 704:Generated_Source\PSoC5/ECSenseUART.c ****         else if(ECSenseUART_rxBufferRead < ECSenseUART_rxBufferWrite)
+ 705:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 706:Generated_Source\PSoC5/ECSenseUART.c ****             size = (ECSenseUART_rxBufferWrite - ECSenseUART_rxBufferRead);
+ 707:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 708:Generated_Source\PSoC5/ECSenseUART.c ****         else
+ 709:Generated_Source\PSoC5/ECSenseUART.c ****         {
+ 710:Generated_Source\PSoC5/ECSenseUART.c ****             size = (ECSenseUART_RX_BUFFER_SIZE - ECSenseUART_rxBufferRead) + ECSenseUART_rxBufferWr
+ 711:Generated_Source\PSoC5/ECSenseUART.c ****         }
+ 712:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 713:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_EnableRxInt();
+ 714:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 715:Generated_Source\PSoC5/ECSenseUART.c ****     #else
+ 716:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 717:Generated_Source\PSoC5/ECSenseUART.c ****         /* We can only know if there is data in the fifo. */
+ 718:Generated_Source\PSoC5/ECSenseUART.c ****         size = ((ECSenseUART_RXSTATUS_REG & ECSenseUART_RX_STS_FIFO_NOTEMPTY) != 0u) ? 1u : 0u;
+ 561              		.loc 1 718 0
+ 562 0006 084B     		ldr	r3, .L39
+ 563 0008 1B78     		ldrb	r3, [r3]
+ 564 000a DBB2     		uxtb	r3, r3
+ 565 000c 03F02003 		and	r3, r3, #32
+ 566 0010 002B     		cmp	r3, #0
+ 567 0012 01D0     		beq	.L36
+ 568              		.loc 1 718 0 is_stmt 0 discriminator 1
+ 569 0014 0123     		movs	r3, #1
+ 570 0016 00E0     		b	.L37
+ 571              	.L36:
+ 572              		.loc 1 718 0 discriminator 2
+ 573 0018 0023     		movs	r3, #0
+ 574              	.L37:
+ 575              		.loc 1 718 0 discriminator 4
+ 576 001a FB71     		strb	r3, [r7, #7]
+ 719:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 720:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 721:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 722:Generated_Source\PSoC5/ECSenseUART.c ****         return(size);
+ 577              		.loc 1 722 0 is_stmt 1 discriminator 4
+ 578 001c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 723:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 579              		.loc 1 723 0 discriminator 4
+ 580 001e 1846     		mov	r0, r3
+ 581 0020 0C37     		adds	r7, r7, #12
+ 582              		.cfi_def_cfa_offset 4
+ 583 0022 BD46     		mov	sp, r7
+ 584              		.cfi_def_cfa_register 13
+ 585              		@ sp needed
+ 586 0024 80BC     		pop	{r7}
+ 587              		.cfi_restore 7
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 24
+
+
+ 588              		.cfi_def_cfa_offset 0
+ 589 0026 7047     		bx	lr
+ 590              	.L40:
+ 591              		.align	2
+ 592              	.L39:
+ 593 0028 64640040 		.word	1073767524
+ 594              		.cfi_endproc
+ 595              	.LFE11:
+ 596              		.size	ECSenseUART_GetRxBufferSize, .-ECSenseUART_GetRxBufferSize
+ 597              		.section	.text.ECSenseUART_ClearRxBuffer,"ax",%progbits
+ 598              		.align	2
+ 599              		.global	ECSenseUART_ClearRxBuffer
+ 600              		.thumb
+ 601              		.thumb_func
+ 602              		.type	ECSenseUART_ClearRxBuffer, %function
+ 603              	ECSenseUART_ClearRxBuffer:
+ 604              	.LFB12:
+ 724:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 725:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 726:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 727:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_ClearRxBuffer
+ 728:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 729:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 730:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 731:Generated_Source\PSoC5/ECSenseUART.c ****     *  Clears the receiver memory buffer and hardware RX FIFO of all received data.
+ 732:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 733:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 734:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 735:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 736:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 737:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 738:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 739:Generated_Source\PSoC5/ECSenseUART.c ****     * Global Variables:
+ 740:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferWrite - cleared to zero.
+ 741:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferRead - cleared to zero.
+ 742:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferLoopDetect - cleared to zero.
+ 743:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxBufferOverflow - cleared to zero.
+ 744:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 745:Generated_Source\PSoC5/ECSenseUART.c ****     * Reentrant:
+ 746:Generated_Source\PSoC5/ECSenseUART.c ****     *  No.
+ 747:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 748:Generated_Source\PSoC5/ECSenseUART.c ****     * Theory:
+ 749:Generated_Source\PSoC5/ECSenseUART.c ****     *  Setting the pointers to zero makes the system believe there is no data to
+ 750:Generated_Source\PSoC5/ECSenseUART.c ****     *  read and writing will resume at address 0 overwriting any data that may
+ 751:Generated_Source\PSoC5/ECSenseUART.c ****     *  have remained in the RAM.
+ 752:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 753:Generated_Source\PSoC5/ECSenseUART.c ****     * Side Effects:
+ 754:Generated_Source\PSoC5/ECSenseUART.c ****     *  Any received data not read from the RAM or FIFO buffer will be lost.
+ 755:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 756:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 757:Generated_Source\PSoC5/ECSenseUART.c ****     void ECSenseUART_ClearRxBuffer(void) 
+ 758:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 605              		.loc 1 758 0
+ 606              		.cfi_startproc
+ 607              		@ args = 0, pretend = 0, frame = 8
+ 608              		@ frame_needed = 1, uses_anonymous_args = 0
+ 609 0000 80B5     		push	{r7, lr}
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 25
+
+
+ 610              		.cfi_def_cfa_offset 8
+ 611              		.cfi_offset 7, -8
+ 612              		.cfi_offset 14, -4
+ 613 0002 82B0     		sub	sp, sp, #8
+ 614              		.cfi_def_cfa_offset 16
+ 615 0004 00AF     		add	r7, sp, #0
+ 616              		.cfi_def_cfa_register 7
+ 759:Generated_Source\PSoC5/ECSenseUART.c ****         uint8 enableInterrupts;
+ 760:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 761:Generated_Source\PSoC5/ECSenseUART.c ****         /* Clear the HW FIFO */
+ 762:Generated_Source\PSoC5/ECSenseUART.c ****         enableInterrupts = CyEnterCriticalSection();
+ 617              		.loc 1 762 0
+ 618 0006 FFF7FEFF 		bl	CyEnterCriticalSection
+ 619 000a 0346     		mov	r3, r0
+ 620 000c FB71     		strb	r3, [r7, #7]
+ 763:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXDATA_AUX_CTL_REG |= (uint8)  ECSenseUART_RX_FIFO_CLR;
+ 621              		.loc 1 763 0
+ 622 000e 0C4A     		ldr	r2, .L42
+ 623 0010 0B4B     		ldr	r3, .L42
+ 624 0012 1B78     		ldrb	r3, [r3]
+ 625 0014 DBB2     		uxtb	r3, r3
+ 626 0016 43F00103 		orr	r3, r3, #1
+ 627 001a DBB2     		uxtb	r3, r3
+ 628 001c 1370     		strb	r3, [r2]
+ 764:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXDATA_AUX_CTL_REG &= (uint8) ~ECSenseUART_RX_FIFO_CLR;
+ 629              		.loc 1 764 0
+ 630 001e 084A     		ldr	r2, .L42
+ 631 0020 074B     		ldr	r3, .L42
+ 632 0022 1B78     		ldrb	r3, [r3]
+ 633 0024 DBB2     		uxtb	r3, r3
+ 634 0026 23F00103 		bic	r3, r3, #1
+ 635 002a DBB2     		uxtb	r3, r3
+ 636 002c 1370     		strb	r3, [r2]
+ 765:Generated_Source\PSoC5/ECSenseUART.c ****         CyExitCriticalSection(enableInterrupts);
+ 637              		.loc 1 765 0
+ 638 002e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 639 0030 1846     		mov	r0, r3
+ 640 0032 FFF7FEFF 		bl	CyExitCriticalSection
+ 766:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 767:Generated_Source\PSoC5/ECSenseUART.c ****     #if (ECSenseUART_RX_INTERRUPT_ENABLED)
+ 768:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 769:Generated_Source\PSoC5/ECSenseUART.c ****         /* Protect variables that could change on interrupt. */
+ 770:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_DisableRxInt();
+ 771:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 772:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_rxBufferRead = 0u;
+ 773:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_rxBufferWrite = 0u;
+ 774:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_rxBufferLoopDetect = 0u;
+ 775:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_rxBufferOverflow = 0u;
+ 776:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 777:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_EnableRxInt();
+ 778:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 779:Generated_Source\PSoC5/ECSenseUART.c ****     #endif /* (ECSenseUART_RX_INTERRUPT_ENABLED) */
+ 780:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 781:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 641              		.loc 1 781 0
+ 642 0036 00BF     		nop
+ 643 0038 0837     		adds	r7, r7, #8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 26
+
+
+ 644              		.cfi_def_cfa_offset 8
+ 645 003a BD46     		mov	sp, r7
+ 646              		.cfi_def_cfa_register 13
+ 647              		@ sp needed
+ 648 003c 80BD     		pop	{r7, pc}
+ 649              	.L43:
+ 650 003e 00BF     		.align	2
+ 651              	.L42:
+ 652 0040 97650040 		.word	1073767831
+ 653              		.cfi_endproc
+ 654              	.LFE12:
+ 655              		.size	ECSenseUART_ClearRxBuffer, .-ECSenseUART_ClearRxBuffer
+ 656              		.section	.text.ECSenseUART_SetRxAddressMode,"ax",%progbits
+ 657              		.align	2
+ 658              		.global	ECSenseUART_SetRxAddressMode
+ 659              		.thumb
+ 660              		.thumb_func
+ 661              		.type	ECSenseUART_SetRxAddressMode, %function
+ 662              	ECSenseUART_SetRxAddressMode:
+ 663              	.LFB13:
+ 782:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 783:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 784:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 785:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_SetRxAddressMode
+ 786:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 787:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 788:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 789:Generated_Source\PSoC5/ECSenseUART.c ****     *  Sets the software controlled Addressing mode used by the RX portion of the
+ 790:Generated_Source\PSoC5/ECSenseUART.c ****     *  UART.
+ 791:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 792:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 793:Generated_Source\PSoC5/ECSenseUART.c ****     *  addressMode: Enumerated value indicating the mode of RX addressing
+ 794:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART__B_UART__AM_SW_BYTE_BYTE -  Software Byte-by-Byte address
+ 795:Generated_Source\PSoC5/ECSenseUART.c ****     *                                               detection
+ 796:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART__B_UART__AM_SW_DETECT_TO_BUFFER - Software Detect to Buffer
+ 797:Generated_Source\PSoC5/ECSenseUART.c ****     *                                               address detection
+ 798:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART__B_UART__AM_HW_BYTE_BY_BYTE - Hardware Byte-by-Byte address
+ 799:Generated_Source\PSoC5/ECSenseUART.c ****     *                                               detection
+ 800:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART__B_UART__AM_HW_DETECT_TO_BUFFER - Hardware Detect to Buffer
+ 801:Generated_Source\PSoC5/ECSenseUART.c ****     *                                               address detection
+ 802:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART__B_UART__AM_NONE - No address detection
+ 803:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 804:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 805:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 806:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 807:Generated_Source\PSoC5/ECSenseUART.c ****     * Global Variables:
+ 808:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxAddressMode - the parameter stored in this variable for
+ 809:Generated_Source\PSoC5/ECSenseUART.c ****     *   the farther usage in RX ISR.
+ 810:Generated_Source\PSoC5/ECSenseUART.c ****     *  ECSenseUART_rxAddressDetected - set to initial state (0).
+ 811:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 812:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 813:Generated_Source\PSoC5/ECSenseUART.c ****     void ECSenseUART_SetRxAddressMode(uint8 addressMode)
+ 814:Generated_Source\PSoC5/ECSenseUART.c ****                                                         
+ 815:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 664              		.loc 1 815 0
+ 665              		.cfi_startproc
+ 666              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 27
+
+
+ 667              		@ frame_needed = 1, uses_anonymous_args = 0
+ 668              		@ link register save eliminated.
+ 669 0000 80B4     		push	{r7}
+ 670              		.cfi_def_cfa_offset 4
+ 671              		.cfi_offset 7, -4
+ 672 0002 83B0     		sub	sp, sp, #12
+ 673              		.cfi_def_cfa_offset 16
+ 674 0004 00AF     		add	r7, sp, #0
+ 675              		.cfi_def_cfa_register 7
+ 676 0006 0346     		mov	r3, r0
+ 677 0008 FB71     		strb	r3, [r7, #7]
+ 816:Generated_Source\PSoC5/ECSenseUART.c ****         #if(ECSenseUART_RXHW_ADDRESS_ENABLED)
+ 817:Generated_Source\PSoC5/ECSenseUART.c ****             #if(ECSenseUART_CONTROL_REG_REMOVED)
+ 818:Generated_Source\PSoC5/ECSenseUART.c ****                 if(0u != addressMode)
+ 819:Generated_Source\PSoC5/ECSenseUART.c ****                 {
+ 820:Generated_Source\PSoC5/ECSenseUART.c ****                     /* Suppress compiler warning */
+ 821:Generated_Source\PSoC5/ECSenseUART.c ****                 }
+ 822:Generated_Source\PSoC5/ECSenseUART.c ****             #else /* ECSenseUART_CONTROL_REG_REMOVED */
+ 823:Generated_Source\PSoC5/ECSenseUART.c ****                 uint8 tmpCtrl;
+ 824:Generated_Source\PSoC5/ECSenseUART.c ****                 tmpCtrl = ECSenseUART_CONTROL_REG & (uint8)~ECSenseUART_CTRL_RXADDR_MODE_MASK;
+ 825:Generated_Source\PSoC5/ECSenseUART.c ****                 tmpCtrl |= (uint8)(addressMode << ECSenseUART_CTRL_RXADDR_MODE0_SHIFT);
+ 826:Generated_Source\PSoC5/ECSenseUART.c ****                 ECSenseUART_CONTROL_REG = tmpCtrl;
+ 827:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 828:Generated_Source\PSoC5/ECSenseUART.c ****                 #if(ECSenseUART_RX_INTERRUPT_ENABLED && \
+ 829:Generated_Source\PSoC5/ECSenseUART.c ****                    (ECSenseUART_RXBUFFERSIZE > ECSenseUART_FIFO_LENGTH) )
+ 830:Generated_Source\PSoC5/ECSenseUART.c ****                     ECSenseUART_rxAddressMode = addressMode;
+ 831:Generated_Source\PSoC5/ECSenseUART.c ****                     ECSenseUART_rxAddressDetected = 0u;
+ 832:Generated_Source\PSoC5/ECSenseUART.c ****                 #endif /* End ECSenseUART_RXBUFFERSIZE > ECSenseUART_FIFO_LENGTH*/
+ 833:Generated_Source\PSoC5/ECSenseUART.c ****             #endif /* End ECSenseUART_CONTROL_REG_REMOVED */
+ 834:Generated_Source\PSoC5/ECSenseUART.c ****         #else /* ECSenseUART_RXHW_ADDRESS_ENABLED */
+ 835:Generated_Source\PSoC5/ECSenseUART.c ****             if(0u != addressMode)
+ 836:Generated_Source\PSoC5/ECSenseUART.c ****             {
+ 837:Generated_Source\PSoC5/ECSenseUART.c ****                 /* Suppress compiler warning */
+ 838:Generated_Source\PSoC5/ECSenseUART.c ****             }
+ 839:Generated_Source\PSoC5/ECSenseUART.c ****         #endif /* End ECSenseUART_RXHW_ADDRESS_ENABLED */
+ 840:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 678              		.loc 1 840 0
+ 679 000a 00BF     		nop
+ 680 000c 0C37     		adds	r7, r7, #12
+ 681              		.cfi_def_cfa_offset 4
+ 682 000e BD46     		mov	sp, r7
+ 683              		.cfi_def_cfa_register 13
+ 684              		@ sp needed
+ 685 0010 80BC     		pop	{r7}
+ 686              		.cfi_restore 7
+ 687              		.cfi_def_cfa_offset 0
+ 688 0012 7047     		bx	lr
+ 689              		.cfi_endproc
+ 690              	.LFE13:
+ 691              		.size	ECSenseUART_SetRxAddressMode, .-ECSenseUART_SetRxAddressMode
+ 692              		.section	.text.ECSenseUART_SetRxAddress1,"ax",%progbits
+ 693              		.align	2
+ 694              		.global	ECSenseUART_SetRxAddress1
+ 695              		.thumb
+ 696              		.thumb_func
+ 697              		.type	ECSenseUART_SetRxAddress1, %function
+ 698              	ECSenseUART_SetRxAddress1:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 28
+
+
+ 699              	.LFB14:
+ 841:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 842:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 843:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 844:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_SetRxAddress1
+ 845:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 846:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 847:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 848:Generated_Source\PSoC5/ECSenseUART.c ****     *  Sets the first of two hardware-detectable receiver addresses.
+ 849:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 850:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 851:Generated_Source\PSoC5/ECSenseUART.c ****     *  address: Address #1 for hardware address detection.
+ 852:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 853:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 854:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 855:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 856:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 857:Generated_Source\PSoC5/ECSenseUART.c ****     void ECSenseUART_SetRxAddress1(uint8 address) 
+ 858:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 700              		.loc 1 858 0
+ 701              		.cfi_startproc
+ 702              		@ args = 0, pretend = 0, frame = 8
+ 703              		@ frame_needed = 1, uses_anonymous_args = 0
+ 704              		@ link register save eliminated.
+ 705 0000 80B4     		push	{r7}
+ 706              		.cfi_def_cfa_offset 4
+ 707              		.cfi_offset 7, -4
+ 708 0002 83B0     		sub	sp, sp, #12
+ 709              		.cfi_def_cfa_offset 16
+ 710 0004 00AF     		add	r7, sp, #0
+ 711              		.cfi_def_cfa_register 7
+ 712 0006 0346     		mov	r3, r0
+ 713 0008 FB71     		strb	r3, [r7, #7]
+ 859:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXADDRESS1_REG = address;
+ 714              		.loc 1 859 0
+ 715 000a 044A     		ldr	r2, .L46
+ 716 000c FB79     		ldrb	r3, [r7, #7]
+ 717 000e 1370     		strb	r3, [r2]
+ 860:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 718              		.loc 1 860 0
+ 719 0010 00BF     		nop
+ 720 0012 0C37     		adds	r7, r7, #12
+ 721              		.cfi_def_cfa_offset 4
+ 722 0014 BD46     		mov	sp, r7
+ 723              		.cfi_def_cfa_register 13
+ 724              		@ sp needed
+ 725 0016 80BC     		pop	{r7}
+ 726              		.cfi_restore 7
+ 727              		.cfi_def_cfa_offset 0
+ 728 0018 7047     		bx	lr
+ 729              	.L47:
+ 730 001a 00BF     		.align	2
+ 731              	.L46:
+ 732 001c 27650040 		.word	1073767719
+ 733              		.cfi_endproc
+ 734              	.LFE14:
+ 735              		.size	ECSenseUART_SetRxAddress1, .-ECSenseUART_SetRxAddress1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 29
+
+
+ 736              		.section	.text.ECSenseUART_SetRxAddress2,"ax",%progbits
+ 737              		.align	2
+ 738              		.global	ECSenseUART_SetRxAddress2
+ 739              		.thumb
+ 740              		.thumb_func
+ 741              		.type	ECSenseUART_SetRxAddress2, %function
+ 742              	ECSenseUART_SetRxAddress2:
+ 743              	.LFB15:
+ 861:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 862:Generated_Source\PSoC5/ECSenseUART.c **** 
+ 863:Generated_Source\PSoC5/ECSenseUART.c ****     /*******************************************************************************
+ 864:Generated_Source\PSoC5/ECSenseUART.c ****     * Function Name: ECSenseUART_SetRxAddress2
+ 865:Generated_Source\PSoC5/ECSenseUART.c ****     ********************************************************************************
+ 866:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 867:Generated_Source\PSoC5/ECSenseUART.c ****     * Summary:
+ 868:Generated_Source\PSoC5/ECSenseUART.c ****     *  Sets the second of two hardware-detectable receiver addresses.
+ 869:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 870:Generated_Source\PSoC5/ECSenseUART.c ****     * Parameters:
+ 871:Generated_Source\PSoC5/ECSenseUART.c ****     *  address: Address #2 for hardware address detection.
+ 872:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 873:Generated_Source\PSoC5/ECSenseUART.c ****     * Return:
+ 874:Generated_Source\PSoC5/ECSenseUART.c ****     *  None.
+ 875:Generated_Source\PSoC5/ECSenseUART.c ****     *
+ 876:Generated_Source\PSoC5/ECSenseUART.c ****     *******************************************************************************/
+ 877:Generated_Source\PSoC5/ECSenseUART.c ****     void ECSenseUART_SetRxAddress2(uint8 address) 
+ 878:Generated_Source\PSoC5/ECSenseUART.c ****     {
+ 744              		.loc 1 878 0
+ 745              		.cfi_startproc
+ 746              		@ args = 0, pretend = 0, frame = 8
+ 747              		@ frame_needed = 1, uses_anonymous_args = 0
+ 748              		@ link register save eliminated.
+ 749 0000 80B4     		push	{r7}
+ 750              		.cfi_def_cfa_offset 4
+ 751              		.cfi_offset 7, -4
+ 752 0002 83B0     		sub	sp, sp, #12
+ 753              		.cfi_def_cfa_offset 16
+ 754 0004 00AF     		add	r7, sp, #0
+ 755              		.cfi_def_cfa_register 7
+ 756 0006 0346     		mov	r3, r0
+ 757 0008 FB71     		strb	r3, [r7, #7]
+ 879:Generated_Source\PSoC5/ECSenseUART.c ****         ECSenseUART_RXADDRESS2_REG = address;
+ 758              		.loc 1 879 0
+ 759 000a 044A     		ldr	r2, .L49
+ 760 000c FB79     		ldrb	r3, [r7, #7]
+ 761 000e 1370     		strb	r3, [r2]
+ 880:Generated_Source\PSoC5/ECSenseUART.c ****     }
+ 762              		.loc 1 880 0
+ 763 0010 00BF     		nop
+ 764 0012 0C37     		adds	r7, r7, #12
+ 765              		.cfi_def_cfa_offset 4
+ 766 0014 BD46     		mov	sp, r7
+ 767              		.cfi_def_cfa_register 13
+ 768              		@ sp needed
+ 769 0016 80BC     		pop	{r7}
+ 770              		.cfi_restore 7
+ 771              		.cfi_def_cfa_offset 0
+ 772 0018 7047     		bx	lr
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 30
+
+
+ 773              	.L50:
+ 774 001a 00BF     		.align	2
+ 775              	.L49:
+ 776 001c 37650040 		.word	1073767735
+ 777              		.cfi_endproc
+ 778              	.LFE15:
+ 779              		.size	ECSenseUART_SetRxAddress2, .-ECSenseUART_SetRxAddress2
+ 780              		.text
+ 781              	.Letext0:
+ 782              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 783              		.section	.debug_info,"",%progbits
+ 784              	.Ldebug_info0:
+ 785 0000 F6020000 		.4byte	0x2f6
+ 786 0004 0400     		.2byte	0x4
+ 787 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 788 000a 04       		.byte	0x4
+ 789 000b 01       		.uleb128 0x1
+ 790 000c 14000000 		.4byte	.LASF42
+ 791 0010 0C       		.byte	0xc
+ 792 0011 2B030000 		.4byte	.LASF43
+ 793 0015 48020000 		.4byte	.LASF44
+ 794 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 795 001d 00000000 		.4byte	0
+ 796 0021 00000000 		.4byte	.Ldebug_line0
+ 797 0025 02       		.uleb128 0x2
+ 798 0026 01       		.byte	0x1
+ 799 0027 06       		.byte	0x6
+ 800 0028 BD030000 		.4byte	.LASF0
+ 801 002c 02       		.uleb128 0x2
+ 802 002d 01       		.byte	0x1
+ 803 002e 08       		.byte	0x8
+ 804 002f BD010000 		.4byte	.LASF1
+ 805 0033 02       		.uleb128 0x2
+ 806 0034 02       		.byte	0x2
+ 807 0035 05       		.byte	0x5
+ 808 0036 7D030000 		.4byte	.LASF2
+ 809 003a 02       		.uleb128 0x2
+ 810 003b 02       		.byte	0x2
+ 811 003c 07       		.byte	0x7
+ 812 003d D8000000 		.4byte	.LASF3
+ 813 0041 02       		.uleb128 0x2
+ 814 0042 04       		.byte	0x4
+ 815 0043 05       		.byte	0x5
+ 816 0044 A8030000 		.4byte	.LASF4
+ 817 0048 02       		.uleb128 0x2
+ 818 0049 04       		.byte	0x4
+ 819 004a 07       		.byte	0x7
+ 820 004b 4F010000 		.4byte	.LASF5
+ 821 004f 02       		.uleb128 0x2
+ 822 0050 08       		.byte	0x8
+ 823 0051 05       		.byte	0x5
+ 824 0052 6A030000 		.4byte	.LASF6
+ 825 0056 02       		.uleb128 0x2
+ 826 0057 08       		.byte	0x8
+ 827 0058 07       		.byte	0x7
+ 828 0059 D5020000 		.4byte	.LASF7
+ 829 005d 03       		.uleb128 0x3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 31
+
+
+ 830 005e 04       		.byte	0x4
+ 831 005f 05       		.byte	0x5
+ 832 0060 696E7400 		.ascii	"int\000"
+ 833 0064 02       		.uleb128 0x2
+ 834 0065 04       		.byte	0x4
+ 835 0066 07       		.byte	0x7
+ 836 0067 3B020000 		.4byte	.LASF8
+ 837 006b 04       		.uleb128 0x4
+ 838 006c 61010000 		.4byte	.LASF9
+ 839 0070 02       		.byte	0x2
+ 840 0071 9201     		.2byte	0x192
+ 841 0073 2C000000 		.4byte	0x2c
+ 842 0077 04       		.uleb128 0x4
+ 843 0078 22020000 		.4byte	.LASF10
+ 844 007c 02       		.byte	0x2
+ 845 007d 9301     		.2byte	0x193
+ 846 007f 3A000000 		.4byte	0x3a
+ 847 0083 02       		.uleb128 0x2
+ 848 0084 04       		.byte	0x4
+ 849 0085 04       		.byte	0x4
+ 850 0086 A2000000 		.4byte	.LASF11
+ 851 008a 02       		.uleb128 0x2
+ 852 008b 08       		.byte	0x8
+ 853 008c 04       		.byte	0x4
+ 854 008d CB010000 		.4byte	.LASF12
+ 855 0091 02       		.uleb128 0x2
+ 856 0092 01       		.byte	0x1
+ 857 0093 08       		.byte	0x8
+ 858 0094 78030000 		.4byte	.LASF13
+ 859 0098 04       		.uleb128 0x4
+ 860 0099 1D030000 		.4byte	.LASF14
+ 861 009d 02       		.byte	0x2
+ 862 009e 3C02     		.2byte	0x23c
+ 863 00a0 A4000000 		.4byte	0xa4
+ 864 00a4 05       		.uleb128 0x5
+ 865 00a5 6B000000 		.4byte	0x6b
+ 866 00a9 02       		.uleb128 0x2
+ 867 00aa 08       		.byte	0x8
+ 868 00ab 04       		.byte	0x4
+ 869 00ac B1030000 		.4byte	.LASF15
+ 870 00b0 02       		.uleb128 0x2
+ 871 00b1 04       		.byte	0x4
+ 872 00b2 07       		.byte	0x7
+ 873 00b3 22030000 		.4byte	.LASF16
+ 874 00b7 06       		.uleb128 0x6
+ 875 00b8 29020000 		.4byte	.LASF17
+ 876 00bc 01       		.byte	0x1
+ 877 00bd 4C       		.byte	0x4c
+ 878 00be 00000000 		.4byte	.LFB0
+ 879 00c2 24000000 		.4byte	.LFE0-.LFB0
+ 880 00c6 01       		.uleb128 0x1
+ 881 00c7 9C       		.byte	0x9c
+ 882 00c8 07       		.uleb128 0x7
+ 883 00c9 C9030000 		.4byte	.LASF18
+ 884 00cd 01       		.byte	0x1
+ 885 00ce 6A       		.byte	0x6a
+ 886 00cf 00000000 		.4byte	.LFB1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 32
+
+
+ 887 00d3 20000000 		.4byte	.LFE1-.LFB1
+ 888 00d7 01       		.uleb128 0x1
+ 889 00d8 9C       		.byte	0x9c
+ 890 00d9 08       		.uleb128 0x8
+ 891 00da D2010000 		.4byte	.LASF19
+ 892 00de 01       		.byte	0x1
+ 893 00df B7       		.byte	0xb7
+ 894 00e0 00000000 		.4byte	.LFB2
+ 895 00e4 4C000000 		.4byte	.LFE2-.LFB2
+ 896 00e8 01       		.uleb128 0x1
+ 897 00e9 9C       		.byte	0x9c
+ 898 00ea FD000000 		.4byte	0xfd
+ 899 00ee 09       		.uleb128 0x9
+ 900 00ef AC010000 		.4byte	.LASF21
+ 901 00f3 01       		.byte	0x1
+ 902 00f4 B9       		.byte	0xb9
+ 903 00f5 6B000000 		.4byte	0x6b
+ 904 00f9 02       		.uleb128 0x2
+ 905 00fa 91       		.byte	0x91
+ 906 00fb 77       		.sleb128 -9
+ 907 00fc 00       		.byte	0
+ 908 00fd 08       		.uleb128 0x8
+ 909 00fe 0C030000 		.4byte	.LASF20
+ 910 0102 01       		.byte	0x1
+ 911 0103 F0       		.byte	0xf0
+ 912 0104 00000000 		.4byte	.LFB3
+ 913 0108 4C000000 		.4byte	.LFE3-.LFB3
+ 914 010c 01       		.uleb128 0x1
+ 915 010d 9C       		.byte	0x9c
+ 916 010e 21010000 		.4byte	0x121
+ 917 0112 09       		.uleb128 0x9
+ 918 0113 AC010000 		.4byte	.LASF21
+ 919 0117 01       		.byte	0x1
+ 920 0118 F2       		.byte	0xf2
+ 921 0119 6B000000 		.4byte	0x6b
+ 922 011d 02       		.uleb128 0x2
+ 923 011e 91       		.byte	0x91
+ 924 011f 77       		.sleb128 -9
+ 925 0120 00       		.byte	0
+ 926 0121 0A       		.uleb128 0xa
+ 927 0122 EC020000 		.4byte	.LASF32
+ 928 0126 01       		.byte	0x1
+ 929 0127 2701     		.2byte	0x127
+ 930 0129 6B000000 		.4byte	0x6b
+ 931 012d 00000000 		.4byte	.LFB4
+ 932 0131 0E000000 		.4byte	.LFE4-.LFB4
+ 933 0135 01       		.uleb128 0x1
+ 934 0136 9C       		.byte	0x9c
+ 935 0137 0B       		.uleb128 0xb
+ 936 0138 87030000 		.4byte	.LASF22
+ 937 013c 01       		.byte	0x1
+ 938 013d 3F01     		.2byte	0x13f
+ 939 013f 00000000 		.4byte	.LFB5
+ 940 0143 14000000 		.4byte	.LFE5-.LFB5
+ 941 0147 01       		.uleb128 0x1
+ 942 0148 9C       		.byte	0x9c
+ 943 0149 5D010000 		.4byte	0x15d
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 33
+
+
+ 944 014d 0C       		.uleb128 0xc
+ 945 014e 67010000 		.4byte	.LASF24
+ 946 0152 01       		.byte	0x1
+ 947 0153 3F01     		.2byte	0x13f
+ 948 0155 6B000000 		.4byte	0x6b
+ 949 0159 02       		.uleb128 0x2
+ 950 015a 91       		.byte	0x91
+ 951 015b 77       		.sleb128 -9
+ 952 015c 00       		.byte	0
+ 953 015d 0B       		.uleb128 0xb
+ 954 015e 30010000 		.4byte	.LASF23
+ 955 0162 01       		.byte	0x1
+ 956 0163 6701     		.2byte	0x167
+ 957 0165 00000000 		.4byte	.LFB6
+ 958 0169 20000000 		.4byte	.LFE6-.LFB6
+ 959 016d 01       		.uleb128 0x1
+ 960 016e 9C       		.byte	0x9c
+ 961 016f 83010000 		.4byte	0x183
+ 962 0173 0C       		.uleb128 0xc
+ 963 0174 EB000000 		.4byte	.LASF25
+ 964 0178 01       		.byte	0x1
+ 965 0179 6701     		.2byte	0x167
+ 966 017b 6B000000 		.4byte	0x6b
+ 967 017f 02       		.uleb128 0x2
+ 968 0180 91       		.byte	0x91
+ 969 0181 77       		.sleb128 -9
+ 970 0182 00       		.byte	0
+ 971 0183 0D       		.uleb128 0xd
+ 972 0184 F9000000 		.4byte	.LASF27
+ 973 0188 01       		.byte	0x1
+ 974 0189 8801     		.2byte	0x188
+ 975 018b 6B000000 		.4byte	0x6b
+ 976 018f 00000000 		.4byte	.LFB7
+ 977 0193 1C000000 		.4byte	.LFE7-.LFB7
+ 978 0197 01       		.uleb128 0x1
+ 979 0198 9C       		.byte	0x9c
+ 980 0199 AD010000 		.4byte	0x1ad
+ 981 019d 0E       		.uleb128 0xe
+ 982 019e A5010000 		.4byte	.LASF26
+ 983 01a2 01       		.byte	0x1
+ 984 01a3 8A01     		.2byte	0x18a
+ 985 01a5 6B000000 		.4byte	0x6b
+ 986 01a9 02       		.uleb128 0x2
+ 987 01aa 91       		.byte	0x91
+ 988 01ab 77       		.sleb128 -9
+ 989 01ac 00       		.byte	0
+ 990 01ad 0D       		.uleb128 0xd
+ 991 01ae 8C010000 		.4byte	.LASF28
+ 992 01b2 01       		.byte	0x1
+ 993 01b3 E501     		.2byte	0x1e5
+ 994 01b5 6B000000 		.4byte	0x6b
+ 995 01b9 00000000 		.4byte	.LFB8
+ 996 01bd 24000000 		.4byte	.LFE8-.LFB8
+ 997 01c1 01       		.uleb128 0x1
+ 998 01c2 9C       		.byte	0x9c
+ 999 01c3 D7010000 		.4byte	0x1d7
+ 1000 01c7 0E       		.uleb128 0xe
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 34
+
+
+ 1001 01c8 F2000000 		.4byte	.LASF29
+ 1002 01cc 01       		.byte	0x1
+ 1003 01cd E701     		.2byte	0x1e7
+ 1004 01cf 6B000000 		.4byte	0x6b
+ 1005 01d3 02       		.uleb128 0x2
+ 1006 01d4 91       		.byte	0x91
+ 1007 01d5 77       		.sleb128 -9
+ 1008 01d6 00       		.byte	0
+ 1009 01d7 0D       		.uleb128 0xd
+ 1010 01d8 A8000000 		.4byte	.LASF30
+ 1011 01dc 01       		.byte	0x1
+ 1012 01dd 1402     		.2byte	0x214
+ 1013 01df 6B000000 		.4byte	0x6b
+ 1014 01e3 00000000 		.4byte	.LFB9
+ 1015 01e7 44000000 		.4byte	.LFE9-.LFB9
+ 1016 01eb 01       		.uleb128 0x1
+ 1017 01ec 9C       		.byte	0x9c
+ 1018 01ed 10020000 		.4byte	0x210
+ 1019 01f1 0E       		.uleb128 0xe
+ 1020 01f2 A5010000 		.4byte	.LASF26
+ 1021 01f6 01       		.byte	0x1
+ 1022 01f7 1602     		.2byte	0x216
+ 1023 01f9 6B000000 		.4byte	0x6b
+ 1024 01fd 02       		.uleb128 0x2
+ 1025 01fe 91       		.byte	0x91
+ 1026 01ff 77       		.sleb128 -9
+ 1027 0200 0E       		.uleb128 0xe
+ 1028 0201 FF010000 		.4byte	.LASF31
+ 1029 0205 01       		.byte	0x1
+ 1030 0206 1702     		.2byte	0x217
+ 1031 0208 6B000000 		.4byte	0x6b
+ 1032 020c 02       		.uleb128 0x2
+ 1033 020d 91       		.byte	0x91
+ 1034 020e 76       		.sleb128 -10
+ 1035 020f 00       		.byte	0
+ 1036 0210 0F       		.uleb128 0xf
+ 1037 0211 10010000 		.4byte	.LASF33
+ 1038 0215 01       		.byte	0x1
+ 1039 0216 7A02     		.2byte	0x27a
+ 1040 0218 77000000 		.4byte	0x77
+ 1041 021c 00000000 		.4byte	.LFB10
+ 1042 0220 20000000 		.4byte	.LFE10-.LFB10
+ 1043 0224 01       		.uleb128 0x1
+ 1044 0225 9C       		.byte	0x9c
+ 1045 0226 0D       		.uleb128 0xd
+ 1046 0227 BC000000 		.4byte	.LASF34
+ 1047 022b 01       		.byte	0x1
+ 1048 022c AB02     		.2byte	0x2ab
+ 1049 022e 6B000000 		.4byte	0x6b
+ 1050 0232 00000000 		.4byte	.LFB11
+ 1051 0236 2C000000 		.4byte	.LFE11-.LFB11
+ 1052 023a 01       		.uleb128 0x1
+ 1053 023b 9C       		.byte	0x9c
+ 1054 023c 50020000 		.4byte	0x250
+ 1055 0240 0E       		.uleb128 0xe
+ 1056 0241 DA030000 		.4byte	.LASF35
+ 1057 0245 01       		.byte	0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 35
+
+
+ 1058 0246 AE02     		.2byte	0x2ae
+ 1059 0248 6B000000 		.4byte	0x6b
+ 1060 024c 02       		.uleb128 0x2
+ 1061 024d 91       		.byte	0x91
+ 1062 024e 77       		.sleb128 -9
+ 1063 024f 00       		.byte	0
+ 1064 0250 10       		.uleb128 0x10
+ 1065 0251 E5010000 		.4byte	.LASF36
+ 1066 0255 01       		.byte	0x1
+ 1067 0256 F502     		.2byte	0x2f5
+ 1068 0258 00000000 		.4byte	.LFB12
+ 1069 025c 44000000 		.4byte	.LFE12-.LFB12
+ 1070 0260 01       		.uleb128 0x1
+ 1071 0261 9C       		.byte	0x9c
+ 1072 0262 76020000 		.4byte	0x276
+ 1073 0266 0E       		.uleb128 0xe
+ 1074 0267 AC010000 		.4byte	.LASF21
+ 1075 026b 01       		.byte	0x1
+ 1076 026c F702     		.2byte	0x2f7
+ 1077 026e 6B000000 		.4byte	0x6b
+ 1078 0272 02       		.uleb128 0x2
+ 1079 0273 91       		.byte	0x91
+ 1080 0274 77       		.sleb128 -9
+ 1081 0275 00       		.byte	0
+ 1082 0276 0B       		.uleb128 0xb
+ 1083 0277 6F010000 		.4byte	.LASF37
+ 1084 027b 01       		.byte	0x1
+ 1085 027c 2D03     		.2byte	0x32d
+ 1086 027e 00000000 		.4byte	.LFB13
+ 1087 0282 14000000 		.4byte	.LFE13-.LFB13
+ 1088 0286 01       		.uleb128 0x1
+ 1089 0287 9C       		.byte	0x9c
+ 1090 0288 9C020000 		.4byte	0x29c
+ 1091 028c 0C       		.uleb128 0xc
+ 1092 028d 24010000 		.4byte	.LASF38
+ 1093 0291 01       		.byte	0x1
+ 1094 0292 2D03     		.2byte	0x32d
+ 1095 0294 6B000000 		.4byte	0x6b
+ 1096 0298 02       		.uleb128 0x2
+ 1097 0299 91       		.byte	0x91
+ 1098 029a 77       		.sleb128 -9
+ 1099 029b 00       		.byte	0
+ 1100 029c 0B       		.uleb128 0xb
+ 1101 029d 50030000 		.4byte	.LASF39
+ 1102 02a1 01       		.byte	0x1
+ 1103 02a2 5903     		.2byte	0x359
+ 1104 02a4 00000000 		.4byte	.LFB14
+ 1105 02a8 20000000 		.4byte	.LFE14-.LFB14
+ 1106 02ac 01       		.uleb128 0x1
+ 1107 02ad 9C       		.byte	0x9c
+ 1108 02ae C2020000 		.4byte	0x2c2
+ 1109 02b2 0C       		.uleb128 0xc
+ 1110 02b3 CD020000 		.4byte	.LASF40
+ 1111 02b7 01       		.byte	0x1
+ 1112 02b8 5903     		.2byte	0x359
+ 1113 02ba 6B000000 		.4byte	0x6b
+ 1114 02be 02       		.uleb128 0x2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 36
+
+
+ 1115 02bf 91       		.byte	0x91
+ 1116 02c0 77       		.sleb128 -9
+ 1117 02c1 00       		.byte	0
+ 1118 02c2 0B       		.uleb128 0xb
+ 1119 02c3 08020000 		.4byte	.LASF41
+ 1120 02c7 01       		.byte	0x1
+ 1121 02c8 6D03     		.2byte	0x36d
+ 1122 02ca 00000000 		.4byte	.LFB15
+ 1123 02ce 20000000 		.4byte	.LFE15-.LFB15
+ 1124 02d2 01       		.uleb128 0x1
+ 1125 02d3 9C       		.byte	0x9c
+ 1126 02d4 E8020000 		.4byte	0x2e8
+ 1127 02d8 0C       		.uleb128 0xc
+ 1128 02d9 CD020000 		.4byte	.LASF40
+ 1129 02dd 01       		.byte	0x1
+ 1130 02de 6D03     		.2byte	0x36d
+ 1131 02e0 6B000000 		.4byte	0x6b
+ 1132 02e4 02       		.uleb128 0x2
+ 1133 02e5 91       		.byte	0x91
+ 1134 02e6 77       		.sleb128 -9
+ 1135 02e7 00       		.byte	0
+ 1136 02e8 11       		.uleb128 0x11
+ 1137 02e9 00000000 		.4byte	.LASF45
+ 1138 02ed 01       		.byte	0x1
+ 1139 02ee 1B       		.byte	0x1b
+ 1140 02ef 6B000000 		.4byte	0x6b
+ 1141 02f3 05       		.uleb128 0x5
+ 1142 02f4 03       		.byte	0x3
+ 1143 02f5 00000000 		.4byte	ECSenseUART_initVar
+ 1144 02f9 00       		.byte	0
+ 1145              		.section	.debug_abbrev,"",%progbits
+ 1146              	.Ldebug_abbrev0:
+ 1147 0000 01       		.uleb128 0x1
+ 1148 0001 11       		.uleb128 0x11
+ 1149 0002 01       		.byte	0x1
+ 1150 0003 25       		.uleb128 0x25
+ 1151 0004 0E       		.uleb128 0xe
+ 1152 0005 13       		.uleb128 0x13
+ 1153 0006 0B       		.uleb128 0xb
+ 1154 0007 03       		.uleb128 0x3
+ 1155 0008 0E       		.uleb128 0xe
+ 1156 0009 1B       		.uleb128 0x1b
+ 1157 000a 0E       		.uleb128 0xe
+ 1158 000b 55       		.uleb128 0x55
+ 1159 000c 17       		.uleb128 0x17
+ 1160 000d 11       		.uleb128 0x11
+ 1161 000e 01       		.uleb128 0x1
+ 1162 000f 10       		.uleb128 0x10
+ 1163 0010 17       		.uleb128 0x17
+ 1164 0011 00       		.byte	0
+ 1165 0012 00       		.byte	0
+ 1166 0013 02       		.uleb128 0x2
+ 1167 0014 24       		.uleb128 0x24
+ 1168 0015 00       		.byte	0
+ 1169 0016 0B       		.uleb128 0xb
+ 1170 0017 0B       		.uleb128 0xb
+ 1171 0018 3E       		.uleb128 0x3e
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 37
+
+
+ 1172 0019 0B       		.uleb128 0xb
+ 1173 001a 03       		.uleb128 0x3
+ 1174 001b 0E       		.uleb128 0xe
+ 1175 001c 00       		.byte	0
+ 1176 001d 00       		.byte	0
+ 1177 001e 03       		.uleb128 0x3
+ 1178 001f 24       		.uleb128 0x24
+ 1179 0020 00       		.byte	0
+ 1180 0021 0B       		.uleb128 0xb
+ 1181 0022 0B       		.uleb128 0xb
+ 1182 0023 3E       		.uleb128 0x3e
+ 1183 0024 0B       		.uleb128 0xb
+ 1184 0025 03       		.uleb128 0x3
+ 1185 0026 08       		.uleb128 0x8
+ 1186 0027 00       		.byte	0
+ 1187 0028 00       		.byte	0
+ 1188 0029 04       		.uleb128 0x4
+ 1189 002a 16       		.uleb128 0x16
+ 1190 002b 00       		.byte	0
+ 1191 002c 03       		.uleb128 0x3
+ 1192 002d 0E       		.uleb128 0xe
+ 1193 002e 3A       		.uleb128 0x3a
+ 1194 002f 0B       		.uleb128 0xb
+ 1195 0030 3B       		.uleb128 0x3b
+ 1196 0031 05       		.uleb128 0x5
+ 1197 0032 49       		.uleb128 0x49
+ 1198 0033 13       		.uleb128 0x13
+ 1199 0034 00       		.byte	0
+ 1200 0035 00       		.byte	0
+ 1201 0036 05       		.uleb128 0x5
+ 1202 0037 35       		.uleb128 0x35
+ 1203 0038 00       		.byte	0
+ 1204 0039 49       		.uleb128 0x49
+ 1205 003a 13       		.uleb128 0x13
+ 1206 003b 00       		.byte	0
+ 1207 003c 00       		.byte	0
+ 1208 003d 06       		.uleb128 0x6
+ 1209 003e 2E       		.uleb128 0x2e
+ 1210 003f 00       		.byte	0
+ 1211 0040 3F       		.uleb128 0x3f
+ 1212 0041 19       		.uleb128 0x19
+ 1213 0042 03       		.uleb128 0x3
+ 1214 0043 0E       		.uleb128 0xe
+ 1215 0044 3A       		.uleb128 0x3a
+ 1216 0045 0B       		.uleb128 0xb
+ 1217 0046 3B       		.uleb128 0x3b
+ 1218 0047 0B       		.uleb128 0xb
+ 1219 0048 27       		.uleb128 0x27
+ 1220 0049 19       		.uleb128 0x19
+ 1221 004a 11       		.uleb128 0x11
+ 1222 004b 01       		.uleb128 0x1
+ 1223 004c 12       		.uleb128 0x12
+ 1224 004d 06       		.uleb128 0x6
+ 1225 004e 40       		.uleb128 0x40
+ 1226 004f 18       		.uleb128 0x18
+ 1227 0050 9642     		.uleb128 0x2116
+ 1228 0052 19       		.uleb128 0x19
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 38
+
+
+ 1229 0053 00       		.byte	0
+ 1230 0054 00       		.byte	0
+ 1231 0055 07       		.uleb128 0x7
+ 1232 0056 2E       		.uleb128 0x2e
+ 1233 0057 00       		.byte	0
+ 1234 0058 3F       		.uleb128 0x3f
+ 1235 0059 19       		.uleb128 0x19
+ 1236 005a 03       		.uleb128 0x3
+ 1237 005b 0E       		.uleb128 0xe
+ 1238 005c 3A       		.uleb128 0x3a
+ 1239 005d 0B       		.uleb128 0xb
+ 1240 005e 3B       		.uleb128 0x3b
+ 1241 005f 0B       		.uleb128 0xb
+ 1242 0060 27       		.uleb128 0x27
+ 1243 0061 19       		.uleb128 0x19
+ 1244 0062 11       		.uleb128 0x11
+ 1245 0063 01       		.uleb128 0x1
+ 1246 0064 12       		.uleb128 0x12
+ 1247 0065 06       		.uleb128 0x6
+ 1248 0066 40       		.uleb128 0x40
+ 1249 0067 18       		.uleb128 0x18
+ 1250 0068 9742     		.uleb128 0x2117
+ 1251 006a 19       		.uleb128 0x19
+ 1252 006b 00       		.byte	0
+ 1253 006c 00       		.byte	0
+ 1254 006d 08       		.uleb128 0x8
+ 1255 006e 2E       		.uleb128 0x2e
+ 1256 006f 01       		.byte	0x1
+ 1257 0070 3F       		.uleb128 0x3f
+ 1258 0071 19       		.uleb128 0x19
+ 1259 0072 03       		.uleb128 0x3
+ 1260 0073 0E       		.uleb128 0xe
+ 1261 0074 3A       		.uleb128 0x3a
+ 1262 0075 0B       		.uleb128 0xb
+ 1263 0076 3B       		.uleb128 0x3b
+ 1264 0077 0B       		.uleb128 0xb
+ 1265 0078 27       		.uleb128 0x27
+ 1266 0079 19       		.uleb128 0x19
+ 1267 007a 11       		.uleb128 0x11
+ 1268 007b 01       		.uleb128 0x1
+ 1269 007c 12       		.uleb128 0x12
+ 1270 007d 06       		.uleb128 0x6
+ 1271 007e 40       		.uleb128 0x40
+ 1272 007f 18       		.uleb128 0x18
+ 1273 0080 9642     		.uleb128 0x2116
+ 1274 0082 19       		.uleb128 0x19
+ 1275 0083 01       		.uleb128 0x1
+ 1276 0084 13       		.uleb128 0x13
+ 1277 0085 00       		.byte	0
+ 1278 0086 00       		.byte	0
+ 1279 0087 09       		.uleb128 0x9
+ 1280 0088 34       		.uleb128 0x34
+ 1281 0089 00       		.byte	0
+ 1282 008a 03       		.uleb128 0x3
+ 1283 008b 0E       		.uleb128 0xe
+ 1284 008c 3A       		.uleb128 0x3a
+ 1285 008d 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 39
+
+
+ 1286 008e 3B       		.uleb128 0x3b
+ 1287 008f 0B       		.uleb128 0xb
+ 1288 0090 49       		.uleb128 0x49
+ 1289 0091 13       		.uleb128 0x13
+ 1290 0092 02       		.uleb128 0x2
+ 1291 0093 18       		.uleb128 0x18
+ 1292 0094 00       		.byte	0
+ 1293 0095 00       		.byte	0
+ 1294 0096 0A       		.uleb128 0xa
+ 1295 0097 2E       		.uleb128 0x2e
+ 1296 0098 00       		.byte	0
+ 1297 0099 3F       		.uleb128 0x3f
+ 1298 009a 19       		.uleb128 0x19
+ 1299 009b 03       		.uleb128 0x3
+ 1300 009c 0E       		.uleb128 0xe
+ 1301 009d 3A       		.uleb128 0x3a
+ 1302 009e 0B       		.uleb128 0xb
+ 1303 009f 3B       		.uleb128 0x3b
+ 1304 00a0 05       		.uleb128 0x5
+ 1305 00a1 27       		.uleb128 0x27
+ 1306 00a2 19       		.uleb128 0x19
+ 1307 00a3 49       		.uleb128 0x49
+ 1308 00a4 13       		.uleb128 0x13
+ 1309 00a5 11       		.uleb128 0x11
+ 1310 00a6 01       		.uleb128 0x1
+ 1311 00a7 12       		.uleb128 0x12
+ 1312 00a8 06       		.uleb128 0x6
+ 1313 00a9 40       		.uleb128 0x40
+ 1314 00aa 18       		.uleb128 0x18
+ 1315 00ab 9742     		.uleb128 0x2117
+ 1316 00ad 19       		.uleb128 0x19
+ 1317 00ae 00       		.byte	0
+ 1318 00af 00       		.byte	0
+ 1319 00b0 0B       		.uleb128 0xb
+ 1320 00b1 2E       		.uleb128 0x2e
+ 1321 00b2 01       		.byte	0x1
+ 1322 00b3 3F       		.uleb128 0x3f
+ 1323 00b4 19       		.uleb128 0x19
+ 1324 00b5 03       		.uleb128 0x3
+ 1325 00b6 0E       		.uleb128 0xe
+ 1326 00b7 3A       		.uleb128 0x3a
+ 1327 00b8 0B       		.uleb128 0xb
+ 1328 00b9 3B       		.uleb128 0x3b
+ 1329 00ba 05       		.uleb128 0x5
+ 1330 00bb 27       		.uleb128 0x27
+ 1331 00bc 19       		.uleb128 0x19
+ 1332 00bd 11       		.uleb128 0x11
+ 1333 00be 01       		.uleb128 0x1
+ 1334 00bf 12       		.uleb128 0x12
+ 1335 00c0 06       		.uleb128 0x6
+ 1336 00c1 40       		.uleb128 0x40
+ 1337 00c2 18       		.uleb128 0x18
+ 1338 00c3 9742     		.uleb128 0x2117
+ 1339 00c5 19       		.uleb128 0x19
+ 1340 00c6 01       		.uleb128 0x1
+ 1341 00c7 13       		.uleb128 0x13
+ 1342 00c8 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 40
+
+
+ 1343 00c9 00       		.byte	0
+ 1344 00ca 0C       		.uleb128 0xc
+ 1345 00cb 05       		.uleb128 0x5
+ 1346 00cc 00       		.byte	0
+ 1347 00cd 03       		.uleb128 0x3
+ 1348 00ce 0E       		.uleb128 0xe
+ 1349 00cf 3A       		.uleb128 0x3a
+ 1350 00d0 0B       		.uleb128 0xb
+ 1351 00d1 3B       		.uleb128 0x3b
+ 1352 00d2 05       		.uleb128 0x5
+ 1353 00d3 49       		.uleb128 0x49
+ 1354 00d4 13       		.uleb128 0x13
+ 1355 00d5 02       		.uleb128 0x2
+ 1356 00d6 18       		.uleb128 0x18
+ 1357 00d7 00       		.byte	0
+ 1358 00d8 00       		.byte	0
+ 1359 00d9 0D       		.uleb128 0xd
+ 1360 00da 2E       		.uleb128 0x2e
+ 1361 00db 01       		.byte	0x1
+ 1362 00dc 3F       		.uleb128 0x3f
+ 1363 00dd 19       		.uleb128 0x19
+ 1364 00de 03       		.uleb128 0x3
+ 1365 00df 0E       		.uleb128 0xe
+ 1366 00e0 3A       		.uleb128 0x3a
+ 1367 00e1 0B       		.uleb128 0xb
+ 1368 00e2 3B       		.uleb128 0x3b
+ 1369 00e3 05       		.uleb128 0x5
+ 1370 00e4 27       		.uleb128 0x27
+ 1371 00e5 19       		.uleb128 0x19
+ 1372 00e6 49       		.uleb128 0x49
+ 1373 00e7 13       		.uleb128 0x13
+ 1374 00e8 11       		.uleb128 0x11
+ 1375 00e9 01       		.uleb128 0x1
+ 1376 00ea 12       		.uleb128 0x12
+ 1377 00eb 06       		.uleb128 0x6
+ 1378 00ec 40       		.uleb128 0x40
+ 1379 00ed 18       		.uleb128 0x18
+ 1380 00ee 9742     		.uleb128 0x2117
+ 1381 00f0 19       		.uleb128 0x19
+ 1382 00f1 01       		.uleb128 0x1
+ 1383 00f2 13       		.uleb128 0x13
+ 1384 00f3 00       		.byte	0
+ 1385 00f4 00       		.byte	0
+ 1386 00f5 0E       		.uleb128 0xe
+ 1387 00f6 34       		.uleb128 0x34
+ 1388 00f7 00       		.byte	0
+ 1389 00f8 03       		.uleb128 0x3
+ 1390 00f9 0E       		.uleb128 0xe
+ 1391 00fa 3A       		.uleb128 0x3a
+ 1392 00fb 0B       		.uleb128 0xb
+ 1393 00fc 3B       		.uleb128 0x3b
+ 1394 00fd 05       		.uleb128 0x5
+ 1395 00fe 49       		.uleb128 0x49
+ 1396 00ff 13       		.uleb128 0x13
+ 1397 0100 02       		.uleb128 0x2
+ 1398 0101 18       		.uleb128 0x18
+ 1399 0102 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 41
+
+
+ 1400 0103 00       		.byte	0
+ 1401 0104 0F       		.uleb128 0xf
+ 1402 0105 2E       		.uleb128 0x2e
+ 1403 0106 00       		.byte	0
+ 1404 0107 3F       		.uleb128 0x3f
+ 1405 0108 19       		.uleb128 0x19
+ 1406 0109 03       		.uleb128 0x3
+ 1407 010a 0E       		.uleb128 0xe
+ 1408 010b 3A       		.uleb128 0x3a
+ 1409 010c 0B       		.uleb128 0xb
+ 1410 010d 3B       		.uleb128 0x3b
+ 1411 010e 05       		.uleb128 0x5
+ 1412 010f 27       		.uleb128 0x27
+ 1413 0110 19       		.uleb128 0x19
+ 1414 0111 49       		.uleb128 0x49
+ 1415 0112 13       		.uleb128 0x13
+ 1416 0113 11       		.uleb128 0x11
+ 1417 0114 01       		.uleb128 0x1
+ 1418 0115 12       		.uleb128 0x12
+ 1419 0116 06       		.uleb128 0x6
+ 1420 0117 40       		.uleb128 0x40
+ 1421 0118 18       		.uleb128 0x18
+ 1422 0119 9642     		.uleb128 0x2116
+ 1423 011b 19       		.uleb128 0x19
+ 1424 011c 00       		.byte	0
+ 1425 011d 00       		.byte	0
+ 1426 011e 10       		.uleb128 0x10
+ 1427 011f 2E       		.uleb128 0x2e
+ 1428 0120 01       		.byte	0x1
+ 1429 0121 3F       		.uleb128 0x3f
+ 1430 0122 19       		.uleb128 0x19
+ 1431 0123 03       		.uleb128 0x3
+ 1432 0124 0E       		.uleb128 0xe
+ 1433 0125 3A       		.uleb128 0x3a
+ 1434 0126 0B       		.uleb128 0xb
+ 1435 0127 3B       		.uleb128 0x3b
+ 1436 0128 05       		.uleb128 0x5
+ 1437 0129 27       		.uleb128 0x27
+ 1438 012a 19       		.uleb128 0x19
+ 1439 012b 11       		.uleb128 0x11
+ 1440 012c 01       		.uleb128 0x1
+ 1441 012d 12       		.uleb128 0x12
+ 1442 012e 06       		.uleb128 0x6
+ 1443 012f 40       		.uleb128 0x40
+ 1444 0130 18       		.uleb128 0x18
+ 1445 0131 9642     		.uleb128 0x2116
+ 1446 0133 19       		.uleb128 0x19
+ 1447 0134 01       		.uleb128 0x1
+ 1448 0135 13       		.uleb128 0x13
+ 1449 0136 00       		.byte	0
+ 1450 0137 00       		.byte	0
+ 1451 0138 11       		.uleb128 0x11
+ 1452 0139 34       		.uleb128 0x34
+ 1453 013a 00       		.byte	0
+ 1454 013b 03       		.uleb128 0x3
+ 1455 013c 0E       		.uleb128 0xe
+ 1456 013d 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 42
+
+
+ 1457 013e 0B       		.uleb128 0xb
+ 1458 013f 3B       		.uleb128 0x3b
+ 1459 0140 0B       		.uleb128 0xb
+ 1460 0141 49       		.uleb128 0x49
+ 1461 0142 13       		.uleb128 0x13
+ 1462 0143 3F       		.uleb128 0x3f
+ 1463 0144 19       		.uleb128 0x19
+ 1464 0145 02       		.uleb128 0x2
+ 1465 0146 18       		.uleb128 0x18
+ 1466 0147 00       		.byte	0
+ 1467 0148 00       		.byte	0
+ 1468 0149 00       		.byte	0
+ 1469              		.section	.debug_aranges,"",%progbits
+ 1470 0000 94000000 		.4byte	0x94
+ 1471 0004 0200     		.2byte	0x2
+ 1472 0006 00000000 		.4byte	.Ldebug_info0
+ 1473 000a 04       		.byte	0x4
+ 1474 000b 00       		.byte	0
+ 1475 000c 0000     		.2byte	0
+ 1476 000e 0000     		.2byte	0
+ 1477 0010 00000000 		.4byte	.LFB0
+ 1478 0014 24000000 		.4byte	.LFE0-.LFB0
+ 1479 0018 00000000 		.4byte	.LFB1
+ 1480 001c 20000000 		.4byte	.LFE1-.LFB1
+ 1481 0020 00000000 		.4byte	.LFB2
+ 1482 0024 4C000000 		.4byte	.LFE2-.LFB2
+ 1483 0028 00000000 		.4byte	.LFB3
+ 1484 002c 4C000000 		.4byte	.LFE3-.LFB3
+ 1485 0030 00000000 		.4byte	.LFB4
+ 1486 0034 0E000000 		.4byte	.LFE4-.LFB4
+ 1487 0038 00000000 		.4byte	.LFB5
+ 1488 003c 14000000 		.4byte	.LFE5-.LFB5
+ 1489 0040 00000000 		.4byte	.LFB6
+ 1490 0044 20000000 		.4byte	.LFE6-.LFB6
+ 1491 0048 00000000 		.4byte	.LFB7
+ 1492 004c 1C000000 		.4byte	.LFE7-.LFB7
+ 1493 0050 00000000 		.4byte	.LFB8
+ 1494 0054 24000000 		.4byte	.LFE8-.LFB8
+ 1495 0058 00000000 		.4byte	.LFB9
+ 1496 005c 44000000 		.4byte	.LFE9-.LFB9
+ 1497 0060 00000000 		.4byte	.LFB10
+ 1498 0064 20000000 		.4byte	.LFE10-.LFB10
+ 1499 0068 00000000 		.4byte	.LFB11
+ 1500 006c 2C000000 		.4byte	.LFE11-.LFB11
+ 1501 0070 00000000 		.4byte	.LFB12
+ 1502 0074 44000000 		.4byte	.LFE12-.LFB12
+ 1503 0078 00000000 		.4byte	.LFB13
+ 1504 007c 14000000 		.4byte	.LFE13-.LFB13
+ 1505 0080 00000000 		.4byte	.LFB14
+ 1506 0084 20000000 		.4byte	.LFE14-.LFB14
+ 1507 0088 00000000 		.4byte	.LFB15
+ 1508 008c 20000000 		.4byte	.LFE15-.LFB15
+ 1509 0090 00000000 		.4byte	0
+ 1510 0094 00000000 		.4byte	0
+ 1511              		.section	.debug_ranges,"",%progbits
+ 1512              	.Ldebug_ranges0:
+ 1513 0000 00000000 		.4byte	.LFB0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 43
+
+
+ 1514 0004 24000000 		.4byte	.LFE0
+ 1515 0008 00000000 		.4byte	.LFB1
+ 1516 000c 20000000 		.4byte	.LFE1
+ 1517 0010 00000000 		.4byte	.LFB2
+ 1518 0014 4C000000 		.4byte	.LFE2
+ 1519 0018 00000000 		.4byte	.LFB3
+ 1520 001c 4C000000 		.4byte	.LFE3
+ 1521 0020 00000000 		.4byte	.LFB4
+ 1522 0024 0E000000 		.4byte	.LFE4
+ 1523 0028 00000000 		.4byte	.LFB5
+ 1524 002c 14000000 		.4byte	.LFE5
+ 1525 0030 00000000 		.4byte	.LFB6
+ 1526 0034 20000000 		.4byte	.LFE6
+ 1527 0038 00000000 		.4byte	.LFB7
+ 1528 003c 1C000000 		.4byte	.LFE7
+ 1529 0040 00000000 		.4byte	.LFB8
+ 1530 0044 24000000 		.4byte	.LFE8
+ 1531 0048 00000000 		.4byte	.LFB9
+ 1532 004c 44000000 		.4byte	.LFE9
+ 1533 0050 00000000 		.4byte	.LFB10
+ 1534 0054 20000000 		.4byte	.LFE10
+ 1535 0058 00000000 		.4byte	.LFB11
+ 1536 005c 2C000000 		.4byte	.LFE11
+ 1537 0060 00000000 		.4byte	.LFB12
+ 1538 0064 44000000 		.4byte	.LFE12
+ 1539 0068 00000000 		.4byte	.LFB13
+ 1540 006c 14000000 		.4byte	.LFE13
+ 1541 0070 00000000 		.4byte	.LFB14
+ 1542 0074 20000000 		.4byte	.LFE14
+ 1543 0078 00000000 		.4byte	.LFB15
+ 1544 007c 20000000 		.4byte	.LFE15
+ 1545 0080 00000000 		.4byte	0
+ 1546 0084 00000000 		.4byte	0
+ 1547              		.section	.debug_line,"",%progbits
+ 1548              	.Ldebug_line0:
+ 1549 0000 B8010000 		.section	.debug_str,"MS",%progbits,1
+ 1549      02004800 
+ 1549      00000201 
+ 1549      FB0E0D00 
+ 1549      01010101 
+ 1550              	.LASF45:
+ 1551 0000 45435365 		.ascii	"ECSenseUART_initVar\000"
+ 1551      6E736555 
+ 1551      4152545F 
+ 1551      696E6974 
+ 1551      56617200 
+ 1552              	.LASF42:
+ 1553 0014 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1553      43313120 
+ 1553      352E342E 
+ 1553      31203230 
+ 1553      31363036 
+ 1554 0047 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1554      20726576 
+ 1554      6973696F 
+ 1554      6E203233 
+ 1554      37373135 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 44
+
+
+ 1555 007a 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1555      66756E63 
+ 1555      74696F6E 
+ 1555      2D736563 
+ 1555      74696F6E 
+ 1556              	.LASF11:
+ 1557 00a2 666C6F61 		.ascii	"float\000"
+ 1557      7400
+ 1558              	.LASF30:
+ 1559 00a8 45435365 		.ascii	"ECSenseUART_GetChar\000"
+ 1559      6E736555 
+ 1559      4152545F 
+ 1559      47657443 
+ 1559      68617200 
+ 1560              	.LASF34:
+ 1561 00bc 45435365 		.ascii	"ECSenseUART_GetRxBufferSize\000"
+ 1561      6E736555 
+ 1561      4152545F 
+ 1561      47657452 
+ 1561      78427566 
+ 1562              	.LASF3:
+ 1563 00d8 73686F72 		.ascii	"short unsigned int\000"
+ 1563      7420756E 
+ 1563      7369676E 
+ 1563      65642069 
+ 1563      6E7400
+ 1564              	.LASF25:
+ 1565 00eb 696E7453 		.ascii	"intSrc\000"
+ 1565      726300
+ 1566              	.LASF29:
+ 1567 00f2 73746174 		.ascii	"status\000"
+ 1567      757300
+ 1568              	.LASF27:
+ 1569 00f9 45435365 		.ascii	"ECSenseUART_ReadRxData\000"
+ 1569      6E736555 
+ 1569      4152545F 
+ 1569      52656164 
+ 1569      52784461 
+ 1570              	.LASF33:
+ 1571 0110 45435365 		.ascii	"ECSenseUART_GetByte\000"
+ 1571      6E736555 
+ 1571      4152545F 
+ 1571      47657442 
+ 1571      79746500 
+ 1572              	.LASF38:
+ 1573 0124 61646472 		.ascii	"addressMode\000"
+ 1573      6573734D 
+ 1573      6F646500 
+ 1574              	.LASF23:
+ 1575 0130 45435365 		.ascii	"ECSenseUART_SetRxInterruptMode\000"
+ 1575      6E736555 
+ 1575      4152545F 
+ 1575      53657452 
+ 1575      78496E74 
+ 1576              	.LASF5:
+ 1577 014f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1577      20756E73 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 45
+
+
+ 1577      69676E65 
+ 1577      6420696E 
+ 1577      7400
+ 1578              	.LASF9:
+ 1579 0161 75696E74 		.ascii	"uint8\000"
+ 1579      3800
+ 1580              	.LASF24:
+ 1581 0167 636F6E74 		.ascii	"control\000"
+ 1581      726F6C00 
+ 1582              	.LASF37:
+ 1583 016f 45435365 		.ascii	"ECSenseUART_SetRxAddressMode\000"
+ 1583      6E736555 
+ 1583      4152545F 
+ 1583      53657452 
+ 1583      78416464 
+ 1584              	.LASF28:
+ 1585 018c 45435365 		.ascii	"ECSenseUART_ReadRxStatus\000"
+ 1585      6E736555 
+ 1585      4152545F 
+ 1585      52656164 
+ 1585      52785374 
+ 1586              	.LASF26:
+ 1587 01a5 72784461 		.ascii	"rxData\000"
+ 1587      746100
+ 1588              	.LASF21:
+ 1589 01ac 656E6162 		.ascii	"enableInterrupts\000"
+ 1589      6C65496E 
+ 1589      74657272 
+ 1589      75707473 
+ 1589      00
+ 1590              	.LASF1:
+ 1591 01bd 756E7369 		.ascii	"unsigned char\000"
+ 1591      676E6564 
+ 1591      20636861 
+ 1591      7200
+ 1592              	.LASF12:
+ 1593 01cb 646F7562 		.ascii	"double\000"
+ 1593      6C6500
+ 1594              	.LASF19:
+ 1595 01d2 45435365 		.ascii	"ECSenseUART_Enable\000"
+ 1595      6E736555 
+ 1595      4152545F 
+ 1595      456E6162 
+ 1595      6C6500
+ 1596              	.LASF36:
+ 1597 01e5 45435365 		.ascii	"ECSenseUART_ClearRxBuffer\000"
+ 1597      6E736555 
+ 1597      4152545F 
+ 1597      436C6561 
+ 1597      72527842 
+ 1598              	.LASF31:
+ 1599 01ff 72785374 		.ascii	"rxStatus\000"
+ 1599      61747573 
+ 1599      00
+ 1600              	.LASF41:
+ 1601 0208 45435365 		.ascii	"ECSenseUART_SetRxAddress2\000"
+ 1601      6E736555 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 46
+
+
+ 1601      4152545F 
+ 1601      53657452 
+ 1601      78416464 
+ 1602              	.LASF10:
+ 1603 0222 75696E74 		.ascii	"uint16\000"
+ 1603      313600
+ 1604              	.LASF17:
+ 1605 0229 45435365 		.ascii	"ECSenseUART_Start\000"
+ 1605      6E736555 
+ 1605      4152545F 
+ 1605      53746172 
+ 1605      7400
+ 1606              	.LASF8:
+ 1607 023b 756E7369 		.ascii	"unsigned int\000"
+ 1607      676E6564 
+ 1607      20696E74 
+ 1607      00
+ 1608              	.LASF44:
+ 1609 0248 433A5C55 		.ascii	"C:\\Users\\tpbw4321\\AppData\\Roaming\\SPB_Data\\Hy"
+ 1609      73657273 
+ 1609      5C747062 
+ 1609      77343332 
+ 1609      315C4170 
+ 1610 0275 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
+ 1610      6F6E6963 
+ 1610      73417574 
+ 1610      6F6D6174 
+ 1610      696F6E5C 
+ 1611 02a4 536F435C 		.ascii	"SoC\\HydroponicAutomationSensorPerf.cydsn\000"
+ 1611      48796472 
+ 1611      6F706F6E 
+ 1611      69634175 
+ 1611      746F6D61 
+ 1612              	.LASF40:
+ 1613 02cd 61646472 		.ascii	"address\000"
+ 1613      65737300 
+ 1614              	.LASF7:
+ 1615 02d5 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1615      206C6F6E 
+ 1615      6720756E 
+ 1615      7369676E 
+ 1615      65642069 
+ 1616              	.LASF32:
+ 1617 02ec 45435365 		.ascii	"ECSenseUART_ReadControlRegister\000"
+ 1617      6E736555 
+ 1617      4152545F 
+ 1617      52656164 
+ 1617      436F6E74 
+ 1618              	.LASF20:
+ 1619 030c 45435365 		.ascii	"ECSenseUART_Stop\000"
+ 1619      6E736555 
+ 1619      4152545F 
+ 1619      53746F70 
+ 1619      00
+ 1620              	.LASF14:
+ 1621 031d 72656738 		.ascii	"reg8\000"
+ 1621      00
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccXCoC9f.s 			page 47
+
+
+ 1622              	.LASF16:
+ 1623 0322 73697A65 		.ascii	"sizetype\000"
+ 1623      74797065 
+ 1623      00
+ 1624              	.LASF43:
+ 1625 032b 47656E65 		.ascii	"Generated_Source\\PSoC5\\ECSenseUART.c\000"
+ 1625      72617465 
+ 1625      645F536F 
+ 1625      75726365 
+ 1625      5C50536F 
+ 1626              	.LASF39:
+ 1627 0350 45435365 		.ascii	"ECSenseUART_SetRxAddress1\000"
+ 1627      6E736555 
+ 1627      4152545F 
+ 1627      53657452 
+ 1627      78416464 
+ 1628              	.LASF6:
+ 1629 036a 6C6F6E67 		.ascii	"long long int\000"
+ 1629      206C6F6E 
+ 1629      6720696E 
+ 1629      7400
+ 1630              	.LASF13:
+ 1631 0378 63686172 		.ascii	"char\000"
+ 1631      00
+ 1632              	.LASF2:
+ 1633 037d 73686F72 		.ascii	"short int\000"
+ 1633      7420696E 
+ 1633      7400
+ 1634              	.LASF22:
+ 1635 0387 45435365 		.ascii	"ECSenseUART_WriteControlRegister\000"
+ 1635      6E736555 
+ 1635      4152545F 
+ 1635      57726974 
+ 1635      65436F6E 
+ 1636              	.LASF4:
+ 1637 03a8 6C6F6E67 		.ascii	"long int\000"
+ 1637      20696E74 
+ 1637      00
+ 1638              	.LASF15:
+ 1639 03b1 6C6F6E67 		.ascii	"long double\000"
+ 1639      20646F75 
+ 1639      626C6500 
+ 1640              	.LASF0:
+ 1641 03bd 7369676E 		.ascii	"signed char\000"
+ 1641      65642063 
+ 1641      68617200 
+ 1642              	.LASF18:
+ 1643 03c9 45435365 		.ascii	"ECSenseUART_Init\000"
+ 1643      6E736555 
+ 1643      4152545F 
+ 1643      496E6974 
+ 1643      00
+ 1644              	.LASF35:
+ 1645 03da 73697A65 		.ascii	"size\000"
+ 1645      00
+ 1646              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

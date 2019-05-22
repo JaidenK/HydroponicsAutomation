@@ -523,7 +523,7 @@
 			"file": "hydro_pi.c",
 			"settings":
 			{
-				"buffer_size": 7234,
+				"buffer_size": 8230,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,39 +531,7 @@
 			"file": "http.c",
 			"settings":
 			{
-				"buffer_size": 5027,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Documents/Classes/CE 118/CanvasDownload/Labs/LabGeneral/CMPE118/include/roach.h",
-			"settings":
-			{
-				"buffer_size": 4587,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "void Roach_Init(void);\n\nchar Roach_LeftMtrSpeed(char newSpeed);\nchar Roach_RightMtrSpeed(char newSpeed);\n\nunsigned int Roach_LightLevel(void);\nunsigned int Roach_BatteryVoltage(void);\n\nunsigned char Roach_ReadFrontLeftBumper(void);\nunsigned char Roach_ReadFrontRightBumper(void);\nunsigned char Roach_ReadRearLeftBumper(void);\nunsigned char Roach_ReadRearRightBumper(void);\nunsigned char Roach_ReadBumpers(void);\n\nchar Roach_LEDSSet(uint16_t pattern);\nuint16_t Roach_LEDSGet(void);\nchar Roach_BarGraph(uint8_t Number);\n",
-			"settings":
-			{
-				"buffer_size": 518,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Documents/PythonScripts/Scope/measurements.py",
-			"settings":
-			{
-				"buffer_size": 5380,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Documents/PythonScripts/ES_Framework_helper/thisIsAnFSM.c",
-			"settings":
-			{
-				"buffer_size": 1679,
+				"buffer_size": 5045,
 				"line_ending": "Unix"
 			}
 		},
@@ -576,11 +544,76 @@
 			}
 		},
 		{
+			"file": "Makefile",
+			"settings":
+			{
+				"buffer_size": 1041,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "sensor_data.h",
+			"settings":
+			{
+				"buffer_size": 731,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "sensor_data.c",
+			"settings":
+			{
+				"buffer_size": 6045,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/dataReceiver.php",
+			"settings":
+			{
+				"buffer_size": 2737,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Joy.h",
+			"settings":
+			{
+				"buffer_size": 845,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "hydro_gui.c",
 			"settings":
 			{
-				"buffer_size": 7247,
+				"buffer_size": 7342,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Joy.c",
+			"settings":
+			{
+				"buffer_size": 2262,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab4/Lab4.X/lab4_main.c",
+			"settings":
+			{
+				"buffer_size": 17034,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "˙˜¨∆ˆµ˚ø≤",
+			"settings":
+			{
+				"buffer_size": 9,
+				"line_ending": "Unix",
+				"name": "˙˜¨∆ˆµ˚ø≤"
 			}
 		}
 	],
@@ -616,6 +649,11 @@
 	},
 	"file_history":
 	[
+		"/Users/jaidenking/Documents/Classes/CE 118/CanvasDownload/Labs/LabGeneral/CMPE118/include/RC_Servo.h",
+		"/Users/jaidenking/Documents/Classes/CE 118/CanvasDownload/Labs/LabGeneral/CMPE118/include/roach.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui.c",
+		"/Users/jaidenking/Documents/PythonScripts/ES_Framework_helper/thisIsAnFSM.c",
+		"/Users/jaidenking/Documents/PythonScripts/Scope/measurements.py",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/logfile.dat",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/detailedGraphs.php",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/getDetailedGraphsData.php",
@@ -639,7 +677,6 @@
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_Graph.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_Graph.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_pi.c",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui.c",
 		"/Users/jaidenking/Downloads/CMPE118/src/roach.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/scene_displayIP.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/scene_dashboard.h",
@@ -680,7 +717,6 @@
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/http.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/PSoC/src/FlowController.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/keyboardUtil.py",
-		"/Users/jaidenking/Documents/PythonScripts/Scope/measurements.py",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab2/Lab2.X/QEI.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab2/Lab2.X/least_squares.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab2/Lab2.X/PING.c",
@@ -740,10 +776,7 @@
 		"/Users/jaidenking/Documents/Classes/CE 121/git/jaaking/project/raspi/logicAnalyzer/src/main.c",
 		"/Users/jaidenking/Documents/Classes/CE 129A/HydroponicsAutomation/Designs/Electrical/images/quick_sketches/Readme.txt",
 		"/Users/jaidenking/Documents/Classes/CE 167/CE167/lab0/Lab0.X/instrumentMain.c",
-		"/Users/jaidenking/Desktop/loops.c",
-		"/Users/jaidenking/Desktop/foo",
-		"/Users/jaidenking/Documents/Roblox/Refinery/Scripts/BuyFuncs.lua",
-		"/Users/jaidenking/Documents/Roblox/Refinery/Scripts/Machines.lua"
+		"/Users/jaidenking/Desktop/loops.c"
 	],
 	"find":
 	{
@@ -762,6 +795,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"int wait",
+			"waitFor",
+			"new_record",
 			"return",
 			"responseMaxSize",
 			"responseArray",
@@ -886,10 +922,7 @@
 			"xMax",
 			"x",
 			"xMax",
-			"drawButton",
-			"int",
-			"y",
-			"x"
+			"drawButton"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -914,7 +947,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 11,
 			"sheets":
 			[
 				{
@@ -922,15 +955,15 @@
 					"file": "hydro_pi.c",
 					"settings":
 					{
-						"buffer_size": 7234,
+						"buffer_size": 8230,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6582,
-								6582
+								7076,
+								7076
 							]
 						],
 						"settings":
@@ -940,7 +973,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6087.0,
+						"translation.y": 5582.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -950,15 +983,15 @@
 					"file": "http.c",
 					"settings":
 					{
-						"buffer_size": 5027,
+						"buffer_size": 5045,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2877,
-								2877
+								3906,
+								3906
 							]
 						],
 						"settings":
@@ -968,55 +1001,58 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2689.0,
+						"translation.y": 410.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "/Users/jaidenking/Documents/Classes/CE 118/CanvasDownload/Labs/LabGeneral/CMPE118/include/roach.h",
+					"file": "http.h",
 					"settings":
 					{
-						"buffer_size": 4587,
+						"buffer_size": 2204,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4578,
-								810
+								1424,
+								1424
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 212.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"file": "Makefile",
 					"settings":
 					{
-						"buffer_size": 518,
+						"buffer_size": 1041,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								518
+								743,
+								743
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1026,23 +1062,23 @@
 				},
 				{
 					"buffer": 4,
-					"file": "/Users/jaidenking/Documents/PythonScripts/Scope/measurements.py",
+					"file": "sensor_data.h",
 					"settings":
 					{
-						"buffer_size": 5380,
+						"buffer_size": 731,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								404,
+								404
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
+							"syntax": "Packages/C++/C++.tmLanguage",
 							"tab_size": 3,
 							"translate_tabs_to_spaces": true
 						},
@@ -1054,74 +1090,100 @@
 				},
 				{
 					"buffer": 5,
-					"file": "/Users/jaidenking/Documents/PythonScripts/ES_Framework_helper/thisIsAnFSM.c",
+					"file": "sensor_data.c",
 					"settings":
 					{
-						"buffer_size": 1679,
+						"buffer_size": 6045,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1677,
-								1653
+								734,
+								734
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 4,
+							"tab_size": 3,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1273.0,
+						"translation.y": 1.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "http.h",
+					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/dataReceiver.php",
 					"settings":
 					{
-						"buffer_size": 2204,
+						"buffer_size": 2737,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2079,
-								2079
+								2524,
+								2524
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 205.0,
+						"translation.x": 16.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 7,
-					"file": "hydro_gui.c",
+					"file": "Joy.h",
 					"settings":
 					{
-						"buffer_size": 7247,
+						"buffer_size": 845,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								677,
-								657
+								658,
+								658
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 113.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "hydro_gui.c",
+					"settings":
+					{
+						"buffer_size": 7342,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5495,
+								5495
 							]
 						],
 						"settings":
@@ -1131,7 +1193,89 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 161.0,
+						"translation.y": 4678.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Joy.c",
+					"settings":
+					{
+						"buffer_size": 2262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1539,
+								1641
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1011.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab4/Lab4.X/lab4_main.c",
+					"settings":
+					{
+						"buffer_size": 17034,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4316,
+								4316
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4398.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"settings":
+					{
+						"buffer_size": 9,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								1
+							]
+						],
+						"settings":
+						{
+							"auto_name": "˙˜¨∆ˆµ˚ø≤",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

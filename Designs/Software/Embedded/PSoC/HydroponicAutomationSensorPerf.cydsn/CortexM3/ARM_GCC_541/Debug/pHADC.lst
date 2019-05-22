@@ -1,0 +1,3629 @@
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"pHADC.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	pHADC_initVar
+  20              		.bss
+  21              		.type	pHADC_initVar, %object
+  22              		.size	pHADC_initVar, 1
+  23              	pHADC_initVar:
+  24 0000 00       		.space	1
+  25              		.comm	pHADC_offset,2,2
+  26              		.comm	pHADC_countsPerVolt,2,2
+  27              		.comm	pHADC_countsPer10Volt,4,4
+  28              		.comm	pHADC_shift,2,2
+  29              		.section	.text.pHADC_Start,"ax",%progbits
+  30              		.align	2
+  31              		.global	pHADC_Start
+  32              		.thumb
+  33              		.thumb_func
+  34              		.type	pHADC_Start, %function
+  35              	pHADC_Start:
+  36              	.LFB0:
+  37              		.file 1 "Generated_Source\\PSoC5\\pHADC.c"
+   1:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/pHADC.c **** * File Name: pHADC.c
+   3:Generated_Source\PSoC5/pHADC.c **** * Version 3.10
+   4:Generated_Source\PSoC5/pHADC.c **** *
+   5:Generated_Source\PSoC5/pHADC.c **** * Description:
+   6:Generated_Source\PSoC5/pHADC.c **** *  This file provides the source code to the API for the Successive
+   7:Generated_Source\PSoC5/pHADC.c **** *  approximation ADC Component.
+   8:Generated_Source\PSoC5/pHADC.c **** *
+   9:Generated_Source\PSoC5/pHADC.c **** * Note:
+  10:Generated_Source\PSoC5/pHADC.c **** *
+  11:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+  12:Generated_Source\PSoC5/pHADC.c **** * Copyright 2008-2015, Cypress Semiconductor Corporation.  All rights reserved.
+  13:Generated_Source\PSoC5/pHADC.c **** * You may use this file only in accordance with the license, terms, conditions,
+  14:Generated_Source\PSoC5/pHADC.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  15:Generated_Source\PSoC5/pHADC.c **** * the software package with which this file was provided.
+  16:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+  17:Generated_Source\PSoC5/pHADC.c **** 
+  18:Generated_Source\PSoC5/pHADC.c **** #include "CyLib.h"
+  19:Generated_Source\PSoC5/pHADC.c **** #include "pHADC.h"
+  20:Generated_Source\PSoC5/pHADC.c **** 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 2
+
+
+  21:Generated_Source\PSoC5/pHADC.c **** #if(pHADC_DEFAULT_INTERNAL_CLK)
+  22:Generated_Source\PSoC5/pHADC.c ****     #include "pHADC_theACLK.h"
+  23:Generated_Source\PSoC5/pHADC.c **** #endif /* End pHADC_DEFAULT_INTERNAL_CLK */
+  24:Generated_Source\PSoC5/pHADC.c **** 
+  25:Generated_Source\PSoC5/pHADC.c **** 
+  26:Generated_Source\PSoC5/pHADC.c **** /***************************************
+  27:Generated_Source\PSoC5/pHADC.c **** * Forward function references
+  28:Generated_Source\PSoC5/pHADC.c **** ***************************************/
+  29:Generated_Source\PSoC5/pHADC.c **** static void pHADC_CalcGain(uint8 resolution);
+  30:Generated_Source\PSoC5/pHADC.c **** 
+  31:Generated_Source\PSoC5/pHADC.c **** 
+  32:Generated_Source\PSoC5/pHADC.c **** /***************************************
+  33:Generated_Source\PSoC5/pHADC.c **** * Global data allocation
+  34:Generated_Source\PSoC5/pHADC.c **** ***************************************/
+  35:Generated_Source\PSoC5/pHADC.c **** uint8 pHADC_initVar = 0u;
+  36:Generated_Source\PSoC5/pHADC.c **** volatile int16 pHADC_offset;
+  37:Generated_Source\PSoC5/pHADC.c **** volatile int16 pHADC_countsPerVolt;     /* Obsolete Gain compensation */
+  38:Generated_Source\PSoC5/pHADC.c **** volatile int32 pHADC_countsPer10Volt;   /* Gain compensation */
+  39:Generated_Source\PSoC5/pHADC.c **** volatile int16 pHADC_shift;
+  40:Generated_Source\PSoC5/pHADC.c **** 
+  41:Generated_Source\PSoC5/pHADC.c **** 
+  42:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+  43:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_Start
+  44:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+  45:Generated_Source\PSoC5/pHADC.c **** *
+  46:Generated_Source\PSoC5/pHADC.c **** * Summary:
+  47:Generated_Source\PSoC5/pHADC.c **** *  This is the preferred method to begin component operation.
+  48:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Start() sets the initVar variable, calls the
+  49:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Init() function, and then calls the
+  50:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Enable() function.
+  51:Generated_Source\PSoC5/pHADC.c **** *
+  52:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+  53:Generated_Source\PSoC5/pHADC.c **** *  None.
+  54:Generated_Source\PSoC5/pHADC.c **** *
+  55:Generated_Source\PSoC5/pHADC.c **** * Return:
+  56:Generated_Source\PSoC5/pHADC.c **** *  None.
+  57:Generated_Source\PSoC5/pHADC.c **** *
+  58:Generated_Source\PSoC5/pHADC.c **** * Global variables:
+  59:Generated_Source\PSoC5/pHADC.c **** *  The pHADC_initVar variable is used to indicate when/if initial
+  60:Generated_Source\PSoC5/pHADC.c **** *  configuration of this component has happened. The variable is initialized to
+  61:Generated_Source\PSoC5/pHADC.c **** *  zero and set to 1 the first time ADC_Start() is called. This allows for
+  62:Generated_Source\PSoC5/pHADC.c **** *  component Re-Start without re-initialization in all subsequent calls to the
+  63:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Start() routine.
+  64:Generated_Source\PSoC5/pHADC.c **** *  If re-initialization of the component is required the variable should be set
+  65:Generated_Source\PSoC5/pHADC.c **** *  to zero before call of pHADC_Start() routine, or the user may call
+  66:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Init() and pHADC_Enable() as done in the
+  67:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Start() routine.
+  68:Generated_Source\PSoC5/pHADC.c **** *
+  69:Generated_Source\PSoC5/pHADC.c **** * Side Effect:
+  70:Generated_Source\PSoC5/pHADC.c **** *  If the initVar variable is already set, this function only calls the
+  71:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Enable() function.
+  72:Generated_Source\PSoC5/pHADC.c **** *
+  73:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+  74:Generated_Source\PSoC5/pHADC.c **** void pHADC_Start(void)
+  75:Generated_Source\PSoC5/pHADC.c **** {
+  38              		.loc 1 75 0
+  39              		.cfi_startproc
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 3
+
+
+  40              		@ args = 0, pretend = 0, frame = 0
+  41              		@ frame_needed = 1, uses_anonymous_args = 0
+  42 0000 80B5     		push	{r7, lr}
+  43              		.cfi_def_cfa_offset 8
+  44              		.cfi_offset 7, -8
+  45              		.cfi_offset 14, -4
+  46 0002 00AF     		add	r7, sp, #0
+  47              		.cfi_def_cfa_register 7
+  76:Generated_Source\PSoC5/pHADC.c **** 
+  77:Generated_Source\PSoC5/pHADC.c ****     /* If not Initialized then initialize all required hardware and software */
+  78:Generated_Source\PSoC5/pHADC.c ****     if(pHADC_initVar == 0u)
+  48              		.loc 1 78 0
+  49 0004 064B     		ldr	r3, .L3
+  50 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  51 0008 002B     		cmp	r3, #0
+  52 000a 04D1     		bne	.L2
+  79:Generated_Source\PSoC5/pHADC.c ****     {
+  80:Generated_Source\PSoC5/pHADC.c ****         pHADC_Init();
+  53              		.loc 1 80 0
+  54 000c FFF7FEFF 		bl	pHADC_Init
+  81:Generated_Source\PSoC5/pHADC.c ****         pHADC_initVar = 1u;
+  55              		.loc 1 81 0
+  56 0010 034B     		ldr	r3, .L3
+  57 0012 0122     		movs	r2, #1
+  58 0014 1A70     		strb	r2, [r3]
+  59              	.L2:
+  82:Generated_Source\PSoC5/pHADC.c ****     }
+  83:Generated_Source\PSoC5/pHADC.c ****     pHADC_Enable();
+  60              		.loc 1 83 0
+  61 0016 FFF7FEFF 		bl	pHADC_Enable
+  84:Generated_Source\PSoC5/pHADC.c **** }
+  62              		.loc 1 84 0
+  63 001a 00BF     		nop
+  64 001c 80BD     		pop	{r7, pc}
+  65              	.L4:
+  66 001e 00BF     		.align	2
+  67              	.L3:
+  68 0020 00000000 		.word	pHADC_initVar
+  69              		.cfi_endproc
+  70              	.LFE0:
+  71              		.size	pHADC_Start, .-pHADC_Start
+  72              		.section	.text.pHADC_Init,"ax",%progbits
+  73              		.align	2
+  74              		.global	pHADC_Init
+  75              		.thumb
+  76              		.thumb_func
+  77              		.type	pHADC_Init, %function
+  78              	pHADC_Init:
+  79              	.LFB1:
+  85:Generated_Source\PSoC5/pHADC.c **** 
+  86:Generated_Source\PSoC5/pHADC.c **** 
+  87:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+  88:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_Init
+  89:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+  90:Generated_Source\PSoC5/pHADC.c **** *
+  91:Generated_Source\PSoC5/pHADC.c **** * Summary:
+  92:Generated_Source\PSoC5/pHADC.c **** *  Initialize component's parameters to the parameters set by user in the
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 4
+
+
+  93:Generated_Source\PSoC5/pHADC.c **** *  customizer of the component placed onto schematic. Usually called in
+  94:Generated_Source\PSoC5/pHADC.c **** *  pHADC_Start().
+  95:Generated_Source\PSoC5/pHADC.c **** *
+  96:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+  97:Generated_Source\PSoC5/pHADC.c **** *  None.
+  98:Generated_Source\PSoC5/pHADC.c **** *
+  99:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 100:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 101:Generated_Source\PSoC5/pHADC.c **** *
+ 102:Generated_Source\PSoC5/pHADC.c **** * Global variables:
+ 103:Generated_Source\PSoC5/pHADC.c **** *  The pHADC_offset variable is initialized to 0.
+ 104:Generated_Source\PSoC5/pHADC.c **** *
+ 105:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 106:Generated_Source\PSoC5/pHADC.c **** void pHADC_Init(void)
+ 107:Generated_Source\PSoC5/pHADC.c **** {
+  80              		.loc 1 107 0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 1, uses_anonymous_args = 0
+  84 0000 80B5     		push	{r7, lr}
+  85              		.cfi_def_cfa_offset 8
+  86              		.cfi_offset 7, -8
+  87              		.cfi_offset 14, -4
+  88 0002 00AF     		add	r7, sp, #0
+  89              		.cfi_def_cfa_register 7
+ 108:Generated_Source\PSoC5/pHADC.c **** 
+ 109:Generated_Source\PSoC5/pHADC.c ****     /* This is only valid if there is an internal clock */
+ 110:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_DEFAULT_INTERNAL_CLK)
+ 111:Generated_Source\PSoC5/pHADC.c ****         pHADC_theACLK_SetMode(CYCLK_DUTY);
+  90              		.loc 1 111 0
+  91 0004 1020     		movs	r0, #16
+  92 0006 FFF7FEFF 		bl	pHADC_theACLK_SetModeRegister
+ 112:Generated_Source\PSoC5/pHADC.c ****     #endif /* End pHADC_DEFAULT_INTERNAL_CLK */
+ 113:Generated_Source\PSoC5/pHADC.c **** 
+ 114:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_IRQ_REMOVE == 0u)
+ 115:Generated_Source\PSoC5/pHADC.c ****         /* Start and set interrupt vector */
+ 116:Generated_Source\PSoC5/pHADC.c ****         CyIntSetPriority(pHADC_INTC_NUMBER, pHADC_INTC_PRIOR_NUMBER);
+  93              		.loc 1 116 0
+  94 000a 0721     		movs	r1, #7
+  95 000c 0720     		movs	r0, #7
+  96 000e FFF7FEFF 		bl	CyIntSetPriority
+ 117:Generated_Source\PSoC5/pHADC.c ****         (void)CyIntSetVector(pHADC_INTC_NUMBER, &pHADC_ISR);
+  97              		.loc 1 117 0
+  98 0012 0A49     		ldr	r1, .L6
+  99 0014 0720     		movs	r0, #7
+ 100 0016 FFF7FEFF 		bl	CyIntSetVector
+ 118:Generated_Source\PSoC5/pHADC.c ****     #endif   /* End pHADC_IRQ_REMOVE */
+ 119:Generated_Source\PSoC5/pHADC.c **** 
+ 120:Generated_Source\PSoC5/pHADC.c ****     /* Enable IRQ mode*/
+ 121:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_CSR1_REG |= pHADC_SAR_IRQ_MASK_EN | pHADC_SAR_IRQ_MODE_EDGE;
+ 101              		.loc 1 121 0
+ 102 001a 094A     		ldr	r2, .L6+4
+ 103 001c 084B     		ldr	r3, .L6+4
+ 104 001e 1B78     		ldrb	r3, [r3]
+ 105 0020 DBB2     		uxtb	r3, r3
+ 106 0022 43F00603 		orr	r3, r3, #6
+ 107 0026 DBB2     		uxtb	r3, r3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 5
+
+
+ 108 0028 1370     		strb	r3, [r2]
+ 122:Generated_Source\PSoC5/pHADC.c **** 
+ 123:Generated_Source\PSoC5/pHADC.c ****     /*Set SAR ADC resolution ADC */
+ 124:Generated_Source\PSoC5/pHADC.c ****     pHADC_SetResolution(pHADC_DEFAULT_RESOLUTION);
+ 109              		.loc 1 124 0
+ 110 002a 0C20     		movs	r0, #12
+ 111 002c FFF7FEFF 		bl	pHADC_SetResolution
+ 125:Generated_Source\PSoC5/pHADC.c ****     pHADC_offset = 0;
+ 112              		.loc 1 125 0
+ 113 0030 044B     		ldr	r3, .L6+8
+ 114 0032 0022     		movs	r2, #0
+ 115 0034 1A80     		strh	r2, [r3]	@ movhi
+ 126:Generated_Source\PSoC5/pHADC.c **** }
+ 116              		.loc 1 126 0
+ 117 0036 00BF     		nop
+ 118 0038 80BD     		pop	{r7, pc}
+ 119              	.L7:
+ 120 003a 00BF     		.align	2
+ 121              	.L6:
+ 122 003c 00000000 		.word	pHADC_ISR
+ 123 0040 01590040 		.word	1073764609
+ 124 0044 00000000 		.word	pHADC_offset
+ 125              		.cfi_endproc
+ 126              	.LFE1:
+ 127              		.size	pHADC_Init, .-pHADC_Init
+ 128              		.section	.text.pHADC_Enable,"ax",%progbits
+ 129              		.align	2
+ 130              		.global	pHADC_Enable
+ 131              		.thumb
+ 132              		.thumb_func
+ 133              		.type	pHADC_Enable, %function
+ 134              	pHADC_Enable:
+ 135              	.LFB2:
+ 127:Generated_Source\PSoC5/pHADC.c **** 
+ 128:Generated_Source\PSoC5/pHADC.c **** 
+ 129:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 130:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_Enable
+ 131:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 132:Generated_Source\PSoC5/pHADC.c **** *
+ 133:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 134:Generated_Source\PSoC5/pHADC.c **** *  Enables the reference, clock and power for SAR ADC.
+ 135:Generated_Source\PSoC5/pHADC.c **** *
+ 136:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 137:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 138:Generated_Source\PSoC5/pHADC.c **** *
+ 139:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 140:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 141:Generated_Source\PSoC5/pHADC.c **** *
+ 142:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 143:Generated_Source\PSoC5/pHADC.c **** void pHADC_Enable(void)
+ 144:Generated_Source\PSoC5/pHADC.c **** {
+ 136              		.loc 1 144 0
+ 137              		.cfi_startproc
+ 138              		@ args = 0, pretend = 0, frame = 8
+ 139              		@ frame_needed = 1, uses_anonymous_args = 0
+ 140 0000 80B5     		push	{r7, lr}
+ 141              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 6
+
+
+ 142              		.cfi_offset 7, -8
+ 143              		.cfi_offset 14, -4
+ 144 0002 82B0     		sub	sp, sp, #8
+ 145              		.cfi_def_cfa_offset 16
+ 146 0004 00AF     		add	r7, sp, #0
+ 147              		.cfi_def_cfa_register 7
+ 145:Generated_Source\PSoC5/pHADC.c ****     uint8 tmpReg;
+ 146:Generated_Source\PSoC5/pHADC.c ****     uint8 enableInterrupts;
+ 147:Generated_Source\PSoC5/pHADC.c ****     enableInterrupts = CyEnterCriticalSection();
+ 148              		.loc 1 147 0
+ 149 0006 FFF7FEFF 		bl	CyEnterCriticalSection
+ 150 000a 0346     		mov	r3, r0
+ 151 000c FB71     		strb	r3, [r7, #7]
+ 148:Generated_Source\PSoC5/pHADC.c **** 
+ 149:Generated_Source\PSoC5/pHADC.c ****     /* Enable the SAR ADC block in Active Power Mode */
+ 150:Generated_Source\PSoC5/pHADC.c ****     pHADC_PWRMGR_SAR_REG |= pHADC_ACT_PWR_SAR_EN;
+ 152              		.loc 1 150 0
+ 153 000e 2E4A     		ldr	r2, .L9
+ 154 0010 2D4B     		ldr	r3, .L9
+ 155 0012 1B78     		ldrb	r3, [r3]
+ 156 0014 DBB2     		uxtb	r3, r3
+ 157 0016 43F00103 		orr	r3, r3, #1
+ 158 001a DBB2     		uxtb	r3, r3
+ 159 001c 1370     		strb	r3, [r2]
+ 151:Generated_Source\PSoC5/pHADC.c **** 
+ 152:Generated_Source\PSoC5/pHADC.c ****      /* Enable the SAR ADC in Standby Power Mode*/
+ 153:Generated_Source\PSoC5/pHADC.c ****     pHADC_STBY_PWRMGR_SAR_REG |= pHADC_STBY_PWR_SAR_EN;
+ 160              		.loc 1 153 0
+ 161 001e 2B4A     		ldr	r2, .L9+4
+ 162 0020 2A4B     		ldr	r3, .L9+4
+ 163 0022 1B78     		ldrb	r3, [r3]
+ 164 0024 DBB2     		uxtb	r3, r3
+ 165 0026 43F00103 		orr	r3, r3, #1
+ 166 002a DBB2     		uxtb	r3, r3
+ 167 002c 1370     		strb	r3, [r2]
+ 154:Generated_Source\PSoC5/pHADC.c **** 
+ 155:Generated_Source\PSoC5/pHADC.c ****     /* This is only valid if there is an internal clock */
+ 156:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_DEFAULT_INTERNAL_CLK)
+ 157:Generated_Source\PSoC5/pHADC.c ****         pHADC_PWRMGR_CLK_REG |= pHADC_ACT_PWR_CLK_EN;
+ 168              		.loc 1 157 0
+ 169 002e 284A     		ldr	r2, .L9+8
+ 170 0030 274B     		ldr	r3, .L9+8
+ 171 0032 1B78     		ldrb	r3, [r3]
+ 172 0034 DBB2     		uxtb	r3, r3
+ 173 0036 43F00203 		orr	r3, r3, #2
+ 174 003a DBB2     		uxtb	r3, r3
+ 175 003c 1370     		strb	r3, [r2]
+ 158:Generated_Source\PSoC5/pHADC.c ****         pHADC_STBY_PWRMGR_CLK_REG |= pHADC_STBY_PWR_CLK_EN;
+ 176              		.loc 1 158 0
+ 177 003e 254A     		ldr	r2, .L9+12
+ 178 0040 244B     		ldr	r3, .L9+12
+ 179 0042 1B78     		ldrb	r3, [r3]
+ 180 0044 DBB2     		uxtb	r3, r3
+ 181 0046 43F00203 		orr	r3, r3, #2
+ 182 004a DBB2     		uxtb	r3, r3
+ 183 004c 1370     		strb	r3, [r2]
+ 159:Generated_Source\PSoC5/pHADC.c ****     #endif /* End pHADC_DEFAULT_INTERNAL_CLK */
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 7
+
+
+ 160:Generated_Source\PSoC5/pHADC.c **** 
+ 161:Generated_Source\PSoC5/pHADC.c ****     /* Enable VCM buffer and Enable Int Ref Amp */
+ 162:Generated_Source\PSoC5/pHADC.c ****     tmpReg = pHADC_SAR_CSR3_REG;
+ 184              		.loc 1 162 0
+ 185 004e 224B     		ldr	r3, .L9+16
+ 186 0050 1B78     		ldrb	r3, [r3]
+ 187 0052 BB71     		strb	r3, [r7, #6]
+ 163:Generated_Source\PSoC5/pHADC.c ****     tmpReg |= pHADC_SAR_EN_BUF_VCM_EN;
+ 188              		.loc 1 163 0
+ 189 0054 BB79     		ldrb	r3, [r7, #6]
+ 190 0056 43F00203 		orr	r3, r3, #2
+ 191 005a BB71     		strb	r3, [r7, #6]
+ 164:Generated_Source\PSoC5/pHADC.c ****     /* PD_BUF_VREF is OFF in External reference or Vdda reference mode */
+ 165:Generated_Source\PSoC5/pHADC.c ****     #if((pHADC_DEFAULT_REFERENCE == pHADC__EXT_REF) || \
+ 166:Generated_Source\PSoC5/pHADC.c ****         (pHADC_DEFAULT_RANGE == pHADC__VNEG_VDDA_DIFF))
+ 167:Generated_Source\PSoC5/pHADC.c ****         tmpReg &= (uint8)~pHADC_SAR_EN_BUF_VREF_EN;
+ 168:Generated_Source\PSoC5/pHADC.c ****     #else /* In INTREF or INTREF Bypassed this buffer is ON */
+ 169:Generated_Source\PSoC5/pHADC.c ****         tmpReg |= pHADC_SAR_EN_BUF_VREF_EN;
+ 192              		.loc 1 169 0
+ 193 005c BB79     		ldrb	r3, [r7, #6]
+ 194 005e 43F00103 		orr	r3, r3, #1
+ 195 0062 BB71     		strb	r3, [r7, #6]
+ 170:Generated_Source\PSoC5/pHADC.c ****     #endif /* pHADC_DEFAULT_REFERENCE == pHADC__EXT_REF */
+ 171:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_CSR3_REG = tmpReg;
+ 196              		.loc 1 171 0
+ 197 0064 1C4A     		ldr	r2, .L9+16
+ 198 0066 BB79     		ldrb	r3, [r7, #6]
+ 199 0068 1370     		strb	r3, [r2]
+ 172:Generated_Source\PSoC5/pHADC.c **** 
+ 173:Generated_Source\PSoC5/pHADC.c ****     /* Set reference for ADC */
+ 174:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_DEFAULT_RANGE == pHADC__VNEG_VDDA_DIFF)
+ 175:Generated_Source\PSoC5/pHADC.c ****         #if(pHADC_DEFAULT_REFERENCE == pHADC__EXT_REF)
+ 176:Generated_Source\PSoC5/pHADC.c ****             pHADC_SAR_CSR6_REG = pHADC_INT_BYPASS_EXT_VREF; /* S2 */
+ 177:Generated_Source\PSoC5/pHADC.c ****         #else /* Internal Vdda reference or obsolete bypass mode */
+ 178:Generated_Source\PSoC5/pHADC.c ****             pHADC_SAR_CSR6_REG = pHADC_VDDA_VREF;           /* S7 */
+ 179:Generated_Source\PSoC5/pHADC.c ****         #endif /* pHADC_DEFAULT_REFERENCE == pHADC__EXT_REF */
+ 180:Generated_Source\PSoC5/pHADC.c ****     #else  /* Reference goes through internal buffer */
+ 181:Generated_Source\PSoC5/pHADC.c ****         #if(pHADC_DEFAULT_REFERENCE == pHADC__INT_REF_NOT_BYPASSED)
+ 182:Generated_Source\PSoC5/pHADC.c ****             pHADC_SAR_CSR6_REG = pHADC_INT_VREF;            /* S3 + S4 */
+ 200              		.loc 1 182 0
+ 201 006a 1C4B     		ldr	r3, .L9+20
+ 202 006c 1822     		movs	r2, #24
+ 203 006e 1A70     		strb	r2, [r3]
+ 183:Generated_Source\PSoC5/pHADC.c ****         #else /* INTREF Bypassed of External */
+ 184:Generated_Source\PSoC5/pHADC.c ****             pHADC_SAR_CSR6_REG = pHADC_INT_BYPASS_EXT_VREF; /* S2 */
+ 185:Generated_Source\PSoC5/pHADC.c ****         #endif /* pHADC_DEFAULT_REFERENCE == pHADC__INT_REF_NOT_BYPASSED */
+ 186:Generated_Source\PSoC5/pHADC.c ****     #endif /* VNEG_VDDA_DIFF */
+ 187:Generated_Source\PSoC5/pHADC.c **** 
+ 188:Generated_Source\PSoC5/pHADC.c ****     /* Low non-overlap delay for sampling clock signals (for 1MSPS) */
+ 189:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_HIGH_POWER_PULSE == 0u) /* MinPulseWidth <= 50 ns */
+ 190:Generated_Source\PSoC5/pHADC.c ****         pHADC_SAR_CSR5_REG &= (uint8)~pHADC_SAR_DLY_INC;
+ 191:Generated_Source\PSoC5/pHADC.c ****     #else /* Set High non-overlap delay for sampling clock signals (for <500KSPS)*/
+ 192:Generated_Source\PSoC5/pHADC.c ****         pHADC_SAR_CSR5_REG |= pHADC_SAR_DLY_INC;
+ 204              		.loc 1 192 0
+ 205 0070 1B4A     		ldr	r2, .L9+24
+ 206 0072 1B4B     		ldr	r3, .L9+24
+ 207 0074 1B78     		ldrb	r3, [r3]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 8
+
+
+ 208 0076 DBB2     		uxtb	r3, r3
+ 209 0078 43F04003 		orr	r3, r3, #64
+ 210 007c DBB2     		uxtb	r3, r3
+ 211 007e 1370     		strb	r3, [r2]
+ 193:Generated_Source\PSoC5/pHADC.c ****     #endif /* pHADC_HIGH_POWER_PULSE == 0u */
+ 194:Generated_Source\PSoC5/pHADC.c **** 
+ 195:Generated_Source\PSoC5/pHADC.c ****     /* Increase comparator latch enable delay by 20%, 
+ 196:Generated_Source\PSoC5/pHADC.c ****     *  Increase comparator bias current by 30% without impacting delaysDelay 
+ 197:Generated_Source\PSoC5/pHADC.c ****     *  Default for 1MSPS) 
+ 198:Generated_Source\PSoC5/pHADC.c ****     */
+ 199:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_HIGH_POWER_PULSE == 0u)    /* MinPulseWidth <= 50 ns */
+ 200:Generated_Source\PSoC5/pHADC.c ****         pHADC_SAR_CSR5_REG |= pHADC_SAR_SEL_CSEL_DFT_CHAR;
+ 201:Generated_Source\PSoC5/pHADC.c ****     #else /* for <500ksps */
+ 202:Generated_Source\PSoC5/pHADC.c ****         pHADC_SAR_CSR5_REG &= (uint8)~pHADC_SAR_SEL_CSEL_DFT_CHAR;
+ 212              		.loc 1 202 0
+ 213 0080 174A     		ldr	r2, .L9+24
+ 214 0082 174B     		ldr	r3, .L9+24
+ 215 0084 1B78     		ldrb	r3, [r3]
+ 216 0086 DBB2     		uxtb	r3, r3
+ 217 0088 23F00303 		bic	r3, r3, #3
+ 218 008c DBB2     		uxtb	r3, r3
+ 219 008e 1370     		strb	r3, [r2]
+ 203:Generated_Source\PSoC5/pHADC.c ****     #endif /* pHADC_HIGH_POWER_PULSE == 0u */
+ 204:Generated_Source\PSoC5/pHADC.c **** 
+ 205:Generated_Source\PSoC5/pHADC.c ****     /* Set default power and other configurations for control register 0 in multiple lines */
+ 206:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_CSR0_REG = (uint8)((uint8)pHADC_DEFAULT_POWER << pHADC_SAR_POWER_SHIFT)
+ 220              		.loc 1 206 0
+ 221 0090 144B     		ldr	r3, .L9+28
+ 222 0092 C822     		movs	r2, #200
+ 223 0094 1A70     		strb	r2, [r3]
+ 207:Generated_Source\PSoC5/pHADC.c ****     /* SAR_HIZ_CLEAR:   Should not be used for LP */
+ 208:Generated_Source\PSoC5/pHADC.c ****     #if ((CY_PSOC5LP) || (pHADC_DEFAULT_REFERENCE != pHADC__EXT_REF))
+ 209:Generated_Source\PSoC5/pHADC.c ****         | pHADC_SAR_HIZ_CLEAR
+ 210:Generated_Source\PSoC5/pHADC.c ****     #endif /* SAR_HIZ_CLEAR */
+ 211:Generated_Source\PSoC5/pHADC.c ****     /*Set Convertion mode */
+ 212:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_DEFAULT_CONV_MODE != pHADC__FREE_RUNNING)      /* If triggered mode */
+ 213:Generated_Source\PSoC5/pHADC.c ****         | pHADC_SAR_MX_SOF_UDB           /* source: UDB */
+ 214:Generated_Source\PSoC5/pHADC.c ****         | pHADC_SAR_SOF_MODE_EDGE        /* Set edge-sensitive sof source */
+ 215:Generated_Source\PSoC5/pHADC.c ****     #endif /* pHADC_DEFAULT_CONV_MODE */
+ 216:Generated_Source\PSoC5/pHADC.c ****     ; /* end of multiple line initialization */
+ 217:Generated_Source\PSoC5/pHADC.c **** 
+ 218:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_TR0_REG = pHADC_SAR_CAP_TRIM_2;
+ 224              		.loc 1 218 0
+ 225 0096 144B     		ldr	r3, .L9+32
+ 226 0098 0222     		movs	r2, #2
+ 227 009a 1A70     		strb	r2, [r3]
+ 219:Generated_Source\PSoC5/pHADC.c **** 
+ 220:Generated_Source\PSoC5/pHADC.c ****     /* Enable clock for SAR ADC*/
+ 221:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_CLK_REG |= pHADC_SAR_MX_CLK_EN;
+ 228              		.loc 1 221 0
+ 229 009c 134A     		ldr	r2, .L9+36
+ 230 009e 134B     		ldr	r3, .L9+36
+ 231 00a0 1B78     		ldrb	r3, [r3]
+ 232 00a2 DBB2     		uxtb	r3, r3
+ 233 00a4 43F00803 		orr	r3, r3, #8
+ 234 00a8 DBB2     		uxtb	r3, r3
+ 235 00aa 1370     		strb	r3, [r2]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 9
+
+
+ 222:Generated_Source\PSoC5/pHADC.c **** 
+ 223:Generated_Source\PSoC5/pHADC.c ****     CyDelayUs(10u); /* The block is ready to use 10 us after the enable signal is set high. */
+ 236              		.loc 1 223 0
+ 237 00ac 0A20     		movs	r0, #10
+ 238 00ae FFF7FEFF 		bl	CyDelayUs
+ 224:Generated_Source\PSoC5/pHADC.c **** 
+ 225:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_IRQ_REMOVE == 0u)
+ 226:Generated_Source\PSoC5/pHADC.c ****         /* Clear a pending interrupt */
+ 227:Generated_Source\PSoC5/pHADC.c ****         CyIntClearPending(pHADC_INTC_NUMBER);
+ 239              		.loc 1 227 0
+ 240 00b2 0F4B     		ldr	r3, .L9+40
+ 241 00b4 8022     		movs	r2, #128
+ 242 00b6 1A60     		str	r2, [r3]
+ 228:Generated_Source\PSoC5/pHADC.c ****     #endif   /* End pHADC_IRQ_REMOVE */
+ 229:Generated_Source\PSoC5/pHADC.c **** 
+ 230:Generated_Source\PSoC5/pHADC.c ****     CyExitCriticalSection(enableInterrupts);
+ 243              		.loc 1 230 0
+ 244 00b8 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 245 00ba 1846     		mov	r0, r3
+ 246 00bc FFF7FEFF 		bl	CyExitCriticalSection
+ 231:Generated_Source\PSoC5/pHADC.c **** }
+ 247              		.loc 1 231 0
+ 248 00c0 00BF     		nop
+ 249 00c2 0837     		adds	r7, r7, #8
+ 250              		.cfi_def_cfa_offset 8
+ 251 00c4 BD46     		mov	sp, r7
+ 252              		.cfi_def_cfa_register 13
+ 253              		@ sp needed
+ 254 00c6 80BD     		pop	{r7, pc}
+ 255              	.L10:
+ 256              		.align	2
+ 257              	.L9:
+ 258 00c8 AB430040 		.word	1073759147
+ 259 00cc BB430040 		.word	1073759163
+ 260 00d0 A1430040 		.word	1073759137
+ 261 00d4 B1430040 		.word	1073759153
+ 262 00d8 03590040 		.word	1073764611
+ 263 00dc 06590040 		.word	1073764614
+ 264 00e0 05590040 		.word	1073764613
+ 265 00e4 00590040 		.word	1073764608
+ 266 00e8 14460040 		.word	1073759764
+ 267 00ec 275B0040 		.word	1073765159
+ 268 00f0 80E200E0 		.word	-536812928
+ 269              		.cfi_endproc
+ 270              	.LFE2:
+ 271              		.size	pHADC_Enable, .-pHADC_Enable
+ 272              		.section	.text.pHADC_Stop,"ax",%progbits
+ 273              		.align	2
+ 274              		.global	pHADC_Stop
+ 275              		.thumb
+ 276              		.thumb_func
+ 277              		.type	pHADC_Stop, %function
+ 278              	pHADC_Stop:
+ 279              	.LFB3:
+ 232:Generated_Source\PSoC5/pHADC.c **** 
+ 233:Generated_Source\PSoC5/pHADC.c **** 
+ 234:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 10
+
+
+ 235:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_Stop
+ 236:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 237:Generated_Source\PSoC5/pHADC.c **** *
+ 238:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 239:Generated_Source\PSoC5/pHADC.c **** *  Stops ADC conversions and puts the ADC into its lowest power mode.
+ 240:Generated_Source\PSoC5/pHADC.c **** *
+ 241:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 242:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 243:Generated_Source\PSoC5/pHADC.c **** *
+ 244:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 245:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 246:Generated_Source\PSoC5/pHADC.c **** *
+ 247:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 248:Generated_Source\PSoC5/pHADC.c **** void pHADC_Stop(void)
+ 249:Generated_Source\PSoC5/pHADC.c **** {
+ 280              		.loc 1 249 0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 8
+ 283              		@ frame_needed = 1, uses_anonymous_args = 0
+ 284 0000 80B5     		push	{r7, lr}
+ 285              		.cfi_def_cfa_offset 8
+ 286              		.cfi_offset 7, -8
+ 287              		.cfi_offset 14, -4
+ 288 0002 82B0     		sub	sp, sp, #8
+ 289              		.cfi_def_cfa_offset 16
+ 290 0004 00AF     		add	r7, sp, #0
+ 291              		.cfi_def_cfa_register 7
+ 250:Generated_Source\PSoC5/pHADC.c ****     uint8 enableInterrupts;
+ 251:Generated_Source\PSoC5/pHADC.c ****     enableInterrupts = CyEnterCriticalSection();
+ 292              		.loc 1 251 0
+ 293 0006 FFF7FEFF 		bl	CyEnterCriticalSection
+ 294 000a 0346     		mov	r3, r0
+ 295 000c FB71     		strb	r3, [r7, #7]
+ 252:Generated_Source\PSoC5/pHADC.c **** 
+ 253:Generated_Source\PSoC5/pHADC.c ****     /* Stop all conversions */
+ 254:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_CSR0_REG &= (uint8)~pHADC_SAR_SOF_START_CONV;
+ 296              		.loc 1 254 0
+ 297 000e 184A     		ldr	r2, .L12
+ 298 0010 174B     		ldr	r3, .L12
+ 299 0012 1B78     		ldrb	r3, [r3]
+ 300 0014 DBB2     		uxtb	r3, r3
+ 301 0016 23F00103 		bic	r3, r3, #1
+ 302 001a DBB2     		uxtb	r3, r3
+ 303 001c 1370     		strb	r3, [r2]
+ 255:Generated_Source\PSoC5/pHADC.c ****     /* Disable the SAR ADC block in Active Power Mode */
+ 256:Generated_Source\PSoC5/pHADC.c ****     pHADC_PWRMGR_SAR_REG &= (uint8)~pHADC_ACT_PWR_SAR_EN;
+ 304              		.loc 1 256 0
+ 305 001e 154A     		ldr	r2, .L12+4
+ 306 0020 144B     		ldr	r3, .L12+4
+ 307 0022 1B78     		ldrb	r3, [r3]
+ 308 0024 DBB2     		uxtb	r3, r3
+ 309 0026 23F00103 		bic	r3, r3, #1
+ 310 002a DBB2     		uxtb	r3, r3
+ 311 002c 1370     		strb	r3, [r2]
+ 257:Generated_Source\PSoC5/pHADC.c ****     /* Disable the SAR ADC in Standby Power Mode */
+ 258:Generated_Source\PSoC5/pHADC.c ****     pHADC_STBY_PWRMGR_SAR_REG &= (uint8)~pHADC_STBY_PWR_SAR_EN;
+ 312              		.loc 1 258 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 11
+
+
+ 313 002e 124A     		ldr	r2, .L12+8
+ 314 0030 114B     		ldr	r3, .L12+8
+ 315 0032 1B78     		ldrb	r3, [r3]
+ 316 0034 DBB2     		uxtb	r3, r3
+ 317 0036 23F00103 		bic	r3, r3, #1
+ 318 003a DBB2     		uxtb	r3, r3
+ 319 003c 1370     		strb	r3, [r2]
+ 259:Generated_Source\PSoC5/pHADC.c **** 
+ 260:Generated_Source\PSoC5/pHADC.c ****     /* This is only valid if there is an internal clock */
+ 261:Generated_Source\PSoC5/pHADC.c ****     #if(pHADC_DEFAULT_INTERNAL_CLK)
+ 262:Generated_Source\PSoC5/pHADC.c ****         pHADC_PWRMGR_CLK_REG &= (uint8)~pHADC_ACT_PWR_CLK_EN;
+ 320              		.loc 1 262 0
+ 321 003e 0F4A     		ldr	r2, .L12+12
+ 322 0040 0E4B     		ldr	r3, .L12+12
+ 323 0042 1B78     		ldrb	r3, [r3]
+ 324 0044 DBB2     		uxtb	r3, r3
+ 325 0046 23F00203 		bic	r3, r3, #2
+ 326 004a DBB2     		uxtb	r3, r3
+ 327 004c 1370     		strb	r3, [r2]
+ 263:Generated_Source\PSoC5/pHADC.c ****         pHADC_STBY_PWRMGR_CLK_REG &= (uint8)~pHADC_STBY_PWR_CLK_EN;
+ 328              		.loc 1 263 0
+ 329 004e 0C4A     		ldr	r2, .L12+16
+ 330 0050 0B4B     		ldr	r3, .L12+16
+ 331 0052 1B78     		ldrb	r3, [r3]
+ 332 0054 DBB2     		uxtb	r3, r3
+ 333 0056 23F00203 		bic	r3, r3, #2
+ 334 005a DBB2     		uxtb	r3, r3
+ 335 005c 1370     		strb	r3, [r2]
+ 264:Generated_Source\PSoC5/pHADC.c ****     #endif /* End pHADC_DEFAULT_INTERNAL_CLK */
+ 265:Generated_Source\PSoC5/pHADC.c **** 
+ 266:Generated_Source\PSoC5/pHADC.c ****     CyExitCriticalSection(enableInterrupts);
+ 336              		.loc 1 266 0
+ 337 005e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 338 0060 1846     		mov	r0, r3
+ 339 0062 FFF7FEFF 		bl	CyExitCriticalSection
+ 267:Generated_Source\PSoC5/pHADC.c **** 
+ 268:Generated_Source\PSoC5/pHADC.c **** }
+ 340              		.loc 1 268 0
+ 341 0066 00BF     		nop
+ 342 0068 0837     		adds	r7, r7, #8
+ 343              		.cfi_def_cfa_offset 8
+ 344 006a BD46     		mov	sp, r7
+ 345              		.cfi_def_cfa_register 13
+ 346              		@ sp needed
+ 347 006c 80BD     		pop	{r7, pc}
+ 348              	.L13:
+ 349 006e 00BF     		.align	2
+ 350              	.L12:
+ 351 0070 00590040 		.word	1073764608
+ 352 0074 AB430040 		.word	1073759147
+ 353 0078 BB430040 		.word	1073759163
+ 354 007c A1430040 		.word	1073759137
+ 355 0080 B1430040 		.word	1073759153
+ 356              		.cfi_endproc
+ 357              	.LFE3:
+ 358              		.size	pHADC_Stop, .-pHADC_Stop
+ 359              		.section	.text.pHADC_SetPower,"ax",%progbits
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 12
+
+
+ 360              		.align	2
+ 361              		.global	pHADC_SetPower
+ 362              		.thumb
+ 363              		.thumb_func
+ 364              		.type	pHADC_SetPower, %function
+ 365              	pHADC_SetPower:
+ 366              	.LFB4:
+ 269:Generated_Source\PSoC5/pHADC.c **** 
+ 270:Generated_Source\PSoC5/pHADC.c **** 
+ 271:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 272:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_SetPower
+ 273:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 274:Generated_Source\PSoC5/pHADC.c **** *
+ 275:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 276:Generated_Source\PSoC5/pHADC.c **** *  Sets the operational power of the ADC. You should use the higher power
+ 277:Generated_Source\PSoC5/pHADC.c **** *  settings with faster clock speeds.
+ 278:Generated_Source\PSoC5/pHADC.c **** *
+ 279:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 280:Generated_Source\PSoC5/pHADC.c **** *  power:  Power setting for ADC
+ 281:Generated_Source\PSoC5/pHADC.c **** *  0 ->    Normal
+ 282:Generated_Source\PSoC5/pHADC.c **** *  1 ->    Medium power
+ 283:Generated_Source\PSoC5/pHADC.c **** *  2 ->    1.25 power
+ 284:Generated_Source\PSoC5/pHADC.c **** *  3 ->    Minimum power.
+ 285:Generated_Source\PSoC5/pHADC.c **** *
+ 286:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 287:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 288:Generated_Source\PSoC5/pHADC.c **** *
+ 289:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 290:Generated_Source\PSoC5/pHADC.c **** void pHADC_SetPower(uint8 power)
+ 291:Generated_Source\PSoC5/pHADC.c **** {
+ 367              		.loc 1 291 0
+ 368              		.cfi_startproc
+ 369              		@ args = 0, pretend = 0, frame = 16
+ 370              		@ frame_needed = 1, uses_anonymous_args = 0
+ 371              		@ link register save eliminated.
+ 372 0000 80B4     		push	{r7}
+ 373              		.cfi_def_cfa_offset 4
+ 374              		.cfi_offset 7, -4
+ 375 0002 85B0     		sub	sp, sp, #20
+ 376              		.cfi_def_cfa_offset 24
+ 377 0004 00AF     		add	r7, sp, #0
+ 378              		.cfi_def_cfa_register 7
+ 379 0006 0346     		mov	r3, r0
+ 380 0008 FB71     		strb	r3, [r7, #7]
+ 292:Generated_Source\PSoC5/pHADC.c ****     uint8 tmpReg;
+ 293:Generated_Source\PSoC5/pHADC.c **** 
+ 294:Generated_Source\PSoC5/pHADC.c ****     /* mask off invalid power settings */
+ 295:Generated_Source\PSoC5/pHADC.c ****     power &= pHADC_SAR_API_POWER_MASK;
+ 381              		.loc 1 295 0
+ 382 000a FB79     		ldrb	r3, [r7, #7]
+ 383 000c 03F00303 		and	r3, r3, #3
+ 384 0010 FB71     		strb	r3, [r7, #7]
+ 296:Generated_Source\PSoC5/pHADC.c **** 
+ 297:Generated_Source\PSoC5/pHADC.c ****     /* Set Power parameter  */
+ 298:Generated_Source\PSoC5/pHADC.c ****     tmpReg = pHADC_SAR_CSR0_REG & (uint8)~pHADC_SAR_POWER_MASK;
+ 385              		.loc 1 298 0
+ 386 0012 0A4B     		ldr	r3, .L15
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 13
+
+
+ 387 0014 1B78     		ldrb	r3, [r3]
+ 388 0016 DBB2     		uxtb	r3, r3
+ 389 0018 03F03F03 		and	r3, r3, #63
+ 390 001c FB73     		strb	r3, [r7, #15]
+ 299:Generated_Source\PSoC5/pHADC.c ****     tmpReg |= (uint8)(power << pHADC_SAR_POWER_SHIFT);
+ 391              		.loc 1 299 0
+ 392 001e FB79     		ldrb	r3, [r7, #7]
+ 393 0020 9B01     		lsls	r3, r3, #6
+ 394 0022 DAB2     		uxtb	r2, r3
+ 395 0024 FB7B     		ldrb	r3, [r7, #15]
+ 396 0026 1343     		orrs	r3, r3, r2
+ 397 0028 FB73     		strb	r3, [r7, #15]
+ 300:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_CSR0_REG = tmpReg;
+ 398              		.loc 1 300 0
+ 399 002a 044A     		ldr	r2, .L15
+ 400 002c FB7B     		ldrb	r3, [r7, #15]
+ 401 002e 1370     		strb	r3, [r2]
+ 301:Generated_Source\PSoC5/pHADC.c **** }
+ 402              		.loc 1 301 0
+ 403 0030 00BF     		nop
+ 404 0032 1437     		adds	r7, r7, #20
+ 405              		.cfi_def_cfa_offset 4
+ 406 0034 BD46     		mov	sp, r7
+ 407              		.cfi_def_cfa_register 13
+ 408              		@ sp needed
+ 409 0036 80BC     		pop	{r7}
+ 410              		.cfi_restore 7
+ 411              		.cfi_def_cfa_offset 0
+ 412 0038 7047     		bx	lr
+ 413              	.L16:
+ 414 003a 00BF     		.align	2
+ 415              	.L15:
+ 416 003c 00590040 		.word	1073764608
+ 417              		.cfi_endproc
+ 418              	.LFE4:
+ 419              		.size	pHADC_SetPower, .-pHADC_SetPower
+ 420              		.section	.text.pHADC_SetResolution,"ax",%progbits
+ 421              		.align	2
+ 422              		.global	pHADC_SetResolution
+ 423              		.thumb
+ 424              		.thumb_func
+ 425              		.type	pHADC_SetResolution, %function
+ 426              	pHADC_SetResolution:
+ 427              	.LFB5:
+ 302:Generated_Source\PSoC5/pHADC.c **** 
+ 303:Generated_Source\PSoC5/pHADC.c **** 
+ 304:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 305:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_SetResolution
+ 306:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 307:Generated_Source\PSoC5/pHADC.c **** *
+ 308:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 309:Generated_Source\PSoC5/pHADC.c **** *  Sets the Relution of the SAR.
+ 310:Generated_Source\PSoC5/pHADC.c **** *
+ 311:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 312:Generated_Source\PSoC5/pHADC.c **** *  resolution:
+ 313:Generated_Source\PSoC5/pHADC.c **** *  12 ->    RES12
+ 314:Generated_Source\PSoC5/pHADC.c **** *  10 ->    RES10
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 14
+
+
+ 315:Generated_Source\PSoC5/pHADC.c **** *  8  ->    RES8
+ 316:Generated_Source\PSoC5/pHADC.c **** *
+ 317:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 318:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 319:Generated_Source\PSoC5/pHADC.c **** *
+ 320:Generated_Source\PSoC5/pHADC.c **** * Side Effects:
+ 321:Generated_Source\PSoC5/pHADC.c **** *  The ADC resolution cannot be changed during a conversion cycle. The
+ 322:Generated_Source\PSoC5/pHADC.c **** *  recommended best practice is to stop conversions with
+ 323:Generated_Source\PSoC5/pHADC.c **** *  ADC_StopConvert(), change the resolution, then restart the
+ 324:Generated_Source\PSoC5/pHADC.c **** *  conversions with ADC_StartConvert().
+ 325:Generated_Source\PSoC5/pHADC.c **** *  If you decide not to stop conversions before calling this API, you
+ 326:Generated_Source\PSoC5/pHADC.c **** *  should use ADC_IsEndConversion() to wait until conversion is complete
+ 327:Generated_Source\PSoC5/pHADC.c **** *  before changing the resolution.
+ 328:Generated_Source\PSoC5/pHADC.c **** *  If you call ADC_SetResolution() during a conversion, the resolution will
+ 329:Generated_Source\PSoC5/pHADC.c **** *  not be changed until the current conversion is complete. Data will not be
+ 330:Generated_Source\PSoC5/pHADC.c **** *  available in the new resolution for another 6 + "New Resolution(in bits)"
+ 331:Generated_Source\PSoC5/pHADC.c **** *  clock cycles.
+ 332:Generated_Source\PSoC5/pHADC.c **** *  You may need add a delay of this number of clock cycles after
+ 333:Generated_Source\PSoC5/pHADC.c **** *  ADC_SetResolution() is called before data is valid again.
+ 334:Generated_Source\PSoC5/pHADC.c **** *  Affects ADC_CountsTo_Volts(), ADC_CountsTo_mVolts(), and
+ 335:Generated_Source\PSoC5/pHADC.c **** *  ADC_CountsTo_uVolts() by calculating the correct conversion between ADC
+ 336:Generated_Source\PSoC5/pHADC.c **** *  counts and the applied input voltage. Calculation depends on resolution,
+ 337:Generated_Source\PSoC5/pHADC.c **** *  input range, and voltage reference.
+ 338:Generated_Source\PSoC5/pHADC.c **** *
+ 339:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 340:Generated_Source\PSoC5/pHADC.c **** void pHADC_SetResolution(uint8 resolution)
+ 341:Generated_Source\PSoC5/pHADC.c **** {
+ 428              		.loc 1 341 0
+ 429              		.cfi_startproc
+ 430              		@ args = 0, pretend = 0, frame = 16
+ 431              		@ frame_needed = 1, uses_anonymous_args = 0
+ 432 0000 80B5     		push	{r7, lr}
+ 433              		.cfi_def_cfa_offset 8
+ 434              		.cfi_offset 7, -8
+ 435              		.cfi_offset 14, -4
+ 436 0002 84B0     		sub	sp, sp, #16
+ 437              		.cfi_def_cfa_offset 24
+ 438 0004 00AF     		add	r7, sp, #0
+ 439              		.cfi_def_cfa_register 7
+ 440 0006 0346     		mov	r3, r0
+ 441 0008 FB71     		strb	r3, [r7, #7]
+ 342:Generated_Source\PSoC5/pHADC.c ****     uint8 tmpReg;
+ 343:Generated_Source\PSoC5/pHADC.c **** 
+ 344:Generated_Source\PSoC5/pHADC.c ****     /* Set SAR ADC resolution and sample width: 18 conversion cycles at 12bits + 1 gap */
+ 345:Generated_Source\PSoC5/pHADC.c ****     switch (resolution)
+ 442              		.loc 1 345 0
+ 443 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 444 000c 0A2B     		cmp	r3, #10
+ 445 000e 07D0     		beq	.L19
+ 446 0010 0C2B     		cmp	r3, #12
+ 447 0012 02D0     		beq	.L20
+ 448 0014 082B     		cmp	r3, #8
+ 449 0016 06D0     		beq	.L21
+ 450 0018 08E0     		b	.L23
+ 451              	.L20:
+ 346:Generated_Source\PSoC5/pHADC.c ****     {
+ 347:Generated_Source\PSoC5/pHADC.c ****         case (uint8)pHADC__BITS_12:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 15
+
+
+ 348:Generated_Source\PSoC5/pHADC.c ****             tmpReg = pHADC_SAR_RESOLUTION_12BIT | pHADC_SAR_SAMPLE_WIDTH;
+ 452              		.loc 1 348 0
+ 453 001a C223     		movs	r3, #194
+ 454 001c FB73     		strb	r3, [r7, #15]
+ 349:Generated_Source\PSoC5/pHADC.c ****             break;
+ 455              		.loc 1 349 0
+ 456 001e 0BE0     		b	.L22
+ 457              	.L19:
+ 350:Generated_Source\PSoC5/pHADC.c ****         case (uint8)pHADC__BITS_10:
+ 351:Generated_Source\PSoC5/pHADC.c ****             tmpReg = pHADC_SAR_RESOLUTION_10BIT | pHADC_SAR_SAMPLE_WIDTH;
+ 458              		.loc 1 351 0
+ 459 0020 8223     		movs	r3, #130
+ 460 0022 FB73     		strb	r3, [r7, #15]
+ 352:Generated_Source\PSoC5/pHADC.c ****             break;
+ 461              		.loc 1 352 0
+ 462 0024 08E0     		b	.L22
+ 463              	.L21:
+ 353:Generated_Source\PSoC5/pHADC.c ****         case (uint8)pHADC__BITS_8:
+ 354:Generated_Source\PSoC5/pHADC.c ****             tmpReg = pHADC_SAR_RESOLUTION_8BIT | pHADC_SAR_SAMPLE_WIDTH;
+ 464              		.loc 1 354 0
+ 465 0026 4223     		movs	r3, #66
+ 466 0028 FB73     		strb	r3, [r7, #15]
+ 355:Generated_Source\PSoC5/pHADC.c ****             break;
+ 467              		.loc 1 355 0
+ 468 002a 05E0     		b	.L22
+ 469              	.L23:
+ 356:Generated_Source\PSoC5/pHADC.c ****         default:
+ 357:Generated_Source\PSoC5/pHADC.c ****             tmpReg = pHADC_SAR_RESOLUTION_12BIT | pHADC_SAR_SAMPLE_WIDTH;
+ 470              		.loc 1 357 0
+ 471 002c C223     		movs	r3, #194
+ 472 002e FB73     		strb	r3, [r7, #15]
+ 358:Generated_Source\PSoC5/pHADC.c ****             /* Halt CPU in debug mode if resolution is out of valid range */
+ 359:Generated_Source\PSoC5/pHADC.c ****             CYASSERT(0u != 0u);
+ 473              		.loc 1 359 0
+ 474 0030 0020     		movs	r0, #0
+ 475 0032 FFF7FEFF 		bl	CyHalt
+ 360:Generated_Source\PSoC5/pHADC.c ****             break;
+ 476              		.loc 1 360 0
+ 477 0036 00BF     		nop
+ 478              	.L22:
+ 361:Generated_Source\PSoC5/pHADC.c ****     }
+ 362:Generated_Source\PSoC5/pHADC.c ****     pHADC_SAR_CSR2_REG = tmpReg;
+ 479              		.loc 1 362 0
+ 480 0038 054A     		ldr	r2, .L24
+ 481 003a FB7B     		ldrb	r3, [r7, #15]
+ 482 003c 1370     		strb	r3, [r2]
+ 363:Generated_Source\PSoC5/pHADC.c **** 
+ 364:Generated_Source\PSoC5/pHADC.c ****      /* Calculate gain for convert counts to volts */
+ 365:Generated_Source\PSoC5/pHADC.c ****     pHADC_CalcGain(resolution);
+ 483              		.loc 1 365 0
+ 484 003e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 485 0040 1846     		mov	r0, r3
+ 486 0042 FFF7FEFF 		bl	pHADC_CalcGain
+ 366:Generated_Source\PSoC5/pHADC.c **** }
+ 487              		.loc 1 366 0
+ 488 0046 00BF     		nop
+ 489 0048 1037     		adds	r7, r7, #16
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 16
+
+
+ 490              		.cfi_def_cfa_offset 8
+ 491 004a BD46     		mov	sp, r7
+ 492              		.cfi_def_cfa_register 13
+ 493              		@ sp needed
+ 494 004c 80BD     		pop	{r7, pc}
+ 495              	.L25:
+ 496 004e 00BF     		.align	2
+ 497              	.L24:
+ 498 0050 02590040 		.word	1073764610
+ 499              		.cfi_endproc
+ 500              	.LFE5:
+ 501              		.size	pHADC_SetResolution, .-pHADC_SetResolution
+ 502              		.section	.text.pHADC_StartConvert,"ax",%progbits
+ 503              		.align	2
+ 504              		.global	pHADC_StartConvert
+ 505              		.thumb
+ 506              		.thumb_func
+ 507              		.type	pHADC_StartConvert, %function
+ 508              	pHADC_StartConvert:
+ 509              	.LFB6:
+ 367:Generated_Source\PSoC5/pHADC.c **** 
+ 368:Generated_Source\PSoC5/pHADC.c **** 
+ 369:Generated_Source\PSoC5/pHADC.c **** #if(pHADC_DEFAULT_CONV_MODE != pHADC__HARDWARE_TRIGGER)
+ 370:Generated_Source\PSoC5/pHADC.c **** 
+ 371:Generated_Source\PSoC5/pHADC.c **** 
+ 372:Generated_Source\PSoC5/pHADC.c ****     /*******************************************************************************
+ 373:Generated_Source\PSoC5/pHADC.c ****     * Function Name: pHADC_StartConvert
+ 374:Generated_Source\PSoC5/pHADC.c ****     ********************************************************************************
+ 375:Generated_Source\PSoC5/pHADC.c ****     *
+ 376:Generated_Source\PSoC5/pHADC.c ****     * Summary:
+ 377:Generated_Source\PSoC5/pHADC.c ****     *  Forces the ADC to initiate a conversion. In free-running mode, the ADC runs
+ 378:Generated_Source\PSoC5/pHADC.c ****     *  continuously. In software trigger mode, the function also acts as a software
+ 379:Generated_Source\PSoC5/pHADC.c ****     *  version of the SOC and every conversion must be triggered by
+ 380:Generated_Source\PSoC5/pHADC.c ****     *  pHADC_StartConvert(). This function is not available when the
+ 381:Generated_Source\PSoC5/pHADC.c ****     *  Hardware Trigger sample mode is selected.
+ 382:Generated_Source\PSoC5/pHADC.c ****     *
+ 383:Generated_Source\PSoC5/pHADC.c ****     * Parameters:
+ 384:Generated_Source\PSoC5/pHADC.c ****     *  None.
+ 385:Generated_Source\PSoC5/pHADC.c ****     *
+ 386:Generated_Source\PSoC5/pHADC.c ****     * Return:
+ 387:Generated_Source\PSoC5/pHADC.c ****     *  None.
+ 388:Generated_Source\PSoC5/pHADC.c ****     *
+ 389:Generated_Source\PSoC5/pHADC.c ****     * Theory:
+ 390:Generated_Source\PSoC5/pHADC.c ****     *  Forces the ADC to initiate a conversion. In Free Running mode, the ADC will
+ 391:Generated_Source\PSoC5/pHADC.c ****     *  run continuously. In a software trigger mode the function also acts as a
+ 392:Generated_Source\PSoC5/pHADC.c ****     *  software version of the SOC. Here every conversion has to be triggered by
+ 393:Generated_Source\PSoC5/pHADC.c ****     *  the routine. This writes into the SOC bit in SAR_CTRL reg.
+ 394:Generated_Source\PSoC5/pHADC.c ****     *
+ 395:Generated_Source\PSoC5/pHADC.c ****     * Side Effects:
+ 396:Generated_Source\PSoC5/pHADC.c ****     *  In a software trigger mode the function switches source for SOF from the
+ 397:Generated_Source\PSoC5/pHADC.c ****     *  external pin to the internal SOF generation. Application should not call
+ 398:Generated_Source\PSoC5/pHADC.c ****     *  StartConvert if external source used for SOF.
+ 399:Generated_Source\PSoC5/pHADC.c ****     *
+ 400:Generated_Source\PSoC5/pHADC.c ****     *******************************************************************************/
+ 401:Generated_Source\PSoC5/pHADC.c ****     void pHADC_StartConvert(void)
+ 402:Generated_Source\PSoC5/pHADC.c ****     {
+ 510              		.loc 1 402 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 17
+
+
+ 511              		.cfi_startproc
+ 512              		@ args = 0, pretend = 0, frame = 0
+ 513              		@ frame_needed = 1, uses_anonymous_args = 0
+ 514              		@ link register save eliminated.
+ 515 0000 80B4     		push	{r7}
+ 516              		.cfi_def_cfa_offset 4
+ 517              		.cfi_offset 7, -4
+ 518 0002 00AF     		add	r7, sp, #0
+ 519              		.cfi_def_cfa_register 7
+ 403:Generated_Source\PSoC5/pHADC.c ****         #if(pHADC_DEFAULT_CONV_MODE != pHADC__FREE_RUNNING)  /* If software triggered mode */
+ 404:Generated_Source\PSoC5/pHADC.c ****             pHADC_SAR_CSR0_REG &= (uint8)~pHADC_SAR_MX_SOF_UDB;   /* source: SOF bit */
+ 405:Generated_Source\PSoC5/pHADC.c ****         #endif /* End pHADC_DEFAULT_CONV_MODE */
+ 406:Generated_Source\PSoC5/pHADC.c **** 
+ 407:Generated_Source\PSoC5/pHADC.c ****         /* Start the conversion */
+ 408:Generated_Source\PSoC5/pHADC.c ****         pHADC_SAR_CSR0_REG |= pHADC_SAR_SOF_START_CONV;
+ 520              		.loc 1 408 0
+ 521 0004 054A     		ldr	r2, .L27
+ 522 0006 054B     		ldr	r3, .L27
+ 523 0008 1B78     		ldrb	r3, [r3]
+ 524 000a DBB2     		uxtb	r3, r3
+ 525 000c 43F00103 		orr	r3, r3, #1
+ 526 0010 DBB2     		uxtb	r3, r3
+ 527 0012 1370     		strb	r3, [r2]
+ 409:Generated_Source\PSoC5/pHADC.c ****     }
+ 528              		.loc 1 409 0
+ 529 0014 00BF     		nop
+ 530 0016 BD46     		mov	sp, r7
+ 531              		.cfi_def_cfa_register 13
+ 532              		@ sp needed
+ 533 0018 80BC     		pop	{r7}
+ 534              		.cfi_restore 7
+ 535              		.cfi_def_cfa_offset 0
+ 536 001a 7047     		bx	lr
+ 537              	.L28:
+ 538              		.align	2
+ 539              	.L27:
+ 540 001c 00590040 		.word	1073764608
+ 541              		.cfi_endproc
+ 542              	.LFE6:
+ 543              		.size	pHADC_StartConvert, .-pHADC_StartConvert
+ 544              		.section	.text.pHADC_StopConvert,"ax",%progbits
+ 545              		.align	2
+ 546              		.global	pHADC_StopConvert
+ 547              		.thumb
+ 548              		.thumb_func
+ 549              		.type	pHADC_StopConvert, %function
+ 550              	pHADC_StopConvert:
+ 551              	.LFB7:
+ 410:Generated_Source\PSoC5/pHADC.c **** 
+ 411:Generated_Source\PSoC5/pHADC.c **** 
+ 412:Generated_Source\PSoC5/pHADC.c ****     /*******************************************************************************
+ 413:Generated_Source\PSoC5/pHADC.c ****     * Function Name: pHADC_StopConvert
+ 414:Generated_Source\PSoC5/pHADC.c ****     ********************************************************************************
+ 415:Generated_Source\PSoC5/pHADC.c ****     *
+ 416:Generated_Source\PSoC5/pHADC.c ****     * Summary:
+ 417:Generated_Source\PSoC5/pHADC.c ****     *  Forces the ADC to stop conversions. If a conversion is currently executing,
+ 418:Generated_Source\PSoC5/pHADC.c ****     *  that conversion will complete, but no further conversions will occur. This
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 18
+
+
+ 419:Generated_Source\PSoC5/pHADC.c ****     *  function is not available when the Hardware Trigger sample mode is selected.
+ 420:Generated_Source\PSoC5/pHADC.c ****     *
+ 421:Generated_Source\PSoC5/pHADC.c ****     * Parameters:
+ 422:Generated_Source\PSoC5/pHADC.c ****     *  None.
+ 423:Generated_Source\PSoC5/pHADC.c ****     *
+ 424:Generated_Source\PSoC5/pHADC.c ****     * Return:
+ 425:Generated_Source\PSoC5/pHADC.c ****     *  None.
+ 426:Generated_Source\PSoC5/pHADC.c ****     *
+ 427:Generated_Source\PSoC5/pHADC.c ****     * Theory:
+ 428:Generated_Source\PSoC5/pHADC.c ****     *  Stops ADC conversion in Free Running mode.
+ 429:Generated_Source\PSoC5/pHADC.c ****     *
+ 430:Generated_Source\PSoC5/pHADC.c ****     * Side Effects:
+ 431:Generated_Source\PSoC5/pHADC.c ****     *  In Software Trigger sample mode, this function sets a software version of the
+ 432:Generated_Source\PSoC5/pHADC.c ****     *  SOC to low level and switches the SOC source to hardware SOC input.
+ 433:Generated_Source\PSoC5/pHADC.c ****     *
+ 434:Generated_Source\PSoC5/pHADC.c ****     *******************************************************************************/
+ 435:Generated_Source\PSoC5/pHADC.c ****     void pHADC_StopConvert(void)
+ 436:Generated_Source\PSoC5/pHADC.c ****     {
+ 552              		.loc 1 436 0
+ 553              		.cfi_startproc
+ 554              		@ args = 0, pretend = 0, frame = 0
+ 555              		@ frame_needed = 1, uses_anonymous_args = 0
+ 556              		@ link register save eliminated.
+ 557 0000 80B4     		push	{r7}
+ 558              		.cfi_def_cfa_offset 4
+ 559              		.cfi_offset 7, -4
+ 560 0002 00AF     		add	r7, sp, #0
+ 561              		.cfi_def_cfa_register 7
+ 437:Generated_Source\PSoC5/pHADC.c ****         /* Stop all conversions */
+ 438:Generated_Source\PSoC5/pHADC.c ****         pHADC_SAR_CSR0_REG &= (uint8)~pHADC_SAR_SOF_START_CONV;
+ 562              		.loc 1 438 0
+ 563 0004 054A     		ldr	r2, .L30
+ 564 0006 054B     		ldr	r3, .L30
+ 565 0008 1B78     		ldrb	r3, [r3]
+ 566 000a DBB2     		uxtb	r3, r3
+ 567 000c 23F00103 		bic	r3, r3, #1
+ 568 0010 DBB2     		uxtb	r3, r3
+ 569 0012 1370     		strb	r3, [r2]
+ 439:Generated_Source\PSoC5/pHADC.c **** 
+ 440:Generated_Source\PSoC5/pHADC.c ****         #if(pHADC_DEFAULT_CONV_MODE != pHADC__FREE_RUNNING)  /* If software triggered mode */
+ 441:Generated_Source\PSoC5/pHADC.c ****             /* Return source to UDB for hardware SOF signal */
+ 442:Generated_Source\PSoC5/pHADC.c ****             pHADC_SAR_CSR0_REG |= pHADC_SAR_MX_SOF_UDB;    /* source: UDB */
+ 443:Generated_Source\PSoC5/pHADC.c ****         #endif /* End pHADC_DEFAULT_CONV_MODE */
+ 444:Generated_Source\PSoC5/pHADC.c **** 
+ 445:Generated_Source\PSoC5/pHADC.c ****     }
+ 570              		.loc 1 445 0
+ 571 0014 00BF     		nop
+ 572 0016 BD46     		mov	sp, r7
+ 573              		.cfi_def_cfa_register 13
+ 574              		@ sp needed
+ 575 0018 80BC     		pop	{r7}
+ 576              		.cfi_restore 7
+ 577              		.cfi_def_cfa_offset 0
+ 578 001a 7047     		bx	lr
+ 579              	.L31:
+ 580              		.align	2
+ 581              	.L30:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 19
+
+
+ 582 001c 00590040 		.word	1073764608
+ 583              		.cfi_endproc
+ 584              	.LFE7:
+ 585              		.size	pHADC_StopConvert, .-pHADC_StopConvert
+ 586              		.section	.text.pHADC_IsEndConversion,"ax",%progbits
+ 587              		.align	2
+ 588              		.global	pHADC_IsEndConversion
+ 589              		.thumb
+ 590              		.thumb_func
+ 591              		.type	pHADC_IsEndConversion, %function
+ 592              	pHADC_IsEndConversion:
+ 593              	.LFB8:
+ 446:Generated_Source\PSoC5/pHADC.c **** 
+ 447:Generated_Source\PSoC5/pHADC.c **** #endif /* End pHADC_DEFAULT_CONV_MODE != pHADC__HARDWARE_TRIGGER */
+ 448:Generated_Source\PSoC5/pHADC.c **** 
+ 449:Generated_Source\PSoC5/pHADC.c **** 
+ 450:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 451:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_IsEndConversion
+ 452:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 453:Generated_Source\PSoC5/pHADC.c **** *
+ 454:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 455:Generated_Source\PSoC5/pHADC.c **** *  Immediately returns the status of the conversion or does not return
+ 456:Generated_Source\PSoC5/pHADC.c **** *  (blocking) until the conversion completes, depending on the retMode
+ 457:Generated_Source\PSoC5/pHADC.c **** *  parameter.
+ 458:Generated_Source\PSoC5/pHADC.c **** *
+ 459:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 460:Generated_Source\PSoC5/pHADC.c **** *  retMode:  Check conversion return mode.
+ 461:Generated_Source\PSoC5/pHADC.c **** *   pHADC_RETURN_STATUS: Immediately returns the status. If the
+ 462:Generated_Source\PSoC5/pHADC.c **** *     value returned is zero, the conversion is not complete, and this function
+ 463:Generated_Source\PSoC5/pHADC.c **** *     should be retried until a nonzero result is returned.
+ 464:Generated_Source\PSoC5/pHADC.c **** *   pHADC_WAIT_FOR_RESULT: Does not return a result until the ADC
+ 465:Generated_Source\PSoC5/pHADC.c **** *     conversion is complete.
+ 466:Generated_Source\PSoC5/pHADC.c **** *
+ 467:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 468:Generated_Source\PSoC5/pHADC.c **** *  (uint8)  0 =>  The ADC is still calculating the last result.
+ 469:Generated_Source\PSoC5/pHADC.c **** *           1 =>  The last conversion is complete.
+ 470:Generated_Source\PSoC5/pHADC.c **** *
+ 471:Generated_Source\PSoC5/pHADC.c **** * Side Effects:
+ 472:Generated_Source\PSoC5/pHADC.c **** *  This function reads the end of conversion status, which is cleared on read.
+ 473:Generated_Source\PSoC5/pHADC.c **** *
+ 474:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 475:Generated_Source\PSoC5/pHADC.c **** uint8 pHADC_IsEndConversion(uint8 retMode)
+ 476:Generated_Source\PSoC5/pHADC.c **** {
+ 594              		.loc 1 476 0
+ 595              		.cfi_startproc
+ 596              		@ args = 0, pretend = 0, frame = 16
+ 597              		@ frame_needed = 1, uses_anonymous_args = 0
+ 598 0000 80B5     		push	{r7, lr}
+ 599              		.cfi_def_cfa_offset 8
+ 600              		.cfi_offset 7, -8
+ 601              		.cfi_offset 14, -4
+ 602 0002 84B0     		sub	sp, sp, #16
+ 603              		.cfi_def_cfa_offset 24
+ 604 0004 00AF     		add	r7, sp, #0
+ 605              		.cfi_def_cfa_register 7
+ 606 0006 0346     		mov	r3, r0
+ 607 0008 FB71     		strb	r3, [r7, #7]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 20
+
+
+ 608              	.L34:
+ 477:Generated_Source\PSoC5/pHADC.c ****     uint8 status;
+ 478:Generated_Source\PSoC5/pHADC.c **** 
+ 479:Generated_Source\PSoC5/pHADC.c ****     do
+ 480:Generated_Source\PSoC5/pHADC.c ****     {
+ 481:Generated_Source\PSoC5/pHADC.c ****         status = pHADC_SAR_CSR1_REG & pHADC_SAR_EOF_1;
+ 609              		.loc 1 481 0 discriminator 2
+ 610 000a 0C4B     		ldr	r3, .L37
+ 611 000c 1B78     		ldrb	r3, [r3]
+ 612 000e DBB2     		uxtb	r3, r3
+ 613 0010 03F00103 		and	r3, r3, #1
+ 614 0014 FB73     		strb	r3, [r7, #15]
+ 482:Generated_Source\PSoC5/pHADC.c ****     } while ((status != pHADC_SAR_EOF_1) && (retMode == pHADC_WAIT_FOR_RESULT));
+ 615              		.loc 1 482 0 discriminator 2
+ 616 0016 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 617 0018 012B     		cmp	r3, #1
+ 618 001a 02D0     		beq	.L33
+ 619              		.loc 1 482 0 is_stmt 0 discriminator 1
+ 620 001c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 621 001e 002B     		cmp	r3, #0
+ 622 0020 F3D0     		beq	.L34
+ 623              	.L33:
+ 483:Generated_Source\PSoC5/pHADC.c ****     /* If convertion complete, wait until EOF bit released */
+ 484:Generated_Source\PSoC5/pHADC.c ****     if(status == pHADC_SAR_EOF_1)
+ 624              		.loc 1 484 0 is_stmt 1
+ 625 0022 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 626 0024 012B     		cmp	r3, #1
+ 627 0026 04D1     		bne	.L35
+ 485:Generated_Source\PSoC5/pHADC.c ****     {
+ 486:Generated_Source\PSoC5/pHADC.c ****         /* wait one ADC clock to let the EOC status bit release */
+ 487:Generated_Source\PSoC5/pHADC.c ****         CyDelayUs(1u);
+ 628              		.loc 1 487 0
+ 629 0028 0120     		movs	r0, #1
+ 630 002a FFF7FEFF 		bl	CyDelayUs
+ 488:Generated_Source\PSoC5/pHADC.c ****         /* Do the unconditional read operation of the CSR1 register to make sure the EOC bit has be
+ 489:Generated_Source\PSoC5/pHADC.c ****         CY_GET_REG8(pHADC_SAR_CSR1_PTR);
+ 631              		.loc 1 489 0
+ 632 002e 034B     		ldr	r3, .L37
+ 633 0030 1B78     		ldrb	r3, [r3]
+ 634              	.L35:
+ 490:Generated_Source\PSoC5/pHADC.c ****     }
+ 491:Generated_Source\PSoC5/pHADC.c **** 
+ 492:Generated_Source\PSoC5/pHADC.c ****     return(status);
+ 635              		.loc 1 492 0
+ 636 0032 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 493:Generated_Source\PSoC5/pHADC.c **** }
+ 637              		.loc 1 493 0
+ 638 0034 1846     		mov	r0, r3
+ 639 0036 1037     		adds	r7, r7, #16
+ 640              		.cfi_def_cfa_offset 8
+ 641 0038 BD46     		mov	sp, r7
+ 642              		.cfi_def_cfa_register 13
+ 643              		@ sp needed
+ 644 003a 80BD     		pop	{r7, pc}
+ 645              	.L38:
+ 646              		.align	2
+ 647              	.L37:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 21
+
+
+ 648 003c 01590040 		.word	1073764609
+ 649              		.cfi_endproc
+ 650              	.LFE8:
+ 651              		.size	pHADC_IsEndConversion, .-pHADC_IsEndConversion
+ 652              		.section	.text.pHADC_GetResult8,"ax",%progbits
+ 653              		.align	2
+ 654              		.global	pHADC_GetResult8
+ 655              		.thumb
+ 656              		.thumb_func
+ 657              		.type	pHADC_GetResult8, %function
+ 658              	pHADC_GetResult8:
+ 659              	.LFB9:
+ 494:Generated_Source\PSoC5/pHADC.c **** 
+ 495:Generated_Source\PSoC5/pHADC.c **** 
+ 496:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 497:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_GetResult8
+ 498:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 499:Generated_Source\PSoC5/pHADC.c **** *
+ 500:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 501:Generated_Source\PSoC5/pHADC.c **** *  Returns the result of an 8-bit conversion. If the resolution is set greater
+ 502:Generated_Source\PSoC5/pHADC.c **** *  than 8 bits, the function returns the LSB of the result.
+ 503:Generated_Source\PSoC5/pHADC.c **** *  pHADC_IsEndConversion() should be called to verify that the data
+ 504:Generated_Source\PSoC5/pHADC.c **** *   sample is ready.
+ 505:Generated_Source\PSoC5/pHADC.c **** *
+ 506:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 507:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 508:Generated_Source\PSoC5/pHADC.c **** *
+ 509:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 510:Generated_Source\PSoC5/pHADC.c **** *  The LSB of the last ADC conversion.
+ 511:Generated_Source\PSoC5/pHADC.c **** *
+ 512:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 513:Generated_Source\PSoC5/pHADC.c **** *  pHADC_shift - used to convert the ADC counts to the 2s
+ 514:Generated_Source\PSoC5/pHADC.c **** *  compliment form.
+ 515:Generated_Source\PSoC5/pHADC.c **** *
+ 516:Generated_Source\PSoC5/pHADC.c **** * Side Effects:
+ 517:Generated_Source\PSoC5/pHADC.c **** *  Converts the ADC counts to the 2s complement form.
+ 518:Generated_Source\PSoC5/pHADC.c **** *
+ 519:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 520:Generated_Source\PSoC5/pHADC.c **** int8 pHADC_GetResult8( void )
+ 521:Generated_Source\PSoC5/pHADC.c **** {
+ 660              		.loc 1 521 0
+ 661              		.cfi_startproc
+ 662              		@ args = 0, pretend = 0, frame = 0
+ 663              		@ frame_needed = 1, uses_anonymous_args = 0
+ 664              		@ link register save eliminated.
+ 665 0000 80B4     		push	{r7}
+ 666              		.cfi_def_cfa_offset 4
+ 667              		.cfi_offset 7, -4
+ 668 0002 00AF     		add	r7, sp, #0
+ 669              		.cfi_def_cfa_register 7
+ 522:Generated_Source\PSoC5/pHADC.c ****     return( (int8)pHADC_SAR_WRK0_REG - (int8)pHADC_shift);
+ 670              		.loc 1 522 0
+ 671 0004 064B     		ldr	r3, .L41
+ 672 0006 1B78     		ldrb	r3, [r3]
+ 673 0008 DAB2     		uxtb	r2, r3
+ 674 000a 064B     		ldr	r3, .L41+4
+ 675 000c 1B88     		ldrh	r3, [r3]	@ movhi
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 22
+
+
+ 676 000e 1BB2     		sxth	r3, r3
+ 677 0010 DBB2     		uxtb	r3, r3
+ 678 0012 D31A     		subs	r3, r2, r3
+ 679 0014 DBB2     		uxtb	r3, r3
+ 680 0016 5BB2     		sxtb	r3, r3
+ 523:Generated_Source\PSoC5/pHADC.c **** }
+ 681              		.loc 1 523 0
+ 682 0018 1846     		mov	r0, r3
+ 683 001a BD46     		mov	sp, r7
+ 684              		.cfi_def_cfa_register 13
+ 685              		@ sp needed
+ 686 001c 80BC     		pop	{r7}
+ 687              		.cfi_restore 7
+ 688              		.cfi_def_cfa_offset 0
+ 689 001e 7047     		bx	lr
+ 690              	.L42:
+ 691              		.align	2
+ 692              	.L41:
+ 693 0020 A05B0040 		.word	1073765280
+ 694 0024 00000000 		.word	pHADC_shift
+ 695              		.cfi_endproc
+ 696              	.LFE9:
+ 697              		.size	pHADC_GetResult8, .-pHADC_GetResult8
+ 698              		.section	.text.pHADC_GetResult16,"ax",%progbits
+ 699              		.align	2
+ 700              		.global	pHADC_GetResult16
+ 701              		.thumb
+ 702              		.thumb_func
+ 703              		.type	pHADC_GetResult16, %function
+ 704              	pHADC_GetResult16:
+ 705              	.LFB10:
+ 524:Generated_Source\PSoC5/pHADC.c **** 
+ 525:Generated_Source\PSoC5/pHADC.c **** 
+ 526:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 527:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_GetResult16
+ 528:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 529:Generated_Source\PSoC5/pHADC.c **** *
+ 530:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 531:Generated_Source\PSoC5/pHADC.c **** *  Returns a 16-bit result for a conversion with a result that has a resolution
+ 532:Generated_Source\PSoC5/pHADC.c **** *  of 8 to 12 bits.
+ 533:Generated_Source\PSoC5/pHADC.c **** *  pHADC_IsEndConversion() should be called to verify that the data
+ 534:Generated_Source\PSoC5/pHADC.c **** *   sample is ready
+ 535:Generated_Source\PSoC5/pHADC.c **** *
+ 536:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 537:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 538:Generated_Source\PSoC5/pHADC.c **** *
+ 539:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 540:Generated_Source\PSoC5/pHADC.c **** *  The 16-bit result of the last ADC conversion
+ 541:Generated_Source\PSoC5/pHADC.c **** *
+ 542:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 543:Generated_Source\PSoC5/pHADC.c **** *  pHADC_shift - used to convert the ADC counts to the 2s
+ 544:Generated_Source\PSoC5/pHADC.c **** *  compliment form.
+ 545:Generated_Source\PSoC5/pHADC.c **** *
+ 546:Generated_Source\PSoC5/pHADC.c **** * Side Effects:
+ 547:Generated_Source\PSoC5/pHADC.c **** *  Converts the ADC counts to the 2s complement form.
+ 548:Generated_Source\PSoC5/pHADC.c **** *
+ 549:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 23
+
+
+ 550:Generated_Source\PSoC5/pHADC.c **** int16 pHADC_GetResult16( void )
+ 551:Generated_Source\PSoC5/pHADC.c **** {
+ 706              		.loc 1 551 0
+ 707              		.cfi_startproc
+ 708              		@ args = 0, pretend = 0, frame = 8
+ 709              		@ frame_needed = 1, uses_anonymous_args = 0
+ 710              		@ link register save eliminated.
+ 711 0000 80B4     		push	{r7}
+ 712              		.cfi_def_cfa_offset 4
+ 713              		.cfi_offset 7, -4
+ 714 0002 83B0     		sub	sp, sp, #12
+ 715              		.cfi_def_cfa_offset 16
+ 716 0004 00AF     		add	r7, sp, #0
+ 717              		.cfi_def_cfa_register 7
+ 552:Generated_Source\PSoC5/pHADC.c ****     uint16 res;
+ 553:Generated_Source\PSoC5/pHADC.c **** 
+ 554:Generated_Source\PSoC5/pHADC.c ****     res = CY_GET_REG16(pHADC_SAR_WRK_PTR);
+ 718              		.loc 1 554 0
+ 719 0006 084B     		ldr	r3, .L45
+ 720 0008 1B88     		ldrh	r3, [r3]	@ movhi
+ 721 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 555:Generated_Source\PSoC5/pHADC.c **** 
+ 556:Generated_Source\PSoC5/pHADC.c ****     return( (int16)res - pHADC_shift );
+ 722              		.loc 1 556 0
+ 723 000c 074B     		ldr	r3, .L45+4
+ 724 000e 1B88     		ldrh	r3, [r3]	@ movhi
+ 725 0010 1BB2     		sxth	r3, r3
+ 726 0012 9BB2     		uxth	r3, r3
+ 727 0014 FA88     		ldrh	r2, [r7, #6]	@ movhi
+ 728 0016 D31A     		subs	r3, r2, r3
+ 729 0018 9BB2     		uxth	r3, r3
+ 730 001a 1BB2     		sxth	r3, r3
+ 557:Generated_Source\PSoC5/pHADC.c **** }
+ 731              		.loc 1 557 0
+ 732 001c 1846     		mov	r0, r3
+ 733 001e 0C37     		adds	r7, r7, #12
+ 734              		.cfi_def_cfa_offset 4
+ 735 0020 BD46     		mov	sp, r7
+ 736              		.cfi_def_cfa_register 13
+ 737              		@ sp needed
+ 738 0022 80BC     		pop	{r7}
+ 739              		.cfi_restore 7
+ 740              		.cfi_def_cfa_offset 0
+ 741 0024 7047     		bx	lr
+ 742              	.L46:
+ 743 0026 00BF     		.align	2
+ 744              	.L45:
+ 745 0028 A05B0040 		.word	1073765280
+ 746 002c 00000000 		.word	pHADC_shift
+ 747              		.cfi_endproc
+ 748              	.LFE10:
+ 749              		.size	pHADC_GetResult16, .-pHADC_GetResult16
+ 750              		.section	.text.pHADC_SetOffset,"ax",%progbits
+ 751              		.align	2
+ 752              		.global	pHADC_SetOffset
+ 753              		.thumb
+ 754              		.thumb_func
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 24
+
+
+ 755              		.type	pHADC_SetOffset, %function
+ 756              	pHADC_SetOffset:
+ 757              	.LFB11:
+ 558:Generated_Source\PSoC5/pHADC.c **** 
+ 559:Generated_Source\PSoC5/pHADC.c **** 
+ 560:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 561:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_SetOffset
+ 562:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 563:Generated_Source\PSoC5/pHADC.c **** *
+ 564:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 565:Generated_Source\PSoC5/pHADC.c **** *  Sets the ADC offset, which is used by pHADC_CountsTo_Volts(),
+ 566:Generated_Source\PSoC5/pHADC.c **** *  pHADC_CountsTo_mVolts(), and pHADC_CountsTo_uVolts()
+ 567:Generated_Source\PSoC5/pHADC.c **** *  to subtract the offset from the given reading before calculating the voltage
+ 568:Generated_Source\PSoC5/pHADC.c **** *  conversion.
+ 569:Generated_Source\PSoC5/pHADC.c **** *
+ 570:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 571:Generated_Source\PSoC5/pHADC.c **** *  int16: This value is measured when the inputs are shorted or connected to
+ 572:Generated_Source\PSoC5/pHADC.c ****    the same input voltage.
+ 573:Generated_Source\PSoC5/pHADC.c **** *
+ 574:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 575:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 576:Generated_Source\PSoC5/pHADC.c **** *
+ 577:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 578:Generated_Source\PSoC5/pHADC.c **** *  The pHADC_offset variable modified. This variable is used for
+ 579:Generated_Source\PSoC5/pHADC.c **** *  offset calibration purpose.
+ 580:Generated_Source\PSoC5/pHADC.c **** *  Affects the pHADC_CountsTo_Volts,
+ 581:Generated_Source\PSoC5/pHADC.c **** *  pHADC_CountsTo_mVolts, pHADC_CountsTo_uVolts functions
+ 582:Generated_Source\PSoC5/pHADC.c **** *  by subtracting the given offset.
+ 583:Generated_Source\PSoC5/pHADC.c **** *
+ 584:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 585:Generated_Source\PSoC5/pHADC.c **** void pHADC_SetOffset(int16 offset)
+ 586:Generated_Source\PSoC5/pHADC.c **** {
+ 758              		.loc 1 586 0
+ 759              		.cfi_startproc
+ 760              		@ args = 0, pretend = 0, frame = 8
+ 761              		@ frame_needed = 1, uses_anonymous_args = 0
+ 762              		@ link register save eliminated.
+ 763 0000 80B4     		push	{r7}
+ 764              		.cfi_def_cfa_offset 4
+ 765              		.cfi_offset 7, -4
+ 766 0002 83B0     		sub	sp, sp, #12
+ 767              		.cfi_def_cfa_offset 16
+ 768 0004 00AF     		add	r7, sp, #0
+ 769              		.cfi_def_cfa_register 7
+ 770 0006 0346     		mov	r3, r0
+ 771 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 587:Generated_Source\PSoC5/pHADC.c ****     pHADC_offset = offset;
+ 772              		.loc 1 587 0
+ 773 000a 044A     		ldr	r2, .L48
+ 774 000c FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 775 000e 1380     		strh	r3, [r2]	@ movhi
+ 588:Generated_Source\PSoC5/pHADC.c **** }
+ 776              		.loc 1 588 0
+ 777 0010 00BF     		nop
+ 778 0012 0C37     		adds	r7, r7, #12
+ 779              		.cfi_def_cfa_offset 4
+ 780 0014 BD46     		mov	sp, r7
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 25
+
+
+ 781              		.cfi_def_cfa_register 13
+ 782              		@ sp needed
+ 783 0016 80BC     		pop	{r7}
+ 784              		.cfi_restore 7
+ 785              		.cfi_def_cfa_offset 0
+ 786 0018 7047     		bx	lr
+ 787              	.L49:
+ 788 001a 00BF     		.align	2
+ 789              	.L48:
+ 790 001c 00000000 		.word	pHADC_offset
+ 791              		.cfi_endproc
+ 792              	.LFE11:
+ 793              		.size	pHADC_SetOffset, .-pHADC_SetOffset
+ 794              		.section	.text.pHADC_CalcGain,"ax",%progbits
+ 795              		.align	2
+ 796              		.thumb
+ 797              		.thumb_func
+ 798              		.type	pHADC_CalcGain, %function
+ 799              	pHADC_CalcGain:
+ 800              	.LFB12:
+ 589:Generated_Source\PSoC5/pHADC.c **** 
+ 590:Generated_Source\PSoC5/pHADC.c **** 
+ 591:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 592:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_CalcGain
+ 593:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 594:Generated_Source\PSoC5/pHADC.c **** *
+ 595:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 596:Generated_Source\PSoC5/pHADC.c **** *  This function calculates the ADC gain in counts per 10 volt.
+ 597:Generated_Source\PSoC5/pHADC.c **** *
+ 598:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 599:Generated_Source\PSoC5/pHADC.c **** *  uint8: resolution
+ 600:Generated_Source\PSoC5/pHADC.c **** *
+ 601:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 602:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 603:Generated_Source\PSoC5/pHADC.c **** *
+ 604:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 605:Generated_Source\PSoC5/pHADC.c **** *  pHADC_shift variable initialized. This variable is used to
+ 606:Generated_Source\PSoC5/pHADC.c **** *  convert the ADC counts to the 2s compliment form.
+ 607:Generated_Source\PSoC5/pHADC.c **** *  pHADC_countsPer10Volt variable initialized. This variable is used
+ 608:Generated_Source\PSoC5/pHADC.c **** *  for gain calibration purpose.
+ 609:Generated_Source\PSoC5/pHADC.c **** *
+ 610:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 611:Generated_Source\PSoC5/pHADC.c **** static void pHADC_CalcGain( uint8 resolution )
+ 612:Generated_Source\PSoC5/pHADC.c **** {
+ 801              		.loc 1 612 0
+ 802              		.cfi_startproc
+ 803              		@ args = 0, pretend = 0, frame = 16
+ 804              		@ frame_needed = 1, uses_anonymous_args = 0
+ 805 0000 80B5     		push	{r7, lr}
+ 806              		.cfi_def_cfa_offset 8
+ 807              		.cfi_offset 7, -8
+ 808              		.cfi_offset 14, -4
+ 809 0002 84B0     		sub	sp, sp, #16
+ 810              		.cfi_def_cfa_offset 24
+ 811 0004 00AF     		add	r7, sp, #0
+ 812              		.cfi_def_cfa_register 7
+ 813 0006 0346     		mov	r3, r0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 26
+
+
+ 814 0008 FB71     		strb	r3, [r7, #7]
+ 613:Generated_Source\PSoC5/pHADC.c ****     int32 counts;
+ 614:Generated_Source\PSoC5/pHADC.c ****     #if(!((pHADC_DEFAULT_RANGE == pHADC__VSS_TO_VREF) || \
+ 615:Generated_Source\PSoC5/pHADC.c ****          (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDDA) || \
+ 616:Generated_Source\PSoC5/pHADC.c ****          (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDAC)) )
+ 617:Generated_Source\PSoC5/pHADC.c ****         uint16 diff_zero;
+ 618:Generated_Source\PSoC5/pHADC.c ****     #endif /* End pHADC_DEFAULT_RANGE */
+ 619:Generated_Source\PSoC5/pHADC.c **** 
+ 620:Generated_Source\PSoC5/pHADC.c ****     switch (resolution)
+ 815              		.loc 1 620 0
+ 816 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 817 000c 0A2B     		cmp	r3, #10
+ 818 000e 08D0     		beq	.L52
+ 819 0010 0C2B     		cmp	r3, #12
+ 820 0012 02D0     		beq	.L53
+ 821 0014 082B     		cmp	r3, #8
+ 822 0016 08D0     		beq	.L54
+ 823 0018 0BE0     		b	.L56
+ 824              	.L53:
+ 621:Generated_Source\PSoC5/pHADC.c ****     {
+ 622:Generated_Source\PSoC5/pHADC.c ****         case (uint8)pHADC__BITS_12:
+ 623:Generated_Source\PSoC5/pHADC.c ****             counts = (int32)pHADC_SAR_WRK_MAX_12BIT;
+ 825              		.loc 1 623 0
+ 826 001a 4FF48053 		mov	r3, #4096
+ 827 001e FB60     		str	r3, [r7, #12]
+ 624:Generated_Source\PSoC5/pHADC.c ****             #if(!((pHADC_DEFAULT_RANGE == pHADC__VSS_TO_VREF) || \
+ 625:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDDA) || \
+ 626:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDAC)) )
+ 627:Generated_Source\PSoC5/pHADC.c ****                 diff_zero = pHADC_SAR_DIFF_SHIFT;
+ 628:Generated_Source\PSoC5/pHADC.c ****             #endif /* End pHADC_DEFAULT_RANGE */
+ 629:Generated_Source\PSoC5/pHADC.c ****             break;
+ 828              		.loc 1 629 0
+ 829 0020 0DE0     		b	.L55
+ 830              	.L52:
+ 630:Generated_Source\PSoC5/pHADC.c ****         case (uint8)pHADC__BITS_10:
+ 631:Generated_Source\PSoC5/pHADC.c ****             counts = (int32)pHADC_SAR_WRK_MAX_10BIT;
+ 831              		.loc 1 631 0
+ 832 0022 4FF48063 		mov	r3, #1024
+ 833 0026 FB60     		str	r3, [r7, #12]
+ 632:Generated_Source\PSoC5/pHADC.c ****             #if(!((pHADC_DEFAULT_RANGE == pHADC__VSS_TO_VREF) || \
+ 633:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDDA) || \
+ 634:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDAC)) )
+ 635:Generated_Source\PSoC5/pHADC.c ****                 diff_zero = pHADC_SAR_DIFF_SHIFT >> 2u;
+ 636:Generated_Source\PSoC5/pHADC.c ****             #endif /* End pHADC_DEFAULT_RANGE */
+ 637:Generated_Source\PSoC5/pHADC.c ****             break;
+ 834              		.loc 1 637 0
+ 835 0028 09E0     		b	.L55
+ 836              	.L54:
+ 638:Generated_Source\PSoC5/pHADC.c ****         case (uint8)pHADC__BITS_8:
+ 639:Generated_Source\PSoC5/pHADC.c ****             counts = (int32)pHADC_SAR_WRK_MAX_8BIT;
+ 837              		.loc 1 639 0
+ 838 002a 4FF48073 		mov	r3, #256
+ 839 002e FB60     		str	r3, [r7, #12]
+ 640:Generated_Source\PSoC5/pHADC.c ****             #if(!((pHADC_DEFAULT_RANGE == pHADC__VSS_TO_VREF) || \
+ 641:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDDA) || \
+ 642:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDAC)) )
+ 643:Generated_Source\PSoC5/pHADC.c ****                 diff_zero = pHADC_SAR_DIFF_SHIFT >> 4u;
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 27
+
+
+ 644:Generated_Source\PSoC5/pHADC.c ****             #endif /* End pHADC_DEFAULT_RANGE */
+ 645:Generated_Source\PSoC5/pHADC.c ****             break;
+ 840              		.loc 1 645 0
+ 841 0030 05E0     		b	.L55
+ 842              	.L56:
+ 646:Generated_Source\PSoC5/pHADC.c ****         default: /* Halt CPU in debug mode if resolution is out of valid range */
+ 647:Generated_Source\PSoC5/pHADC.c ****             counts = 0;
+ 843              		.loc 1 647 0
+ 844 0032 0023     		movs	r3, #0
+ 845 0034 FB60     		str	r3, [r7, #12]
+ 648:Generated_Source\PSoC5/pHADC.c ****             #if(!((pHADC_DEFAULT_RANGE == pHADC__VSS_TO_VREF) || \
+ 649:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDDA) || \
+ 650:Generated_Source\PSoC5/pHADC.c ****                  (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDAC)) )
+ 651:Generated_Source\PSoC5/pHADC.c ****                 diff_zero = 0u;
+ 652:Generated_Source\PSoC5/pHADC.c ****             #endif /* End pHADC_DEFAULT_RANGE */
+ 653:Generated_Source\PSoC5/pHADC.c ****             CYASSERT(0u != 0u);
+ 846              		.loc 1 653 0
+ 847 0036 0020     		movs	r0, #0
+ 848 0038 FFF7FEFF 		bl	CyHalt
+ 654:Generated_Source\PSoC5/pHADC.c ****             break;
+ 849              		.loc 1 654 0
+ 850 003c 00BF     		nop
+ 851              	.L55:
+ 655:Generated_Source\PSoC5/pHADC.c ****     }
+ 656:Generated_Source\PSoC5/pHADC.c ****     pHADC_countsPerVolt = 0; /* Clear obsolete variable */
+ 852              		.loc 1 656 0
+ 853 003e 0C4B     		ldr	r3, .L57
+ 854 0040 0022     		movs	r2, #0
+ 855 0042 1A80     		strh	r2, [r3]	@ movhi
+ 657:Generated_Source\PSoC5/pHADC.c ****     /* Calculate gain in counts per 10 volts with rounding */
+ 658:Generated_Source\PSoC5/pHADC.c ****     pHADC_countsPer10Volt = (((counts * pHADC_10MV_COUNTS) +
+ 856              		.loc 1 658 0
+ 857 0044 FB68     		ldr	r3, [r7, #12]
+ 858 0046 42F21072 		movw	r2, #10000
+ 859 004a 02FB03F3 		mul	r3, r2, r3
+ 860 004e 03F6C413 		addw	r3, r3, #2500
+ 659:Generated_Source\PSoC5/pHADC.c ****                         pHADC_DEFAULT_REF_VOLTAGE_MV) / (pHADC_DEFAULT_REF_VOLTAGE_MV * 2));
+ 861              		.loc 1 659 0
+ 862 0052 084A     		ldr	r2, .L57+4
+ 863 0054 82FB0312 		smull	r1, r2, r2, r3
+ 864 0058 D212     		asrs	r2, r2, #11
+ 865 005a DB17     		asrs	r3, r3, #31
+ 866 005c D31A     		subs	r3, r2, r3
+ 658:Generated_Source\PSoC5/pHADC.c ****                         pHADC_DEFAULT_REF_VOLTAGE_MV) / (pHADC_DEFAULT_REF_VOLTAGE_MV * 2));
+ 867              		.loc 1 658 0
+ 868 005e 064A     		ldr	r2, .L57+8
+ 869 0060 1360     		str	r3, [r2]
+ 660:Generated_Source\PSoC5/pHADC.c **** 
+ 661:Generated_Source\PSoC5/pHADC.c ****     #if( (pHADC_DEFAULT_RANGE == pHADC__VSS_TO_VREF) || \
+ 662:Generated_Source\PSoC5/pHADC.c ****          (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDDA) || \
+ 663:Generated_Source\PSoC5/pHADC.c ****          (pHADC_DEFAULT_RANGE == pHADC__VSSA_TO_VDAC) )
+ 664:Generated_Source\PSoC5/pHADC.c ****         pHADC_shift = 0;
+ 870              		.loc 1 664 0
+ 871 0062 064B     		ldr	r3, .L57+12
+ 872 0064 0022     		movs	r2, #0
+ 873 0066 1A80     		strh	r2, [r3]	@ movhi
+ 665:Generated_Source\PSoC5/pHADC.c ****     #else
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 28
+
+
+ 666:Generated_Source\PSoC5/pHADC.c ****         pHADC_shift = diff_zero;
+ 667:Generated_Source\PSoC5/pHADC.c ****     #endif /* End pHADC_DEFAULT_RANGE */
+ 668:Generated_Source\PSoC5/pHADC.c **** }
+ 874              		.loc 1 668 0
+ 875 0068 00BF     		nop
+ 876 006a 1037     		adds	r7, r7, #16
+ 877              		.cfi_def_cfa_offset 8
+ 878 006c BD46     		mov	sp, r7
+ 879              		.cfi_def_cfa_register 13
+ 880              		@ sp needed
+ 881 006e 80BD     		pop	{r7, pc}
+ 882              	.L58:
+ 883              		.align	2
+ 884              	.L57:
+ 885 0070 00000000 		.word	pHADC_countsPerVolt
+ 886 0074 AD8BDB68 		.word	1759218605
+ 887 0078 00000000 		.word	pHADC_countsPer10Volt
+ 888 007c 00000000 		.word	pHADC_shift
+ 889              		.cfi_endproc
+ 890              	.LFE12:
+ 891              		.size	pHADC_CalcGain, .-pHADC_CalcGain
+ 892              		.section	.text.pHADC_SetGain,"ax",%progbits
+ 893              		.align	2
+ 894              		.global	pHADC_SetGain
+ 895              		.thumb
+ 896              		.thumb_func
+ 897              		.type	pHADC_SetGain, %function
+ 898              	pHADC_SetGain:
+ 899              	.LFB13:
+ 669:Generated_Source\PSoC5/pHADC.c **** 
+ 670:Generated_Source\PSoC5/pHADC.c **** 
+ 671:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 672:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_SetGain
+ 673:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 674:Generated_Source\PSoC5/pHADC.c **** *
+ 675:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 676:Generated_Source\PSoC5/pHADC.c **** *  Sets the ADC gain in counts per volt for the voltage conversion functions
+ 677:Generated_Source\PSoC5/pHADC.c **** *  that follow. This value is set by default by the reference and input range
+ 678:Generated_Source\PSoC5/pHADC.c **** *  settings. It should only be used to further calibrate the ADC with a known
+ 679:Generated_Source\PSoC5/pHADC.c **** *  input or if the ADC is using an external reference.
+ 680:Generated_Source\PSoC5/pHADC.c **** *
+ 681:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 682:Generated_Source\PSoC5/pHADC.c **** *  int16 adcGain counts per volt
+ 683:Generated_Source\PSoC5/pHADC.c **** *
+ 684:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 685:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 686:Generated_Source\PSoC5/pHADC.c **** *
+ 687:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 688:Generated_Source\PSoC5/pHADC.c **** *  pHADC_countsPer10Volt variable modified. This variable is used
+ 689:Generated_Source\PSoC5/pHADC.c **** *  for gain calibration purpose.
+ 690:Generated_Source\PSoC5/pHADC.c **** *
+ 691:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 692:Generated_Source\PSoC5/pHADC.c **** void pHADC_SetGain(int16 adcGain)
+ 693:Generated_Source\PSoC5/pHADC.c **** {
+ 900              		.loc 1 693 0
+ 901              		.cfi_startproc
+ 902              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 29
+
+
+ 903              		@ frame_needed = 1, uses_anonymous_args = 0
+ 904              		@ link register save eliminated.
+ 905 0000 80B4     		push	{r7}
+ 906              		.cfi_def_cfa_offset 4
+ 907              		.cfi_offset 7, -4
+ 908 0002 83B0     		sub	sp, sp, #12
+ 909              		.cfi_def_cfa_offset 16
+ 910 0004 00AF     		add	r7, sp, #0
+ 911              		.cfi_def_cfa_register 7
+ 912 0006 0346     		mov	r3, r0
+ 913 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 694:Generated_Source\PSoC5/pHADC.c ****     pHADC_countsPer10Volt = (int32)adcGain * 10;
+ 914              		.loc 1 694 0
+ 915 000a B7F90620 		ldrsh	r2, [r7, #6]
+ 916 000e 1346     		mov	r3, r2
+ 917 0010 9B00     		lsls	r3, r3, #2
+ 918 0012 1344     		add	r3, r3, r2
+ 919 0014 5B00     		lsls	r3, r3, #1
+ 920 0016 1A46     		mov	r2, r3
+ 921 0018 034B     		ldr	r3, .L60
+ 922 001a 1A60     		str	r2, [r3]
+ 695:Generated_Source\PSoC5/pHADC.c **** }
+ 923              		.loc 1 695 0
+ 924 001c 00BF     		nop
+ 925 001e 0C37     		adds	r7, r7, #12
+ 926              		.cfi_def_cfa_offset 4
+ 927 0020 BD46     		mov	sp, r7
+ 928              		.cfi_def_cfa_register 13
+ 929              		@ sp needed
+ 930 0022 80BC     		pop	{r7}
+ 931              		.cfi_restore 7
+ 932              		.cfi_def_cfa_offset 0
+ 933 0024 7047     		bx	lr
+ 934              	.L61:
+ 935 0026 00BF     		.align	2
+ 936              	.L60:
+ 937 0028 00000000 		.word	pHADC_countsPer10Volt
+ 938              		.cfi_endproc
+ 939              	.LFE13:
+ 940              		.size	pHADC_SetGain, .-pHADC_SetGain
+ 941              		.section	.text.pHADC_SetScaledGain,"ax",%progbits
+ 942              		.align	2
+ 943              		.global	pHADC_SetScaledGain
+ 944              		.thumb
+ 945              		.thumb_func
+ 946              		.type	pHADC_SetScaledGain, %function
+ 947              	pHADC_SetScaledGain:
+ 948              	.LFB14:
+ 696:Generated_Source\PSoC5/pHADC.c **** 
+ 697:Generated_Source\PSoC5/pHADC.c **** 
+ 698:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 699:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_SetScaledGain
+ 700:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 701:Generated_Source\PSoC5/pHADC.c **** *
+ 702:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 703:Generated_Source\PSoC5/pHADC.c **** *  Sets the ADC gain in counts per 10 volt for the voltage conversion functions
+ 704:Generated_Source\PSoC5/pHADC.c **** *  that follow. This value is set by default by the reference and input range
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 30
+
+
+ 705:Generated_Source\PSoC5/pHADC.c **** *  settings. It should only be used to further calibrate the ADC with a known
+ 706:Generated_Source\PSoC5/pHADC.c **** *  input or if the ADC is using an external reference.
+ 707:Generated_Source\PSoC5/pHADC.c **** *
+ 708:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 709:Generated_Source\PSoC5/pHADC.c **** *  int32 adcGain  counts per 10 volt
+ 710:Generated_Source\PSoC5/pHADC.c **** *
+ 711:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 712:Generated_Source\PSoC5/pHADC.c **** *  None.
+ 713:Generated_Source\PSoC5/pHADC.c **** *
+ 714:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 715:Generated_Source\PSoC5/pHADC.c **** *  pHADC_countsPer10Volt variable modified. This variable is used
+ 716:Generated_Source\PSoC5/pHADC.c **** *  for gain calibration purpose.
+ 717:Generated_Source\PSoC5/pHADC.c **** *
+ 718:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 719:Generated_Source\PSoC5/pHADC.c **** void pHADC_SetScaledGain(int32 adcGain)
+ 720:Generated_Source\PSoC5/pHADC.c **** {
+ 949              		.loc 1 720 0
+ 950              		.cfi_startproc
+ 951              		@ args = 0, pretend = 0, frame = 8
+ 952              		@ frame_needed = 1, uses_anonymous_args = 0
+ 953              		@ link register save eliminated.
+ 954 0000 80B4     		push	{r7}
+ 955              		.cfi_def_cfa_offset 4
+ 956              		.cfi_offset 7, -4
+ 957 0002 83B0     		sub	sp, sp, #12
+ 958              		.cfi_def_cfa_offset 16
+ 959 0004 00AF     		add	r7, sp, #0
+ 960              		.cfi_def_cfa_register 7
+ 961 0006 7860     		str	r0, [r7, #4]
+ 721:Generated_Source\PSoC5/pHADC.c ****     pHADC_countsPer10Volt = adcGain;
+ 962              		.loc 1 721 0
+ 963 0008 034A     		ldr	r2, .L63
+ 964 000a 7B68     		ldr	r3, [r7, #4]
+ 965 000c 1360     		str	r3, [r2]
+ 722:Generated_Source\PSoC5/pHADC.c **** }
+ 966              		.loc 1 722 0
+ 967 000e 00BF     		nop
+ 968 0010 0C37     		adds	r7, r7, #12
+ 969              		.cfi_def_cfa_offset 4
+ 970 0012 BD46     		mov	sp, r7
+ 971              		.cfi_def_cfa_register 13
+ 972              		@ sp needed
+ 973 0014 80BC     		pop	{r7}
+ 974              		.cfi_restore 7
+ 975              		.cfi_def_cfa_offset 0
+ 976 0016 7047     		bx	lr
+ 977              	.L64:
+ 978              		.align	2
+ 979              	.L63:
+ 980 0018 00000000 		.word	pHADC_countsPer10Volt
+ 981              		.cfi_endproc
+ 982              	.LFE14:
+ 983              		.size	pHADC_SetScaledGain, .-pHADC_SetScaledGain
+ 984              		.section	.text.pHADC_CountsTo_mVolts,"ax",%progbits
+ 985              		.align	2
+ 986              		.global	pHADC_CountsTo_mVolts
+ 987              		.thumb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 31
+
+
+ 988              		.thumb_func
+ 989              		.type	pHADC_CountsTo_mVolts, %function
+ 990              	pHADC_CountsTo_mVolts:
+ 991              	.LFB15:
+ 723:Generated_Source\PSoC5/pHADC.c **** 
+ 724:Generated_Source\PSoC5/pHADC.c **** 
+ 725:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 726:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_CountsTo_mVolts
+ 727:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 728:Generated_Source\PSoC5/pHADC.c **** *
+ 729:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 730:Generated_Source\PSoC5/pHADC.c **** *  Converts the ADC output to millivolts as a 16-bit integer.
+ 731:Generated_Source\PSoC5/pHADC.c **** *
+ 732:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 733:Generated_Source\PSoC5/pHADC.c **** *  int16 adcCounts:  Result from the ADC conversion
+ 734:Generated_Source\PSoC5/pHADC.c **** *
+ 735:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 736:Generated_Source\PSoC5/pHADC.c **** *  int16 Result in mVolts
+ 737:Generated_Source\PSoC5/pHADC.c **** *
+ 738:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 739:Generated_Source\PSoC5/pHADC.c **** *  pHADC_offset variable used.
+ 740:Generated_Source\PSoC5/pHADC.c **** *  pHADC_countsPer10Volt variable used.
+ 741:Generated_Source\PSoC5/pHADC.c **** *
+ 742:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 743:Generated_Source\PSoC5/pHADC.c **** int16 pHADC_CountsTo_mVolts(int16 adcCounts)
+ 744:Generated_Source\PSoC5/pHADC.c **** {
+ 992              		.loc 1 744 0
+ 993              		.cfi_startproc
+ 994              		@ args = 0, pretend = 0, frame = 16
+ 995              		@ frame_needed = 1, uses_anonymous_args = 0
+ 996              		@ link register save eliminated.
+ 997 0000 80B4     		push	{r7}
+ 998              		.cfi_def_cfa_offset 4
+ 999              		.cfi_offset 7, -4
+ 1000 0002 85B0     		sub	sp, sp, #20
+ 1001              		.cfi_def_cfa_offset 24
+ 1002 0004 00AF     		add	r7, sp, #0
+ 1003              		.cfi_def_cfa_register 7
+ 1004 0006 0346     		mov	r3, r0
+ 1005 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 745:Generated_Source\PSoC5/pHADC.c ****     int16 mVolts;
+ 746:Generated_Source\PSoC5/pHADC.c ****     int32 countsPer10Volt;
+ 747:Generated_Source\PSoC5/pHADC.c **** 
+ 748:Generated_Source\PSoC5/pHADC.c ****     if(pHADC_countsPerVolt != 0)
+ 1006              		.loc 1 748 0
+ 1007 000a 1D4B     		ldr	r3, .L71
+ 1008 000c 1B88     		ldrh	r3, [r3]	@ movhi
+ 1009 000e 1BB2     		sxth	r3, r3
+ 1010 0010 002B     		cmp	r3, #0
+ 1011 0012 09D0     		beq	.L66
+ 749:Generated_Source\PSoC5/pHADC.c ****     {   /* Support obsolete method */
+ 750:Generated_Source\PSoC5/pHADC.c ****         countsPer10Volt = (int32)pHADC_countsPerVolt * 10;
+ 1012              		.loc 1 750 0
+ 1013 0014 1A4B     		ldr	r3, .L71
+ 1014 0016 1B88     		ldrh	r3, [r3]	@ movhi
+ 1015 0018 1BB2     		sxth	r3, r3
+ 1016 001a 1A46     		mov	r2, r3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 32
+
+
+ 1017 001c 1346     		mov	r3, r2
+ 1018 001e 9B00     		lsls	r3, r3, #2
+ 1019 0020 1344     		add	r3, r3, r2
+ 1020 0022 5B00     		lsls	r3, r3, #1
+ 1021 0024 FB60     		str	r3, [r7, #12]
+ 1022 0026 02E0     		b	.L67
+ 1023              	.L66:
+ 751:Generated_Source\PSoC5/pHADC.c ****     }
+ 752:Generated_Source\PSoC5/pHADC.c ****     else
+ 753:Generated_Source\PSoC5/pHADC.c ****     {
+ 754:Generated_Source\PSoC5/pHADC.c ****         countsPer10Volt = pHADC_countsPer10Volt;
+ 1024              		.loc 1 754 0
+ 1025 0028 164B     		ldr	r3, .L71+4
+ 1026 002a 1B68     		ldr	r3, [r3]
+ 1027 002c FB60     		str	r3, [r7, #12]
+ 1028              	.L67:
+ 755:Generated_Source\PSoC5/pHADC.c ****     }
+ 756:Generated_Source\PSoC5/pHADC.c **** 
+ 757:Generated_Source\PSoC5/pHADC.c ****     /* Subtract ADC offset */
+ 758:Generated_Source\PSoC5/pHADC.c ****     adcCounts -= pHADC_offset;
+ 1029              		.loc 1 758 0
+ 1030 002e 164B     		ldr	r3, .L71+8
+ 1031 0030 1B88     		ldrh	r3, [r3]	@ movhi
+ 1032 0032 1BB2     		sxth	r3, r3
+ 1033 0034 FA88     		ldrh	r2, [r7, #6]
+ 1034 0036 9BB2     		uxth	r3, r3
+ 1035 0038 D31A     		subs	r3, r2, r3
+ 1036 003a 9BB2     		uxth	r3, r3
+ 1037 003c FB80     		strh	r3, [r7, #6]	@ movhi
+ 759:Generated_Source\PSoC5/pHADC.c ****     /* Convert to millivolts with rounding */
+ 760:Generated_Source\PSoC5/pHADC.c ****     mVolts = (int16)( (( (int32)adcCounts * pHADC_10MV_COUNTS ) + ( (adcCounts > 0) ?
+ 1038              		.loc 1 760 0
+ 1039 003e B7F90630 		ldrsh	r3, [r7, #6]
+ 1040 0042 42F21072 		movw	r2, #10000
+ 1041 0046 02FB03F2 		mul	r2, r2, r3
+ 761:Generated_Source\PSoC5/pHADC.c ****                        (countsPer10Volt / 2) : (-(countsPer10Volt / 2)) )) / countsPer10Volt);
+ 1042              		.loc 1 761 0
+ 1043 004a B7F90630 		ldrsh	r3, [r7, #6]
+ 1044 004e 002B     		cmp	r3, #0
+ 1045 0050 04DD     		ble	.L68
+ 1046              		.loc 1 761 0 is_stmt 0 discriminator 1
+ 1047 0052 FB68     		ldr	r3, [r7, #12]
+ 1048 0054 D90F     		lsrs	r1, r3, #31
+ 1049 0056 0B44     		add	r3, r3, r1
+ 1050 0058 5B10     		asrs	r3, r3, #1
+ 1051 005a 04E0     		b	.L69
+ 1052              	.L68:
+ 1053              		.loc 1 761 0 discriminator 2
+ 1054 005c FB68     		ldr	r3, [r7, #12]
+ 1055 005e D90F     		lsrs	r1, r3, #31
+ 1056 0060 0B44     		add	r3, r3, r1
+ 1057 0062 5B10     		asrs	r3, r3, #1
+ 1058 0064 5B42     		negs	r3, r3
+ 1059              	.L69:
+ 760:Generated_Source\PSoC5/pHADC.c ****                        (countsPer10Volt / 2) : (-(countsPer10Volt / 2)) )) / countsPer10Volt);
+ 1060              		.loc 1 760 0 is_stmt 1
+ 1061 0066 1A44     		add	r2, r2, r3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 33
+
+
+ 1062              		.loc 1 761 0
+ 1063 0068 FB68     		ldr	r3, [r7, #12]
+ 1064 006a 92FBF3F3 		sdiv	r3, r2, r3
+ 760:Generated_Source\PSoC5/pHADC.c ****                        (countsPer10Volt / 2) : (-(countsPer10Volt / 2)) )) / countsPer10Volt);
+ 1065              		.loc 1 760 0
+ 1066 006e 7B81     		strh	r3, [r7, #10]	@ movhi
+ 762:Generated_Source\PSoC5/pHADC.c **** 
+ 763:Generated_Source\PSoC5/pHADC.c ****     return( mVolts );
+ 1067              		.loc 1 763 0
+ 1068 0070 B7F90A30 		ldrsh	r3, [r7, #10]
+ 764:Generated_Source\PSoC5/pHADC.c **** }
+ 1069              		.loc 1 764 0
+ 1070 0074 1846     		mov	r0, r3
+ 1071 0076 1437     		adds	r7, r7, #20
+ 1072              		.cfi_def_cfa_offset 4
+ 1073 0078 BD46     		mov	sp, r7
+ 1074              		.cfi_def_cfa_register 13
+ 1075              		@ sp needed
+ 1076 007a 80BC     		pop	{r7}
+ 1077              		.cfi_restore 7
+ 1078              		.cfi_def_cfa_offset 0
+ 1079 007c 7047     		bx	lr
+ 1080              	.L72:
+ 1081 007e 00BF     		.align	2
+ 1082              	.L71:
+ 1083 0080 00000000 		.word	pHADC_countsPerVolt
+ 1084 0084 00000000 		.word	pHADC_countsPer10Volt
+ 1085 0088 00000000 		.word	pHADC_offset
+ 1086              		.cfi_endproc
+ 1087              	.LFE15:
+ 1088              		.size	pHADC_CountsTo_mVolts, .-pHADC_CountsTo_mVolts
+ 1089              		.global	__aeabi_ldivmod
+ 1090              		.section	.text.pHADC_CountsTo_uVolts,"ax",%progbits
+ 1091              		.align	2
+ 1092              		.global	pHADC_CountsTo_uVolts
+ 1093              		.thumb
+ 1094              		.thumb_func
+ 1095              		.type	pHADC_CountsTo_uVolts, %function
+ 1096              	pHADC_CountsTo_uVolts:
+ 1097              	.LFB16:
+ 765:Generated_Source\PSoC5/pHADC.c **** 
+ 766:Generated_Source\PSoC5/pHADC.c **** 
+ 767:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 768:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_CountsTo_uVolts
+ 769:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 770:Generated_Source\PSoC5/pHADC.c **** *
+ 771:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 772:Generated_Source\PSoC5/pHADC.c **** *  Converts the ADC output to microvolts as a 32-bit integer.
+ 773:Generated_Source\PSoC5/pHADC.c **** *
+ 774:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 775:Generated_Source\PSoC5/pHADC.c **** *  int16 adcCounts: Result from the ADC conversion
+ 776:Generated_Source\PSoC5/pHADC.c **** *
+ 777:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 778:Generated_Source\PSoC5/pHADC.c **** *  int32 Result in micro Volts
+ 779:Generated_Source\PSoC5/pHADC.c **** *
+ 780:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 781:Generated_Source\PSoC5/pHADC.c **** *  pHADC_offset variable used.
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 34
+
+
+ 782:Generated_Source\PSoC5/pHADC.c **** *  pHADC_countsPer10Volt used to convert ADC counts to uVolts.
+ 783:Generated_Source\PSoC5/pHADC.c **** *
+ 784:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 785:Generated_Source\PSoC5/pHADC.c **** int32 pHADC_CountsTo_uVolts(int16 adcCounts)
+ 786:Generated_Source\PSoC5/pHADC.c **** {
+ 1098              		.loc 1 786 0
+ 1099              		.cfi_startproc
+ 1100              		@ args = 0, pretend = 0, frame = 24
+ 1101              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1102 0000 90B5     		push	{r4, r7, lr}
+ 1103              		.cfi_def_cfa_offset 12
+ 1104              		.cfi_offset 4, -12
+ 1105              		.cfi_offset 7, -8
+ 1106              		.cfi_offset 14, -4
+ 1107 0002 87B0     		sub	sp, sp, #28
+ 1108              		.cfi_def_cfa_offset 40
+ 1109 0004 00AF     		add	r7, sp, #0
+ 1110              		.cfi_def_cfa_register 7
+ 1111 0006 0346     		mov	r3, r0
+ 1112 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 787:Generated_Source\PSoC5/pHADC.c **** 
+ 788:Generated_Source\PSoC5/pHADC.c ****     int64 uVolts;
+ 789:Generated_Source\PSoC5/pHADC.c ****     int32 countsPer10Volt;
+ 790:Generated_Source\PSoC5/pHADC.c **** 
+ 791:Generated_Source\PSoC5/pHADC.c ****     if(pHADC_countsPerVolt != 0)
+ 1113              		.loc 1 791 0
+ 1114 000a 1D4B     		ldr	r3, .L77
+ 1115 000c 1B88     		ldrh	r3, [r3]	@ movhi
+ 1116 000e 1BB2     		sxth	r3, r3
+ 1117 0010 002B     		cmp	r3, #0
+ 1118 0012 09D0     		beq	.L74
+ 792:Generated_Source\PSoC5/pHADC.c ****     {   /* Support obsolete method */
+ 793:Generated_Source\PSoC5/pHADC.c ****         countsPer10Volt = (int32)pHADC_countsPerVolt * 10;
+ 1119              		.loc 1 793 0
+ 1120 0014 1A4B     		ldr	r3, .L77
+ 1121 0016 1B88     		ldrh	r3, [r3]	@ movhi
+ 1122 0018 1BB2     		sxth	r3, r3
+ 1123 001a 1A46     		mov	r2, r3
+ 1124 001c 1346     		mov	r3, r2
+ 1125 001e 9B00     		lsls	r3, r3, #2
+ 1126 0020 1344     		add	r3, r3, r2
+ 1127 0022 5B00     		lsls	r3, r3, #1
+ 1128 0024 7B61     		str	r3, [r7, #20]
+ 1129 0026 02E0     		b	.L75
+ 1130              	.L74:
+ 794:Generated_Source\PSoC5/pHADC.c ****     }
+ 795:Generated_Source\PSoC5/pHADC.c ****     else
+ 796:Generated_Source\PSoC5/pHADC.c ****     {
+ 797:Generated_Source\PSoC5/pHADC.c ****         countsPer10Volt = pHADC_countsPer10Volt;
+ 1131              		.loc 1 797 0
+ 1132 0028 164B     		ldr	r3, .L77+4
+ 1133 002a 1B68     		ldr	r3, [r3]
+ 1134 002c 7B61     		str	r3, [r7, #20]
+ 1135              	.L75:
+ 798:Generated_Source\PSoC5/pHADC.c ****     }
+ 799:Generated_Source\PSoC5/pHADC.c **** 
+ 800:Generated_Source\PSoC5/pHADC.c ****     /* Subtract ADC offset */
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 35
+
+
+ 801:Generated_Source\PSoC5/pHADC.c ****     adcCounts -= pHADC_offset;
+ 1136              		.loc 1 801 0
+ 1137 002e 164B     		ldr	r3, .L77+8
+ 1138 0030 1B88     		ldrh	r3, [r3]	@ movhi
+ 1139 0032 1BB2     		sxth	r3, r3
+ 1140 0034 FA88     		ldrh	r2, [r7, #6]
+ 1141 0036 9BB2     		uxth	r3, r3
+ 1142 0038 D31A     		subs	r3, r2, r3
+ 1143 003a 9BB2     		uxth	r3, r3
+ 1144 003c FB80     		strh	r3, [r7, #6]	@ movhi
+ 802:Generated_Source\PSoC5/pHADC.c ****     /* To convert adcCounts to microVolts it is required to be multiplied
+ 803:Generated_Source\PSoC5/pHADC.c ****     *  on 10 million and later divide on gain in counts per 10V.
+ 804:Generated_Source\PSoC5/pHADC.c ****     */
+ 805:Generated_Source\PSoC5/pHADC.c ****     uVolts = (( (int64)adcCounts * pHADC_10UV_COUNTS ) / countsPer10Volt);
+ 1145              		.loc 1 805 0
+ 1146 003e B7F90630 		ldrsh	r3, [r7, #6]
+ 1147 0042 4FEAE374 		asr	r4, r3, #31
+ 1148 0046 114A     		ldr	r2, .L77+12
+ 1149 0048 02FB04F1 		mul	r1, r2, r4
+ 1150 004c 0022     		movs	r2, #0
+ 1151 004e 02FB03F2 		mul	r2, r2, r3
+ 1152 0052 0A44     		add	r2, r2, r1
+ 1153 0054 0D49     		ldr	r1, .L77+12
+ 1154 0056 A3FB0101 		umull	r0, r1, r3, r1
+ 1155 005a 5318     		adds	r3, r2, r1
+ 1156 005c 1946     		mov	r1, r3
+ 1157 005e 7B69     		ldr	r3, [r7, #20]
+ 1158 0060 4FEAE374 		asr	r4, r3, #31
+ 1159 0064 1A46     		mov	r2, r3
+ 1160 0066 2346     		mov	r3, r4
+ 1161 0068 FFF7FEFF 		bl	__aeabi_ldivmod
+ 1162 006c 0346     		mov	r3, r0
+ 1163 006e 0C46     		mov	r4, r1
+ 1164 0070 C7E90234 		strd	r3, [r7, #8]
+ 806:Generated_Source\PSoC5/pHADC.c **** 
+ 807:Generated_Source\PSoC5/pHADC.c ****     return((int32) uVolts );
+ 1165              		.loc 1 807 0
+ 1166 0074 BB68     		ldr	r3, [r7, #8]
+ 808:Generated_Source\PSoC5/pHADC.c **** }
+ 1167              		.loc 1 808 0
+ 1168 0076 1846     		mov	r0, r3
+ 1169 0078 1C37     		adds	r7, r7, #28
+ 1170              		.cfi_def_cfa_offset 12
+ 1171 007a BD46     		mov	sp, r7
+ 1172              		.cfi_def_cfa_register 13
+ 1173              		@ sp needed
+ 1174 007c 90BD     		pop	{r4, r7, pc}
+ 1175              	.L78:
+ 1176 007e 00BF     		.align	2
+ 1177              	.L77:
+ 1178 0080 00000000 		.word	pHADC_countsPerVolt
+ 1179 0084 00000000 		.word	pHADC_countsPer10Volt
+ 1180 0088 00000000 		.word	pHADC_offset
+ 1181 008c 80969800 		.word	10000000
+ 1182              		.cfi_endproc
+ 1183              	.LFE16:
+ 1184              		.size	pHADC_CountsTo_uVolts, .-pHADC_CountsTo_uVolts
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 36
+
+
+ 1185              		.global	__aeabi_i2f
+ 1186              		.global	__aeabi_fmul
+ 1187              		.global	__aeabi_fdiv
+ 1188              		.section	.text.pHADC_CountsTo_Volts,"ax",%progbits
+ 1189              		.align	2
+ 1190              		.global	pHADC_CountsTo_Volts
+ 1191              		.thumb
+ 1192              		.thumb_func
+ 1193              		.type	pHADC_CountsTo_Volts, %function
+ 1194              	pHADC_CountsTo_Volts:
+ 1195              	.LFB17:
+ 809:Generated_Source\PSoC5/pHADC.c **** 
+ 810:Generated_Source\PSoC5/pHADC.c **** 
+ 811:Generated_Source\PSoC5/pHADC.c **** /*******************************************************************************
+ 812:Generated_Source\PSoC5/pHADC.c **** * Function Name: pHADC_CountsTo_Volts
+ 813:Generated_Source\PSoC5/pHADC.c **** ********************************************************************************
+ 814:Generated_Source\PSoC5/pHADC.c **** *
+ 815:Generated_Source\PSoC5/pHADC.c **** * Summary:
+ 816:Generated_Source\PSoC5/pHADC.c **** *  Converts the ADC output to volts as a floating-point number.
+ 817:Generated_Source\PSoC5/pHADC.c **** *
+ 818:Generated_Source\PSoC5/pHADC.c **** * Parameters:
+ 819:Generated_Source\PSoC5/pHADC.c **** *  int16 adcCounts: Result from the ADC conversion
+ 820:Generated_Source\PSoC5/pHADC.c **** *
+ 821:Generated_Source\PSoC5/pHADC.c **** * Return:
+ 822:Generated_Source\PSoC5/pHADC.c **** *  float Result in Volts
+ 823:Generated_Source\PSoC5/pHADC.c **** *
+ 824:Generated_Source\PSoC5/pHADC.c **** * Global Variables:
+ 825:Generated_Source\PSoC5/pHADC.c **** *  pHADC_offset variable used.
+ 826:Generated_Source\PSoC5/pHADC.c **** *  pHADC_countsPer10Volt used to convert ADC counts to Volts.
+ 827:Generated_Source\PSoC5/pHADC.c **** *
+ 828:Generated_Source\PSoC5/pHADC.c **** *******************************************************************************/
+ 829:Generated_Source\PSoC5/pHADC.c **** float32 pHADC_CountsTo_Volts(int16 adcCounts)
+ 830:Generated_Source\PSoC5/pHADC.c **** {
+ 1196              		.loc 1 830 0
+ 1197              		.cfi_startproc
+ 1198              		@ args = 0, pretend = 0, frame = 16
+ 1199              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1200 0000 90B5     		push	{r4, r7, lr}
+ 1201              		.cfi_def_cfa_offset 12
+ 1202              		.cfi_offset 4, -12
+ 1203              		.cfi_offset 7, -8
+ 1204              		.cfi_offset 14, -4
+ 1205 0002 85B0     		sub	sp, sp, #20
+ 1206              		.cfi_def_cfa_offset 32
+ 1207 0004 00AF     		add	r7, sp, #0
+ 1208              		.cfi_def_cfa_register 7
+ 1209 0006 0346     		mov	r3, r0
+ 1210 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 831:Generated_Source\PSoC5/pHADC.c ****     float32 volts;
+ 832:Generated_Source\PSoC5/pHADC.c ****     int32 countsPer10Volt;
+ 833:Generated_Source\PSoC5/pHADC.c **** 
+ 834:Generated_Source\PSoC5/pHADC.c ****     if(pHADC_countsPerVolt != 0)
+ 1211              		.loc 1 834 0
+ 1212 000a 1A4B     		ldr	r3, .L83
+ 1213 000c 1B88     		ldrh	r3, [r3]	@ movhi
+ 1214 000e 1BB2     		sxth	r3, r3
+ 1215 0010 002B     		cmp	r3, #0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 37
+
+
+ 1216 0012 09D0     		beq	.L80
+ 835:Generated_Source\PSoC5/pHADC.c ****     {   /* Support obsolete method */
+ 836:Generated_Source\PSoC5/pHADC.c ****         countsPer10Volt = (int32)pHADC_countsPerVolt * 10;
+ 1217              		.loc 1 836 0
+ 1218 0014 174B     		ldr	r3, .L83
+ 1219 0016 1B88     		ldrh	r3, [r3]	@ movhi
+ 1220 0018 1BB2     		sxth	r3, r3
+ 1221 001a 1A46     		mov	r2, r3
+ 1222 001c 1346     		mov	r3, r2
+ 1223 001e 9B00     		lsls	r3, r3, #2
+ 1224 0020 1344     		add	r3, r3, r2
+ 1225 0022 5B00     		lsls	r3, r3, #1
+ 1226 0024 FB60     		str	r3, [r7, #12]
+ 1227 0026 02E0     		b	.L81
+ 1228              	.L80:
+ 837:Generated_Source\PSoC5/pHADC.c ****     }
+ 838:Generated_Source\PSoC5/pHADC.c ****     else
+ 839:Generated_Source\PSoC5/pHADC.c ****     {
+ 840:Generated_Source\PSoC5/pHADC.c ****         countsPer10Volt = pHADC_countsPer10Volt;
+ 1229              		.loc 1 840 0
+ 1230 0028 134B     		ldr	r3, .L83+4
+ 1231 002a 1B68     		ldr	r3, [r3]
+ 1232 002c FB60     		str	r3, [r7, #12]
+ 1233              	.L81:
+ 841:Generated_Source\PSoC5/pHADC.c ****     }
+ 842:Generated_Source\PSoC5/pHADC.c **** 
+ 843:Generated_Source\PSoC5/pHADC.c ****     /* Subtract ADC offset */
+ 844:Generated_Source\PSoC5/pHADC.c ****     adcCounts -= pHADC_offset;
+ 1234              		.loc 1 844 0
+ 1235 002e 134B     		ldr	r3, .L83+8
+ 1236 0030 1B88     		ldrh	r3, [r3]	@ movhi
+ 1237 0032 1BB2     		sxth	r3, r3
+ 1238 0034 FA88     		ldrh	r2, [r7, #6]
+ 1239 0036 9BB2     		uxth	r3, r3
+ 1240 0038 D31A     		subs	r3, r2, r3
+ 1241 003a 9BB2     		uxth	r3, r3
+ 1242 003c FB80     		strh	r3, [r7, #6]	@ movhi
+ 845:Generated_Source\PSoC5/pHADC.c **** 
+ 846:Generated_Source\PSoC5/pHADC.c ****     volts = ((float32)adcCounts * pHADC_10V_COUNTS) / (float32)countsPer10Volt;
+ 1243              		.loc 1 846 0
+ 1244 003e B7F90630 		ldrsh	r3, [r7, #6]
+ 1245 0042 1846     		mov	r0, r3
+ 1246 0044 FFF7FEFF 		bl	__aeabi_i2f
+ 1247 0048 0346     		mov	r3, r0
+ 1248 004a 0D49     		ldr	r1, .L83+12
+ 1249 004c 1846     		mov	r0, r3
+ 1250 004e FFF7FEFF 		bl	__aeabi_fmul
+ 1251 0052 0346     		mov	r3, r0
+ 1252 0054 1C46     		mov	r4, r3
+ 1253 0056 F868     		ldr	r0, [r7, #12]
+ 1254 0058 FFF7FEFF 		bl	__aeabi_i2f
+ 1255 005c 0346     		mov	r3, r0
+ 1256 005e 1946     		mov	r1, r3
+ 1257 0060 2046     		mov	r0, r4
+ 1258 0062 FFF7FEFF 		bl	__aeabi_fdiv
+ 1259 0066 0346     		mov	r3, r0
+ 1260 0068 BB60     		str	r3, [r7, #8]	@ float
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 38
+
+
+ 847:Generated_Source\PSoC5/pHADC.c **** 
+ 848:Generated_Source\PSoC5/pHADC.c ****     return( volts );
+ 1261              		.loc 1 848 0
+ 1262 006a BB68     		ldr	r3, [r7, #8]	@ float
+ 849:Generated_Source\PSoC5/pHADC.c **** }
+ 1263              		.loc 1 849 0
+ 1264 006c 1846     		mov	r0, r3
+ 1265 006e 1437     		adds	r7, r7, #20
+ 1266              		.cfi_def_cfa_offset 12
+ 1267 0070 BD46     		mov	sp, r7
+ 1268              		.cfi_def_cfa_register 13
+ 1269              		@ sp needed
+ 1270 0072 90BD     		pop	{r4, r7, pc}
+ 1271              	.L84:
+ 1272              		.align	2
+ 1273              	.L83:
+ 1274 0074 00000000 		.word	pHADC_countsPerVolt
+ 1275 0078 00000000 		.word	pHADC_countsPer10Volt
+ 1276 007c 00000000 		.word	pHADC_offset
+ 1277 0080 00002041 		.word	1092616192
+ 1278              		.cfi_endproc
+ 1279              	.LFE17:
+ 1280              		.size	pHADC_CountsTo_Volts, .-pHADC_CountsTo_Volts
+ 1281              		.text
+ 1282              	.Letext0:
+ 1283              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 1284              		.section	.debug_info,"",%progbits
+ 1285              	.Ldebug_info0:
+ 1286 0000 7B040000 		.4byte	0x47b
+ 1287 0004 0400     		.2byte	0x4
+ 1288 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1289 000a 04       		.byte	0x4
+ 1290 000b 01       		.uleb128 0x1
+ 1291 000c 16000000 		.4byte	.LASF60
+ 1292 0010 0C       		.byte	0xc
+ 1293 0011 E5000000 		.4byte	.LASF61
+ 1294 0015 86020000 		.4byte	.LASF62
+ 1295 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 1296 001d 00000000 		.4byte	0
+ 1297 0021 00000000 		.4byte	.Ldebug_line0
+ 1298 0025 02       		.uleb128 0x2
+ 1299 0026 04       		.byte	0x4
+ 1300 0027 05       		.byte	0x5
+ 1301 0028 696E7400 		.ascii	"int\000"
+ 1302 002c 03       		.uleb128 0x3
+ 1303 002d 04       		.byte	0x4
+ 1304 002e 07       		.byte	0x7
+ 1305 002f BD010000 		.4byte	.LASF0
+ 1306 0033 03       		.uleb128 0x3
+ 1307 0034 08       		.byte	0x8
+ 1308 0035 05       		.byte	0x5
+ 1309 0036 14010000 		.4byte	.LASF1
+ 1310 003a 03       		.uleb128 0x3
+ 1311 003b 08       		.byte	0x8
+ 1312 003c 04       		.byte	0x4
+ 1313 003d 63020000 		.4byte	.LASF2
+ 1314 0041 03       		.uleb128 0x3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 39
+
+
+ 1315 0042 01       		.byte	0x1
+ 1316 0043 06       		.byte	0x6
+ 1317 0044 22010000 		.4byte	.LASF3
+ 1318 0048 03       		.uleb128 0x3
+ 1319 0049 01       		.byte	0x1
+ 1320 004a 08       		.byte	0x8
+ 1321 004b 30030000 		.4byte	.LASF4
+ 1322 004f 03       		.uleb128 0x3
+ 1323 0050 02       		.byte	0x2
+ 1324 0051 05       		.byte	0x5
+ 1325 0052 50030000 		.4byte	.LASF5
+ 1326 0056 03       		.uleb128 0x3
+ 1327 0057 02       		.byte	0x2
+ 1328 0058 07       		.byte	0x7
+ 1329 0059 E9010000 		.4byte	.LASF6
+ 1330 005d 03       		.uleb128 0x3
+ 1331 005e 04       		.byte	0x4
+ 1332 005f 05       		.byte	0x5
+ 1333 0060 34010000 		.4byte	.LASF7
+ 1334 0064 03       		.uleb128 0x3
+ 1335 0065 04       		.byte	0x4
+ 1336 0066 07       		.byte	0x7
+ 1337 0067 D1010000 		.4byte	.LASF8
+ 1338 006b 03       		.uleb128 0x3
+ 1339 006c 08       		.byte	0x8
+ 1340 006d 07       		.byte	0x7
+ 1341 006e CE000000 		.4byte	.LASF9
+ 1342 0072 03       		.uleb128 0x3
+ 1343 0073 04       		.byte	0x4
+ 1344 0074 07       		.byte	0x7
+ 1345 0075 5A020000 		.4byte	.LASF10
+ 1346 0079 03       		.uleb128 0x3
+ 1347 007a 01       		.byte	0x1
+ 1348 007b 08       		.byte	0x8
+ 1349 007c 8E030000 		.4byte	.LASF11
+ 1350 0080 04       		.uleb128 0x4
+ 1351 0081 52010000 		.4byte	.LASF12
+ 1352 0085 02       		.byte	0x2
+ 1353 0086 9201     		.2byte	0x192
+ 1354 0088 48000000 		.4byte	0x48
+ 1355 008c 04       		.uleb128 0x4
+ 1356 008d 00000000 		.4byte	.LASF13
+ 1357 0091 02       		.byte	0x2
+ 1358 0092 9301     		.2byte	0x193
+ 1359 0094 56000000 		.4byte	0x56
+ 1360 0098 04       		.uleb128 0x4
+ 1361 0099 7C010000 		.4byte	.LASF14
+ 1362 009d 02       		.byte	0x2
+ 1363 009e 9401     		.2byte	0x194
+ 1364 00a0 64000000 		.4byte	0x64
+ 1365 00a4 04       		.uleb128 0x4
+ 1366 00a5 FC010000 		.4byte	.LASF15
+ 1367 00a9 02       		.byte	0x2
+ 1368 00aa 9501     		.2byte	0x195
+ 1369 00ac 41000000 		.4byte	0x41
+ 1370 00b0 04       		.uleb128 0x4
+ 1371 00b1 13040000 		.4byte	.LASF16
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 40
+
+
+ 1372 00b5 02       		.byte	0x2
+ 1373 00b6 9601     		.2byte	0x196
+ 1374 00b8 4F000000 		.4byte	0x4f
+ 1375 00bc 04       		.uleb128 0x4
+ 1376 00bd 2E010000 		.4byte	.LASF17
+ 1377 00c1 02       		.byte	0x2
+ 1378 00c2 9701     		.2byte	0x197
+ 1379 00c4 5D000000 		.4byte	0x5d
+ 1380 00c8 04       		.uleb128 0x4
+ 1381 00c9 52020000 		.4byte	.LASF18
+ 1382 00cd 02       		.byte	0x2
+ 1383 00ce 9801     		.2byte	0x198
+ 1384 00d0 D4000000 		.4byte	0xd4
+ 1385 00d4 03       		.uleb128 0x3
+ 1386 00d5 04       		.byte	0x4
+ 1387 00d6 04       		.byte	0x4
+ 1388 00d7 0B030000 		.4byte	.LASF19
+ 1389 00db 03       		.uleb128 0x3
+ 1390 00dc 08       		.byte	0x8
+ 1391 00dd 04       		.byte	0x4
+ 1392 00de 58010000 		.4byte	.LASF20
+ 1393 00e2 04       		.uleb128 0x4
+ 1394 00e3 80020000 		.4byte	.LASF21
+ 1395 00e7 02       		.byte	0x2
+ 1396 00e8 9D01     		.2byte	0x19d
+ 1397 00ea 33000000 		.4byte	0x33
+ 1398 00ee 04       		.uleb128 0x4
+ 1399 00ef 2B030000 		.4byte	.LASF22
+ 1400 00f3 02       		.byte	0x2
+ 1401 00f4 3C02     		.2byte	0x23c
+ 1402 00f6 FA000000 		.4byte	0xfa
+ 1403 00fa 05       		.uleb128 0x5
+ 1404 00fb 80000000 		.4byte	0x80
+ 1405 00ff 04       		.uleb128 0x4
+ 1406 0100 4C010000 		.4byte	.LASF23
+ 1407 0104 02       		.byte	0x2
+ 1408 0105 3D02     		.2byte	0x23d
+ 1409 0107 0B010000 		.4byte	0x10b
+ 1410 010b 05       		.uleb128 0x5
+ 1411 010c 8C000000 		.4byte	0x8c
+ 1412 0110 04       		.uleb128 0x4
+ 1413 0111 32020000 		.4byte	.LASF24
+ 1414 0115 02       		.byte	0x2
+ 1415 0116 3E02     		.2byte	0x23e
+ 1416 0118 1C010000 		.4byte	0x11c
+ 1417 011c 05       		.uleb128 0x5
+ 1418 011d 98000000 		.4byte	0x98
+ 1419 0121 06       		.uleb128 0x6
+ 1420 0122 38020000 		.4byte	.LASF25
+ 1421 0126 01       		.byte	0x1
+ 1422 0127 4A       		.byte	0x4a
+ 1423 0128 00000000 		.4byte	.LFB0
+ 1424 012c 24000000 		.4byte	.LFE0-.LFB0
+ 1425 0130 01       		.uleb128 0x1
+ 1426 0131 9C       		.byte	0x9c
+ 1427 0132 06       		.uleb128 0x6
+ 1428 0133 71010000 		.4byte	.LASF26
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 41
+
+
+ 1429 0137 01       		.byte	0x1
+ 1430 0138 6A       		.byte	0x6a
+ 1431 0139 00000000 		.4byte	.LFB1
+ 1432 013d 48000000 		.4byte	.LFE1-.LFB1
+ 1433 0141 01       		.uleb128 0x1
+ 1434 0142 9C       		.byte	0x9c
+ 1435 0143 07       		.uleb128 0x7
+ 1436 0144 B0030000 		.4byte	.LASF29
+ 1437 0148 01       		.byte	0x1
+ 1438 0149 8F       		.byte	0x8f
+ 1439 014a 00000000 		.4byte	.LFB2
+ 1440 014e F4000000 		.4byte	.LFE2-.LFB2
+ 1441 0152 01       		.uleb128 0x1
+ 1442 0153 9C       		.byte	0x9c
+ 1443 0154 75010000 		.4byte	0x175
+ 1444 0158 08       		.uleb128 0x8
+ 1445 0159 19040000 		.4byte	.LASF27
+ 1446 015d 01       		.byte	0x1
+ 1447 015e 91       		.byte	0x91
+ 1448 015f 80000000 		.4byte	0x80
+ 1449 0163 02       		.uleb128 0x2
+ 1450 0164 91       		.byte	0x91
+ 1451 0165 76       		.sleb128 -10
+ 1452 0166 08       		.uleb128 0x8
+ 1453 0167 EF030000 		.4byte	.LASF28
+ 1454 016b 01       		.byte	0x1
+ 1455 016c 92       		.byte	0x92
+ 1456 016d 80000000 		.4byte	0x80
+ 1457 0171 02       		.uleb128 0x2
+ 1458 0172 91       		.byte	0x91
+ 1459 0173 77       		.sleb128 -9
+ 1460 0174 00       		.byte	0
+ 1461 0175 07       		.uleb128 0x7
+ 1462 0176 E4030000 		.4byte	.LASF30
+ 1463 017a 01       		.byte	0x1
+ 1464 017b F8       		.byte	0xf8
+ 1465 017c 00000000 		.4byte	.LFB3
+ 1466 0180 84000000 		.4byte	.LFE3-.LFB3
+ 1467 0184 01       		.uleb128 0x1
+ 1468 0185 9C       		.byte	0x9c
+ 1469 0186 99010000 		.4byte	0x199
+ 1470 018a 08       		.uleb128 0x8
+ 1471 018b EF030000 		.4byte	.LASF28
+ 1472 018f 01       		.byte	0x1
+ 1473 0190 FA       		.byte	0xfa
+ 1474 0191 80000000 		.4byte	0x80
+ 1475 0195 02       		.uleb128 0x2
+ 1476 0196 91       		.byte	0x91
+ 1477 0197 77       		.sleb128 -9
+ 1478 0198 00       		.byte	0
+ 1479 0199 09       		.uleb128 0x9
+ 1480 019a 93030000 		.4byte	.LASF31
+ 1481 019e 01       		.byte	0x1
+ 1482 019f 2201     		.2byte	0x122
+ 1483 01a1 00000000 		.4byte	.LFB4
+ 1484 01a5 40000000 		.4byte	.LFE4-.LFB4
+ 1485 01a9 01       		.uleb128 0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 42
+
+
+ 1486 01aa 9C       		.byte	0x9c
+ 1487 01ab CE010000 		.4byte	0x1ce
+ 1488 01af 0A       		.uleb128 0xa
+ 1489 01b0 25030000 		.4byte	.LASF33
+ 1490 01b4 01       		.byte	0x1
+ 1491 01b5 2201     		.2byte	0x122
+ 1492 01b7 80000000 		.4byte	0x80
+ 1493 01bb 02       		.uleb128 0x2
+ 1494 01bc 91       		.byte	0x91
+ 1495 01bd 6F       		.sleb128 -17
+ 1496 01be 0B       		.uleb128 0xb
+ 1497 01bf 19040000 		.4byte	.LASF27
+ 1498 01c3 01       		.byte	0x1
+ 1499 01c4 2401     		.2byte	0x124
+ 1500 01c6 80000000 		.4byte	0x80
+ 1501 01ca 02       		.uleb128 0x2
+ 1502 01cb 91       		.byte	0x91
+ 1503 01cc 77       		.sleb128 -9
+ 1504 01cd 00       		.byte	0
+ 1505 01ce 0C       		.uleb128 0xc
+ 1506 01cf 17020000 		.4byte	.LASF32
+ 1507 01d3 01       		.byte	0x1
+ 1508 01d4 5401     		.2byte	0x154
+ 1509 01d6 00000000 		.4byte	.LFB5
+ 1510 01da 54000000 		.4byte	.LFE5-.LFB5
+ 1511 01de 01       		.uleb128 0x1
+ 1512 01df 9C       		.byte	0x9c
+ 1513 01e0 03020000 		.4byte	0x203
+ 1514 01e4 0A       		.uleb128 0xa
+ 1515 01e5 6D030000 		.4byte	.LASF34
+ 1516 01e9 01       		.byte	0x1
+ 1517 01ea 5401     		.2byte	0x154
+ 1518 01ec 80000000 		.4byte	0x80
+ 1519 01f0 02       		.uleb128 0x2
+ 1520 01f1 91       		.byte	0x91
+ 1521 01f2 6F       		.sleb128 -17
+ 1522 01f3 0B       		.uleb128 0xb
+ 1523 01f4 19040000 		.4byte	.LASF27
+ 1524 01f8 01       		.byte	0x1
+ 1525 01f9 5601     		.2byte	0x156
+ 1526 01fb 80000000 		.4byte	0x80
+ 1527 01ff 02       		.uleb128 0x2
+ 1528 0200 91       		.byte	0x91
+ 1529 0201 77       		.sleb128 -9
+ 1530 0202 00       		.byte	0
+ 1531 0203 0D       		.uleb128 0xd
+ 1532 0204 5A030000 		.4byte	.LASF35
+ 1533 0208 01       		.byte	0x1
+ 1534 0209 9101     		.2byte	0x191
+ 1535 020b 00000000 		.4byte	.LFB6
+ 1536 020f 20000000 		.4byte	.LFE6-.LFB6
+ 1537 0213 01       		.uleb128 0x1
+ 1538 0214 9C       		.byte	0x9c
+ 1539 0215 0D       		.uleb128 0xd
+ 1540 0216 3E030000 		.4byte	.LASF36
+ 1541 021a 01       		.byte	0x1
+ 1542 021b B301     		.2byte	0x1b3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 43
+
+
+ 1543 021d 00000000 		.4byte	.LFB7
+ 1544 0221 20000000 		.4byte	.LFE7-.LFB7
+ 1545 0225 01       		.uleb128 0x1
+ 1546 0226 9C       		.byte	0x9c
+ 1547 0227 0E       		.uleb128 0xe
+ 1548 0228 78030000 		.4byte	.LASF39
+ 1549 022c 01       		.byte	0x1
+ 1550 022d DB01     		.2byte	0x1db
+ 1551 022f 80000000 		.4byte	0x80
+ 1552 0233 00000000 		.4byte	.LFB8
+ 1553 0237 40000000 		.4byte	.LFE8-.LFB8
+ 1554 023b 01       		.uleb128 0x1
+ 1555 023c 9C       		.byte	0x9c
+ 1556 023d 60020000 		.4byte	0x260
+ 1557 0241 0A       		.uleb128 0xa
+ 1558 0242 B5010000 		.4byte	.LASF37
+ 1559 0246 01       		.byte	0x1
+ 1560 0247 DB01     		.2byte	0x1db
+ 1561 0249 80000000 		.4byte	0x80
+ 1562 024d 02       		.uleb128 0x2
+ 1563 024e 91       		.byte	0x91
+ 1564 024f 6F       		.sleb128 -17
+ 1565 0250 0B       		.uleb128 0xb
+ 1566 0251 00040000 		.4byte	.LASF38
+ 1567 0255 01       		.byte	0x1
+ 1568 0256 DD01     		.2byte	0x1dd
+ 1569 0258 80000000 		.4byte	0x80
+ 1570 025c 02       		.uleb128 0x2
+ 1571 025d 91       		.byte	0x91
+ 1572 025e 77       		.sleb128 -9
+ 1573 025f 00       		.byte	0
+ 1574 0260 0F       		.uleb128 0xf
+ 1575 0261 6F020000 		.4byte	.LASF63
+ 1576 0265 01       		.byte	0x1
+ 1577 0266 0802     		.2byte	0x208
+ 1578 0268 A4000000 		.4byte	0xa4
+ 1579 026c 00000000 		.4byte	.LFB9
+ 1580 0270 28000000 		.4byte	.LFE9-.LFB9
+ 1581 0274 01       		.uleb128 0x1
+ 1582 0275 9C       		.byte	0x9c
+ 1583 0276 10       		.uleb128 0x10
+ 1584 0277 5F010000 		.4byte	.LASF40
+ 1585 027b 01       		.byte	0x1
+ 1586 027c 2602     		.2byte	0x226
+ 1587 027e B0000000 		.4byte	0xb0
+ 1588 0282 00000000 		.4byte	.LFB10
+ 1589 0286 30000000 		.4byte	.LFE10-.LFB10
+ 1590 028a 01       		.uleb128 0x1
+ 1591 028b 9C       		.byte	0x9c
+ 1592 028c A0020000 		.4byte	0x2a0
+ 1593 0290 11       		.uleb128 0x11
+ 1594 0291 72657300 		.ascii	"res\000"
+ 1595 0295 01       		.byte	0x1
+ 1596 0296 2802     		.2byte	0x228
+ 1597 0298 8C000000 		.4byte	0x8c
+ 1598 029c 02       		.uleb128 0x2
+ 1599 029d 91       		.byte	0x91
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 44
+
+
+ 1600 029e 76       		.sleb128 -10
+ 1601 029f 00       		.byte	0
+ 1602 02a0 09       		.uleb128 0x9
+ 1603 02a1 04010000 		.4byte	.LASF41
+ 1604 02a5 01       		.byte	0x1
+ 1605 02a6 4902     		.2byte	0x249
+ 1606 02a8 00000000 		.4byte	.LFB11
+ 1607 02ac 20000000 		.4byte	.LFE11-.LFB11
+ 1608 02b0 01       		.uleb128 0x1
+ 1609 02b1 9C       		.byte	0x9c
+ 1610 02b2 C6020000 		.4byte	0x2c6
+ 1611 02b6 0A       		.uleb128 0xa
+ 1612 02b7 BD030000 		.4byte	.LASF42
+ 1613 02bb 01       		.byte	0x1
+ 1614 02bc 4902     		.2byte	0x249
+ 1615 02be B0000000 		.4byte	0xb0
+ 1616 02c2 02       		.uleb128 0x2
+ 1617 02c3 91       		.byte	0x91
+ 1618 02c4 76       		.sleb128 -10
+ 1619 02c5 00       		.byte	0
+ 1620 02c6 12       		.uleb128 0x12
+ 1621 02c7 3D010000 		.4byte	.LASF64
+ 1622 02cb 01       		.byte	0x1
+ 1623 02cc 6302     		.2byte	0x263
+ 1624 02ce 00000000 		.4byte	.LFB12
+ 1625 02d2 80000000 		.4byte	.LFE12-.LFB12
+ 1626 02d6 01       		.uleb128 0x1
+ 1627 02d7 9C       		.byte	0x9c
+ 1628 02d8 FB020000 		.4byte	0x2fb
+ 1629 02dc 0A       		.uleb128 0xa
+ 1630 02dd 6D030000 		.4byte	.LASF34
+ 1631 02e1 01       		.byte	0x1
+ 1632 02e2 6302     		.2byte	0x263
+ 1633 02e4 80000000 		.4byte	0x80
+ 1634 02e8 02       		.uleb128 0x2
+ 1635 02e9 91       		.byte	0x91
+ 1636 02ea 6F       		.sleb128 -17
+ 1637 02eb 0B       		.uleb128 0xb
+ 1638 02ec 0F000000 		.4byte	.LASF43
+ 1639 02f0 01       		.byte	0x1
+ 1640 02f1 6502     		.2byte	0x265
+ 1641 02f3 BC000000 		.4byte	0xbc
+ 1642 02f7 02       		.uleb128 0x2
+ 1643 02f8 91       		.byte	0x91
+ 1644 02f9 74       		.sleb128 -12
+ 1645 02fa 00       		.byte	0
+ 1646 02fb 09       		.uleb128 0x9
+ 1647 02fc A2030000 		.4byte	.LASF44
+ 1648 0300 01       		.byte	0x1
+ 1649 0301 B402     		.2byte	0x2b4
+ 1650 0303 00000000 		.4byte	.LFB13
+ 1651 0307 2C000000 		.4byte	.LFE13-.LFB13
+ 1652 030b 01       		.uleb128 0x1
+ 1653 030c 9C       		.byte	0x9c
+ 1654 030d 21030000 		.4byte	0x321
+ 1655 0311 0A       		.uleb128 0xa
+ 1656 0312 07000000 		.4byte	.LASF45
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 45
+
+
+ 1657 0316 01       		.byte	0x1
+ 1658 0317 B402     		.2byte	0x2b4
+ 1659 0319 B0000000 		.4byte	0xb0
+ 1660 031d 02       		.uleb128 0x2
+ 1661 031e 91       		.byte	0x91
+ 1662 031f 76       		.sleb128 -10
+ 1663 0320 00       		.byte	0
+ 1664 0321 09       		.uleb128 0x9
+ 1665 0322 11030000 		.4byte	.LASF46
+ 1666 0326 01       		.byte	0x1
+ 1667 0327 CF02     		.2byte	0x2cf
+ 1668 0329 00000000 		.4byte	.LFB14
+ 1669 032d 1C000000 		.4byte	.LFE14-.LFB14
+ 1670 0331 01       		.uleb128 0x1
+ 1671 0332 9C       		.byte	0x9c
+ 1672 0333 47030000 		.4byte	0x347
+ 1673 0337 0A       		.uleb128 0xa
+ 1674 0338 07000000 		.4byte	.LASF45
+ 1675 033c 01       		.byte	0x1
+ 1676 033d CF02     		.2byte	0x2cf
+ 1677 033f BC000000 		.4byte	0xbc
+ 1678 0343 02       		.uleb128 0x2
+ 1679 0344 91       		.byte	0x91
+ 1680 0345 74       		.sleb128 -12
+ 1681 0346 00       		.byte	0
+ 1682 0347 10       		.uleb128 0x10
+ 1683 0348 C4030000 		.4byte	.LASF47
+ 1684 034c 01       		.byte	0x1
+ 1685 034d E702     		.2byte	0x2e7
+ 1686 034f B0000000 		.4byte	0xb0
+ 1687 0353 00000000 		.4byte	.LFB15
+ 1688 0357 8C000000 		.4byte	.LFE15-.LFB15
+ 1689 035b 01       		.uleb128 0x1
+ 1690 035c 9C       		.byte	0x9c
+ 1691 035d 8F030000 		.4byte	0x38f
+ 1692 0361 0A       		.uleb128 0xa
+ 1693 0362 DA030000 		.4byte	.LASF48
+ 1694 0366 01       		.byte	0x1
+ 1695 0367 E702     		.2byte	0x2e7
+ 1696 0369 B0000000 		.4byte	0xb0
+ 1697 036d 02       		.uleb128 0x2
+ 1698 036e 91       		.byte	0x91
+ 1699 036f 6E       		.sleb128 -18
+ 1700 0370 0B       		.uleb128 0xb
+ 1701 0371 2B020000 		.4byte	.LASF49
+ 1702 0375 01       		.byte	0x1
+ 1703 0376 E902     		.2byte	0x2e9
+ 1704 0378 B0000000 		.4byte	0xb0
+ 1705 037c 02       		.uleb128 0x2
+ 1706 037d 91       		.byte	0x91
+ 1707 037e 72       		.sleb128 -14
+ 1708 037f 0B       		.uleb128 0xb
+ 1709 0380 83010000 		.4byte	.LASF50
+ 1710 0384 01       		.byte	0x1
+ 1711 0385 EA02     		.2byte	0x2ea
+ 1712 0387 BC000000 		.4byte	0xbc
+ 1713 038b 02       		.uleb128 0x2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 46
+
+
+ 1714 038c 91       		.byte	0x91
+ 1715 038d 74       		.sleb128 -12
+ 1716 038e 00       		.byte	0
+ 1717 038f 0E       		.uleb128 0xe
+ 1718 0390 01020000 		.4byte	.LASF51
+ 1719 0394 01       		.byte	0x1
+ 1720 0395 1103     		.2byte	0x311
+ 1721 0397 BC000000 		.4byte	0xbc
+ 1722 039b 00000000 		.4byte	.LFB16
+ 1723 039f 90000000 		.4byte	.LFE16-.LFB16
+ 1724 03a3 01       		.uleb128 0x1
+ 1725 03a4 9C       		.byte	0x9c
+ 1726 03a5 D7030000 		.4byte	0x3d7
+ 1727 03a9 0A       		.uleb128 0xa
+ 1728 03aa DA030000 		.4byte	.LASF48
+ 1729 03ae 01       		.byte	0x1
+ 1730 03af 1103     		.2byte	0x311
+ 1731 03b1 B0000000 		.4byte	0xb0
+ 1732 03b5 02       		.uleb128 0x2
+ 1733 03b6 91       		.byte	0x91
+ 1734 03b7 5E       		.sleb128 -34
+ 1735 03b8 0B       		.uleb128 0xb
+ 1736 03b9 CA010000 		.4byte	.LASF52
+ 1737 03bd 01       		.byte	0x1
+ 1738 03be 1403     		.2byte	0x314
+ 1739 03c0 E2000000 		.4byte	0xe2
+ 1740 03c4 02       		.uleb128 0x2
+ 1741 03c5 91       		.byte	0x91
+ 1742 03c6 60       		.sleb128 -32
+ 1743 03c7 0B       		.uleb128 0xb
+ 1744 03c8 83010000 		.4byte	.LASF50
+ 1745 03cc 01       		.byte	0x1
+ 1746 03cd 1503     		.2byte	0x315
+ 1747 03cf BC000000 		.4byte	0xbc
+ 1748 03d3 02       		.uleb128 0x2
+ 1749 03d4 91       		.byte	0x91
+ 1750 03d5 6C       		.sleb128 -20
+ 1751 03d6 00       		.byte	0
+ 1752 03d7 0E       		.uleb128 0xe
+ 1753 03d8 A0010000 		.4byte	.LASF53
+ 1754 03dc 01       		.byte	0x1
+ 1755 03dd 3D03     		.2byte	0x33d
+ 1756 03df C8000000 		.4byte	0xc8
+ 1757 03e3 00000000 		.4byte	.LFB17
+ 1758 03e7 84000000 		.4byte	.LFE17-.LFB17
+ 1759 03eb 01       		.uleb128 0x1
+ 1760 03ec 9C       		.byte	0x9c
+ 1761 03ed 1F040000 		.4byte	0x41f
+ 1762 03f1 0A       		.uleb128 0xa
+ 1763 03f2 DA030000 		.4byte	.LASF48
+ 1764 03f6 01       		.byte	0x1
+ 1765 03f7 3D03     		.2byte	0x33d
+ 1766 03f9 B0000000 		.4byte	0xb0
+ 1767 03fd 02       		.uleb128 0x2
+ 1768 03fe 91       		.byte	0x91
+ 1769 03ff 66       		.sleb128 -26
+ 1770 0400 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 47
+
+
+ 1771 0401 E3010000 		.4byte	.LASF54
+ 1772 0405 01       		.byte	0x1
+ 1773 0406 3F03     		.2byte	0x33f
+ 1774 0408 C8000000 		.4byte	0xc8
+ 1775 040c 02       		.uleb128 0x2
+ 1776 040d 91       		.byte	0x91
+ 1777 040e 68       		.sleb128 -24
+ 1778 040f 0B       		.uleb128 0xb
+ 1779 0410 83010000 		.4byte	.LASF50
+ 1780 0414 01       		.byte	0x1
+ 1781 0415 4003     		.2byte	0x340
+ 1782 0417 BC000000 		.4byte	0xbc
+ 1783 041b 02       		.uleb128 0x2
+ 1784 041c 91       		.byte	0x91
+ 1785 041d 6C       		.sleb128 -20
+ 1786 041e 00       		.byte	0
+ 1787 041f 13       		.uleb128 0x13
+ 1788 0420 44020000 		.4byte	.LASF55
+ 1789 0424 01       		.byte	0x1
+ 1790 0425 23       		.byte	0x23
+ 1791 0426 80000000 		.4byte	0x80
+ 1792 042a 05       		.uleb128 0x5
+ 1793 042b 03       		.byte	0x3
+ 1794 042c 00000000 		.4byte	pHADC_initVar
+ 1795 0430 13       		.uleb128 0x13
+ 1796 0431 93010000 		.4byte	.LASF56
+ 1797 0435 01       		.byte	0x1
+ 1798 0436 24       		.byte	0x24
+ 1799 0437 41040000 		.4byte	0x441
+ 1800 043b 05       		.uleb128 0x5
+ 1801 043c 03       		.byte	0x3
+ 1802 043d 00000000 		.4byte	pHADC_offset
+ 1803 0441 05       		.uleb128 0x5
+ 1804 0442 B0000000 		.4byte	0xb0
+ 1805 0446 13       		.uleb128 0x13
+ 1806 0447 A4000000 		.4byte	.LASF57
+ 1807 044b 01       		.byte	0x1
+ 1808 044c 25       		.byte	0x25
+ 1809 044d 41040000 		.4byte	0x441
+ 1810 0451 05       		.uleb128 0x5
+ 1811 0452 03       		.byte	0x3
+ 1812 0453 00000000 		.4byte	pHADC_countsPerVolt
+ 1813 0457 13       		.uleb128 0x13
+ 1814 0458 B8000000 		.4byte	.LASF58
+ 1815 045c 01       		.byte	0x1
+ 1816 045d 26       		.byte	0x26
+ 1817 045e 68040000 		.4byte	0x468
+ 1818 0462 05       		.uleb128 0x5
+ 1819 0463 03       		.byte	0x3
+ 1820 0464 00000000 		.4byte	pHADC_countsPer10Volt
+ 1821 0468 05       		.uleb128 0x5
+ 1822 0469 BC000000 		.4byte	0xbc
+ 1823 046d 13       		.uleb128 0x13
+ 1824 046e 07040000 		.4byte	.LASF59
+ 1825 0472 01       		.byte	0x1
+ 1826 0473 27       		.byte	0x27
+ 1827 0474 41040000 		.4byte	0x441
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 48
+
+
+ 1828 0478 05       		.uleb128 0x5
+ 1829 0479 03       		.byte	0x3
+ 1830 047a 00000000 		.4byte	pHADC_shift
+ 1831 047e 00       		.byte	0
+ 1832              		.section	.debug_abbrev,"",%progbits
+ 1833              	.Ldebug_abbrev0:
+ 1834 0000 01       		.uleb128 0x1
+ 1835 0001 11       		.uleb128 0x11
+ 1836 0002 01       		.byte	0x1
+ 1837 0003 25       		.uleb128 0x25
+ 1838 0004 0E       		.uleb128 0xe
+ 1839 0005 13       		.uleb128 0x13
+ 1840 0006 0B       		.uleb128 0xb
+ 1841 0007 03       		.uleb128 0x3
+ 1842 0008 0E       		.uleb128 0xe
+ 1843 0009 1B       		.uleb128 0x1b
+ 1844 000a 0E       		.uleb128 0xe
+ 1845 000b 55       		.uleb128 0x55
+ 1846 000c 17       		.uleb128 0x17
+ 1847 000d 11       		.uleb128 0x11
+ 1848 000e 01       		.uleb128 0x1
+ 1849 000f 10       		.uleb128 0x10
+ 1850 0010 17       		.uleb128 0x17
+ 1851 0011 00       		.byte	0
+ 1852 0012 00       		.byte	0
+ 1853 0013 02       		.uleb128 0x2
+ 1854 0014 24       		.uleb128 0x24
+ 1855 0015 00       		.byte	0
+ 1856 0016 0B       		.uleb128 0xb
+ 1857 0017 0B       		.uleb128 0xb
+ 1858 0018 3E       		.uleb128 0x3e
+ 1859 0019 0B       		.uleb128 0xb
+ 1860 001a 03       		.uleb128 0x3
+ 1861 001b 08       		.uleb128 0x8
+ 1862 001c 00       		.byte	0
+ 1863 001d 00       		.byte	0
+ 1864 001e 03       		.uleb128 0x3
+ 1865 001f 24       		.uleb128 0x24
+ 1866 0020 00       		.byte	0
+ 1867 0021 0B       		.uleb128 0xb
+ 1868 0022 0B       		.uleb128 0xb
+ 1869 0023 3E       		.uleb128 0x3e
+ 1870 0024 0B       		.uleb128 0xb
+ 1871 0025 03       		.uleb128 0x3
+ 1872 0026 0E       		.uleb128 0xe
+ 1873 0027 00       		.byte	0
+ 1874 0028 00       		.byte	0
+ 1875 0029 04       		.uleb128 0x4
+ 1876 002a 16       		.uleb128 0x16
+ 1877 002b 00       		.byte	0
+ 1878 002c 03       		.uleb128 0x3
+ 1879 002d 0E       		.uleb128 0xe
+ 1880 002e 3A       		.uleb128 0x3a
+ 1881 002f 0B       		.uleb128 0xb
+ 1882 0030 3B       		.uleb128 0x3b
+ 1883 0031 05       		.uleb128 0x5
+ 1884 0032 49       		.uleb128 0x49
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 49
+
+
+ 1885 0033 13       		.uleb128 0x13
+ 1886 0034 00       		.byte	0
+ 1887 0035 00       		.byte	0
+ 1888 0036 05       		.uleb128 0x5
+ 1889 0037 35       		.uleb128 0x35
+ 1890 0038 00       		.byte	0
+ 1891 0039 49       		.uleb128 0x49
+ 1892 003a 13       		.uleb128 0x13
+ 1893 003b 00       		.byte	0
+ 1894 003c 00       		.byte	0
+ 1895 003d 06       		.uleb128 0x6
+ 1896 003e 2E       		.uleb128 0x2e
+ 1897 003f 00       		.byte	0
+ 1898 0040 3F       		.uleb128 0x3f
+ 1899 0041 19       		.uleb128 0x19
+ 1900 0042 03       		.uleb128 0x3
+ 1901 0043 0E       		.uleb128 0xe
+ 1902 0044 3A       		.uleb128 0x3a
+ 1903 0045 0B       		.uleb128 0xb
+ 1904 0046 3B       		.uleb128 0x3b
+ 1905 0047 0B       		.uleb128 0xb
+ 1906 0048 27       		.uleb128 0x27
+ 1907 0049 19       		.uleb128 0x19
+ 1908 004a 11       		.uleb128 0x11
+ 1909 004b 01       		.uleb128 0x1
+ 1910 004c 12       		.uleb128 0x12
+ 1911 004d 06       		.uleb128 0x6
+ 1912 004e 40       		.uleb128 0x40
+ 1913 004f 18       		.uleb128 0x18
+ 1914 0050 9642     		.uleb128 0x2116
+ 1915 0052 19       		.uleb128 0x19
+ 1916 0053 00       		.byte	0
+ 1917 0054 00       		.byte	0
+ 1918 0055 07       		.uleb128 0x7
+ 1919 0056 2E       		.uleb128 0x2e
+ 1920 0057 01       		.byte	0x1
+ 1921 0058 3F       		.uleb128 0x3f
+ 1922 0059 19       		.uleb128 0x19
+ 1923 005a 03       		.uleb128 0x3
+ 1924 005b 0E       		.uleb128 0xe
+ 1925 005c 3A       		.uleb128 0x3a
+ 1926 005d 0B       		.uleb128 0xb
+ 1927 005e 3B       		.uleb128 0x3b
+ 1928 005f 0B       		.uleb128 0xb
+ 1929 0060 27       		.uleb128 0x27
+ 1930 0061 19       		.uleb128 0x19
+ 1931 0062 11       		.uleb128 0x11
+ 1932 0063 01       		.uleb128 0x1
+ 1933 0064 12       		.uleb128 0x12
+ 1934 0065 06       		.uleb128 0x6
+ 1935 0066 40       		.uleb128 0x40
+ 1936 0067 18       		.uleb128 0x18
+ 1937 0068 9642     		.uleb128 0x2116
+ 1938 006a 19       		.uleb128 0x19
+ 1939 006b 01       		.uleb128 0x1
+ 1940 006c 13       		.uleb128 0x13
+ 1941 006d 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 50
+
+
+ 1942 006e 00       		.byte	0
+ 1943 006f 08       		.uleb128 0x8
+ 1944 0070 34       		.uleb128 0x34
+ 1945 0071 00       		.byte	0
+ 1946 0072 03       		.uleb128 0x3
+ 1947 0073 0E       		.uleb128 0xe
+ 1948 0074 3A       		.uleb128 0x3a
+ 1949 0075 0B       		.uleb128 0xb
+ 1950 0076 3B       		.uleb128 0x3b
+ 1951 0077 0B       		.uleb128 0xb
+ 1952 0078 49       		.uleb128 0x49
+ 1953 0079 13       		.uleb128 0x13
+ 1954 007a 02       		.uleb128 0x2
+ 1955 007b 18       		.uleb128 0x18
+ 1956 007c 00       		.byte	0
+ 1957 007d 00       		.byte	0
+ 1958 007e 09       		.uleb128 0x9
+ 1959 007f 2E       		.uleb128 0x2e
+ 1960 0080 01       		.byte	0x1
+ 1961 0081 3F       		.uleb128 0x3f
+ 1962 0082 19       		.uleb128 0x19
+ 1963 0083 03       		.uleb128 0x3
+ 1964 0084 0E       		.uleb128 0xe
+ 1965 0085 3A       		.uleb128 0x3a
+ 1966 0086 0B       		.uleb128 0xb
+ 1967 0087 3B       		.uleb128 0x3b
+ 1968 0088 05       		.uleb128 0x5
+ 1969 0089 27       		.uleb128 0x27
+ 1970 008a 19       		.uleb128 0x19
+ 1971 008b 11       		.uleb128 0x11
+ 1972 008c 01       		.uleb128 0x1
+ 1973 008d 12       		.uleb128 0x12
+ 1974 008e 06       		.uleb128 0x6
+ 1975 008f 40       		.uleb128 0x40
+ 1976 0090 18       		.uleb128 0x18
+ 1977 0091 9742     		.uleb128 0x2117
+ 1978 0093 19       		.uleb128 0x19
+ 1979 0094 01       		.uleb128 0x1
+ 1980 0095 13       		.uleb128 0x13
+ 1981 0096 00       		.byte	0
+ 1982 0097 00       		.byte	0
+ 1983 0098 0A       		.uleb128 0xa
+ 1984 0099 05       		.uleb128 0x5
+ 1985 009a 00       		.byte	0
+ 1986 009b 03       		.uleb128 0x3
+ 1987 009c 0E       		.uleb128 0xe
+ 1988 009d 3A       		.uleb128 0x3a
+ 1989 009e 0B       		.uleb128 0xb
+ 1990 009f 3B       		.uleb128 0x3b
+ 1991 00a0 05       		.uleb128 0x5
+ 1992 00a1 49       		.uleb128 0x49
+ 1993 00a2 13       		.uleb128 0x13
+ 1994 00a3 02       		.uleb128 0x2
+ 1995 00a4 18       		.uleb128 0x18
+ 1996 00a5 00       		.byte	0
+ 1997 00a6 00       		.byte	0
+ 1998 00a7 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 51
+
+
+ 1999 00a8 34       		.uleb128 0x34
+ 2000 00a9 00       		.byte	0
+ 2001 00aa 03       		.uleb128 0x3
+ 2002 00ab 0E       		.uleb128 0xe
+ 2003 00ac 3A       		.uleb128 0x3a
+ 2004 00ad 0B       		.uleb128 0xb
+ 2005 00ae 3B       		.uleb128 0x3b
+ 2006 00af 05       		.uleb128 0x5
+ 2007 00b0 49       		.uleb128 0x49
+ 2008 00b1 13       		.uleb128 0x13
+ 2009 00b2 02       		.uleb128 0x2
+ 2010 00b3 18       		.uleb128 0x18
+ 2011 00b4 00       		.byte	0
+ 2012 00b5 00       		.byte	0
+ 2013 00b6 0C       		.uleb128 0xc
+ 2014 00b7 2E       		.uleb128 0x2e
+ 2015 00b8 01       		.byte	0x1
+ 2016 00b9 3F       		.uleb128 0x3f
+ 2017 00ba 19       		.uleb128 0x19
+ 2018 00bb 03       		.uleb128 0x3
+ 2019 00bc 0E       		.uleb128 0xe
+ 2020 00bd 3A       		.uleb128 0x3a
+ 2021 00be 0B       		.uleb128 0xb
+ 2022 00bf 3B       		.uleb128 0x3b
+ 2023 00c0 05       		.uleb128 0x5
+ 2024 00c1 27       		.uleb128 0x27
+ 2025 00c2 19       		.uleb128 0x19
+ 2026 00c3 11       		.uleb128 0x11
+ 2027 00c4 01       		.uleb128 0x1
+ 2028 00c5 12       		.uleb128 0x12
+ 2029 00c6 06       		.uleb128 0x6
+ 2030 00c7 40       		.uleb128 0x40
+ 2031 00c8 18       		.uleb128 0x18
+ 2032 00c9 9642     		.uleb128 0x2116
+ 2033 00cb 19       		.uleb128 0x19
+ 2034 00cc 01       		.uleb128 0x1
+ 2035 00cd 13       		.uleb128 0x13
+ 2036 00ce 00       		.byte	0
+ 2037 00cf 00       		.byte	0
+ 2038 00d0 0D       		.uleb128 0xd
+ 2039 00d1 2E       		.uleb128 0x2e
+ 2040 00d2 00       		.byte	0
+ 2041 00d3 3F       		.uleb128 0x3f
+ 2042 00d4 19       		.uleb128 0x19
+ 2043 00d5 03       		.uleb128 0x3
+ 2044 00d6 0E       		.uleb128 0xe
+ 2045 00d7 3A       		.uleb128 0x3a
+ 2046 00d8 0B       		.uleb128 0xb
+ 2047 00d9 3B       		.uleb128 0x3b
+ 2048 00da 05       		.uleb128 0x5
+ 2049 00db 27       		.uleb128 0x27
+ 2050 00dc 19       		.uleb128 0x19
+ 2051 00dd 11       		.uleb128 0x11
+ 2052 00de 01       		.uleb128 0x1
+ 2053 00df 12       		.uleb128 0x12
+ 2054 00e0 06       		.uleb128 0x6
+ 2055 00e1 40       		.uleb128 0x40
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 52
+
+
+ 2056 00e2 18       		.uleb128 0x18
+ 2057 00e3 9742     		.uleb128 0x2117
+ 2058 00e5 19       		.uleb128 0x19
+ 2059 00e6 00       		.byte	0
+ 2060 00e7 00       		.byte	0
+ 2061 00e8 0E       		.uleb128 0xe
+ 2062 00e9 2E       		.uleb128 0x2e
+ 2063 00ea 01       		.byte	0x1
+ 2064 00eb 3F       		.uleb128 0x3f
+ 2065 00ec 19       		.uleb128 0x19
+ 2066 00ed 03       		.uleb128 0x3
+ 2067 00ee 0E       		.uleb128 0xe
+ 2068 00ef 3A       		.uleb128 0x3a
+ 2069 00f0 0B       		.uleb128 0xb
+ 2070 00f1 3B       		.uleb128 0x3b
+ 2071 00f2 05       		.uleb128 0x5
+ 2072 00f3 27       		.uleb128 0x27
+ 2073 00f4 19       		.uleb128 0x19
+ 2074 00f5 49       		.uleb128 0x49
+ 2075 00f6 13       		.uleb128 0x13
+ 2076 00f7 11       		.uleb128 0x11
+ 2077 00f8 01       		.uleb128 0x1
+ 2078 00f9 12       		.uleb128 0x12
+ 2079 00fa 06       		.uleb128 0x6
+ 2080 00fb 40       		.uleb128 0x40
+ 2081 00fc 18       		.uleb128 0x18
+ 2082 00fd 9642     		.uleb128 0x2116
+ 2083 00ff 19       		.uleb128 0x19
+ 2084 0100 01       		.uleb128 0x1
+ 2085 0101 13       		.uleb128 0x13
+ 2086 0102 00       		.byte	0
+ 2087 0103 00       		.byte	0
+ 2088 0104 0F       		.uleb128 0xf
+ 2089 0105 2E       		.uleb128 0x2e
+ 2090 0106 00       		.byte	0
+ 2091 0107 3F       		.uleb128 0x3f
+ 2092 0108 19       		.uleb128 0x19
+ 2093 0109 03       		.uleb128 0x3
+ 2094 010a 0E       		.uleb128 0xe
+ 2095 010b 3A       		.uleb128 0x3a
+ 2096 010c 0B       		.uleb128 0xb
+ 2097 010d 3B       		.uleb128 0x3b
+ 2098 010e 05       		.uleb128 0x5
+ 2099 010f 27       		.uleb128 0x27
+ 2100 0110 19       		.uleb128 0x19
+ 2101 0111 49       		.uleb128 0x49
+ 2102 0112 13       		.uleb128 0x13
+ 2103 0113 11       		.uleb128 0x11
+ 2104 0114 01       		.uleb128 0x1
+ 2105 0115 12       		.uleb128 0x12
+ 2106 0116 06       		.uleb128 0x6
+ 2107 0117 40       		.uleb128 0x40
+ 2108 0118 18       		.uleb128 0x18
+ 2109 0119 9742     		.uleb128 0x2117
+ 2110 011b 19       		.uleb128 0x19
+ 2111 011c 00       		.byte	0
+ 2112 011d 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 53
+
+
+ 2113 011e 10       		.uleb128 0x10
+ 2114 011f 2E       		.uleb128 0x2e
+ 2115 0120 01       		.byte	0x1
+ 2116 0121 3F       		.uleb128 0x3f
+ 2117 0122 19       		.uleb128 0x19
+ 2118 0123 03       		.uleb128 0x3
+ 2119 0124 0E       		.uleb128 0xe
+ 2120 0125 3A       		.uleb128 0x3a
+ 2121 0126 0B       		.uleb128 0xb
+ 2122 0127 3B       		.uleb128 0x3b
+ 2123 0128 05       		.uleb128 0x5
+ 2124 0129 27       		.uleb128 0x27
+ 2125 012a 19       		.uleb128 0x19
+ 2126 012b 49       		.uleb128 0x49
+ 2127 012c 13       		.uleb128 0x13
+ 2128 012d 11       		.uleb128 0x11
+ 2129 012e 01       		.uleb128 0x1
+ 2130 012f 12       		.uleb128 0x12
+ 2131 0130 06       		.uleb128 0x6
+ 2132 0131 40       		.uleb128 0x40
+ 2133 0132 18       		.uleb128 0x18
+ 2134 0133 9742     		.uleb128 0x2117
+ 2135 0135 19       		.uleb128 0x19
+ 2136 0136 01       		.uleb128 0x1
+ 2137 0137 13       		.uleb128 0x13
+ 2138 0138 00       		.byte	0
+ 2139 0139 00       		.byte	0
+ 2140 013a 11       		.uleb128 0x11
+ 2141 013b 34       		.uleb128 0x34
+ 2142 013c 00       		.byte	0
+ 2143 013d 03       		.uleb128 0x3
+ 2144 013e 08       		.uleb128 0x8
+ 2145 013f 3A       		.uleb128 0x3a
+ 2146 0140 0B       		.uleb128 0xb
+ 2147 0141 3B       		.uleb128 0x3b
+ 2148 0142 05       		.uleb128 0x5
+ 2149 0143 49       		.uleb128 0x49
+ 2150 0144 13       		.uleb128 0x13
+ 2151 0145 02       		.uleb128 0x2
+ 2152 0146 18       		.uleb128 0x18
+ 2153 0147 00       		.byte	0
+ 2154 0148 00       		.byte	0
+ 2155 0149 12       		.uleb128 0x12
+ 2156 014a 2E       		.uleb128 0x2e
+ 2157 014b 01       		.byte	0x1
+ 2158 014c 03       		.uleb128 0x3
+ 2159 014d 0E       		.uleb128 0xe
+ 2160 014e 3A       		.uleb128 0x3a
+ 2161 014f 0B       		.uleb128 0xb
+ 2162 0150 3B       		.uleb128 0x3b
+ 2163 0151 05       		.uleb128 0x5
+ 2164 0152 27       		.uleb128 0x27
+ 2165 0153 19       		.uleb128 0x19
+ 2166 0154 11       		.uleb128 0x11
+ 2167 0155 01       		.uleb128 0x1
+ 2168 0156 12       		.uleb128 0x12
+ 2169 0157 06       		.uleb128 0x6
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 54
+
+
+ 2170 0158 40       		.uleb128 0x40
+ 2171 0159 18       		.uleb128 0x18
+ 2172 015a 9642     		.uleb128 0x2116
+ 2173 015c 19       		.uleb128 0x19
+ 2174 015d 01       		.uleb128 0x1
+ 2175 015e 13       		.uleb128 0x13
+ 2176 015f 00       		.byte	0
+ 2177 0160 00       		.byte	0
+ 2178 0161 13       		.uleb128 0x13
+ 2179 0162 34       		.uleb128 0x34
+ 2180 0163 00       		.byte	0
+ 2181 0164 03       		.uleb128 0x3
+ 2182 0165 0E       		.uleb128 0xe
+ 2183 0166 3A       		.uleb128 0x3a
+ 2184 0167 0B       		.uleb128 0xb
+ 2185 0168 3B       		.uleb128 0x3b
+ 2186 0169 0B       		.uleb128 0xb
+ 2187 016a 49       		.uleb128 0x49
+ 2188 016b 13       		.uleb128 0x13
+ 2189 016c 3F       		.uleb128 0x3f
+ 2190 016d 19       		.uleb128 0x19
+ 2191 016e 02       		.uleb128 0x2
+ 2192 016f 18       		.uleb128 0x18
+ 2193 0170 00       		.byte	0
+ 2194 0171 00       		.byte	0
+ 2195 0172 00       		.byte	0
+ 2196              		.section	.debug_aranges,"",%progbits
+ 2197 0000 A4000000 		.4byte	0xa4
+ 2198 0004 0200     		.2byte	0x2
+ 2199 0006 00000000 		.4byte	.Ldebug_info0
+ 2200 000a 04       		.byte	0x4
+ 2201 000b 00       		.byte	0
+ 2202 000c 0000     		.2byte	0
+ 2203 000e 0000     		.2byte	0
+ 2204 0010 00000000 		.4byte	.LFB0
+ 2205 0014 24000000 		.4byte	.LFE0-.LFB0
+ 2206 0018 00000000 		.4byte	.LFB1
+ 2207 001c 48000000 		.4byte	.LFE1-.LFB1
+ 2208 0020 00000000 		.4byte	.LFB2
+ 2209 0024 F4000000 		.4byte	.LFE2-.LFB2
+ 2210 0028 00000000 		.4byte	.LFB3
+ 2211 002c 84000000 		.4byte	.LFE3-.LFB3
+ 2212 0030 00000000 		.4byte	.LFB4
+ 2213 0034 40000000 		.4byte	.LFE4-.LFB4
+ 2214 0038 00000000 		.4byte	.LFB5
+ 2215 003c 54000000 		.4byte	.LFE5-.LFB5
+ 2216 0040 00000000 		.4byte	.LFB6
+ 2217 0044 20000000 		.4byte	.LFE6-.LFB6
+ 2218 0048 00000000 		.4byte	.LFB7
+ 2219 004c 20000000 		.4byte	.LFE7-.LFB7
+ 2220 0050 00000000 		.4byte	.LFB8
+ 2221 0054 40000000 		.4byte	.LFE8-.LFB8
+ 2222 0058 00000000 		.4byte	.LFB9
+ 2223 005c 28000000 		.4byte	.LFE9-.LFB9
+ 2224 0060 00000000 		.4byte	.LFB10
+ 2225 0064 30000000 		.4byte	.LFE10-.LFB10
+ 2226 0068 00000000 		.4byte	.LFB11
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 55
+
+
+ 2227 006c 20000000 		.4byte	.LFE11-.LFB11
+ 2228 0070 00000000 		.4byte	.LFB12
+ 2229 0074 80000000 		.4byte	.LFE12-.LFB12
+ 2230 0078 00000000 		.4byte	.LFB13
+ 2231 007c 2C000000 		.4byte	.LFE13-.LFB13
+ 2232 0080 00000000 		.4byte	.LFB14
+ 2233 0084 1C000000 		.4byte	.LFE14-.LFB14
+ 2234 0088 00000000 		.4byte	.LFB15
+ 2235 008c 8C000000 		.4byte	.LFE15-.LFB15
+ 2236 0090 00000000 		.4byte	.LFB16
+ 2237 0094 90000000 		.4byte	.LFE16-.LFB16
+ 2238 0098 00000000 		.4byte	.LFB17
+ 2239 009c 84000000 		.4byte	.LFE17-.LFB17
+ 2240 00a0 00000000 		.4byte	0
+ 2241 00a4 00000000 		.4byte	0
+ 2242              		.section	.debug_ranges,"",%progbits
+ 2243              	.Ldebug_ranges0:
+ 2244 0000 00000000 		.4byte	.LFB0
+ 2245 0004 24000000 		.4byte	.LFE0
+ 2246 0008 00000000 		.4byte	.LFB1
+ 2247 000c 48000000 		.4byte	.LFE1
+ 2248 0010 00000000 		.4byte	.LFB2
+ 2249 0014 F4000000 		.4byte	.LFE2
+ 2250 0018 00000000 		.4byte	.LFB3
+ 2251 001c 84000000 		.4byte	.LFE3
+ 2252 0020 00000000 		.4byte	.LFB4
+ 2253 0024 40000000 		.4byte	.LFE4
+ 2254 0028 00000000 		.4byte	.LFB5
+ 2255 002c 54000000 		.4byte	.LFE5
+ 2256 0030 00000000 		.4byte	.LFB6
+ 2257 0034 20000000 		.4byte	.LFE6
+ 2258 0038 00000000 		.4byte	.LFB7
+ 2259 003c 20000000 		.4byte	.LFE7
+ 2260 0040 00000000 		.4byte	.LFB8
+ 2261 0044 40000000 		.4byte	.LFE8
+ 2262 0048 00000000 		.4byte	.LFB9
+ 2263 004c 28000000 		.4byte	.LFE9
+ 2264 0050 00000000 		.4byte	.LFB10
+ 2265 0054 30000000 		.4byte	.LFE10
+ 2266 0058 00000000 		.4byte	.LFB11
+ 2267 005c 20000000 		.4byte	.LFE11
+ 2268 0060 00000000 		.4byte	.LFB12
+ 2269 0064 80000000 		.4byte	.LFE12
+ 2270 0068 00000000 		.4byte	.LFB13
+ 2271 006c 2C000000 		.4byte	.LFE13
+ 2272 0070 00000000 		.4byte	.LFB14
+ 2273 0074 1C000000 		.4byte	.LFE14
+ 2274 0078 00000000 		.4byte	.LFB15
+ 2275 007c 8C000000 		.4byte	.LFE15
+ 2276 0080 00000000 		.4byte	.LFB16
+ 2277 0084 90000000 		.4byte	.LFE16
+ 2278 0088 00000000 		.4byte	.LFB17
+ 2279 008c 84000000 		.4byte	.LFE17
+ 2280 0090 00000000 		.4byte	0
+ 2281 0094 00000000 		.4byte	0
+ 2282              		.section	.debug_line,"",%progbits
+ 2283              	.Ldebug_line0:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 56
+
+
+ 2284 0000 05020000 		.section	.debug_str,"MS",%progbits,1
+ 2284      02004200 
+ 2284      00000201 
+ 2284      FB0E0D00 
+ 2284      01010101 
+ 2285              	.LASF13:
+ 2286 0000 75696E74 		.ascii	"uint16\000"
+ 2286      313600
+ 2287              	.LASF45:
+ 2288 0007 61646347 		.ascii	"adcGain\000"
+ 2288      61696E00 
+ 2289              	.LASF43:
+ 2290 000f 636F756E 		.ascii	"counts\000"
+ 2290      747300
+ 2291              	.LASF60:
+ 2292 0016 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2292      43313120 
+ 2292      352E342E 
+ 2292      31203230 
+ 2292      31363036 
+ 2293 0049 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 2293      20726576 
+ 2293      6973696F 
+ 2293      6E203233 
+ 2293      37373135 
+ 2294 007c 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2294      66756E63 
+ 2294      74696F6E 
+ 2294      2D736563 
+ 2294      74696F6E 
+ 2295              	.LASF57:
+ 2296 00a4 70484144 		.ascii	"pHADC_countsPerVolt\000"
+ 2296      435F636F 
+ 2296      756E7473 
+ 2296      50657256 
+ 2296      6F6C7400 
+ 2297              	.LASF58:
+ 2298 00b8 70484144 		.ascii	"pHADC_countsPer10Volt\000"
+ 2298      435F636F 
+ 2298      756E7473 
+ 2298      50657231 
+ 2298      30566F6C 
+ 2299              	.LASF9:
+ 2300 00ce 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2300      206C6F6E 
+ 2300      6720756E 
+ 2300      7369676E 
+ 2300      65642069 
+ 2301              	.LASF61:
+ 2302 00e5 47656E65 		.ascii	"Generated_Source\\PSoC5\\pHADC.c\000"
+ 2302      72617465 
+ 2302      645F536F 
+ 2302      75726365 
+ 2302      5C50536F 
+ 2303              	.LASF41:
+ 2304 0104 70484144 		.ascii	"pHADC_SetOffset\000"
+ 2304      435F5365 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 57
+
+
+ 2304      744F6666 
+ 2304      73657400 
+ 2305              	.LASF1:
+ 2306 0114 6C6F6E67 		.ascii	"long long int\000"
+ 2306      206C6F6E 
+ 2306      6720696E 
+ 2306      7400
+ 2307              	.LASF3:
+ 2308 0122 7369676E 		.ascii	"signed char\000"
+ 2308      65642063 
+ 2308      68617200 
+ 2309              	.LASF17:
+ 2310 012e 696E7433 		.ascii	"int32\000"
+ 2310      3200
+ 2311              	.LASF7:
+ 2312 0134 6C6F6E67 		.ascii	"long int\000"
+ 2312      20696E74 
+ 2312      00
+ 2313              	.LASF64:
+ 2314 013d 70484144 		.ascii	"pHADC_CalcGain\000"
+ 2314      435F4361 
+ 2314      6C634761 
+ 2314      696E00
+ 2315              	.LASF23:
+ 2316 014c 72656731 		.ascii	"reg16\000"
+ 2316      3600
+ 2317              	.LASF12:
+ 2318 0152 75696E74 		.ascii	"uint8\000"
+ 2318      3800
+ 2319              	.LASF20:
+ 2320 0158 646F7562 		.ascii	"double\000"
+ 2320      6C6500
+ 2321              	.LASF40:
+ 2322 015f 70484144 		.ascii	"pHADC_GetResult16\000"
+ 2322      435F4765 
+ 2322      74526573 
+ 2322      756C7431 
+ 2322      3600
+ 2323              	.LASF26:
+ 2324 0171 70484144 		.ascii	"pHADC_Init\000"
+ 2324      435F496E 
+ 2324      697400
+ 2325              	.LASF14:
+ 2326 017c 75696E74 		.ascii	"uint32\000"
+ 2326      333200
+ 2327              	.LASF50:
+ 2328 0183 636F756E 		.ascii	"countsPer10Volt\000"
+ 2328      74735065 
+ 2328      72313056 
+ 2328      6F6C7400 
+ 2329              	.LASF56:
+ 2330 0193 70484144 		.ascii	"pHADC_offset\000"
+ 2330      435F6F66 
+ 2330      66736574 
+ 2330      00
+ 2331              	.LASF53:
+ 2332 01a0 70484144 		.ascii	"pHADC_CountsTo_Volts\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 58
+
+
+ 2332      435F436F 
+ 2332      756E7473 
+ 2332      546F5F56 
+ 2332      6F6C7473 
+ 2333              	.LASF37:
+ 2334 01b5 7265744D 		.ascii	"retMode\000"
+ 2334      6F646500 
+ 2335              	.LASF0:
+ 2336 01bd 756E7369 		.ascii	"unsigned int\000"
+ 2336      676E6564 
+ 2336      20696E74 
+ 2336      00
+ 2337              	.LASF52:
+ 2338 01ca 75566F6C 		.ascii	"uVolts\000"
+ 2338      747300
+ 2339              	.LASF8:
+ 2340 01d1 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2340      20756E73 
+ 2340      69676E65 
+ 2340      6420696E 
+ 2340      7400
+ 2341              	.LASF54:
+ 2342 01e3 766F6C74 		.ascii	"volts\000"
+ 2342      7300
+ 2343              	.LASF6:
+ 2344 01e9 73686F72 		.ascii	"short unsigned int\000"
+ 2344      7420756E 
+ 2344      7369676E 
+ 2344      65642069 
+ 2344      6E7400
+ 2345              	.LASF15:
+ 2346 01fc 696E7438 		.ascii	"int8\000"
+ 2346      00
+ 2347              	.LASF51:
+ 2348 0201 70484144 		.ascii	"pHADC_CountsTo_uVolts\000"
+ 2348      435F436F 
+ 2348      756E7473 
+ 2348      546F5F75 
+ 2348      566F6C74 
+ 2349              	.LASF32:
+ 2350 0217 70484144 		.ascii	"pHADC_SetResolution\000"
+ 2350      435F5365 
+ 2350      74526573 
+ 2350      6F6C7574 
+ 2350      696F6E00 
+ 2351              	.LASF49:
+ 2352 022b 6D566F6C 		.ascii	"mVolts\000"
+ 2352      747300
+ 2353              	.LASF24:
+ 2354 0232 72656733 		.ascii	"reg32\000"
+ 2354      3200
+ 2355              	.LASF25:
+ 2356 0238 70484144 		.ascii	"pHADC_Start\000"
+ 2356      435F5374 
+ 2356      61727400 
+ 2357              	.LASF55:
+ 2358 0244 70484144 		.ascii	"pHADC_initVar\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 59
+
+
+ 2358      435F696E 
+ 2358      69745661 
+ 2358      7200
+ 2359              	.LASF18:
+ 2360 0252 666C6F61 		.ascii	"float32\000"
+ 2360      74333200 
+ 2361              	.LASF10:
+ 2362 025a 73697A65 		.ascii	"sizetype\000"
+ 2362      74797065 
+ 2362      00
+ 2363              	.LASF2:
+ 2364 0263 6C6F6E67 		.ascii	"long double\000"
+ 2364      20646F75 
+ 2364      626C6500 
+ 2365              	.LASF63:
+ 2366 026f 70484144 		.ascii	"pHADC_GetResult8\000"
+ 2366      435F4765 
+ 2366      74526573 
+ 2366      756C7438 
+ 2366      00
+ 2367              	.LASF21:
+ 2368 0280 696E7436 		.ascii	"int64\000"
+ 2368      3400
+ 2369              	.LASF62:
+ 2370 0286 433A5C55 		.ascii	"C:\\Users\\tpbw4321\\AppData\\Roaming\\SPB_Data\\Hy"
+ 2370      73657273 
+ 2370      5C747062 
+ 2370      77343332 
+ 2370      315C4170 
+ 2371 02b3 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
+ 2371      6F6E6963 
+ 2371      73417574 
+ 2371      6F6D6174 
+ 2371      696F6E5C 
+ 2372 02e2 536F435C 		.ascii	"SoC\\HydroponicAutomationSensorPerf.cydsn\000"
+ 2372      48796472 
+ 2372      6F706F6E 
+ 2372      69634175 
+ 2372      746F6D61 
+ 2373              	.LASF19:
+ 2374 030b 666C6F61 		.ascii	"float\000"
+ 2374      7400
+ 2375              	.LASF46:
+ 2376 0311 70484144 		.ascii	"pHADC_SetScaledGain\000"
+ 2376      435F5365 
+ 2376      74536361 
+ 2376      6C656447 
+ 2376      61696E00 
+ 2377              	.LASF33:
+ 2378 0325 706F7765 		.ascii	"power\000"
+ 2378      7200
+ 2379              	.LASF22:
+ 2380 032b 72656738 		.ascii	"reg8\000"
+ 2380      00
+ 2381              	.LASF4:
+ 2382 0330 756E7369 		.ascii	"unsigned char\000"
+ 2382      676E6564 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 60
+
+
+ 2382      20636861 
+ 2382      7200
+ 2383              	.LASF36:
+ 2384 033e 70484144 		.ascii	"pHADC_StopConvert\000"
+ 2384      435F5374 
+ 2384      6F70436F 
+ 2384      6E766572 
+ 2384      7400
+ 2385              	.LASF5:
+ 2386 0350 73686F72 		.ascii	"short int\000"
+ 2386      7420696E 
+ 2386      7400
+ 2387              	.LASF35:
+ 2388 035a 70484144 		.ascii	"pHADC_StartConvert\000"
+ 2388      435F5374 
+ 2388      61727443 
+ 2388      6F6E7665 
+ 2388      727400
+ 2389              	.LASF34:
+ 2390 036d 7265736F 		.ascii	"resolution\000"
+ 2390      6C757469 
+ 2390      6F6E00
+ 2391              	.LASF39:
+ 2392 0378 70484144 		.ascii	"pHADC_IsEndConversion\000"
+ 2392      435F4973 
+ 2392      456E6443 
+ 2392      6F6E7665 
+ 2392      7273696F 
+ 2393              	.LASF11:
+ 2394 038e 63686172 		.ascii	"char\000"
+ 2394      00
+ 2395              	.LASF31:
+ 2396 0393 70484144 		.ascii	"pHADC_SetPower\000"
+ 2396      435F5365 
+ 2396      74506F77 
+ 2396      657200
+ 2397              	.LASF44:
+ 2398 03a2 70484144 		.ascii	"pHADC_SetGain\000"
+ 2398      435F5365 
+ 2398      74476169 
+ 2398      6E00
+ 2399              	.LASF29:
+ 2400 03b0 70484144 		.ascii	"pHADC_Enable\000"
+ 2400      435F456E 
+ 2400      61626C65 
+ 2400      00
+ 2401              	.LASF42:
+ 2402 03bd 6F666673 		.ascii	"offset\000"
+ 2402      657400
+ 2403              	.LASF47:
+ 2404 03c4 70484144 		.ascii	"pHADC_CountsTo_mVolts\000"
+ 2404      435F436F 
+ 2404      756E7473 
+ 2404      546F5F6D 
+ 2404      566F6C74 
+ 2405              	.LASF48:
+ 2406 03da 61646343 		.ascii	"adcCounts\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccmH01mL.s 			page 61
+
+
+ 2406      6F756E74 
+ 2406      7300
+ 2407              	.LASF30:
+ 2408 03e4 70484144 		.ascii	"pHADC_Stop\000"
+ 2408      435F5374 
+ 2408      6F7000
+ 2409              	.LASF28:
+ 2410 03ef 656E6162 		.ascii	"enableInterrupts\000"
+ 2410      6C65496E 
+ 2410      74657272 
+ 2410      75707473 
+ 2410      00
+ 2411              	.LASF38:
+ 2412 0400 73746174 		.ascii	"status\000"
+ 2412      757300
+ 2413              	.LASF59:
+ 2414 0407 70484144 		.ascii	"pHADC_shift\000"
+ 2414      435F7368 
+ 2414      69667400 
+ 2415              	.LASF16:
+ 2416 0413 696E7431 		.ascii	"int16\000"
+ 2416      3600
+ 2417              	.LASF27:
+ 2418 0419 746D7052 		.ascii	"tmpReg\000"
+ 2418      656700
+ 2419              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

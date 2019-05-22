@@ -1,0 +1,1453 @@
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"Protocol.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.rodata
+  20              		.align	2
+  21              	.LC0:
+  22 0000 696E7661 		.ascii	"invalid_key\000"
+  22      6C69645F 
+  22      6B657900 
+  23              		.align	2
+  24              	.LC1:
+  25 000c 666C6F77 		.ascii	"flow_target\000"
+  25      5F746172 
+  25      67657400 
+  26              		.align	2
+  27              	.LC2:
+  28 0018 70685F74 		.ascii	"ph_target\000"
+  28      61726765 
+  28      7400
+  29 0022 0000     		.align	2
+  30              	.LC3:
+  31 0024 65635F74 		.ascii	"ec_target\000"
+  31      61726765 
+  31      7400
+  32 002e 0000     		.align	2
+  33              	.LC4:
+  34 0030 6832305F 		.ascii	"h20_level_target\000"
+  34      6C657665 
+  34      6C5F7461 
+  34      72676574 
+  34      00
+  35 0041 000000   		.align	2
+  36              	.LC5:
+  37 0044 6832305F 		.ascii	"h20_level\000"
+  37      6C657665 
+  37      6C00
+  38 004e 0000     		.align	2
+  39              	.LC6:
+  40 0050 6832305F 		.ascii	"h20_stored\000"
+  40      73746F72 
+  40      656400
+  41 005b 00       		.align	2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 2
+
+
+  42              	.LC7:
+  43 005c 70685F6D 		.ascii	"ph_measured\000"
+  43      65617375 
+  43      72656400 
+  44              		.align	2
+  45              	.LC8:
+  46 0068 70685F75 		.ascii	"ph_up_stored\000"
+  46      705F7374 
+  46      6F726564 
+  46      00
+  47 0075 000000   		.align	2
+  48              	.LC9:
+  49 0078 70685F64 		.ascii	"ph_down_stored\000"
+  49      6F776E5F 
+  49      73746F72 
+  49      656400
+  50 0087 00       		.align	2
+  51              	.LC10:
+  52 0088 65635F6D 		.ascii	"ec_measured\000"
+  52      65617375 
+  52      72656400 
+  53              		.align	2
+  54              	.LC11:
+  55 0094 65635F73 		.ascii	"ec_stored\000"
+  55      746F7265 
+  55      6400
+  56 009e 0000     		.align	2
+  57              	.LC12:
+  58 00a0 74656D70 		.ascii	"temp_measured\000"
+  58      5F6D6561 
+  58      73757265 
+  58      6400
+  59 00ae 0000     		.align	2
+  60              	.LC13:
+  61 00b0 666C6F77 		.ascii	"flow_measured\000"
+  61      5F6D6561 
+  61      73757265 
+  61      6400
+  62              		.data
+  63              		.align	2
+  64              		.type	pkey_const, %object
+  65              		.size	pkey_const, 56
+  66              	pkey_const:
+  67 0000 00000000 		.word	.LC0
+  68 0004 0C000000 		.word	.LC1
+  69 0008 18000000 		.word	.LC2
+  70 000c 24000000 		.word	.LC3
+  71 0010 30000000 		.word	.LC4
+  72 0014 44000000 		.word	.LC5
+  73 0018 50000000 		.word	.LC6
+  74 001c 5C000000 		.word	.LC7
+  75 0020 68000000 		.word	.LC8
+  76 0024 78000000 		.word	.LC9
+  77 0028 88000000 		.word	.LC10
+  78 002c 94000000 		.word	.LC11
+  79 0030 A0000000 		.word	.LC12
+  80 0034 B0000000 		.word	.LC13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 3
+
+
+  81              		.section	.rodata
+  82 00be 0000     		.align	2
+  83              	.LC14:
+  84 00c0 3A00     		.ascii	":\000"
+  85              		.global	__aeabi_d2f
+  86              		.section	.text.Protocol_DecodeInput,"ax",%progbits
+  87              		.align	2
+  88              		.global	Protocol_DecodeInput
+  89              		.thumb
+  90              		.thumb_func
+  91              		.type	Protocol_DecodeInput, %function
+  92              	Protocol_DecodeInput:
+  93              	.LFB64:
+  94              		.file 1 "src\\Protocol.c"
+   1:src/Protocol.c **** /* ========================================
+   2:src/Protocol.c ****  *
+   3:src/Protocol.c ****  * Copyright YOUR COMPANY, THE YEAR
+   4:src/Protocol.c ****  * All Rights Reserved
+   5:src/Protocol.c ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:src/Protocol.c ****  *
+   7:src/Protocol.c ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:src/Protocol.c ****  * WHICH IS THE PROPERTY OF your company.
+   9:src/Protocol.c ****  *
+  10:src/Protocol.c ****  * ========================================
+  11:src/Protocol.c **** */
+  12:src/Protocol.c **** 
+  13:src/Protocol.c **** #include <stdio.h>
+  14:src/Protocol.c **** #include <stdlib.h>
+  15:src/Protocol.c **** #include "Protocol.h"
+  16:src/Protocol.c **** #include "project.h"
+  17:src/Protocol.c **** 
+  18:src/Protocol.c **** /**
+  19:src/Protocol.c ****  * @function Protocol_DecodeInput(char * input)
+  20:src/Protocol.c ****  * @param None
+  21:src/Protocol.c ****  * @return decoded input stored in a message_t structure
+  22:src/Protocol.c ****  * @brief Takes an incoming data transmission and decodes it
+  23:src/Protocol.c ****  * @author Barron Wong 02/08/19
+  24:src/Protocol.c **** */
+  25:src/Protocol.c **** message_t Protocol_DecodeInput(char * input){
+  95              		.loc 1 25 0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 24
+  98              		@ frame_needed = 1, uses_anonymous_args = 0
+  99 0000 90B5     		push	{r4, r7, lr}
+ 100              		.cfi_def_cfa_offset 12
+ 101              		.cfi_offset 4, -12
+ 102              		.cfi_offset 7, -8
+ 103              		.cfi_offset 14, -4
+ 104 0002 87B0     		sub	sp, sp, #28
+ 105              		.cfi_def_cfa_offset 40
+ 106 0004 00AF     		add	r7, sp, #0
+ 107              		.cfi_def_cfa_register 7
+ 108 0006 7860     		str	r0, [r7, #4]
+ 109 0008 3960     		str	r1, [r7]
+  26:src/Protocol.c ****     char * ptr;
+  27:src/Protocol.c ****     message_t target;
+  28:src/Protocol.c ****     uint8_t count = 0;
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 4
+
+
+ 110              		.loc 1 28 0
+ 111 000a 0023     		movs	r3, #0
+ 112 000c FB74     		strb	r3, [r7, #19]
+  29:src/Protocol.c ****     
+  30:src/Protocol.c ****     target.key = invalid_key;
+ 113              		.loc 1 30 0
+ 114 000e 0023     		movs	r3, #0
+ 115 0010 3B72     		strb	r3, [r7, #8]
+  31:src/Protocol.c ****     target.key = 0;
+ 116              		.loc 1 31 0
+ 117 0012 0023     		movs	r3, #0
+ 118 0014 3B72     		strb	r3, [r7, #8]
+  32:src/Protocol.c ****     
+  33:src/Protocol.c ****     ptr = strtok(input,":");
+ 119              		.loc 1 33 0
+ 120 0016 1D49     		ldr	r1, .L10
+ 121 0018 3868     		ldr	r0, [r7]
+ 122 001a FFF7FEFF 		bl	strtok
+ 123 001e 7861     		str	r0, [r7, #20]
+  34:src/Protocol.c ****     
+  35:src/Protocol.c ****     while(ptr != NULL){
+ 124              		.loc 1 35 0
+ 125 0020 24E0     		b	.L2
+ 126              	.L7:
+  36:src/Protocol.c ****         switch(count){
+ 127              		.loc 1 36 0
+ 128 0022 FB7C     		ldrb	r3, [r7, #19]	@ zero_extendqisi2
+ 129 0024 002B     		cmp	r3, #0
+ 130 0026 02D0     		beq	.L4
+ 131 0028 012B     		cmp	r3, #1
+ 132 002a 07D0     		beq	.L5
+ 133 002c 12E0     		b	.L9
+ 134              	.L4:
+  37:src/Protocol.c ****             case 0:{
+  38:src/Protocol.c ****                 target.key = atoi(ptr);
+ 135              		.loc 1 38 0
+ 136 002e 7869     		ldr	r0, [r7, #20]
+ 137 0030 FFF7FEFF 		bl	atoi
+ 138 0034 0346     		mov	r3, r0
+ 139 0036 DBB2     		uxtb	r3, r3
+ 140 0038 3B72     		strb	r3, [r7, #8]
+  39:src/Protocol.c ****             break;
+ 141              		.loc 1 39 0
+ 142 003a 0FE0     		b	.L6
+ 143              	.L5:
+  40:src/Protocol.c ****             }
+  41:src/Protocol.c ****             case 1:{
+  42:src/Protocol.c ****                 target.value = atof(ptr);
+ 144              		.loc 1 42 0
+ 145 003c 7869     		ldr	r0, [r7, #20]
+ 146 003e FFF7FEFF 		bl	atof
+ 147 0042 0346     		mov	r3, r0
+ 148 0044 0C46     		mov	r4, r1
+ 149 0046 1846     		mov	r0, r3
+ 150 0048 2146     		mov	r1, r4
+ 151 004a FFF7FEFF 		bl	__aeabi_d2f
+ 152 004e 0346     		mov	r3, r0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 5
+
+
+ 153 0050 FB60     		str	r3, [r7, #12]	@ float
+  43:src/Protocol.c ****             break;
+ 154              		.loc 1 43 0
+ 155 0052 03E0     		b	.L6
+ 156              	.L9:
+  44:src/Protocol.c ****             }
+  45:src/Protocol.c ****             default:{
+  46:src/Protocol.c ****                 target.key = invalid_key;
+ 157              		.loc 1 46 0
+ 158 0054 0023     		movs	r3, #0
+ 159 0056 3B72     		strb	r3, [r7, #8]
+  47:src/Protocol.c ****                 target.value = -1;
+ 160              		.loc 1 47 0
+ 161 0058 0D4B     		ldr	r3, .L10+4
+ 162 005a FB60     		str	r3, [r7, #12]	@ float
+ 163              	.L6:
+  48:src/Protocol.c ****             }
+  49:src/Protocol.c ****         }
+  50:src/Protocol.c ****         count++;
+ 164              		.loc 1 50 0
+ 165 005c FB7C     		ldrb	r3, [r7, #19]	@ zero_extendqisi2
+ 166 005e 0133     		adds	r3, r3, #1
+ 167 0060 FB74     		strb	r3, [r7, #19]
+  51:src/Protocol.c ****         ptr = strtok(NULL,":");
+ 168              		.loc 1 51 0
+ 169 0062 0A49     		ldr	r1, .L10
+ 170 0064 0020     		movs	r0, #0
+ 171 0066 FFF7FEFF 		bl	strtok
+ 172 006a 7861     		str	r0, [r7, #20]
+ 173              	.L2:
+  35:src/Protocol.c ****         switch(count){
+ 174              		.loc 1 35 0
+ 175 006c 7B69     		ldr	r3, [r7, #20]
+ 176 006e 002B     		cmp	r3, #0
+ 177 0070 D7D1     		bne	.L7
+  52:src/Protocol.c ****     }
+  53:src/Protocol.c ****     
+  54:src/Protocol.c ****     return target;
+ 178              		.loc 1 54 0
+ 179 0072 7B68     		ldr	r3, [r7, #4]
+ 180 0074 1A46     		mov	r2, r3
+ 181 0076 07F10803 		add	r3, r7, #8
+ 182 007a 93E80300 		ldmia	r3, {r0, r1}
+ 183 007e 82E80300 		stmia	r2, {r0, r1}
+  55:src/Protocol.c ****     
+  56:src/Protocol.c **** }
+ 184              		.loc 1 56 0
+ 185 0082 7868     		ldr	r0, [r7, #4]
+ 186 0084 1C37     		adds	r7, r7, #28
+ 187              		.cfi_def_cfa_offset 12
+ 188 0086 BD46     		mov	sp, r7
+ 189              		.cfi_def_cfa_register 13
+ 190              		@ sp needed
+ 191 0088 90BD     		pop	{r4, r7, pc}
+ 192              	.L11:
+ 193 008a 00BF     		.align	2
+ 194              	.L10:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 6
+
+
+ 195 008c C0000000 		.word	.LC14
+ 196 0090 000080BF 		.word	-1082130432
+ 197              		.cfi_endproc
+ 198              	.LFE64:
+ 199              		.size	Protocol_DecodeInput, .-Protocol_DecodeInput
+ 200              		.global	__aeabi_f2d
+ 201              		.section	.rodata
+ 202 00c2 0000     		.align	2
+ 203              	.LC15:
+ 204 00c4 25643A25 		.ascii	"%d:%0.3f\000"
+ 204      302E3366 
+ 204      00
+ 205              		.section	.text.Protocol_EncodeOutput,"ax",%progbits
+ 206              		.align	2
+ 207              		.global	Protocol_EncodeOutput
+ 208              		.thumb
+ 209              		.thumb_func
+ 210              		.type	Protocol_EncodeOutput, %function
+ 211              	Protocol_EncodeOutput:
+ 212              	.LFB65:
+  57:src/Protocol.c **** /**
+  58:src/Protocol.c ****  * @function Protocol_EncodeOutput(char * input)
+  59:src/Protocol.c ****  * @param key, value, and buffer
+  60:src/Protocol.c ****  * @return String pointer ready for output
+  61:src/Protocol.c ****  * @brief Takes a key and a value and get it read for output
+  62:src/Protocol.c ****  * @author Barron Wong 02/08/19
+  63:src/Protocol.c **** */
+  64:src/Protocol.c **** char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
+ 213              		.loc 1 64 0
+ 214              		.cfi_startproc
+ 215              		@ args = 0, pretend = 0, frame = 24
+ 216              		@ frame_needed = 1, uses_anonymous_args = 0
+ 217 0000 B0B5     		push	{r4, r5, r7, lr}
+ 218              		.cfi_def_cfa_offset 16
+ 219              		.cfi_offset 4, -16
+ 220              		.cfi_offset 5, -12
+ 221              		.cfi_offset 7, -8
+ 222              		.cfi_offset 14, -4
+ 223 0002 88B0     		sub	sp, sp, #32
+ 224              		.cfi_def_cfa_offset 48
+ 225 0004 02AF     		add	r7, sp, #8
+ 226              		.cfi_def_cfa 7, 40
+ 227 0006 0346     		mov	r3, r0
+ 228 0008 B960     		str	r1, [r7, #8]	@ float
+ 229 000a 7A60     		str	r2, [r7, #4]
+ 230 000c FB73     		strb	r3, [r7, #15]
+  65:src/Protocol.c ****     int size = strlen(buffer);
+ 231              		.loc 1 65 0
+ 232 000e 7868     		ldr	r0, [r7, #4]
+ 233 0010 FFF7FEFF 		bl	strlen
+ 234 0014 0346     		mov	r3, r0
+ 235 0016 3B61     		str	r3, [r7, #16]
+ 236              	.LBB2:
+  66:src/Protocol.c ****  
+  67:src/Protocol.c ****     //clear buffer
+  68:src/Protocol.c ****     for(int i = 0; i < size; i++){
+ 237              		.loc 1 68 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 7
+
+
+ 238 0018 0023     		movs	r3, #0
+ 239 001a 7B61     		str	r3, [r7, #20]
+ 240 001c 05E0     		b	.L13
+ 241              	.L14:
+  69:src/Protocol.c ****         buffer[0] = 0;
+ 242              		.loc 1 69 0 discriminator 3
+ 243 001e 7B68     		ldr	r3, [r7, #4]
+ 244 0020 0022     		movs	r2, #0
+ 245 0022 1A70     		strb	r2, [r3]
+  68:src/Protocol.c ****         buffer[0] = 0;
+ 246              		.loc 1 68 0 discriminator 3
+ 247 0024 7B69     		ldr	r3, [r7, #20]
+ 248 0026 0133     		adds	r3, r3, #1
+ 249 0028 7B61     		str	r3, [r7, #20]
+ 250              	.L13:
+  68:src/Protocol.c ****         buffer[0] = 0;
+ 251              		.loc 1 68 0 is_stmt 0 discriminator 1
+ 252 002a 7A69     		ldr	r2, [r7, #20]
+ 253 002c 3B69     		ldr	r3, [r7, #16]
+ 254 002e 9A42     		cmp	r2, r3
+ 255 0030 F5DB     		blt	.L14
+ 256              	.LBE2:
+  70:src/Protocol.c ****     }
+  71:src/Protocol.c ****     if(key > invalid_key && key <= flow_measured){
+ 257              		.loc 1 71 0 is_stmt 1
+ 258 0032 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 259 0034 002B     		cmp	r3, #0
+ 260 0036 0FD0     		beq	.L15
+ 261              		.loc 1 71 0 is_stmt 0 discriminator 1
+ 262 0038 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 263 003a 0D2B     		cmp	r3, #13
+ 264 003c 0CD8     		bhi	.L15
+  72:src/Protocol.c ****         sprintf(buffer,"%d:%0.3f",(int)key,value);
+ 265              		.loc 1 72 0 is_stmt 1
+ 266 003e FD7B     		ldrb	r5, [r7, #15]	@ zero_extendqisi2
+ 267 0040 B868     		ldr	r0, [r7, #8]	@ float
+ 268 0042 FFF7FEFF 		bl	__aeabi_f2d
+ 269 0046 0346     		mov	r3, r0
+ 270 0048 0C46     		mov	r4, r1
+ 271 004a CDE90034 		strd	r3, [sp]
+ 272 004e 2A46     		mov	r2, r5
+ 273 0050 0449     		ldr	r1, .L17
+ 274 0052 7868     		ldr	r0, [r7, #4]
+ 275 0054 FFF7FEFF 		bl	sprintf
+ 276              	.L15:
+  73:src/Protocol.c ****     }
+  74:src/Protocol.c ****     
+  75:src/Protocol.c ****     return buffer;
+ 277              		.loc 1 75 0
+ 278 0058 7B68     		ldr	r3, [r7, #4]
+  76:src/Protocol.c **** }
+ 279              		.loc 1 76 0
+ 280 005a 1846     		mov	r0, r3
+ 281 005c 1837     		adds	r7, r7, #24
+ 282              		.cfi_def_cfa_offset 16
+ 283 005e BD46     		mov	sp, r7
+ 284              		.cfi_def_cfa_register 13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 8
+
+
+ 285              		@ sp needed
+ 286 0060 B0BD     		pop	{r4, r5, r7, pc}
+ 287              	.L18:
+ 288 0062 00BF     		.align	2
+ 289              	.L17:
+ 290 0064 C4000000 		.word	.LC15
+ 291              		.cfi_endproc
+ 292              	.LFE65:
+ 293              		.size	Protocol_EncodeOutput, .-Protocol_EncodeOutput
+ 294              		.section	.rodata
+ 295 00cd 000000   		.align	2
+ 296              	.LC16:
+ 297 00d0 25733A25 		.ascii	"%s:%f\015\012\000"
+ 297      660D0A00 
+ 298              		.section	.text.Protocol_PrintMessage,"ax",%progbits
+ 299              		.align	2
+ 300              		.global	Protocol_PrintMessage
+ 301              		.thumb
+ 302              		.thumb_func
+ 303              		.type	Protocol_PrintMessage, %function
+ 304              	Protocol_PrintMessage:
+ 305              	.LFB66:
+  77:src/Protocol.c **** /**
+  78:src/Protocol.c ****  * @function Protocol_PrintMessage(char * input)
+  79:src/Protocol.c ****  * @param target_t
+  80:src/Protocol.c ****  * @return none
+  81:src/Protocol.c ****  * @brief Prints a message and its value
+  82:src/Protocol.c ****  * @author Barron Wong 02/08/19
+  83:src/Protocol.c ****  */
+  84:src/Protocol.c **** void Protocol_PrintMessage(message_t message){
+ 306              		.loc 1 84 0
+ 307              		.cfi_startproc
+ 308              		@ args = 0, pretend = 0, frame = 8
+ 309              		@ frame_needed = 1, uses_anonymous_args = 0
+ 310 0000 90B5     		push	{r4, r7, lr}
+ 311              		.cfi_def_cfa_offset 12
+ 312              		.cfi_offset 4, -12
+ 313              		.cfi_offset 7, -8
+ 314              		.cfi_offset 14, -4
+ 315 0002 83B0     		sub	sp, sp, #12
+ 316              		.cfi_def_cfa_offset 24
+ 317 0004 00AF     		add	r7, sp, #0
+ 318              		.cfi_def_cfa_register 7
+ 319 0006 3B46     		mov	r3, r7
+ 320 0008 83E80300 		stmia	r3, {r0, r1}
+  85:src/Protocol.c ****     if(message.key <= flow_measured)
+ 321              		.loc 1 85 0
+ 322 000c 3B78     		ldrb	r3, [r7]	@ zero_extendqisi2
+ 323 000e 0D2B     		cmp	r3, #13
+ 324 0010 0ED8     		bhi	.L21
+  86:src/Protocol.c ****         printf("%s:%f\r\n", pkey_const[message.key], message.value);
+ 325              		.loc 1 86 0
+ 326 0012 3B78     		ldrb	r3, [r7]	@ zero_extendqisi2
+ 327 0014 1A46     		mov	r2, r3
+ 328 0016 084B     		ldr	r3, .L22
+ 329 0018 53F82240 		ldr	r4, [r3, r2, lsl #2]
+ 330 001c 7B68     		ldr	r3, [r7, #4]	@ float
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 9
+
+
+ 331 001e 1846     		mov	r0, r3
+ 332 0020 FFF7FEFF 		bl	__aeabi_f2d
+ 333 0024 0246     		mov	r2, r0
+ 334 0026 0B46     		mov	r3, r1
+ 335 0028 2146     		mov	r1, r4
+ 336 002a 0448     		ldr	r0, .L22+4
+ 337 002c FFF7FEFF 		bl	printf
+ 338              	.L21:
+  87:src/Protocol.c **** }
+ 339              		.loc 1 87 0
+ 340 0030 00BF     		nop
+ 341 0032 0C37     		adds	r7, r7, #12
+ 342              		.cfi_def_cfa_offset 12
+ 343 0034 BD46     		mov	sp, r7
+ 344              		.cfi_def_cfa_register 13
+ 345              		@ sp needed
+ 346 0036 90BD     		pop	{r4, r7, pc}
+ 347              	.L23:
+ 348              		.align	2
+ 349              	.L22:
+ 350 0038 00000000 		.word	pkey_const
+ 351 003c D0000000 		.word	.LC16
+ 352              		.cfi_endproc
+ 353              	.LFE66:
+ 354              		.size	Protocol_PrintMessage, .-Protocol_PrintMessage
+ 355              		.text
+ 356              	.Letext0:
+ 357              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 358              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 359              		.file 4 ".\\include/Protocol.h"
+ 360              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 361              		.section	.debug_info,"",%progbits
+ 362              	.Ldebug_info0:
+ 363 0000 78020000 		.4byte	0x278
+ 364 0004 0400     		.2byte	0x4
+ 365 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 366 000a 04       		.byte	0x4
+ 367 000b 01       		.uleb128 0x1
+ 368 000c 12000000 		.4byte	.LASF44
+ 369 0010 0C       		.byte	0xc
+ 370 0011 25030000 		.4byte	.LASF45
+ 371 0015 1E010000 		.4byte	.LASF46
+ 372 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 373 001d 00000000 		.4byte	0
+ 374 0021 00000000 		.4byte	.Ldebug_line0
+ 375 0025 02       		.uleb128 0x2
+ 376 0026 01       		.byte	0x1
+ 377 0027 06       		.byte	0x6
+ 378 0028 00030000 		.4byte	.LASF0
+ 379 002c 03       		.uleb128 0x3
+ 380 002d 08000000 		.4byte	.LASF4
+ 381 0031 02       		.byte	0x2
+ 382 0032 1D       		.byte	0x1d
+ 383 0033 37000000 		.4byte	0x37
+ 384 0037 02       		.uleb128 0x2
+ 385 0038 01       		.byte	0x1
+ 386 0039 08       		.byte	0x8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 10
+
+
+ 387 003a FC010000 		.4byte	.LASF1
+ 388 003e 02       		.uleb128 0x2
+ 389 003f 02       		.byte	0x2
+ 390 0040 05       		.byte	0x5
+ 391 0041 AC020000 		.4byte	.LASF2
+ 392 0045 02       		.uleb128 0x2
+ 393 0046 02       		.byte	0x2
+ 394 0047 07       		.byte	0x7
+ 395 0048 D6000000 		.4byte	.LASF3
+ 396 004c 03       		.uleb128 0x3
+ 397 004d CC000000 		.4byte	.LASF5
+ 398 0051 02       		.byte	0x2
+ 399 0052 3F       		.byte	0x3f
+ 400 0053 57000000 		.4byte	0x57
+ 401 0057 02       		.uleb128 0x2
+ 402 0058 04       		.byte	0x4
+ 403 0059 05       		.byte	0x5
+ 404 005a BD020000 		.4byte	.LASF6
+ 405 005e 02       		.uleb128 0x2
+ 406 005f 04       		.byte	0x4
+ 407 0060 07       		.byte	0x7
+ 408 0061 D3010000 		.4byte	.LASF7
+ 409 0065 02       		.uleb128 0x2
+ 410 0066 08       		.byte	0x8
+ 411 0067 05       		.byte	0x5
+ 412 0068 87020000 		.4byte	.LASF8
+ 413 006c 02       		.uleb128 0x2
+ 414 006d 08       		.byte	0x8
+ 415 006e 07       		.byte	0x7
+ 416 006f 2C020000 		.4byte	.LASF9
+ 417 0073 04       		.uleb128 0x4
+ 418 0074 04       		.byte	0x4
+ 419 0075 05       		.byte	0x5
+ 420 0076 696E7400 		.ascii	"int\000"
+ 421 007a 02       		.uleb128 0x2
+ 422 007b 04       		.byte	0x4
+ 423 007c 07       		.byte	0x7
+ 424 007d 1F020000 		.4byte	.LASF10
+ 425 0081 02       		.uleb128 0x2
+ 426 0082 08       		.byte	0x8
+ 427 0083 04       		.byte	0x4
+ 428 0084 E9020000 		.4byte	.LASF11
+ 429 0088 02       		.uleb128 0x2
+ 430 0089 04       		.byte	0x4
+ 431 008a 07       		.byte	0x7
+ 432 008b 7E020000 		.4byte	.LASF12
+ 433 008f 05       		.uleb128 0x5
+ 434 0090 04       		.byte	0x4
+ 435 0091 95000000 		.4byte	0x95
+ 436 0095 02       		.uleb128 0x2
+ 437 0096 01       		.byte	0x1
+ 438 0097 08       		.byte	0x8
+ 439 0098 A1020000 		.4byte	.LASF13
+ 440 009c 05       		.uleb128 0x5
+ 441 009d 04       		.byte	0x4
+ 442 009e A2000000 		.4byte	0xa2
+ 443 00a2 06       		.uleb128 0x6
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 11
+
+
+ 444 00a3 95000000 		.4byte	0x95
+ 445 00a7 03       		.uleb128 0x3
+ 446 00a8 43020000 		.4byte	.LASF14
+ 447 00ac 03       		.byte	0x3
+ 448 00ad 18       		.byte	0x18
+ 449 00ae 2C000000 		.4byte	0x2c
+ 450 00b2 03       		.uleb128 0x3
+ 451 00b3 76020000 		.4byte	.LASF15
+ 452 00b7 03       		.byte	0x3
+ 453 00b8 2C       		.byte	0x2c
+ 454 00b9 4C000000 		.4byte	0x4c
+ 455 00bd 07       		.uleb128 0x7
+ 456 00be A0000000 		.4byte	.LASF30
+ 457 00c2 01       		.byte	0x1
+ 458 00c3 37000000 		.4byte	0x37
+ 459 00c7 04       		.byte	0x4
+ 460 00c8 13       		.byte	0x13
+ 461 00c9 22010000 		.4byte	0x122
+ 462 00cd 08       		.uleb128 0x8
+ 463 00ce A3010000 		.4byte	.LASF16
+ 464 00d2 00       		.byte	0
+ 465 00d3 08       		.uleb128 0x8
+ 466 00d4 95020000 		.4byte	.LASF17
+ 467 00d8 01       		.byte	0x1
+ 468 00d9 08       		.uleb128 0x8
+ 469 00da 0A020000 		.4byte	.LASF18
+ 470 00de 02       		.byte	0x2
+ 471 00df 08       		.uleb128 0x8
+ 472 00e0 1B030000 		.4byte	.LASF19
+ 473 00e4 03       		.byte	0x3
+ 474 00e5 08       		.uleb128 0x8
+ 475 00e6 B5000000 		.4byte	.LASF20
+ 476 00ea 04       		.byte	0x4
+ 477 00eb 08       		.uleb128 0x8
+ 478 00ec E9000000 		.4byte	.LASF21
+ 479 00f0 05       		.byte	0x5
+ 480 00f1 08       		.uleb128 0x8
+ 481 00f2 14020000 		.4byte	.LASF22
+ 482 00f6 06       		.byte	0x6
+ 483 00f7 08       		.uleb128 0x8
+ 484 00f8 BC010000 		.4byte	.LASF23
+ 485 00fc 07       		.byte	0x7
+ 486 00fd 08       		.uleb128 0x8
+ 487 00fe C6020000 		.4byte	.LASF24
+ 488 0102 08       		.byte	0x8
+ 489 0103 08       		.uleb128 0x8
+ 490 0104 0C030000 		.4byte	.LASF25
+ 491 0108 09       		.byte	0x9
+ 492 0109 08       		.uleb128 0x8
+ 493 010a 4B020000 		.4byte	.LASF26
+ 494 010e 0A       		.byte	0xa
+ 495 010f 08       		.uleb128 0x8
+ 496 0110 E5010000 		.4byte	.LASF27
+ 497 0114 0B       		.byte	0xb
+ 498 0115 08       		.uleb128 0x8
+ 499 0116 A7000000 		.4byte	.LASF28
+ 500 011a 0C       		.byte	0xc
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 12
+
+
+ 501 011b 08       		.uleb128 0x8
+ 502 011c F3000000 		.4byte	.LASF29
+ 503 0120 0D       		.byte	0xd
+ 504 0121 00       		.byte	0
+ 505 0122 03       		.uleb128 0x3
+ 506 0123 A0000000 		.4byte	.LASF30
+ 507 0127 04       		.byte	0x4
+ 508 0128 26       		.byte	0x26
+ 509 0129 BD000000 		.4byte	0xbd
+ 510 012d 09       		.uleb128 0x9
+ 511 012e 6C020000 		.4byte	.LASF33
+ 512 0132 08       		.byte	0x8
+ 513 0133 04       		.byte	0x4
+ 514 0134 3C       		.byte	0x3c
+ 515 0135 52010000 		.4byte	0x152
+ 516 0139 0A       		.uleb128 0xa
+ 517 013a 6B657900 		.ascii	"key\000"
+ 518 013e 04       		.byte	0x4
+ 519 013f 3D       		.byte	0x3d
+ 520 0140 22010000 		.4byte	0x122
+ 521 0144 00       		.byte	0
+ 522 0145 0B       		.uleb128 0xb
+ 523 0146 C6000000 		.4byte	.LASF31
+ 524 014a 04       		.byte	0x4
+ 525 014b 3E       		.byte	0x3e
+ 526 014c 52010000 		.4byte	0x152
+ 527 0150 04       		.byte	0x4
+ 528 0151 00       		.byte	0
+ 529 0152 02       		.uleb128 0x2
+ 530 0153 04       		.byte	0x4
+ 531 0154 04       		.byte	0x4
+ 532 0155 B6010000 		.4byte	.LASF32
+ 533 0159 03       		.uleb128 0x3
+ 534 015a 6C020000 		.4byte	.LASF33
+ 535 015e 04       		.byte	0x4
+ 536 015f 3F       		.byte	0x3f
+ 537 0160 2D010000 		.4byte	0x12d
+ 538 0164 02       		.uleb128 0x2
+ 539 0165 08       		.byte	0x8
+ 540 0166 04       		.byte	0x4
+ 541 0167 01010000 		.4byte	.LASF34
+ 542 016b 0C       		.uleb128 0xc
+ 543 016c 57020000 		.4byte	.LASF37
+ 544 0170 01       		.byte	0x1
+ 545 0171 19       		.byte	0x19
+ 546 0172 59010000 		.4byte	0x159
+ 547 0176 00000000 		.4byte	.LFB64
+ 548 017a 94000000 		.4byte	.LFE64-.LFB64
+ 549 017e 01       		.uleb128 0x1
+ 550 017f 9C       		.byte	0x9c
+ 551 0180 BD010000 		.4byte	0x1bd
+ 552 0184 0D       		.uleb128 0xd
+ 553 0185 CD010000 		.4byte	.LASF39
+ 554 0189 01       		.byte	0x1
+ 555 018a 19       		.byte	0x19
+ 556 018b 8F000000 		.4byte	0x8f
+ 557 018f 02       		.uleb128 0x2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 13
+
+
+ 558 0190 91       		.byte	0x91
+ 559 0191 58       		.sleb128 -40
+ 560 0192 0E       		.uleb128 0xe
+ 561 0193 70747200 		.ascii	"ptr\000"
+ 562 0197 01       		.byte	0x1
+ 563 0198 1A       		.byte	0x1a
+ 564 0199 8F000000 		.4byte	0x8f
+ 565 019d 02       		.uleb128 0x2
+ 566 019e 91       		.byte	0x91
+ 567 019f 6C       		.sleb128 -20
+ 568 01a0 0F       		.uleb128 0xf
+ 569 01a1 AF010000 		.4byte	.LASF35
+ 570 01a5 01       		.byte	0x1
+ 571 01a6 1B       		.byte	0x1b
+ 572 01a7 59010000 		.4byte	0x159
+ 573 01ab 02       		.uleb128 0x2
+ 574 01ac 91       		.byte	0x91
+ 575 01ad 60       		.sleb128 -32
+ 576 01ae 0F       		.uleb128 0xf
+ 577 01af A6020000 		.4byte	.LASF36
+ 578 01b3 01       		.byte	0x1
+ 579 01b4 1C       		.byte	0x1c
+ 580 01b5 A7000000 		.4byte	0xa7
+ 581 01b9 02       		.uleb128 0x2
+ 582 01ba 91       		.byte	0x91
+ 583 01bb 6B       		.sleb128 -21
+ 584 01bc 00       		.byte	0
+ 585 01bd 0C       		.uleb128 0xc
+ 586 01be D3020000 		.4byte	.LASF38
+ 587 01c2 01       		.byte	0x1
+ 588 01c3 40       		.byte	0x40
+ 589 01c4 8F000000 		.4byte	0x8f
+ 590 01c8 00000000 		.4byte	.LFB65
+ 591 01cc 68000000 		.4byte	.LFE65-.LFB65
+ 592 01d0 01       		.uleb128 0x1
+ 593 01d1 9C       		.byte	0x9c
+ 594 01d2 25020000 		.4byte	0x225
+ 595 01d6 10       		.uleb128 0x10
+ 596 01d7 6B657900 		.ascii	"key\000"
+ 597 01db 01       		.byte	0x1
+ 598 01dc 40       		.byte	0x40
+ 599 01dd 22010000 		.4byte	0x122
+ 600 01e1 02       		.uleb128 0x2
+ 601 01e2 91       		.byte	0x91
+ 602 01e3 67       		.sleb128 -25
+ 603 01e4 0D       		.uleb128 0xd
+ 604 01e5 C6000000 		.4byte	.LASF31
+ 605 01e9 01       		.byte	0x1
+ 606 01ea 40       		.byte	0x40
+ 607 01eb 52010000 		.4byte	0x152
+ 608 01ef 02       		.uleb128 0x2
+ 609 01f0 91       		.byte	0x91
+ 610 01f1 60       		.sleb128 -32
+ 611 01f2 0D       		.uleb128 0xd
+ 612 01f3 B6020000 		.4byte	.LASF40
+ 613 01f7 01       		.byte	0x1
+ 614 01f8 40       		.byte	0x40
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 14
+
+
+ 615 01f9 8F000000 		.4byte	0x8f
+ 616 01fd 02       		.uleb128 0x2
+ 617 01fe 91       		.byte	0x91
+ 618 01ff 5C       		.sleb128 -36
+ 619 0200 0F       		.uleb128 0xf
+ 620 0201 C8010000 		.4byte	.LASF41
+ 621 0205 01       		.byte	0x1
+ 622 0206 41       		.byte	0x41
+ 623 0207 73000000 		.4byte	0x73
+ 624 020b 02       		.uleb128 0x2
+ 625 020c 91       		.byte	0x91
+ 626 020d 68       		.sleb128 -24
+ 627 020e 11       		.uleb128 0x11
+ 628 020f 18000000 		.4byte	.LBB2
+ 629 0213 1A000000 		.4byte	.LBE2-.LBB2
+ 630 0217 0E       		.uleb128 0xe
+ 631 0218 6900     		.ascii	"i\000"
+ 632 021a 01       		.byte	0x1
+ 633 021b 44       		.byte	0x44
+ 634 021c 73000000 		.4byte	0x73
+ 635 0220 02       		.uleb128 0x2
+ 636 0221 91       		.byte	0x91
+ 637 0222 6C       		.sleb128 -20
+ 638 0223 00       		.byte	0
+ 639 0224 00       		.byte	0
+ 640 0225 12       		.uleb128 0x12
+ 641 0226 08010000 		.4byte	.LASF47
+ 642 022a 01       		.byte	0x1
+ 643 022b 54       		.byte	0x54
+ 644 022c 00000000 		.4byte	.LFB66
+ 645 0230 40000000 		.4byte	.LFE66-.LFB66
+ 646 0234 01       		.uleb128 0x1
+ 647 0235 9C       		.byte	0x9c
+ 648 0236 49020000 		.4byte	0x249
+ 649 023a 0D       		.uleb128 0xd
+ 650 023b 00000000 		.4byte	.LASF42
+ 651 023f 01       		.byte	0x1
+ 652 0240 54       		.byte	0x54
+ 653 0241 59010000 		.4byte	0x159
+ 654 0245 02       		.uleb128 0x2
+ 655 0246 91       		.byte	0x91
+ 656 0247 68       		.sleb128 -24
+ 657 0248 00       		.byte	0
+ 658 0249 13       		.uleb128 0x13
+ 659 024a 9C000000 		.4byte	0x9c
+ 660 024e 59020000 		.4byte	0x259
+ 661 0252 14       		.uleb128 0x14
+ 662 0253 88000000 		.4byte	0x88
+ 663 0257 0D       		.byte	0xd
+ 664 0258 00       		.byte	0
+ 665 0259 0F       		.uleb128 0xf
+ 666 025a F5020000 		.4byte	.LASF43
+ 667 025e 04       		.byte	0x4
+ 668 025f 28       		.byte	0x28
+ 669 0260 49020000 		.4byte	0x249
+ 670 0264 05       		.uleb128 0x5
+ 671 0265 03       		.byte	0x3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 15
+
+
+ 672 0266 00000000 		.4byte	pkey_const
+ 673 026a 15       		.uleb128 0x15
+ 674 026b EF010000 		.4byte	.LASF48
+ 675 026f 05       		.byte	0x5
+ 676 0270 1207     		.2byte	0x712
+ 677 0272 76020000 		.4byte	0x276
+ 678 0276 16       		.uleb128 0x16
+ 679 0277 B2000000 		.4byte	0xb2
+ 680 027b 00       		.byte	0
+ 681              		.section	.debug_abbrev,"",%progbits
+ 682              	.Ldebug_abbrev0:
+ 683 0000 01       		.uleb128 0x1
+ 684 0001 11       		.uleb128 0x11
+ 685 0002 01       		.byte	0x1
+ 686 0003 25       		.uleb128 0x25
+ 687 0004 0E       		.uleb128 0xe
+ 688 0005 13       		.uleb128 0x13
+ 689 0006 0B       		.uleb128 0xb
+ 690 0007 03       		.uleb128 0x3
+ 691 0008 0E       		.uleb128 0xe
+ 692 0009 1B       		.uleb128 0x1b
+ 693 000a 0E       		.uleb128 0xe
+ 694 000b 55       		.uleb128 0x55
+ 695 000c 17       		.uleb128 0x17
+ 696 000d 11       		.uleb128 0x11
+ 697 000e 01       		.uleb128 0x1
+ 698 000f 10       		.uleb128 0x10
+ 699 0010 17       		.uleb128 0x17
+ 700 0011 00       		.byte	0
+ 701 0012 00       		.byte	0
+ 702 0013 02       		.uleb128 0x2
+ 703 0014 24       		.uleb128 0x24
+ 704 0015 00       		.byte	0
+ 705 0016 0B       		.uleb128 0xb
+ 706 0017 0B       		.uleb128 0xb
+ 707 0018 3E       		.uleb128 0x3e
+ 708 0019 0B       		.uleb128 0xb
+ 709 001a 03       		.uleb128 0x3
+ 710 001b 0E       		.uleb128 0xe
+ 711 001c 00       		.byte	0
+ 712 001d 00       		.byte	0
+ 713 001e 03       		.uleb128 0x3
+ 714 001f 16       		.uleb128 0x16
+ 715 0020 00       		.byte	0
+ 716 0021 03       		.uleb128 0x3
+ 717 0022 0E       		.uleb128 0xe
+ 718 0023 3A       		.uleb128 0x3a
+ 719 0024 0B       		.uleb128 0xb
+ 720 0025 3B       		.uleb128 0x3b
+ 721 0026 0B       		.uleb128 0xb
+ 722 0027 49       		.uleb128 0x49
+ 723 0028 13       		.uleb128 0x13
+ 724 0029 00       		.byte	0
+ 725 002a 00       		.byte	0
+ 726 002b 04       		.uleb128 0x4
+ 727 002c 24       		.uleb128 0x24
+ 728 002d 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 16
+
+
+ 729 002e 0B       		.uleb128 0xb
+ 730 002f 0B       		.uleb128 0xb
+ 731 0030 3E       		.uleb128 0x3e
+ 732 0031 0B       		.uleb128 0xb
+ 733 0032 03       		.uleb128 0x3
+ 734 0033 08       		.uleb128 0x8
+ 735 0034 00       		.byte	0
+ 736 0035 00       		.byte	0
+ 737 0036 05       		.uleb128 0x5
+ 738 0037 0F       		.uleb128 0xf
+ 739 0038 00       		.byte	0
+ 740 0039 0B       		.uleb128 0xb
+ 741 003a 0B       		.uleb128 0xb
+ 742 003b 49       		.uleb128 0x49
+ 743 003c 13       		.uleb128 0x13
+ 744 003d 00       		.byte	0
+ 745 003e 00       		.byte	0
+ 746 003f 06       		.uleb128 0x6
+ 747 0040 26       		.uleb128 0x26
+ 748 0041 00       		.byte	0
+ 749 0042 49       		.uleb128 0x49
+ 750 0043 13       		.uleb128 0x13
+ 751 0044 00       		.byte	0
+ 752 0045 00       		.byte	0
+ 753 0046 07       		.uleb128 0x7
+ 754 0047 04       		.uleb128 0x4
+ 755 0048 01       		.byte	0x1
+ 756 0049 03       		.uleb128 0x3
+ 757 004a 0E       		.uleb128 0xe
+ 758 004b 0B       		.uleb128 0xb
+ 759 004c 0B       		.uleb128 0xb
+ 760 004d 49       		.uleb128 0x49
+ 761 004e 13       		.uleb128 0x13
+ 762 004f 3A       		.uleb128 0x3a
+ 763 0050 0B       		.uleb128 0xb
+ 764 0051 3B       		.uleb128 0x3b
+ 765 0052 0B       		.uleb128 0xb
+ 766 0053 01       		.uleb128 0x1
+ 767 0054 13       		.uleb128 0x13
+ 768 0055 00       		.byte	0
+ 769 0056 00       		.byte	0
+ 770 0057 08       		.uleb128 0x8
+ 771 0058 28       		.uleb128 0x28
+ 772 0059 00       		.byte	0
+ 773 005a 03       		.uleb128 0x3
+ 774 005b 0E       		.uleb128 0xe
+ 775 005c 1C       		.uleb128 0x1c
+ 776 005d 0B       		.uleb128 0xb
+ 777 005e 00       		.byte	0
+ 778 005f 00       		.byte	0
+ 779 0060 09       		.uleb128 0x9
+ 780 0061 13       		.uleb128 0x13
+ 781 0062 01       		.byte	0x1
+ 782 0063 03       		.uleb128 0x3
+ 783 0064 0E       		.uleb128 0xe
+ 784 0065 0B       		.uleb128 0xb
+ 785 0066 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 17
+
+
+ 786 0067 3A       		.uleb128 0x3a
+ 787 0068 0B       		.uleb128 0xb
+ 788 0069 3B       		.uleb128 0x3b
+ 789 006a 0B       		.uleb128 0xb
+ 790 006b 01       		.uleb128 0x1
+ 791 006c 13       		.uleb128 0x13
+ 792 006d 00       		.byte	0
+ 793 006e 00       		.byte	0
+ 794 006f 0A       		.uleb128 0xa
+ 795 0070 0D       		.uleb128 0xd
+ 796 0071 00       		.byte	0
+ 797 0072 03       		.uleb128 0x3
+ 798 0073 08       		.uleb128 0x8
+ 799 0074 3A       		.uleb128 0x3a
+ 800 0075 0B       		.uleb128 0xb
+ 801 0076 3B       		.uleb128 0x3b
+ 802 0077 0B       		.uleb128 0xb
+ 803 0078 49       		.uleb128 0x49
+ 804 0079 13       		.uleb128 0x13
+ 805 007a 38       		.uleb128 0x38
+ 806 007b 0B       		.uleb128 0xb
+ 807 007c 00       		.byte	0
+ 808 007d 00       		.byte	0
+ 809 007e 0B       		.uleb128 0xb
+ 810 007f 0D       		.uleb128 0xd
+ 811 0080 00       		.byte	0
+ 812 0081 03       		.uleb128 0x3
+ 813 0082 0E       		.uleb128 0xe
+ 814 0083 3A       		.uleb128 0x3a
+ 815 0084 0B       		.uleb128 0xb
+ 816 0085 3B       		.uleb128 0x3b
+ 817 0086 0B       		.uleb128 0xb
+ 818 0087 49       		.uleb128 0x49
+ 819 0088 13       		.uleb128 0x13
+ 820 0089 38       		.uleb128 0x38
+ 821 008a 0B       		.uleb128 0xb
+ 822 008b 00       		.byte	0
+ 823 008c 00       		.byte	0
+ 824 008d 0C       		.uleb128 0xc
+ 825 008e 2E       		.uleb128 0x2e
+ 826 008f 01       		.byte	0x1
+ 827 0090 3F       		.uleb128 0x3f
+ 828 0091 19       		.uleb128 0x19
+ 829 0092 03       		.uleb128 0x3
+ 830 0093 0E       		.uleb128 0xe
+ 831 0094 3A       		.uleb128 0x3a
+ 832 0095 0B       		.uleb128 0xb
+ 833 0096 3B       		.uleb128 0x3b
+ 834 0097 0B       		.uleb128 0xb
+ 835 0098 27       		.uleb128 0x27
+ 836 0099 19       		.uleb128 0x19
+ 837 009a 49       		.uleb128 0x49
+ 838 009b 13       		.uleb128 0x13
+ 839 009c 11       		.uleb128 0x11
+ 840 009d 01       		.uleb128 0x1
+ 841 009e 12       		.uleb128 0x12
+ 842 009f 06       		.uleb128 0x6
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 18
+
+
+ 843 00a0 40       		.uleb128 0x40
+ 844 00a1 18       		.uleb128 0x18
+ 845 00a2 9642     		.uleb128 0x2116
+ 846 00a4 19       		.uleb128 0x19
+ 847 00a5 01       		.uleb128 0x1
+ 848 00a6 13       		.uleb128 0x13
+ 849 00a7 00       		.byte	0
+ 850 00a8 00       		.byte	0
+ 851 00a9 0D       		.uleb128 0xd
+ 852 00aa 05       		.uleb128 0x5
+ 853 00ab 00       		.byte	0
+ 854 00ac 03       		.uleb128 0x3
+ 855 00ad 0E       		.uleb128 0xe
+ 856 00ae 3A       		.uleb128 0x3a
+ 857 00af 0B       		.uleb128 0xb
+ 858 00b0 3B       		.uleb128 0x3b
+ 859 00b1 0B       		.uleb128 0xb
+ 860 00b2 49       		.uleb128 0x49
+ 861 00b3 13       		.uleb128 0x13
+ 862 00b4 02       		.uleb128 0x2
+ 863 00b5 18       		.uleb128 0x18
+ 864 00b6 00       		.byte	0
+ 865 00b7 00       		.byte	0
+ 866 00b8 0E       		.uleb128 0xe
+ 867 00b9 34       		.uleb128 0x34
+ 868 00ba 00       		.byte	0
+ 869 00bb 03       		.uleb128 0x3
+ 870 00bc 08       		.uleb128 0x8
+ 871 00bd 3A       		.uleb128 0x3a
+ 872 00be 0B       		.uleb128 0xb
+ 873 00bf 3B       		.uleb128 0x3b
+ 874 00c0 0B       		.uleb128 0xb
+ 875 00c1 49       		.uleb128 0x49
+ 876 00c2 13       		.uleb128 0x13
+ 877 00c3 02       		.uleb128 0x2
+ 878 00c4 18       		.uleb128 0x18
+ 879 00c5 00       		.byte	0
+ 880 00c6 00       		.byte	0
+ 881 00c7 0F       		.uleb128 0xf
+ 882 00c8 34       		.uleb128 0x34
+ 883 00c9 00       		.byte	0
+ 884 00ca 03       		.uleb128 0x3
+ 885 00cb 0E       		.uleb128 0xe
+ 886 00cc 3A       		.uleb128 0x3a
+ 887 00cd 0B       		.uleb128 0xb
+ 888 00ce 3B       		.uleb128 0x3b
+ 889 00cf 0B       		.uleb128 0xb
+ 890 00d0 49       		.uleb128 0x49
+ 891 00d1 13       		.uleb128 0x13
+ 892 00d2 02       		.uleb128 0x2
+ 893 00d3 18       		.uleb128 0x18
+ 894 00d4 00       		.byte	0
+ 895 00d5 00       		.byte	0
+ 896 00d6 10       		.uleb128 0x10
+ 897 00d7 05       		.uleb128 0x5
+ 898 00d8 00       		.byte	0
+ 899 00d9 03       		.uleb128 0x3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 19
+
+
+ 900 00da 08       		.uleb128 0x8
+ 901 00db 3A       		.uleb128 0x3a
+ 902 00dc 0B       		.uleb128 0xb
+ 903 00dd 3B       		.uleb128 0x3b
+ 904 00de 0B       		.uleb128 0xb
+ 905 00df 49       		.uleb128 0x49
+ 906 00e0 13       		.uleb128 0x13
+ 907 00e1 02       		.uleb128 0x2
+ 908 00e2 18       		.uleb128 0x18
+ 909 00e3 00       		.byte	0
+ 910 00e4 00       		.byte	0
+ 911 00e5 11       		.uleb128 0x11
+ 912 00e6 0B       		.uleb128 0xb
+ 913 00e7 01       		.byte	0x1
+ 914 00e8 11       		.uleb128 0x11
+ 915 00e9 01       		.uleb128 0x1
+ 916 00ea 12       		.uleb128 0x12
+ 917 00eb 06       		.uleb128 0x6
+ 918 00ec 00       		.byte	0
+ 919 00ed 00       		.byte	0
+ 920 00ee 12       		.uleb128 0x12
+ 921 00ef 2E       		.uleb128 0x2e
+ 922 00f0 01       		.byte	0x1
+ 923 00f1 3F       		.uleb128 0x3f
+ 924 00f2 19       		.uleb128 0x19
+ 925 00f3 03       		.uleb128 0x3
+ 926 00f4 0E       		.uleb128 0xe
+ 927 00f5 3A       		.uleb128 0x3a
+ 928 00f6 0B       		.uleb128 0xb
+ 929 00f7 3B       		.uleb128 0x3b
+ 930 00f8 0B       		.uleb128 0xb
+ 931 00f9 27       		.uleb128 0x27
+ 932 00fa 19       		.uleb128 0x19
+ 933 00fb 11       		.uleb128 0x11
+ 934 00fc 01       		.uleb128 0x1
+ 935 00fd 12       		.uleb128 0x12
+ 936 00fe 06       		.uleb128 0x6
+ 937 00ff 40       		.uleb128 0x40
+ 938 0100 18       		.uleb128 0x18
+ 939 0101 9642     		.uleb128 0x2116
+ 940 0103 19       		.uleb128 0x19
+ 941 0104 01       		.uleb128 0x1
+ 942 0105 13       		.uleb128 0x13
+ 943 0106 00       		.byte	0
+ 944 0107 00       		.byte	0
+ 945 0108 13       		.uleb128 0x13
+ 946 0109 01       		.uleb128 0x1
+ 947 010a 01       		.byte	0x1
+ 948 010b 49       		.uleb128 0x49
+ 949 010c 13       		.uleb128 0x13
+ 950 010d 01       		.uleb128 0x1
+ 951 010e 13       		.uleb128 0x13
+ 952 010f 00       		.byte	0
+ 953 0110 00       		.byte	0
+ 954 0111 14       		.uleb128 0x14
+ 955 0112 21       		.uleb128 0x21
+ 956 0113 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 20
+
+
+ 957 0114 49       		.uleb128 0x49
+ 958 0115 13       		.uleb128 0x13
+ 959 0116 2F       		.uleb128 0x2f
+ 960 0117 0B       		.uleb128 0xb
+ 961 0118 00       		.byte	0
+ 962 0119 00       		.byte	0
+ 963 011a 15       		.uleb128 0x15
+ 964 011b 34       		.uleb128 0x34
+ 965 011c 00       		.byte	0
+ 966 011d 03       		.uleb128 0x3
+ 967 011e 0E       		.uleb128 0xe
+ 968 011f 3A       		.uleb128 0x3a
+ 969 0120 0B       		.uleb128 0xb
+ 970 0121 3B       		.uleb128 0x3b
+ 971 0122 05       		.uleb128 0x5
+ 972 0123 49       		.uleb128 0x49
+ 973 0124 13       		.uleb128 0x13
+ 974 0125 3F       		.uleb128 0x3f
+ 975 0126 19       		.uleb128 0x19
+ 976 0127 3C       		.uleb128 0x3c
+ 977 0128 19       		.uleb128 0x19
+ 978 0129 00       		.byte	0
+ 979 012a 00       		.byte	0
+ 980 012b 16       		.uleb128 0x16
+ 981 012c 35       		.uleb128 0x35
+ 982 012d 00       		.byte	0
+ 983 012e 49       		.uleb128 0x49
+ 984 012f 13       		.uleb128 0x13
+ 985 0130 00       		.byte	0
+ 986 0131 00       		.byte	0
+ 987 0132 00       		.byte	0
+ 988              		.section	.debug_aranges,"",%progbits
+ 989 0000 2C000000 		.4byte	0x2c
+ 990 0004 0200     		.2byte	0x2
+ 991 0006 00000000 		.4byte	.Ldebug_info0
+ 992 000a 04       		.byte	0x4
+ 993 000b 00       		.byte	0
+ 994 000c 0000     		.2byte	0
+ 995 000e 0000     		.2byte	0
+ 996 0010 00000000 		.4byte	.LFB64
+ 997 0014 94000000 		.4byte	.LFE64-.LFB64
+ 998 0018 00000000 		.4byte	.LFB65
+ 999 001c 68000000 		.4byte	.LFE65-.LFB65
+ 1000 0020 00000000 		.4byte	.LFB66
+ 1001 0024 40000000 		.4byte	.LFE66-.LFB66
+ 1002 0028 00000000 		.4byte	0
+ 1003 002c 00000000 		.4byte	0
+ 1004              		.section	.debug_ranges,"",%progbits
+ 1005              	.Ldebug_ranges0:
+ 1006 0000 00000000 		.4byte	.LFB64
+ 1007 0004 94000000 		.4byte	.LFE64
+ 1008 0008 00000000 		.4byte	.LFB65
+ 1009 000c 68000000 		.4byte	.LFE65
+ 1010 0010 00000000 		.4byte	.LFB66
+ 1011 0014 40000000 		.4byte	.LFE66
+ 1012 0018 00000000 		.4byte	0
+ 1013 001c 00000000 		.4byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 21
+
+
+ 1014              		.section	.debug_line,"",%progbits
+ 1015              	.Ldebug_line0:
+ 1016 0000 C9010000 		.section	.debug_str,"MS",%progbits,1
+ 1016      02005F01 
+ 1016      00000201 
+ 1016      FB0E0D00 
+ 1016      01010101 
+ 1017              	.LASF42:
+ 1018 0000 6D657373 		.ascii	"message\000"
+ 1018      61676500 
+ 1019              	.LASF4:
+ 1020 0008 5F5F7569 		.ascii	"__uint8_t\000"
+ 1020      6E74385F 
+ 1020      7400
+ 1021              	.LASF44:
+ 1022 0012 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1022      43313120 
+ 1022      352E342E 
+ 1022      31203230 
+ 1022      31363036 
+ 1023 0045 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1023      20726576 
+ 1023      6973696F 
+ 1023      6E203233 
+ 1023      37373135 
+ 1024 0078 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1024      66756E63 
+ 1024      74696F6E 
+ 1024      2D736563 
+ 1024      74696F6E 
+ 1025              	.LASF30:
+ 1026 00a0 706B6579 		.ascii	"pkey_t\000"
+ 1026      5F7400
+ 1027              	.LASF28:
+ 1028 00a7 74656D70 		.ascii	"temp_measured\000"
+ 1028      5F6D6561 
+ 1028      73757265 
+ 1028      6400
+ 1029              	.LASF20:
+ 1030 00b5 6832305F 		.ascii	"h20_level_target\000"
+ 1030      6C657665 
+ 1030      6C5F7461 
+ 1030      72676574 
+ 1030      00
+ 1031              	.LASF31:
+ 1032 00c6 76616C75 		.ascii	"value\000"
+ 1032      6500
+ 1033              	.LASF5:
+ 1034 00cc 5F5F696E 		.ascii	"__int32_t\000"
+ 1034      7433325F 
+ 1034      7400
+ 1035              	.LASF3:
+ 1036 00d6 73686F72 		.ascii	"short unsigned int\000"
+ 1036      7420756E 
+ 1036      7369676E 
+ 1036      65642069 
+ 1036      6E7400
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 22
+
+
+ 1037              	.LASF21:
+ 1038 00e9 6832305F 		.ascii	"h20_level\000"
+ 1038      6C657665 
+ 1038      6C00
+ 1039              	.LASF29:
+ 1040 00f3 666C6F77 		.ascii	"flow_measured\000"
+ 1040      5F6D6561 
+ 1040      73757265 
+ 1040      6400
+ 1041              	.LASF34:
+ 1042 0101 646F7562 		.ascii	"double\000"
+ 1042      6C6500
+ 1043              	.LASF47:
+ 1044 0108 50726F74 		.ascii	"Protocol_PrintMessage\000"
+ 1044      6F636F6C 
+ 1044      5F507269 
+ 1044      6E744D65 
+ 1044      73736167 
+ 1045              	.LASF46:
+ 1046 011e 433A5C55 		.ascii	"C:\\Users\\tpbw4321\\AppData\\Roaming\\SPB_Data\\Hy"
+ 1046      73657273 
+ 1046      5C747062 
+ 1046      77343332 
+ 1046      315C4170 
+ 1047 014b 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
+ 1047      6F6E6963 
+ 1047      73417574 
+ 1047      6F6D6174 
+ 1047      696F6E5C 
+ 1048 017a 536F435C 		.ascii	"SoC\\HydroponicAutomationSensorPerf.cydsn\000"
+ 1048      48796472 
+ 1048      6F706F6E 
+ 1048      69634175 
+ 1048      746F6D61 
+ 1049              	.LASF16:
+ 1050 01a3 696E7661 		.ascii	"invalid_key\000"
+ 1050      6C69645F 
+ 1050      6B657900 
+ 1051              	.LASF35:
+ 1052 01af 74617267 		.ascii	"target\000"
+ 1052      657400
+ 1053              	.LASF32:
+ 1054 01b6 666C6F61 		.ascii	"float\000"
+ 1054      7400
+ 1055              	.LASF23:
+ 1056 01bc 70685F6D 		.ascii	"ph_measured\000"
+ 1056      65617375 
+ 1056      72656400 
+ 1057              	.LASF41:
+ 1058 01c8 73697A65 		.ascii	"size\000"
+ 1058      00
+ 1059              	.LASF39:
+ 1060 01cd 696E7075 		.ascii	"input\000"
+ 1060      7400
+ 1061              	.LASF7:
+ 1062 01d3 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1062      20756E73 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 23
+
+
+ 1062      69676E65 
+ 1062      6420696E 
+ 1062      7400
+ 1063              	.LASF27:
+ 1064 01e5 65635F73 		.ascii	"ec_stored\000"
+ 1064      746F7265 
+ 1064      6400
+ 1065              	.LASF48:
+ 1066 01ef 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1066      52784275 
+ 1066      66666572 
+ 1066      00
+ 1067              	.LASF1:
+ 1068 01fc 756E7369 		.ascii	"unsigned char\000"
+ 1068      676E6564 
+ 1068      20636861 
+ 1068      7200
+ 1069              	.LASF18:
+ 1070 020a 70685F74 		.ascii	"ph_target\000"
+ 1070      61726765 
+ 1070      7400
+ 1071              	.LASF22:
+ 1072 0214 6832305F 		.ascii	"h20_stored\000"
+ 1072      73746F72 
+ 1072      656400
+ 1073              	.LASF10:
+ 1074 021f 756E7369 		.ascii	"unsigned int\000"
+ 1074      676E6564 
+ 1074      20696E74 
+ 1074      00
+ 1075              	.LASF9:
+ 1076 022c 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1076      206C6F6E 
+ 1076      6720756E 
+ 1076      7369676E 
+ 1076      65642069 
+ 1077              	.LASF14:
+ 1078 0243 75696E74 		.ascii	"uint8_t\000"
+ 1078      385F7400 
+ 1079              	.LASF26:
+ 1080 024b 65635F6D 		.ascii	"ec_measured\000"
+ 1080      65617375 
+ 1080      72656400 
+ 1081              	.LASF37:
+ 1082 0257 50726F74 		.ascii	"Protocol_DecodeInput\000"
+ 1082      6F636F6C 
+ 1082      5F446563 
+ 1082      6F646549 
+ 1082      6E707574 
+ 1083              	.LASF33:
+ 1084 026c 6D657373 		.ascii	"message_t\000"
+ 1084      6167655F 
+ 1084      7400
+ 1085              	.LASF15:
+ 1086 0276 696E7433 		.ascii	"int32_t\000"
+ 1086      325F7400 
+ 1087              	.LASF12:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 24
+
+
+ 1088 027e 73697A65 		.ascii	"sizetype\000"
+ 1088      74797065 
+ 1088      00
+ 1089              	.LASF8:
+ 1090 0287 6C6F6E67 		.ascii	"long long int\000"
+ 1090      206C6F6E 
+ 1090      6720696E 
+ 1090      7400
+ 1091              	.LASF17:
+ 1092 0295 666C6F77 		.ascii	"flow_target\000"
+ 1092      5F746172 
+ 1092      67657400 
+ 1093              	.LASF13:
+ 1094 02a1 63686172 		.ascii	"char\000"
+ 1094      00
+ 1095              	.LASF36:
+ 1096 02a6 636F756E 		.ascii	"count\000"
+ 1096      7400
+ 1097              	.LASF2:
+ 1098 02ac 73686F72 		.ascii	"short int\000"
+ 1098      7420696E 
+ 1098      7400
+ 1099              	.LASF40:
+ 1100 02b6 62756666 		.ascii	"buffer\000"
+ 1100      657200
+ 1101              	.LASF6:
+ 1102 02bd 6C6F6E67 		.ascii	"long int\000"
+ 1102      20696E74 
+ 1102      00
+ 1103              	.LASF24:
+ 1104 02c6 70685F75 		.ascii	"ph_up_stored\000"
+ 1104      705F7374 
+ 1104      6F726564 
+ 1104      00
+ 1105              	.LASF38:
+ 1106 02d3 50726F74 		.ascii	"Protocol_EncodeOutput\000"
+ 1106      6F636F6C 
+ 1106      5F456E63 
+ 1106      6F64654F 
+ 1106      75747075 
+ 1107              	.LASF11:
+ 1108 02e9 6C6F6E67 		.ascii	"long double\000"
+ 1108      20646F75 
+ 1108      626C6500 
+ 1109              	.LASF43:
+ 1110 02f5 706B6579 		.ascii	"pkey_const\000"
+ 1110      5F636F6E 
+ 1110      737400
+ 1111              	.LASF0:
+ 1112 0300 7369676E 		.ascii	"signed char\000"
+ 1112      65642063 
+ 1112      68617200 
+ 1113              	.LASF25:
+ 1114 030c 70685F64 		.ascii	"ph_down_stored\000"
+ 1114      6F776E5F 
+ 1114      73746F72 
+ 1114      656400
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJ4G4Qh.s 			page 25
+
+
+ 1115              	.LASF19:
+ 1116 031b 65635F74 		.ascii	"ec_target\000"
+ 1116      61726765 
+ 1116      7400
+ 1117              	.LASF45:
+ 1118 0325 7372635C 		.ascii	"src\\Protocol.c\000"
+ 1118      50726F74 
+ 1118      6F636F6C 
+ 1118      2E6300
+ 1119              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

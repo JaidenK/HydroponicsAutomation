@@ -33,7 +33,7 @@ void AD_Init(void){
 uint16_t AD_GetADCValue(){
     uint16_t adc_val;
     
-    adc_val = PotADC_Read32();
+    adc_val = PotADC_GetResult16();
     
     if(adc_val > AD_MAX + 200)
         return 0;

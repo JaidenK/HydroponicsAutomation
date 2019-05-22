@@ -181,6 +181,7 @@ void joy_up(void) {
   debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
     void __fn__ () {
       moveUp(currentScene);
+      printf("Up\n");
     } __fn__;
   }));
 }
@@ -191,6 +192,7 @@ void joy_down(void){
   debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
     void __fn__ () {
       moveDown(currentScene);
+      printf("Down\n");
     } __fn__;
   }));
 }
@@ -201,6 +203,7 @@ void joy_left(void){
   debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
     void __fn__ () {
       moveLeft(currentScene);
+      printf("Left\n");
     } __fn__;
   }));
 }
@@ -211,6 +214,7 @@ void joy_right(void){
   debounce(&t_joyMoveDebounceEvent,t_joyMoveDebounceDuration,({
     void __fn__ () {
       moveRight(currentScene);
+      printf("Right\n");
     } __fn__;
   }));
 }

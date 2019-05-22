@@ -15,7 +15,7 @@
 
 #ifndef Protocol_h
 #define Protocol_h
-
+    
 typedef enum pkey_t{
     invalid_key,
     
@@ -61,6 +61,16 @@ typedef struct message_t{
     pkey_t key;
     float value;
 }message_t;
+
+/*
+ * @function SensorComTx_EncodeMessage()
+ * @param SensorData structure, buffer
+ * @return None
+ * @brief Takes in a SensorData structure and returns
+ *        a string in nmea0183 format
+ * @author Barron Wong 04/24/19
+ */
+char * Protocol_EncodeMessage(char * buffer);
 
 /**
  * @function Protocol_DecodeInput(char * input)

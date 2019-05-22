@@ -4,7 +4,7 @@
 
 #define TIMEOUT 100000//65536 //About 65.536 ms
 #define ECHO_TIMER_MAX 65536 //About 65.536 ms
-#define LEVEL_SENSE_CNT 4
+#define LEVEL_SENSE_CNT 5
 #define MEGA 1000000.0
 
 static double SupplyLevel[LEVEL_SENSE_CNT];
@@ -14,6 +14,7 @@ double PingSensor_GetWaterLevel(){return SupplyLevel[LEVEL_WATER];}
 double PingSensor_GetpHUpLevel(){return SupplyLevel[LEVEL_pH_UP];}
 double PingSensor_GetpHDownLevel(){return SupplyLevel[LEVEL_pH_DOWN];}
 double PingSensor_GetNutLevel(){return SupplyLevel[LEVEL_NUTS];}
+double PingSensor_GetWaterResLevel(){return SupplyLevel[LEVEL_WATER_RES];}
 
 /**
  * @function PingSensor_Init(void)
@@ -65,10 +66,14 @@ CY_ISR(PingSensorSampleTimerISRHandler){
 */
 CY_ISR(PingSensorEchoISRHandler){
     uint32_t time;
-    uint8_t echo_select = (PingSelector - 1) % LEVEL_SENSE_CNT;
+    uint8_t echo_select = (PingSelector - 1);
+    if(echo_select == 255)
+        echo_select = 4;
+    echo_select %= LEVEL_SENSE_CNT;
     PingSensorEchoISR_ClearPending();
     time = ECHO_TIMER_MAX - PingSensorEchoTimer_ReadCapture();
-    SupplyLevel[echo_select] = (time/MEGA * 340)/2;;
+    SupplyLevel[echo_select] = (time/MEGA * 340)/2;
+    //printf("Echo Select %d\r\n", echo_select);
     PingSensorEchoTimer_ClearFIFO();
 }
 /**
@@ -94,14 +99,17 @@ int main(void)
     PingSensor_Init();
     
     printf("Hydroponic Automation\r\n");
+    printf("Level Sensor Test Harness\r\n");
     
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
+        printf("\r\n\r\n\r\n\r\n");
         printf("Water Level: %f\r\n", SupplyLevel[LEVEL_WATER]);
         printf("pH Up Level: %f\r\n", SupplyLevel[LEVEL_pH_UP]);
         printf("pH Down Level: %f\r\n", SupplyLevel[LEVEL_pH_DOWN]);
         printf("Nut Level: %f\r\n", SupplyLevel[LEVEL_NUTS]);
+        printf("Water Res Level: %f\r\n", SupplyLevel[LEVEL_WATER_RES]);
 
     }
 }

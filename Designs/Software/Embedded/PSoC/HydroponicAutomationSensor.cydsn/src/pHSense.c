@@ -37,8 +37,8 @@
 #define PH_UPPERBOUND pHRef*MARGIN
 #define PH_LOWERBOUND -pHRef*MARGIN
 
-#define HIST_CNT 1
-#define SHIFT_CNT 0
+#define HIST_CNT 1024
+#define SHIFT_CNT 10
 
 static float pHRef = 4.5;
 static float pH = 0;
@@ -136,7 +136,6 @@ float pHSense_GetpH(void){
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
-    ADC_DelSig_1_Start();
     SerialCom_Init();
     //USBCom_Init();
     pHSense_Init();
