@@ -491,8 +491,10 @@
       <Data key="893425e2-b901-46a8-80e5-5d2d9917eaf4" value="pHUpPump" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
       <Data key="5353893c-cc68-42be-af72-898688c538a0" value="pHUpTrig" />
+      <Data key="26213394-b743-44f7-bff7-154d81f1e2c9" value="WaterResEcho" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="ECPos" />
       <Data key="a83fec49-d759-48cd-918c-841203016a01" value="pHDownPump" />
+      <Data key="cb1c3c8b-d517-4f86-baf3-924b3afbd2cf" value="WaterResTrig" />
       <Data key="cdcafb18-a71a-4ba8-acc4-02ff0f67c309" value="ECNeg" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
@@ -3711,6 +3713,11 @@
         <Data key="Port Format" value="15,2" />
       </Group>
     </Group>
+    <Group key="26213394-b743-44f7-bff7-154d81f1e2c9">
+      <Group key="0">
+        <Data key="Port Format" value="3,7" />
+      </Group>
+    </Group>
     <Group key="77715107-f8d5-47e5-a629-0fb83101ac6b">
       <Group key="0">
         <Data key="Port Format" value="3,3" />
@@ -3719,6 +3726,11 @@
     <Group key="a83fec49-d759-48cd-918c-841203016a01">
       <Group key="0">
         <Data key="Port Format" value="2,3" />
+      </Group>
+    </Group>
+    <Group key="cb1c3c8b-d517-4f86-baf3-924b3afbd2cf">
+      <Group key="0">
+        <Data key="Port Format" value="3,6" />
       </Group>
     </Group>
     <Group key="cdcafb18-a71a-4ba8-acc4-02ff0f67c309">

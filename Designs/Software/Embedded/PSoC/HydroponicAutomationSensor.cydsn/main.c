@@ -22,7 +22,6 @@
 #include "PingSensor.h"
 #include "SensorComTx.h"
 #include "sensor_data.h"
-#include "HalfBridge.h"
 
 #define FLOW_REF 2.0
 #define PH_REF 4.5
@@ -39,7 +38,6 @@ int main(void)
   
     FlowSense_Init();
     SerialCom_Init();
-    //USBCom_Init();
     PingSensor_Init();
 
     
@@ -57,7 +55,7 @@ int main(void)
     {
         //Update Sensor Readings
         sd.h2o_level = PingSensor_GetWaterLevel();
-        sd.h2o_stored = 0;
+        sd.h2o_stored = PingSensor_GetWaterResLevel();
         sd.ph_level = pHSense_GetpH();
 	    sd.ph_up_stored = PingSensor_GetpHUpLevel();
 	    sd.ph_down_stored = PingSensor_GetpHDownLevel();
