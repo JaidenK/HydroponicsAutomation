@@ -9,6 +9,14 @@
 
 #define SUCCESS 1
 #define ERROR   0
+#define MAX_HEIGHT 16.2
+#define MIN_HEIGHT 0
+#define MIN_FLOW 0
+#define MAX_FLOW 3.5
+#define PH_MAX 8
+#define PH_MIN 3
+#define EC_MIN 200
+#define EC_MAX 3000
 //struct SensorData {
 //	double h2o_level;
 //	double h2o_stored;
@@ -73,18 +81,38 @@ int updateSensors(message_t * msg, struct SensorData * sd) {
 int SensorData_UpdateTarget(message_t target, struct SensorData * sd){
     
     switch(target.key){
-        case h20_level_target:
-        sd->h2o_target = target.value;
+        case h20_level_target:{
+        if(target.value < MIN_HEIGHT)
+            target.key = 0;
+        else if (target.value > MAX_HEIGHT - 2)
+            target.key = 0;
+        else
+            sd->h2o_target = target.value;
         break;
-        case flow_target:
-        sd->flow_target = target.value;
+        }
+        
+        case flow_target:{
+        if (target.key < MIN_FLOW)
+            target.key = MIN_FLOW;
+        else if (target.key > MAX_FLOW)
+            target.key = MAX_FLOW;
+        else 
+            sd->flow_target = target.value;
         break;
-        case ph_target:
+        }
+        
+        case ph_target:{
+        if (target.key < PH_MIN || target.key > PH_MAX)
+            break;
         sd->ph_target = target.value;
         break;
         case ec_target:
+        if (target.value < EC_MIN || target.value > EC_MAX)
+            break;
         sd->ec_target = target.value;
         break;
+        }
+        
         default:
         return ERROR;
     }

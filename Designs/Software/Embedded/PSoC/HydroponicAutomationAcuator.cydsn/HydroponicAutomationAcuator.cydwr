@@ -471,9 +471,10 @@
       <Data key="3a641820-357e-4ef4-a364-bc77eeec9c61" value="pH" />
       <Data key="4d68f60b-b521-426d-ba49-921794f35a39" value="TestTrig" />
       <Data key="6b12d123-53a6-48ac-8dc9-c3cccd9d498e" value="Trigger" />
+      <Data key="6d927108-a7c2-473f-9afd-7fe49dc19795" value="ECPumpOut" />
       <Data key="8ae33fbe-d05d-4a6d-8c13-1df988193343" value="pHUpEcho" />
       <Data key="8bab369d-6bff-4e1e-bc14-2d92e70a04e1" value="MixingMotorOut" />
-      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="FlowSensorSig" />
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="SW1" />
       <Data key="9ae7d2f5-319e-48f4-a6b6-1c5f23844489" value="FlowSpeedVOut" />
       <Data key="9fed8531-b1d5-464b-9bf0-b3d733ec5766" value="WaterEcho" />
       <Data key="019d2344-5756-4737-88cd-fc56f9743a75" value="Echo" />
@@ -494,7 +495,7 @@
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="d182b69c-aa3c-470e-add3-1df34ebc5e47/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
       <Data key="e33a7975-27ee-4ed3-8bb8-34b9252efa35" value="EC" />
-      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="TestEcho" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="WaterLevelPump" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="Tx_1" />
       <Data key="f2593d42-36fc-44df-94be-aefb946f0deb" value="MixingMotor" />
       <Data key="fab91bcc-aff1-402c-9737-4ce088bf4033" value="WaterTrig" />
@@ -3679,6 +3680,11 @@
     <Group key="6b12d123-53a6-48ac-8dc9-c3cccd9d498e">
       <Group key="0">
         <Data key="Port Format" value="0,0" />
+      </Group>
+    </Group>
+    <Group key="6d927108-a7c2-473f-9afd-7fe49dc19795">
+      <Group key="0">
+        <Data key="Port Format" value="1,7" />
       </Group>
     </Group>
     <Group key="8ae33fbe-d05d-4a6d-8c13-1df988193343">

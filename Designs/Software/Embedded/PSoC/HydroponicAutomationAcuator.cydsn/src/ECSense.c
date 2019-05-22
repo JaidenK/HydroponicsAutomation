@@ -12,8 +12,8 @@
  * Created on Janruary 25, 2019
  */
 
-#ifndef ECSense_H
-#define ECSense_H
+#ifndef ECSense_C
+#define ECSense_C
 
 #ifdef ECSENSE_TEST
     #define MODULE_TEST
@@ -111,7 +111,7 @@ CY_ISR(HalfBridgeISRHandler){
     HalfBridgeISR_ClearPending();
     switch(state){
         case POS:
-        //ECADC_Stop();
+        ECADC_Stop();
         HalfBridgeControl_Write(0b00);
         HalfBridgeTimer_WritePeriod(DEAD_TIME);
         HalfBridgeTimerReset_Write(1);
@@ -138,7 +138,7 @@ CY_ISR(HalfBridgeISRHandler){
         HalfBridgeTimerReset_Write(1);
         state = POS;
         ECSampleTimerISR_Enable();
-        //ECADC_Start();
+        ECADC_Start();
         break;
     }
 }

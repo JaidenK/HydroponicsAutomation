@@ -1,0 +1,2440 @@
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"FlowSenseTimeOutTimer.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	FlowSenseTimeOutTimer_initVar
+  20              		.bss
+  21              		.type	FlowSenseTimeOutTimer_initVar, %object
+  22              		.size	FlowSenseTimeOutTimer_initVar, 1
+  23              	FlowSenseTimeOutTimer_initVar:
+  24 0000 00       		.space	1
+  25              		.section	.text.FlowSenseTimeOutTimer_Init,"ax",%progbits
+  26              		.align	2
+  27              		.global	FlowSenseTimeOutTimer_Init
+  28              		.thumb
+  29              		.thumb_func
+  30              		.type	FlowSenseTimeOutTimer_Init, %function
+  31              	FlowSenseTimeOutTimer_Init:
+  32              	.LFB0:
+  33              		.file 1 "Generated_Source\\PSoC5\\FlowSenseTimeOutTimer.c"
+   1:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * File Name: FlowSenseTimeOutTimer.c
+   3:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Version 2.80
+   4:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+   5:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Description:
+   6:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The Timer component consists of a 8, 16, 24 or 32-bit timer with
+   7:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  a selectable period between 2 and 2^Width - 1.  The timer may free run
+   8:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  or be used as a capture timer as well.  The capture can be initiated
+   9:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  by a positive or negative edge signal as well as via software.
+  10:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  A trigger input can be programmed to enable the timer on rising edge
+  11:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  falling edge, either edge or continous run.
+  12:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Interrupts may be generated due to a terminal count condition
+  13:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  or a capture event.
+  14:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+  15:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Note:
+  16:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+  17:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+  18:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Copyright 2008-2017, Cypress Semiconductor Corporation.  All rights reserved.
+  19:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * You may use this file only in accordance with the license, terms, conditions,
+  20:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  21:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * the software package with which this file was provided.
+  22:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************/
+  23:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  24:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #include "FlowSenseTimeOutTimer.h"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 2
+
+
+  25:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  26:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** uint8 FlowSenseTimeOutTimer_initVar = 0u;
+  27:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  28:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  29:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+  30:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_Init
+  31:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+  32:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+  33:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+  34:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Initialize to the schematic state
+  35:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+  36:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+  37:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+  38:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+  39:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+  40:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+  41:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+  42:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+  43:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_Init(void) 
+  44:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+  34              		.loc 1 44 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 8
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38 0000 80B5     		push	{r7, lr}
+  39              		.cfi_def_cfa_offset 8
+  40              		.cfi_offset 7, -8
+  41              		.cfi_offset 14, -4
+  42 0002 82B0     		sub	sp, sp, #8
+  43              		.cfi_def_cfa_offset 16
+  44 0004 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+  45:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if(!FlowSenseTimeOutTimer_UsingFixedFunction)
+  46:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             /* Interrupt State Backup for Critical Region*/
+  47:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             uint8 FlowSenseTimeOutTimer_interruptState;
+  48:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Interrupt state back up for Fixed Function only */
+  49:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  50:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (FlowSenseTimeOutTimer_UsingFixedFunction)
+  51:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Clear all bits but the enable bit (if it's already set) for Timer operation */
+  52:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL &= FlowSenseTimeOutTimer_CTRL_ENABLE;
+  53:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  54:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Clear the mode bits for continuous run mode */
+  55:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (CY_PSOC5A)
+  56:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             FlowSenseTimeOutTimer_CONTROL2 &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_MODE_MASK));
+  57:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* Clear bits in CONTROL2 only in PSOC5A */
+  58:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  59:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (CY_PSOC3 || CY_PSOC5LP)
+  60:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             FlowSenseTimeOutTimer_CONTROL3 &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_MODE_MASK));
+  61:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* CONTROL3 register exists only in PSoC3 OR PSoC5LP */
+  62:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  63:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Check if One Shot mode is enabled i.e. RunMode !=0*/
+  64:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (FlowSenseTimeOutTimer_RunModeUsed != 0x0u)
+  65:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             /* Set 3rd bit of Control register to enable one shot mode */
+  66:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             FlowSenseTimeOutTimer_CONTROL |= 0x04u;
+  67:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* One Shot enabled only when RunModeUsed is not Continuous*/
+  68:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  69:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (FlowSenseTimeOutTimer_RunModeUsed == 2)
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 3
+
+
+  70:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #if (CY_PSOC5A)
+  71:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 /* Set last 2 bits of control2 register if one shot(halt on
+  72:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 interrupt) is enabled*/
+  73:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL2 |= 0x03u;
+  74:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #endif /* Set One-Shot Halt on Interrupt bit in CONTROL2 for PSoC5A */
+  75:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  76:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #if (CY_PSOC3 || CY_PSOC5LP)
+  77:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 /* Set last 2 bits of control3 register if one shot(halt on
+  78:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 interrupt) is enabled*/
+  79:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL3 |= 0x03u;
+  80:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #endif /* Set One-Shot Halt on Interrupt bit in CONTROL3 for PSoC3 or PSoC5LP */
+  81:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  82:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* Remove section if One Shot Halt on Interrupt is not enabled */
+  83:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  84:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (FlowSenseTimeOutTimer_UsingHWEnable != 0)
+  85:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #if (CY_PSOC5A)
+  86:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 /* Set the default Run Mode of the Timer to Continuous */
+  87:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL2 |= FlowSenseTimeOutTimer_CTRL_MODE_PULSEWIDTH;
+  88:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #endif /* Set Continuous Run Mode in CONTROL2 for PSoC5A */
+  89:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  90:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #if (CY_PSOC3 || CY_PSOC5LP)
+  91:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 /* Clear and Set ROD and COD bits of CFG2 register */
+  92:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL3 &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_RCOD_MASK));
+  93:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL3 |= FlowSenseTimeOutTimer_CTRL_RCOD;
+  94:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  95:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 /* Clear and Enable the HW enable bit in CFG2 register */
+  96:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL3 &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_ENBL_MASK));
+  97:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL3 |= FlowSenseTimeOutTimer_CTRL_ENBL;
+  98:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+  99:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 /* Set the default Run Mode of the Timer to Continuous */
+ 100:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 FlowSenseTimeOutTimer_CONTROL3 |= FlowSenseTimeOutTimer_CTRL_MODE_CONTINUOUS;
+ 101:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #endif /* Set Continuous Run Mode in CONTROL3 for PSoC3ES3 or PSoC5A */
+ 102:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 103:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* Configure Run Mode with hardware enable */
+ 104:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 105:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Clear and Set SYNCTC and SYNCCMP bits of RT1 register */
+ 106:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_RT1 &= ((uint8)(~FlowSenseTimeOutTimer_RT1_MASK));
+ 107:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_RT1 |= FlowSenseTimeOutTimer_SYNC;
+ 108:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 109:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /*Enable DSI Sync all all inputs of the Timer*/
+ 110:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_RT1 &= ((uint8)(~FlowSenseTimeOutTimer_SYNCDSI_MASK));
+ 111:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_RT1 |= FlowSenseTimeOutTimer_SYNCDSI_EN;
+ 112:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 113:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Set the IRQ to use the status register interrupts */
+ 114:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL2 |= FlowSenseTimeOutTimer_CTRL2_IRQ_SEL;
+ 115:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Configuring registers of fixed function implementation */
+ 116:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 117:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Set Initial values from Configuration */
+ 118:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     FlowSenseTimeOutTimer_WritePeriod(FlowSenseTimeOutTimer_INIT_PERIOD);
+  46              		.loc 1 118 0
+  47 0006 0F48     		ldr	r0, .L2
+  48 0008 FFF7FEFF 		bl	FlowSenseTimeOutTimer_WritePeriod
+ 119:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     FlowSenseTimeOutTimer_WriteCounter(FlowSenseTimeOutTimer_INIT_PERIOD);
+  49              		.loc 1 119 0
+  50 000c 0D48     		ldr	r0, .L2
+  51 000e FFF7FEFF 		bl	FlowSenseTimeOutTimer_WriteCounter
+ 120:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 4
+
+
+ 121:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (FlowSenseTimeOutTimer_UsingHWCaptureCounter)/* Capture counter is enabled */
+ 122:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CAPTURE_COUNT_CTRL |= FlowSenseTimeOutTimer_CNTR_ENABLE;
+ 123:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_SetCaptureCount(FlowSenseTimeOutTimer_INIT_CAPTURE_COUNT);
+ 124:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Configure capture counter value */
+ 125:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 126:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UsingFixedFunction)
+ 127:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (FlowSenseTimeOutTimer_SoftwareCaptureMode)
+ 128:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             FlowSenseTimeOutTimer_SetCaptureMode(FlowSenseTimeOutTimer_INIT_CAPTURE_MODE);
+ 129:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* Set Capture Mode for UDB implementation if capture mode is software controlled */
+ 130:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 131:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (FlowSenseTimeOutTimer_SoftwareTriggerMode)
+ 132:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED)
+ 133:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 if (0u == (FlowSenseTimeOutTimer_CONTROL & FlowSenseTimeOutTimer__B_TIMER__TM_SOFTW
+ 134:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 {
+ 135:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                     FlowSenseTimeOutTimer_SetTriggerMode(FlowSenseTimeOutTimer_INIT_TRIGGER_MODE);
+ 136:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****                 }
+ 137:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             #endif /* (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) */
+ 138:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* Set trigger mode for UDB Implementation if trigger mode is software controlled */
+ 139:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 140:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* CyEnterCriticalRegion and CyExitCriticalRegion are used to mark following region critica
+ 141:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Enter Critical Region*/
+ 142:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_interruptState = CyEnterCriticalSection();
+  52              		.loc 1 142 0
+  53 0012 FFF7FEFF 		bl	CyEnterCriticalSection
+  54 0016 0346     		mov	r3, r0
+  55 0018 FB71     		strb	r3, [r7, #7]
+ 143:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 144:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Use the interrupt output of the status register for IRQ output */
+ 145:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_STATUS_AUX_CTRL |= FlowSenseTimeOutTimer_STATUS_ACTL_INT_EN_MASK;
+  56              		.loc 1 145 0
+  57 001a 0B4A     		ldr	r2, .L2+4
+  58 001c 0A4B     		ldr	r3, .L2+4
+  59 001e 1B78     		ldrb	r3, [r3]
+  60 0020 DBB2     		uxtb	r3, r3
+  61 0022 43F01003 		orr	r3, r3, #16
+  62 0026 DBB2     		uxtb	r3, r3
+  63 0028 1370     		strb	r3, [r2]
+ 146:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 147:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Exit Critical Region*/
+ 148:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         CyExitCriticalSection(FlowSenseTimeOutTimer_interruptState);
+  64              		.loc 1 148 0
+  65 002a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+  66 002c 1846     		mov	r0, r3
+  67 002e FFF7FEFF 		bl	CyExitCriticalSection
+ 149:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 150:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (FlowSenseTimeOutTimer_EnableTriggerMode)
+ 151:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             FlowSenseTimeOutTimer_EnableTrigger();
+ 152:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* Set Trigger enable bit for UDB implementation in the control register*/
+ 153:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 		
+ 154:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 		
+ 155:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #if (FlowSenseTimeOutTimer_InterruptOnCaptureCount && !FlowSenseTimeOutTimer_UDB_CONTROL_RE
+ 156:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****             FlowSenseTimeOutTimer_SetInterruptCount(FlowSenseTimeOutTimer_INIT_INT_CAPTURE_COUNT);
+ 157:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         #endif /* Set interrupt count in UDB implementation if interrupt count feature is checked.*
+ 158:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 159:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_ClearFIFO();
+  68              		.loc 1 159 0
+  69 0032 FFF7FEFF 		bl	FlowSenseTimeOutTimer_ClearFIFO
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 5
+
+
+ 160:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Configure additional features of UDB implementation */
+ 161:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 162:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     FlowSenseTimeOutTimer_SetInterruptMode(FlowSenseTimeOutTimer_INIT_INTERRUPT_MODE);
+  70              		.loc 1 162 0
+  71 0036 0020     		movs	r0, #0
+  72 0038 FFF7FEFF 		bl	FlowSenseTimeOutTimer_SetInterruptMode
+ 163:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+  73              		.loc 1 163 0
+  74 003c 00BF     		nop
+  75 003e 0837     		adds	r7, r7, #8
+  76              		.cfi_def_cfa_offset 8
+  77 0040 BD46     		mov	sp, r7
+  78              		.cfi_def_cfa_register 13
+  79              		@ sp needed
+  80 0042 80BD     		pop	{r7, pc}
+  81              	.L3:
+  82              		.align	2
+  83              	.L2:
+  84 0044 3F0D0300 		.word	199999
+  85 0048 9A640040 		.word	1073767578
+  86              		.cfi_endproc
+  87              	.LFE0:
+  88              		.size	FlowSenseTimeOutTimer_Init, .-FlowSenseTimeOutTimer_Init
+  89              		.section	.text.FlowSenseTimeOutTimer_Enable,"ax",%progbits
+  90              		.align	2
+  91              		.global	FlowSenseTimeOutTimer_Enable
+  92              		.thumb
+  93              		.thumb_func
+  94              		.type	FlowSenseTimeOutTimer_Enable, %function
+  95              	FlowSenseTimeOutTimer_Enable:
+  96              	.LFB1:
+ 164:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 165:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 166:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 167:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_Enable
+ 168:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 169:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 170:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 171:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Enable the Timer
+ 172:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 173:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 174:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 175:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 176:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 177:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 178:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 179:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 180:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_Enable(void) 
+ 181:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+  97              		.loc 1 181 0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 1, uses_anonymous_args = 0
+ 101              		@ link register save eliminated.
+ 102 0000 80B4     		push	{r7}
+ 103              		.cfi_def_cfa_offset 4
+ 104              		.cfi_offset 7, -4
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 6
+
+
+ 105 0002 00AF     		add	r7, sp, #0
+ 106              		.cfi_def_cfa_register 7
+ 182:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Globally Enable the Fixed Function Block chosen */
+ 183:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (FlowSenseTimeOutTimer_UsingFixedFunction)
+ 184:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_GLOBAL_ENABLE |= FlowSenseTimeOutTimer_BLOCK_EN_MASK;
+ 185:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_GLOBAL_STBY_ENABLE |= FlowSenseTimeOutTimer_BLOCK_STBY_EN_MASK;
+ 186:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Set Enable bit for enabling Fixed function timer*/
+ 187:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 188:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Remove assignment if control register is removed */
+ 189:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED || FlowSenseTimeOutTimer_UsingFixedFunction
+ 190:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL |= FlowSenseTimeOutTimer_CTRL_ENABLE;
+ 107              		.loc 1 190 0
+ 108 0004 054A     		ldr	r2, .L5
+ 109 0006 054B     		ldr	r3, .L5
+ 110 0008 1B78     		ldrb	r3, [r3]
+ 111 000a DBB2     		uxtb	r3, r3
+ 112 000c 63F07F03 		orn	r3, r3, #127
+ 113 0010 DBB2     		uxtb	r3, r3
+ 114 0012 1370     		strb	r3, [r2]
+ 191:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Remove assignment if control register is removed */
+ 192:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 115              		.loc 1 192 0
+ 116 0014 00BF     		nop
+ 117 0016 BD46     		mov	sp, r7
+ 118              		.cfi_def_cfa_register 13
+ 119              		@ sp needed
+ 120 0018 80BC     		pop	{r7}
+ 121              		.cfi_restore 7
+ 122              		.cfi_def_cfa_offset 0
+ 123 001a 7047     		bx	lr
+ 124              	.L6:
+ 125              		.align	2
+ 126              	.L5:
+ 127 001c 7A640040 		.word	1073767546
+ 128              		.cfi_endproc
+ 129              	.LFE1:
+ 130              		.size	FlowSenseTimeOutTimer_Enable, .-FlowSenseTimeOutTimer_Enable
+ 131              		.section	.text.FlowSenseTimeOutTimer_Start,"ax",%progbits
+ 132              		.align	2
+ 133              		.global	FlowSenseTimeOutTimer_Start
+ 134              		.thumb
+ 135              		.thumb_func
+ 136              		.type	FlowSenseTimeOutTimer_Start, %function
+ 137              	FlowSenseTimeOutTimer_Start:
+ 138              	.LFB2:
+ 193:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 194:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 195:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 196:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_Start
+ 197:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 198:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 199:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 200:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The start function initializes the timer with the default values, the
+ 201:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  enables the timerto begin counting.  It does not enable interrupts,
+ 202:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  the EnableInt command should be called if interrupt generation is required.
+ 203:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 204:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 7
+
+
+ 205:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 206:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 207:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 208:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 209:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 210:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Global variables:
+ 211:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  FlowSenseTimeOutTimer_initVar: Is modified when this function is called for the
+ 212:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *   first time. Is used to ensure that initialization happens only once.
+ 213:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 214:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 215:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_Start(void) 
+ 216:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 139              		.loc 1 216 0
+ 140              		.cfi_startproc
+ 141              		@ args = 0, pretend = 0, frame = 0
+ 142              		@ frame_needed = 1, uses_anonymous_args = 0
+ 143 0000 80B5     		push	{r7, lr}
+ 144              		.cfi_def_cfa_offset 8
+ 145              		.cfi_offset 7, -8
+ 146              		.cfi_offset 14, -4
+ 147 0002 00AF     		add	r7, sp, #0
+ 148              		.cfi_def_cfa_register 7
+ 217:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     if(FlowSenseTimeOutTimer_initVar == 0u)
+ 149              		.loc 1 217 0
+ 150 0004 064B     		ldr	r3, .L9
+ 151 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 152 0008 002B     		cmp	r3, #0
+ 153 000a 04D1     		bne	.L8
+ 218:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     {
+ 219:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_Init();
+ 154              		.loc 1 219 0
+ 155 000c FFF7FEFF 		bl	FlowSenseTimeOutTimer_Init
+ 220:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 221:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_initVar = 1u;   /* Clear this bit for Initialization */
+ 156              		.loc 1 221 0
+ 157 0010 034B     		ldr	r3, .L9
+ 158 0012 0122     		movs	r2, #1
+ 159 0014 1A70     		strb	r2, [r3]
+ 160              	.L8:
+ 222:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     }
+ 223:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 224:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Enable the Timer */
+ 225:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     FlowSenseTimeOutTimer_Enable();
+ 161              		.loc 1 225 0
+ 162 0016 FFF7FEFF 		bl	FlowSenseTimeOutTimer_Enable
+ 226:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 163              		.loc 1 226 0
+ 164 001a 00BF     		nop
+ 165 001c 80BD     		pop	{r7, pc}
+ 166              	.L10:
+ 167 001e 00BF     		.align	2
+ 168              	.L9:
+ 169 0020 00000000 		.word	FlowSenseTimeOutTimer_initVar
+ 170              		.cfi_endproc
+ 171              	.LFE2:
+ 172              		.size	FlowSenseTimeOutTimer_Start, .-FlowSenseTimeOutTimer_Start
+ 173              		.section	.text.FlowSenseTimeOutTimer_Stop,"ax",%progbits
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 8
+
+
+ 174              		.align	2
+ 175              		.global	FlowSenseTimeOutTimer_Stop
+ 176              		.thumb
+ 177              		.thumb_func
+ 178              		.type	FlowSenseTimeOutTimer_Stop, %function
+ 179              	FlowSenseTimeOutTimer_Stop:
+ 180              	.LFB3:
+ 227:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 228:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 229:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 230:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_Stop
+ 231:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 232:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 233:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 234:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The stop function halts the timer, but does not change any modes or disable
+ 235:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  interrupts.
+ 236:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 237:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 238:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 239:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 240:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 241:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 242:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 243:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Side Effects: If the Enable mode is set to Hardware only then this function
+ 244:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *               has no effect on the operation of the timer.
+ 245:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 246:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 247:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_Stop(void) 
+ 248:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 181              		.loc 1 248 0
+ 182              		.cfi_startproc
+ 183              		@ args = 0, pretend = 0, frame = 0
+ 184              		@ frame_needed = 1, uses_anonymous_args = 0
+ 185              		@ link register save eliminated.
+ 186 0000 80B4     		push	{r7}
+ 187              		.cfi_def_cfa_offset 4
+ 188              		.cfi_offset 7, -4
+ 189 0002 00AF     		add	r7, sp, #0
+ 190              		.cfi_def_cfa_register 7
+ 249:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Disable Timer */
+ 250:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if(!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED || FlowSenseTimeOutTimer_UsingFixedFunction)
+ 251:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_ENABLE));
+ 191              		.loc 1 251 0
+ 192 0004 054A     		ldr	r2, .L12
+ 193 0006 054B     		ldr	r3, .L12
+ 194 0008 1B78     		ldrb	r3, [r3]
+ 195 000a DBB2     		uxtb	r3, r3
+ 196 000c 03F07F03 		and	r3, r3, #127
+ 197 0010 DBB2     		uxtb	r3, r3
+ 198 0012 1370     		strb	r3, [r2]
+ 252:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Remove assignment if control register is removed */
+ 253:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 254:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Globally disable the Fixed Function Block chosen */
+ 255:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (FlowSenseTimeOutTimer_UsingFixedFunction)
+ 256:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_GLOBAL_ENABLE &= ((uint8)(~FlowSenseTimeOutTimer_BLOCK_EN_MASK));
+ 257:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_GLOBAL_STBY_ENABLE &= ((uint8)(~FlowSenseTimeOutTimer_BLOCK_STBY_EN_M
+ 258:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Disable global enable for the Timer Fixed function block to stop the Timer*/
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 9
+
+
+ 259:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 199              		.loc 1 259 0
+ 200 0014 00BF     		nop
+ 201 0016 BD46     		mov	sp, r7
+ 202              		.cfi_def_cfa_register 13
+ 203              		@ sp needed
+ 204 0018 80BC     		pop	{r7}
+ 205              		.cfi_restore 7
+ 206              		.cfi_def_cfa_offset 0
+ 207 001a 7047     		bx	lr
+ 208              	.L13:
+ 209              		.align	2
+ 210              	.L12:
+ 211 001c 7A640040 		.word	1073767546
+ 212              		.cfi_endproc
+ 213              	.LFE3:
+ 214              		.size	FlowSenseTimeOutTimer_Stop, .-FlowSenseTimeOutTimer_Stop
+ 215              		.section	.text.FlowSenseTimeOutTimer_SetInterruptMode,"ax",%progbits
+ 216              		.align	2
+ 217              		.global	FlowSenseTimeOutTimer_SetInterruptMode
+ 218              		.thumb
+ 219              		.thumb_func
+ 220              		.type	FlowSenseTimeOutTimer_SetInterruptMode, %function
+ 221              	FlowSenseTimeOutTimer_SetInterruptMode:
+ 222              	.LFB4:
+ 260:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 261:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 262:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 263:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_SetInterruptMode
+ 264:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 265:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 266:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 267:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function selects which of the interrupt inputs may cause an interrupt.
+ 268:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The twosources are caputure and terminal.  One, both or neither may
+ 269:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  be selected.
+ 270:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 271:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 272:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  interruptMode:   This parameter is used to enable interrups on either/or
+ 273:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *                   terminal count or capture.
+ 274:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 275:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 276:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 277:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 278:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 279:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_SetInterruptMode(uint8 interruptMode) 
+ 280:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 223              		.loc 1 280 0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 8
+ 226              		@ frame_needed = 1, uses_anonymous_args = 0
+ 227              		@ link register save eliminated.
+ 228 0000 80B4     		push	{r7}
+ 229              		.cfi_def_cfa_offset 4
+ 230              		.cfi_offset 7, -4
+ 231 0002 83B0     		sub	sp, sp, #12
+ 232              		.cfi_def_cfa_offset 16
+ 233 0004 00AF     		add	r7, sp, #0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 10
+
+
+ 234              		.cfi_def_cfa_register 7
+ 235 0006 0346     		mov	r3, r0
+ 236 0008 FB71     		strb	r3, [r7, #7]
+ 281:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     FlowSenseTimeOutTimer_STATUS_MASK = interruptMode;
+ 237              		.loc 1 281 0
+ 238 000a 044A     		ldr	r2, .L15
+ 239 000c FB79     		ldrb	r3, [r7, #7]
+ 240 000e 1370     		strb	r3, [r2]
+ 282:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 241              		.loc 1 282 0
+ 242 0010 00BF     		nop
+ 243 0012 0C37     		adds	r7, r7, #12
+ 244              		.cfi_def_cfa_offset 4
+ 245 0014 BD46     		mov	sp, r7
+ 246              		.cfi_def_cfa_register 13
+ 247              		@ sp needed
+ 248 0016 80BC     		pop	{r7}
+ 249              		.cfi_restore 7
+ 250              		.cfi_def_cfa_offset 0
+ 251 0018 7047     		bx	lr
+ 252              	.L16:
+ 253 001a 00BF     		.align	2
+ 254              	.L15:
+ 255 001c 8A640040 		.word	1073767562
+ 256              		.cfi_endproc
+ 257              	.LFE4:
+ 258              		.size	FlowSenseTimeOutTimer_SetInterruptMode, .-FlowSenseTimeOutTimer_SetInterruptMode
+ 259              		.section	.text.FlowSenseTimeOutTimer_SoftwareCapture,"ax",%progbits
+ 260              		.align	2
+ 261              		.global	FlowSenseTimeOutTimer_SoftwareCapture
+ 262              		.thumb
+ 263              		.thumb_func
+ 264              		.type	FlowSenseTimeOutTimer_SoftwareCapture, %function
+ 265              	FlowSenseTimeOutTimer_SoftwareCapture:
+ 266              	.LFB5:
+ 283:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 284:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 285:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 286:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_SoftwareCapture
+ 287:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 288:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 289:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 290:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function forces a capture independent of the capture signal.
+ 291:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 292:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 293:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 294:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 295:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 296:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 297:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 298:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Side Effects:
+ 299:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  An existing hardware capture could be overwritten.
+ 300:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 301:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 302:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_SoftwareCapture(void) 
+ 303:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 267              		.loc 1 303 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 11
+
+
+ 268              		.cfi_startproc
+ 269              		@ args = 0, pretend = 0, frame = 0
+ 270              		@ frame_needed = 1, uses_anonymous_args = 0
+ 271              		@ link register save eliminated.
+ 272 0000 80B4     		push	{r7}
+ 273              		.cfi_def_cfa_offset 4
+ 274              		.cfi_offset 7, -4
+ 275 0002 00AF     		add	r7, sp, #0
+ 276              		.cfi_def_cfa_register 7
+ 304:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Generate a software capture by reading the counter register */
+ 305:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if(FlowSenseTimeOutTimer_UsingFixedFunction)
+ 306:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         (void)CY_GET_REG16(FlowSenseTimeOutTimer_COUNTER_LSB_PTR);
+ 307:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #else
+ 308:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         (void)CY_GET_REG8(FlowSenseTimeOutTimer_COUNTER_LSB_PTR_8BIT);
+ 277              		.loc 1 308 0
+ 278 0004 024B     		ldr	r3, .L18
+ 279 0006 1B78     		ldrb	r3, [r3]
+ 309:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif/* (FlowSenseTimeOutTimer_UsingFixedFunction) */
+ 310:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Capture Data is now in the FIFO */
+ 311:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 280              		.loc 1 311 0
+ 281 0008 00BF     		nop
+ 282 000a BD46     		mov	sp, r7
+ 283              		.cfi_def_cfa_register 13
+ 284              		@ sp needed
+ 285 000c 80BC     		pop	{r7}
+ 286              		.cfi_restore 7
+ 287              		.cfi_def_cfa_offset 0
+ 288 000e 7047     		bx	lr
+ 289              	.L19:
+ 290              		.align	2
+ 291              	.L18:
+ 292 0010 08650040 		.word	1073767688
+ 293              		.cfi_endproc
+ 294              	.LFE5:
+ 295              		.size	FlowSenseTimeOutTimer_SoftwareCapture, .-FlowSenseTimeOutTimer_SoftwareCapture
+ 296              		.section	.text.FlowSenseTimeOutTimer_ReadStatusRegister,"ax",%progbits
+ 297              		.align	2
+ 298              		.global	FlowSenseTimeOutTimer_ReadStatusRegister
+ 299              		.thumb
+ 300              		.thumb_func
+ 301              		.type	FlowSenseTimeOutTimer_ReadStatusRegister, %function
+ 302              	FlowSenseTimeOutTimer_ReadStatusRegister:
+ 303              	.LFB6:
+ 312:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 313:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 314:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 315:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_ReadStatusRegister
+ 316:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 317:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 318:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 319:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Reads the status register and returns it's state. This function should use
+ 320:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  defined types for the bit-field information as the bits in this register may
+ 321:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  be permuteable.
+ 322:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 323:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 324:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 12
+
+
+ 325:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 326:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 327:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The contents of the status register
+ 328:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 329:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Side Effects:
+ 330:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Status register bits may be clear on read.
+ 331:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 332:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 333:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** uint8   FlowSenseTimeOutTimer_ReadStatusRegister(void) 
+ 334:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 304              		.loc 1 334 0
+ 305              		.cfi_startproc
+ 306              		@ args = 0, pretend = 0, frame = 0
+ 307              		@ frame_needed = 1, uses_anonymous_args = 0
+ 308              		@ link register save eliminated.
+ 309 0000 80B4     		push	{r7}
+ 310              		.cfi_def_cfa_offset 4
+ 311              		.cfi_offset 7, -4
+ 312 0002 00AF     		add	r7, sp, #0
+ 313              		.cfi_def_cfa_register 7
+ 335:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     return (FlowSenseTimeOutTimer_STATUS);
+ 314              		.loc 1 335 0
+ 315 0004 034B     		ldr	r3, .L22
+ 316 0006 1B78     		ldrb	r3, [r3]
+ 317 0008 DBB2     		uxtb	r3, r3
+ 336:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 318              		.loc 1 336 0
+ 319 000a 1846     		mov	r0, r3
+ 320 000c BD46     		mov	sp, r7
+ 321              		.cfi_def_cfa_register 13
+ 322              		@ sp needed
+ 323 000e 80BC     		pop	{r7}
+ 324              		.cfi_restore 7
+ 325              		.cfi_def_cfa_offset 0
+ 326 0010 7047     		bx	lr
+ 327              	.L23:
+ 328 0012 00BF     		.align	2
+ 329              	.L22:
+ 330 0014 6A640040 		.word	1073767530
+ 331              		.cfi_endproc
+ 332              	.LFE6:
+ 333              		.size	FlowSenseTimeOutTimer_ReadStatusRegister, .-FlowSenseTimeOutTimer_ReadStatusRegister
+ 334              		.section	.text.FlowSenseTimeOutTimer_ReadControlRegister,"ax",%progbits
+ 335              		.align	2
+ 336              		.global	FlowSenseTimeOutTimer_ReadControlRegister
+ 337              		.thumb
+ 338              		.thumb_func
+ 339              		.type	FlowSenseTimeOutTimer_ReadControlRegister, %function
+ 340              	FlowSenseTimeOutTimer_ReadControlRegister:
+ 341              	.LFB7:
+ 337:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 338:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 339:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) /* Remove API if control register is unused */
+ 340:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 341:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 342:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 343:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_ReadControlRegister
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 13
+
+
+ 344:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 345:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 346:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 347:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Reads the control register and returns it's value.
+ 348:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 349:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 350:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 351:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 352:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 353:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The contents of the control register
+ 354:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 355:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 356:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** uint8 FlowSenseTimeOutTimer_ReadControlRegister(void) 
+ 357:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 342              		.loc 1 357 0
+ 343              		.cfi_startproc
+ 344              		@ args = 0, pretend = 0, frame = 0
+ 345              		@ frame_needed = 1, uses_anonymous_args = 0
+ 346              		@ link register save eliminated.
+ 347 0000 80B4     		push	{r7}
+ 348              		.cfi_def_cfa_offset 4
+ 349              		.cfi_offset 7, -4
+ 350 0002 00AF     		add	r7, sp, #0
+ 351              		.cfi_def_cfa_register 7
+ 358:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) 
+ 359:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         return ((uint8)FlowSenseTimeOutTimer_CONTROL);
+ 352              		.loc 1 359 0
+ 353 0004 034B     		ldr	r3, .L26
+ 354 0006 1B78     		ldrb	r3, [r3]
+ 355 0008 DBB2     		uxtb	r3, r3
+ 360:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #else
+ 361:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         return (0);
+ 362:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) */
+ 363:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 356              		.loc 1 363 0
+ 357 000a 1846     		mov	r0, r3
+ 358 000c BD46     		mov	sp, r7
+ 359              		.cfi_def_cfa_register 13
+ 360              		@ sp needed
+ 361 000e 80BC     		pop	{r7}
+ 362              		.cfi_restore 7
+ 363              		.cfi_def_cfa_offset 0
+ 364 0010 7047     		bx	lr
+ 365              	.L27:
+ 366 0012 00BF     		.align	2
+ 367              	.L26:
+ 368 0014 7A640040 		.word	1073767546
+ 369              		.cfi_endproc
+ 370              	.LFE7:
+ 371              		.size	FlowSenseTimeOutTimer_ReadControlRegister, .-FlowSenseTimeOutTimer_ReadControlRegister
+ 372              		.section	.text.FlowSenseTimeOutTimer_WriteControlRegister,"ax",%progbits
+ 373              		.align	2
+ 374              		.global	FlowSenseTimeOutTimer_WriteControlRegister
+ 375              		.thumb
+ 376              		.thumb_func
+ 377              		.type	FlowSenseTimeOutTimer_WriteControlRegister, %function
+ 378              	FlowSenseTimeOutTimer_WriteControlRegister:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 14
+
+
+ 379              	.LFB8:
+ 364:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 365:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 366:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 367:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_WriteControlRegister
+ 368:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 369:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 370:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 371:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Sets the bit-field of the control register.
+ 372:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 373:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 374:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  control: The contents of the control register
+ 375:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 376:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 377:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 378:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 379:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_WriteControlRegister(uint8 control) 
+ 380:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 380              		.loc 1 380 0
+ 381              		.cfi_startproc
+ 382              		@ args = 0, pretend = 0, frame = 8
+ 383              		@ frame_needed = 1, uses_anonymous_args = 0
+ 384              		@ link register save eliminated.
+ 385 0000 80B4     		push	{r7}
+ 386              		.cfi_def_cfa_offset 4
+ 387              		.cfi_offset 7, -4
+ 388 0002 83B0     		sub	sp, sp, #12
+ 389              		.cfi_def_cfa_offset 16
+ 390 0004 00AF     		add	r7, sp, #0
+ 391              		.cfi_def_cfa_register 7
+ 392 0006 0346     		mov	r3, r0
+ 393 0008 FB71     		strb	r3, [r7, #7]
+ 381:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) 
+ 382:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL = control;
+ 394              		.loc 1 382 0
+ 395 000a 044A     		ldr	r2, .L29
+ 396 000c FB79     		ldrb	r3, [r7, #7]
+ 397 000e 1370     		strb	r3, [r2]
+ 383:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #else
+ 384:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         control = 0u;
+ 385:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) */
+ 386:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 398              		.loc 1 386 0
+ 399 0010 00BF     		nop
+ 400 0012 0C37     		adds	r7, r7, #12
+ 401              		.cfi_def_cfa_offset 4
+ 402 0014 BD46     		mov	sp, r7
+ 403              		.cfi_def_cfa_register 13
+ 404              		@ sp needed
+ 405 0016 80BC     		pop	{r7}
+ 406              		.cfi_restore 7
+ 407              		.cfi_def_cfa_offset 0
+ 408 0018 7047     		bx	lr
+ 409              	.L30:
+ 410 001a 00BF     		.align	2
+ 411              	.L29:
+ 412 001c 7A640040 		.word	1073767546
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 15
+
+
+ 413              		.cfi_endproc
+ 414              	.LFE8:
+ 415              		.size	FlowSenseTimeOutTimer_WriteControlRegister, .-FlowSenseTimeOutTimer_WriteControlRegister
+ 416              		.section	.text.FlowSenseTimeOutTimer_ReadPeriod,"ax",%progbits
+ 417              		.align	2
+ 418              		.global	FlowSenseTimeOutTimer_ReadPeriod
+ 419              		.thumb
+ 420              		.thumb_func
+ 421              		.type	FlowSenseTimeOutTimer_ReadPeriod, %function
+ 422              	FlowSenseTimeOutTimer_ReadPeriod:
+ 423              	.LFB9:
+ 387:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 388:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #endif /* Remove API if control register is unused */
+ 389:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 390:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 391:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 392:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_ReadPeriod
+ 393:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 394:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 395:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 396:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function returns the current value of the Period.
+ 397:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 398:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 399:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 400:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 401:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 402:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The present value of the counter.
+ 403:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 404:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 405:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** uint32 FlowSenseTimeOutTimer_ReadPeriod(void) 
+ 406:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 424              		.loc 1 406 0
+ 425              		.cfi_startproc
+ 426              		@ args = 0, pretend = 0, frame = 0
+ 427              		@ frame_needed = 1, uses_anonymous_args = 0
+ 428              		@ link register save eliminated.
+ 429 0000 80B4     		push	{r7}
+ 430              		.cfi_def_cfa_offset 4
+ 431              		.cfi_offset 7, -4
+ 432 0002 00AF     		add	r7, sp, #0
+ 433              		.cfi_def_cfa_register 7
+ 407:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****    #if(FlowSenseTimeOutTimer_UsingFixedFunction)
+ 408:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****        return ((uint32)CY_GET_REG16(FlowSenseTimeOutTimer_PERIOD_LSB_PTR));
+ 409:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****    #else
+ 410:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****        return (CY_GET_REG24(FlowSenseTimeOutTimer_PERIOD_LSB_PTR));
+ 434              		.loc 1 410 0
+ 435 0004 034B     		ldr	r3, .L33
+ 436 0006 1B68     		ldr	r3, [r3]
+ 437 0008 23F07F43 		bic	r3, r3, #-16777216
+ 411:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****    #endif /* (FlowSenseTimeOutTimer_UsingFixedFunction) */
+ 412:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 438              		.loc 1 412 0
+ 439 000c 1846     		mov	r0, r3
+ 440 000e BD46     		mov	sp, r7
+ 441              		.cfi_def_cfa_register 13
+ 442              		@ sp needed
+ 443 0010 80BC     		pop	{r7}
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 16
+
+
+ 444              		.cfi_restore 7
+ 445              		.cfi_def_cfa_offset 0
+ 446 0012 7047     		bx	lr
+ 447              	.L34:
+ 448              		.align	2
+ 449              	.L33:
+ 450 0014 28650040 		.word	1073767720
+ 451              		.cfi_endproc
+ 452              	.LFE9:
+ 453              		.size	FlowSenseTimeOutTimer_ReadPeriod, .-FlowSenseTimeOutTimer_ReadPeriod
+ 454              		.section	.text.FlowSenseTimeOutTimer_WritePeriod,"ax",%progbits
+ 455              		.align	2
+ 456              		.global	FlowSenseTimeOutTimer_WritePeriod
+ 457              		.thumb
+ 458              		.thumb_func
+ 459              		.type	FlowSenseTimeOutTimer_WritePeriod, %function
+ 460              	FlowSenseTimeOutTimer_WritePeriod:
+ 461              	.LFB10:
+ 413:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 414:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 415:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 416:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_WritePeriod
+ 417:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 418:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 419:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 420:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function is used to change the period of the counter.  The new period
+ 421:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  will be loaded the next time terminal count is detected.
+ 422:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 423:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 424:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  period: This value may be between 1 and (2^Resolution)-1.  A value of 0 will
+ 425:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *          result in the counter remaining at zero.
+ 426:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 427:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 428:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 429:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 430:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 431:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_WritePeriod(uint32 period) 
+ 432:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 462              		.loc 1 432 0
+ 463              		.cfi_startproc
+ 464              		@ args = 0, pretend = 0, frame = 8
+ 465              		@ frame_needed = 1, uses_anonymous_args = 0
+ 466 0000 80B5     		push	{r7, lr}
+ 467              		.cfi_def_cfa_offset 8
+ 468              		.cfi_offset 7, -8
+ 469              		.cfi_offset 14, -4
+ 470 0002 82B0     		sub	sp, sp, #8
+ 471              		.cfi_def_cfa_offset 16
+ 472 0004 00AF     		add	r7, sp, #0
+ 473              		.cfi_def_cfa_register 7
+ 474 0006 7860     		str	r0, [r7, #4]
+ 433:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if(FlowSenseTimeOutTimer_UsingFixedFunction)
+ 434:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         uint16 period_temp = (uint16)period;
+ 435:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         CY_SET_REG16(FlowSenseTimeOutTimer_PERIOD_LSB_PTR, period_temp);
+ 436:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #else
+ 437:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         CY_SET_REG24(FlowSenseTimeOutTimer_PERIOD_LSB_PTR, period);
+ 475              		.loc 1 437 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 17
+
+
+ 476 0008 7968     		ldr	r1, [r7, #4]
+ 477 000a 0348     		ldr	r0, .L36
+ 478 000c FFF7FEFF 		bl	CySetReg24
+ 438:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /*Write Period value with appropriate resolution suffix depending on UDB or fixed functi
+ 439:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 479              		.loc 1 439 0
+ 480 0010 00BF     		nop
+ 481 0012 0837     		adds	r7, r7, #8
+ 482              		.cfi_def_cfa_offset 8
+ 483 0014 BD46     		mov	sp, r7
+ 484              		.cfi_def_cfa_register 13
+ 485              		@ sp needed
+ 486 0016 80BD     		pop	{r7, pc}
+ 487              	.L37:
+ 488              		.align	2
+ 489              	.L36:
+ 490 0018 28650040 		.word	1073767720
+ 491              		.cfi_endproc
+ 492              	.LFE10:
+ 493              		.size	FlowSenseTimeOutTimer_WritePeriod, .-FlowSenseTimeOutTimer_WritePeriod
+ 494              		.section	.text.FlowSenseTimeOutTimer_ReadCapture,"ax",%progbits
+ 495              		.align	2
+ 496              		.global	FlowSenseTimeOutTimer_ReadCapture
+ 497              		.thumb
+ 498              		.thumb_func
+ 499              		.type	FlowSenseTimeOutTimer_ReadCapture, %function
+ 500              	FlowSenseTimeOutTimer_ReadCapture:
+ 501              	.LFB11:
+ 440:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 441:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 442:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 443:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_ReadCapture
+ 444:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 445:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 446:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 447:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function returns the last value captured.
+ 448:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 449:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 450:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 451:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 452:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 453:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Present Capture value.
+ 454:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 455:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 456:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** uint32 FlowSenseTimeOutTimer_ReadCapture(void) 
+ 457:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 502              		.loc 1 457 0
+ 503              		.cfi_startproc
+ 504              		@ args = 0, pretend = 0, frame = 0
+ 505              		@ frame_needed = 1, uses_anonymous_args = 0
+ 506              		@ link register save eliminated.
+ 507 0000 80B4     		push	{r7}
+ 508              		.cfi_def_cfa_offset 4
+ 509              		.cfi_offset 7, -4
+ 510 0002 00AF     		add	r7, sp, #0
+ 511              		.cfi_def_cfa_register 7
+ 458:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****    #if(FlowSenseTimeOutTimer_UsingFixedFunction)
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 18
+
+
+ 459:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****        return ((uint32)CY_GET_REG16(FlowSenseTimeOutTimer_CAPTURE_LSB_PTR));
+ 460:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****    #else
+ 461:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****        return (CY_GET_REG24(FlowSenseTimeOutTimer_CAPTURE_LSB_PTR));
+ 512              		.loc 1 461 0
+ 513 0004 034B     		ldr	r3, .L40
+ 514 0006 1B68     		ldr	r3, [r3]
+ 515 0008 23F07F43 		bic	r3, r3, #-16777216
+ 462:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****    #endif /* (FlowSenseTimeOutTimer_UsingFixedFunction) */
+ 463:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 516              		.loc 1 463 0
+ 517 000c 1846     		mov	r0, r3
+ 518 000e BD46     		mov	sp, r7
+ 519              		.cfi_def_cfa_register 13
+ 520              		@ sp needed
+ 521 0010 80BC     		pop	{r7}
+ 522              		.cfi_restore 7
+ 523              		.cfi_def_cfa_offset 0
+ 524 0012 7047     		bx	lr
+ 525              	.L41:
+ 526              		.align	2
+ 527              	.L40:
+ 528 0014 48650040 		.word	1073767752
+ 529              		.cfi_endproc
+ 530              	.LFE11:
+ 531              		.size	FlowSenseTimeOutTimer_ReadCapture, .-FlowSenseTimeOutTimer_ReadCapture
+ 532              		.section	.text.FlowSenseTimeOutTimer_WriteCounter,"ax",%progbits
+ 533              		.align	2
+ 534              		.global	FlowSenseTimeOutTimer_WriteCounter
+ 535              		.thumb
+ 536              		.thumb_func
+ 537              		.type	FlowSenseTimeOutTimer_WriteCounter, %function
+ 538              	FlowSenseTimeOutTimer_WriteCounter:
+ 539              	.LFB12:
+ 464:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 465:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 466:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 467:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_WriteCounter
+ 468:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 469:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 470:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 471:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This funtion is used to set the counter to a specific value
+ 472:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 473:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 474:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  counter:  New counter value.
+ 475:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 476:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 477:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 478:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 479:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 480:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_WriteCounter(uint32 counter) 
+ 481:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 540              		.loc 1 481 0
+ 541              		.cfi_startproc
+ 542              		@ args = 0, pretend = 0, frame = 8
+ 543              		@ frame_needed = 1, uses_anonymous_args = 0
+ 544 0000 80B5     		push	{r7, lr}
+ 545              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 19
+
+
+ 546              		.cfi_offset 7, -8
+ 547              		.cfi_offset 14, -4
+ 548 0002 82B0     		sub	sp, sp, #8
+ 549              		.cfi_def_cfa_offset 16
+ 550 0004 00AF     		add	r7, sp, #0
+ 551              		.cfi_def_cfa_register 7
+ 552 0006 7860     		str	r0, [r7, #4]
+ 482:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****    #if(FlowSenseTimeOutTimer_UsingFixedFunction)
+ 483:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* This functionality is removed until a FixedFunction HW update to
+ 484:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****          * allow this register to be written
+ 485:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****          */
+ 486:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         CY_SET_REG16(FlowSenseTimeOutTimer_COUNTER_LSB_PTR, (uint16)counter);
+ 487:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         
+ 488:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #else
+ 489:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         CY_SET_REG24(FlowSenseTimeOutTimer_COUNTER_LSB_PTR, counter);
+ 553              		.loc 1 489 0
+ 554 0008 7968     		ldr	r1, [r7, #4]
+ 555 000a 0348     		ldr	r0, .L43
+ 556 000c FFF7FEFF 		bl	CySetReg24
+ 490:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Set Write Counter only for the UDB implementation (Write Counter not available in fix
+ 491:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 557              		.loc 1 491 0
+ 558 0010 00BF     		nop
+ 559 0012 0837     		adds	r7, r7, #8
+ 560              		.cfi_def_cfa_offset 8
+ 561 0014 BD46     		mov	sp, r7
+ 562              		.cfi_def_cfa_register 13
+ 563              		@ sp needed
+ 564 0016 80BD     		pop	{r7, pc}
+ 565              	.L44:
+ 566              		.align	2
+ 567              	.L43:
+ 568 0018 08650040 		.word	1073767688
+ 569              		.cfi_endproc
+ 570              	.LFE12:
+ 571              		.size	FlowSenseTimeOutTimer_WriteCounter, .-FlowSenseTimeOutTimer_WriteCounter
+ 572              		.section	.text.FlowSenseTimeOutTimer_ReadCounter,"ax",%progbits
+ 573              		.align	2
+ 574              		.global	FlowSenseTimeOutTimer_ReadCounter
+ 575              		.thumb
+ 576              		.thumb_func
+ 577              		.type	FlowSenseTimeOutTimer_ReadCounter, %function
+ 578              	FlowSenseTimeOutTimer_ReadCounter:
+ 579              	.LFB13:
+ 492:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 493:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 494:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 495:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_ReadCounter
+ 496:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 497:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 498:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 499:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function returns the current counter value.
+ 500:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 501:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 502:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 503:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 504:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 20
+
+
+ 505:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Present compare value.
+ 506:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 507:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 508:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** uint32 FlowSenseTimeOutTimer_ReadCounter(void) 
+ 509:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 580              		.loc 1 509 0
+ 581              		.cfi_startproc
+ 582              		@ args = 0, pretend = 0, frame = 0
+ 583              		@ frame_needed = 1, uses_anonymous_args = 0
+ 584              		@ link register save eliminated.
+ 585 0000 80B4     		push	{r7}
+ 586              		.cfi_def_cfa_offset 4
+ 587              		.cfi_offset 7, -4
+ 588 0002 00AF     		add	r7, sp, #0
+ 589              		.cfi_def_cfa_register 7
+ 510:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Force capture by reading Accumulator */
+ 511:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Must first do a software capture to be able to read the counter */
+ 512:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* It is up to the user code to make sure there isn't already captured data in the FIFO */
+ 513:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if(FlowSenseTimeOutTimer_UsingFixedFunction)
+ 514:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         (void)CY_GET_REG16(FlowSenseTimeOutTimer_COUNTER_LSB_PTR);
+ 515:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #else
+ 516:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         (void)CY_GET_REG8(FlowSenseTimeOutTimer_COUNTER_LSB_PTR_8BIT);
+ 590              		.loc 1 516 0
+ 591 0004 044B     		ldr	r3, .L47
+ 592 0006 1B78     		ldrb	r3, [r3]
+ 517:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif/* (FlowSenseTimeOutTimer_UsingFixedFunction) */
+ 518:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 519:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* Read the data from the FIFO (or capture register for Fixed Function)*/
+ 520:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if(FlowSenseTimeOutTimer_UsingFixedFunction)
+ 521:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         return ((uint32)CY_GET_REG16(FlowSenseTimeOutTimer_CAPTURE_LSB_PTR));
+ 522:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #else
+ 523:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         return (CY_GET_REG24(FlowSenseTimeOutTimer_CAPTURE_LSB_PTR));
+ 593              		.loc 1 523 0
+ 594 0008 044B     		ldr	r3, .L47+4
+ 595 000a 1B68     		ldr	r3, [r3]
+ 596 000c 23F07F43 		bic	r3, r3, #-16777216
+ 524:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* (FlowSenseTimeOutTimer_UsingFixedFunction) */
+ 525:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 597              		.loc 1 525 0
+ 598 0010 1846     		mov	r0, r3
+ 599 0012 BD46     		mov	sp, r7
+ 600              		.cfi_def_cfa_register 13
+ 601              		@ sp needed
+ 602 0014 80BC     		pop	{r7}
+ 603              		.cfi_restore 7
+ 604              		.cfi_def_cfa_offset 0
+ 605 0016 7047     		bx	lr
+ 606              	.L48:
+ 607              		.align	2
+ 608              	.L47:
+ 609 0018 08650040 		.word	1073767688
+ 610 001c 48650040 		.word	1073767752
+ 611              		.cfi_endproc
+ 612              	.LFE13:
+ 613              		.size	FlowSenseTimeOutTimer_ReadCounter, .-FlowSenseTimeOutTimer_ReadCounter
+ 614              		.section	.text.FlowSenseTimeOutTimer_ClearFIFO,"ax",%progbits
+ 615              		.align	2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 21
+
+
+ 616              		.global	FlowSenseTimeOutTimer_ClearFIFO
+ 617              		.thumb
+ 618              		.thumb_func
+ 619              		.type	FlowSenseTimeOutTimer_ClearFIFO, %function
+ 620              	FlowSenseTimeOutTimer_ClearFIFO:
+ 621              	.LFB14:
+ 526:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 527:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 528:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #if(!FlowSenseTimeOutTimer_UsingFixedFunction) /* UDB Specific Functions */
+ 529:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 530:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     
+ 531:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 532:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****  * The functions below this point are only available using the UDB
+ 533:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****  * implementation.  If a feature is selected, then the API is enabled.
+ 534:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****  ******************************************************************************/
+ 535:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 536:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 537:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #if (FlowSenseTimeOutTimer_SoftwareCaptureMode)
+ 538:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 539:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 540:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 541:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_SetCaptureMode
+ 542:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 543:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 544:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 545:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function sets the capture mode to either rising or falling edge.
+ 546:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 547:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 548:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  captureMode: This parameter sets the capture mode of the UDB capture feature
+ 549:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The parameter values are defined using the
+ 550:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  #define FlowSenseTimeOutTimer__B_TIMER__CM_NONE 0
+ 551:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #define FlowSenseTimeOutTimer__B_TIMER__CM_RISINGEDGE 1
+ 552:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #define FlowSenseTimeOutTimer__B_TIMER__CM_FALLINGEDGE 2
+ 553:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #define FlowSenseTimeOutTimer__B_TIMER__CM_EITHEREDGE 3
+ 554:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #define FlowSenseTimeOutTimer__B_TIMER__CM_SOFTWARE 4
+ 555:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****  identifiers
+ 556:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  The following are the possible values of the parameter
+ 557:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  FlowSenseTimeOutTimer__B_TIMER__CM_NONE        - Set Capture mode to None
+ 558:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  FlowSenseTimeOutTimer__B_TIMER__CM_RISINGEDGE  - Rising edge of Capture input
+ 559:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  FlowSenseTimeOutTimer__B_TIMER__CM_FALLINGEDGE - Falling edge of Capture input
+ 560:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  FlowSenseTimeOutTimer__B_TIMER__CM_EITHEREDGE  - Either edge of Capture input
+ 561:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 562:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 563:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 564:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 565:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 566:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_SetCaptureMode(uint8 captureMode) 
+ 567:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 568:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* This must only set to two bits of the control register associated */
+ 569:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     captureMode = ((uint8)((uint8)captureMode << FlowSenseTimeOutTimer_CTRL_CAP_MODE_SHIFT));
+ 570:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     captureMode &= (FlowSenseTimeOutTimer_CTRL_CAP_MODE_MASK);
+ 571:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 572:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED)
+ 573:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Clear the Current Setting */
+ 574:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_CAP_MODE_MASK));
+ 575:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 576:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Write The New Setting */
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 22
+
+
+ 577:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL |= captureMode;
+ 578:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) */
+ 579:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 580:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #endif /* Remove API if Capture Mode is not Software Controlled */
+ 581:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 582:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 583:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #if (FlowSenseTimeOutTimer_SoftwareTriggerMode)
+ 584:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 585:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 586:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 587:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_SetTriggerMode
+ 588:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 589:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 590:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 591:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function sets the trigger input mode
+ 592:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 593:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 594:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  triggerMode: Pass one of the pre-defined Trigger Modes (except Software)
+ 595:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #define FlowSenseTimeOutTimer__B_TIMER__TM_NONE 0x00u
+ 596:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #define FlowSenseTimeOutTimer__B_TIMER__TM_RISINGEDGE 0x04u
+ 597:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #define FlowSenseTimeOutTimer__B_TIMER__TM_FALLINGEDGE 0x08u
+ 598:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #define FlowSenseTimeOutTimer__B_TIMER__TM_EITHEREDGE 0x0Cu
+ 599:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #define FlowSenseTimeOutTimer__B_TIMER__TM_SOFTWARE 0x10u
+ 600:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 601:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 602:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 603:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 604:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 605:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_SetTriggerMode(uint8 triggerMode) 
+ 606:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 607:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* This must only set to two bits of the control register associated */
+ 608:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     triggerMode &= FlowSenseTimeOutTimer_CTRL_TRIG_MODE_MASK;
+ 609:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 610:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register
+ 611:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     
+ 612:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Clear the Current Setting */
+ 613:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_TRIG_MODE_MASK));
+ 614:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 615:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Write The New Setting */
+ 616:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL |= (triggerMode | FlowSenseTimeOutTimer__B_TIMER__TM_SOFTWARE
+ 617:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Remove code section if control register is not used */
+ 618:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 619:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #endif /* Remove API if Trigger Mode is not Software Controlled */
+ 620:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 621:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #if (FlowSenseTimeOutTimer_EnableTriggerMode)
+ 622:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 623:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 624:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 625:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_EnableTrigger
+ 626:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 627:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 628:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 629:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Sets the control bit enabling Hardware Trigger mode
+ 630:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 631:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 632:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 633:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 23
+
+
+ 634:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 635:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 636:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 637:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 638:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_EnableTrigger(void) 
+ 639:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 640:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register
+ 641:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL |= FlowSenseTimeOutTimer_CTRL_TRIG_EN;
+ 642:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Remove code section if control register is not used */
+ 643:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 644:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 645:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 646:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 647:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_DisableTrigger
+ 648:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 649:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 650:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 651:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Clears the control bit enabling Hardware Trigger mode
+ 652:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 653:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 654:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 655:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 656:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 657:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 658:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 659:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 660:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_DisableTrigger(void) 
+ 661:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 662:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED )   /* Remove assignment if control registe
+ 663:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_TRIG_EN));
+ 664:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* Remove code section if control register is not used */
+ 665:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 666:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #endif /* Remove API is Trigger Mode is set to None */
+ 667:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 668:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #if(FlowSenseTimeOutTimer_InterruptOnCaptureCount)
+ 669:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 670:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 671:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 672:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_SetInterruptCount
+ 673:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 674:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 675:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 676:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function sets the capture count before an interrupt is triggered.
+ 677:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 678:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 679:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  interruptCount:  A value between 0 and 3 is valid.  If the value is 0, then
+ 680:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *                   an interrupt will occur each time a capture occurs.
+ 681:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *                   A value of 1 to 3 will cause the interrupt
+ 682:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *                   to delay by the same number of captures.
+ 683:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 684:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 685:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 686:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 687:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 688:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_SetInterruptCount(uint8 interruptCount) 
+ 689:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 690:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     /* This must only set to two bits of the control register associated */
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 24
+
+
+ 691:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     interruptCount &= FlowSenseTimeOutTimer_CTRL_INTCNT_MASK;
+ 692:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 693:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #if (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED)
+ 694:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Clear the Current Setting */
+ 695:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL &= ((uint8)(~FlowSenseTimeOutTimer_CTRL_INTCNT_MASK));
+ 696:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         /* Write The New Setting */
+ 697:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         FlowSenseTimeOutTimer_CONTROL |= interruptCount;
+ 698:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     #endif /* (!FlowSenseTimeOutTimer_UDB_CONTROL_REG_REMOVED) */
+ 699:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 700:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #endif /* FlowSenseTimeOutTimer_InterruptOnCaptureCount */
+ 701:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 702:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 703:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #if (FlowSenseTimeOutTimer_UsingHWCaptureCounter)
+ 704:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 705:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 706:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 707:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_SetCaptureCount
+ 708:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 709:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 710:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 711:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function sets the capture count
+ 712:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 713:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 714:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  captureCount: A value between 2 and 127 inclusive is valid.  A value of 1
+ 715:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *                to 127 will cause the interrupt to delay by the same number of
+ 716:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *                captures.
+ 717:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 718:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 719:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 720:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 721:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 722:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_SetCaptureCount(uint8 captureCount) 
+ 723:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 724:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     FlowSenseTimeOutTimer_CAP_COUNT = captureCount;
+ 725:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 726:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 727:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 728:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 729:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_ReadCaptureCount
+ 730:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 731:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 732:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 733:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function reads the capture count setting
+ 734:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 735:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 736:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 737:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 738:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 739:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  Returns the Capture Count Setting
+ 740:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 741:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 742:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** uint8 FlowSenseTimeOutTimer_ReadCaptureCount(void) 
+ 743:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 744:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     return ((uint8)FlowSenseTimeOutTimer_CAP_COUNT);
+ 745:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 746:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** #endif /* FlowSenseTimeOutTimer_UsingHWCaptureCounter */
+ 747:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 25
+
+
+ 748:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** 
+ 749:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** /*******************************************************************************
+ 750:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Function Name: FlowSenseTimeOutTimer_ClearFIFO
+ 751:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** ********************************************************************************
+ 752:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 753:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Summary:
+ 754:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  This function clears all capture data from the capture FIFO
+ 755:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 756:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Parameters:
+ 757:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 758:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 759:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** * Return:
+ 760:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *  void
+ 761:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *
+ 762:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** *******************************************************************************/
+ 763:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** void FlowSenseTimeOutTimer_ClearFIFO(void) 
+ 764:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** {
+ 622              		.loc 1 764 0
+ 623              		.cfi_startproc
+ 624              		@ args = 0, pretend = 0, frame = 0
+ 625              		@ frame_needed = 1, uses_anonymous_args = 0
+ 626 0000 80B5     		push	{r7, lr}
+ 627              		.cfi_def_cfa_offset 8
+ 628              		.cfi_offset 7, -8
+ 629              		.cfi_offset 14, -4
+ 630 0002 00AF     		add	r7, sp, #0
+ 631              		.cfi_def_cfa_register 7
+ 765:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     while(0u != (FlowSenseTimeOutTimer_ReadStatusRegister() & FlowSenseTimeOutTimer_STATUS_FIFONEMP
+ 632              		.loc 1 765 0
+ 633 0004 01E0     		b	.L50
+ 634              	.L51:
+ 766:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     {
+ 767:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****         (void)FlowSenseTimeOutTimer_ReadCapture();
+ 635              		.loc 1 767 0
+ 636 0006 FFF7FEFF 		bl	FlowSenseTimeOutTimer_ReadCapture
+ 637              	.L50:
+ 765:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     while(0u != (FlowSenseTimeOutTimer_ReadStatusRegister() & FlowSenseTimeOutTimer_STATUS_FIFONEMP
+ 638              		.loc 1 765 0
+ 639 000a FFF7FEFF 		bl	FlowSenseTimeOutTimer_ReadStatusRegister
+ 640 000e 0346     		mov	r3, r0
+ 641 0010 03F00803 		and	r3, r3, #8
+ 642 0014 002B     		cmp	r3, #0
+ 643 0016 F6D1     		bne	.L51
+ 768:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c ****     }
+ 769:Generated_Source\PSoC5/FlowSenseTimeOutTimer.c **** }
+ 644              		.loc 1 769 0
+ 645 0018 00BF     		nop
+ 646 001a 80BD     		pop	{r7, pc}
+ 647              		.cfi_endproc
+ 648              	.LFE14:
+ 649              		.size	FlowSenseTimeOutTimer_ClearFIFO, .-FlowSenseTimeOutTimer_ClearFIFO
+ 650              		.text
+ 651              	.Letext0:
+ 652              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 653              		.section	.debug_info,"",%progbits
+ 654              	.Ldebug_info0:
+ 655 0000 57020000 		.4byte	0x257
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 26
+
+
+ 656 0004 0400     		.2byte	0x4
+ 657 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 658 000a 04       		.byte	0x4
+ 659 000b 01       		.uleb128 0x1
+ 660 000c 06000000 		.4byte	.LASF37
+ 661 0010 0C       		.byte	0xc
+ 662 0011 82030000 		.4byte	.LASF38
+ 663 0015 5F010000 		.4byte	.LASF39
+ 664 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 665 001d 00000000 		.4byte	0
+ 666 0021 00000000 		.4byte	.Ldebug_line0
+ 667 0025 02       		.uleb128 0x2
+ 668 0026 01       		.byte	0x1
+ 669 0027 06       		.byte	0x6
+ 670 0028 65040000 		.4byte	.LASF0
+ 671 002c 02       		.uleb128 0x2
+ 672 002d 01       		.byte	0x1
+ 673 002e 08       		.byte	0x8
+ 674 002f 31020000 		.4byte	.LASF1
+ 675 0033 02       		.uleb128 0x2
+ 676 0034 02       		.byte	0x2
+ 677 0035 05       		.byte	0x5
+ 678 0036 DB030000 		.4byte	.LASF2
+ 679 003a 02       		.uleb128 0x2
+ 680 003b 02       		.byte	0x2
+ 681 003c 07       		.byte	0x7
+ 682 003d 08010000 		.4byte	.LASF3
+ 683 0041 02       		.uleb128 0x2
+ 684 0042 04       		.byte	0x4
+ 685 0043 05       		.byte	0x5
+ 686 0044 4B040000 		.4byte	.LASF4
+ 687 0048 02       		.uleb128 0x2
+ 688 0049 04       		.byte	0x4
+ 689 004a 07       		.byte	0x7
+ 690 004b AA020000 		.4byte	.LASF5
+ 691 004f 02       		.uleb128 0x2
+ 692 0050 08       		.byte	0x8
+ 693 0051 05       		.byte	0x5
+ 694 0052 74030000 		.4byte	.LASF6
+ 695 0056 02       		.uleb128 0x2
+ 696 0057 08       		.byte	0x8
+ 697 0058 07       		.byte	0x7
+ 698 0059 31030000 		.4byte	.LASF7
+ 699 005d 03       		.uleb128 0x3
+ 700 005e 04       		.byte	0x4
+ 701 005f 05       		.byte	0x5
+ 702 0060 696E7400 		.ascii	"int\000"
+ 703 0064 02       		.uleb128 0x2
+ 704 0065 04       		.byte	0x4
+ 705 0066 07       		.byte	0x7
+ 706 0067 24030000 		.4byte	.LASF8
+ 707 006b 04       		.uleb128 0x4
+ 708 006c BC020000 		.4byte	.LASF9
+ 709 0070 02       		.byte	0x2
+ 710 0071 9201     		.2byte	0x192
+ 711 0073 2C000000 		.4byte	0x2c
+ 712 0077 04       		.uleb128 0x4
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 27
+
+
+ 713 0078 1D030000 		.4byte	.LASF10
+ 714 007c 02       		.byte	0x2
+ 715 007d 9401     		.2byte	0x194
+ 716 007f 48000000 		.4byte	0x48
+ 717 0083 02       		.uleb128 0x2
+ 718 0084 04       		.byte	0x4
+ 719 0085 04       		.byte	0x4
+ 720 0086 01020000 		.4byte	.LASF11
+ 721 008a 02       		.uleb128 0x2
+ 722 008b 08       		.byte	0x8
+ 723 008c 04       		.byte	0x4
+ 724 008d F1020000 		.4byte	.LASF12
+ 725 0091 02       		.uleb128 0x2
+ 726 0092 01       		.byte	0x1
+ 727 0093 08       		.byte	0x8
+ 728 0094 54040000 		.4byte	.LASF13
+ 729 0098 04       		.uleb128 0x4
+ 730 0099 83020000 		.4byte	.LASF14
+ 731 009d 02       		.byte	0x2
+ 732 009e 3C02     		.2byte	0x23c
+ 733 00a0 A4000000 		.4byte	0xa4
+ 734 00a4 05       		.uleb128 0x5
+ 735 00a5 6B000000 		.4byte	0x6b
+ 736 00a9 04       		.uleb128 0x4
+ 737 00aa 00000000 		.4byte	.LASF15
+ 738 00ae 02       		.byte	0x2
+ 739 00af 3E02     		.2byte	0x23e
+ 740 00b1 B5000000 		.4byte	0xb5
+ 741 00b5 05       		.uleb128 0x5
+ 742 00b6 77000000 		.4byte	0x77
+ 743 00ba 02       		.uleb128 0x2
+ 744 00bb 08       		.byte	0x8
+ 745 00bc 04       		.byte	0x4
+ 746 00bd 59040000 		.4byte	.LASF16
+ 747 00c1 02       		.uleb128 0x2
+ 748 00c2 04       		.byte	0x4
+ 749 00c3 07       		.byte	0x7
+ 750 00c4 6B030000 		.4byte	.LASF17
+ 751 00c8 06       		.uleb128 0x6
+ 752 00c9 30040000 		.4byte	.LASF21
+ 753 00cd 01       		.byte	0x1
+ 754 00ce 2B       		.byte	0x2b
+ 755 00cf 00000000 		.4byte	.LFB0
+ 756 00d3 4C000000 		.4byte	.LFE0-.LFB0
+ 757 00d7 01       		.uleb128 0x1
+ 758 00d8 9C       		.byte	0x9c
+ 759 00d9 EC000000 		.4byte	0xec
+ 760 00dd 07       		.uleb128 0x7
+ 761 00de F8020000 		.4byte	.LASF40
+ 762 00e2 01       		.byte	0x1
+ 763 00e3 2F       		.byte	0x2f
+ 764 00e4 6B000000 		.4byte	0x6b
+ 765 00e8 02       		.uleb128 0x2
+ 766 00e9 91       		.byte	0x91
+ 767 00ea 77       		.sleb128 -9
+ 768 00eb 00       		.byte	0
+ 769 00ec 08       		.uleb128 0x8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 28
+
+
+ 770 00ed E4010000 		.4byte	.LASF18
+ 771 00f1 01       		.byte	0x1
+ 772 00f2 B4       		.byte	0xb4
+ 773 00f3 00000000 		.4byte	.LFB1
+ 774 00f7 20000000 		.4byte	.LFE1-.LFB1
+ 775 00fb 01       		.uleb128 0x1
+ 776 00fc 9C       		.byte	0x9c
+ 777 00fd 09       		.uleb128 0x9
+ 778 00fe BF030000 		.4byte	.LASF19
+ 779 0102 01       		.byte	0x1
+ 780 0103 D7       		.byte	0xd7
+ 781 0104 00000000 		.4byte	.LFB2
+ 782 0108 24000000 		.4byte	.LFE2-.LFB2
+ 783 010c 01       		.uleb128 0x1
+ 784 010d 9C       		.byte	0x9c
+ 785 010e 08       		.uleb128 0x8
+ 786 010f 44010000 		.4byte	.LASF20
+ 787 0113 01       		.byte	0x1
+ 788 0114 F7       		.byte	0xf7
+ 789 0115 00000000 		.4byte	.LFB3
+ 790 0119 20000000 		.4byte	.LFE3-.LFB3
+ 791 011d 01       		.uleb128 0x1
+ 792 011e 9C       		.byte	0x9c
+ 793 011f 0A       		.uleb128 0xa
+ 794 0120 CA020000 		.4byte	.LASF22
+ 795 0124 01       		.byte	0x1
+ 796 0125 1701     		.2byte	0x117
+ 797 0127 00000000 		.4byte	.LFB4
+ 798 012b 20000000 		.4byte	.LFE4-.LFB4
+ 799 012f 01       		.uleb128 0x1
+ 800 0130 9C       		.byte	0x9c
+ 801 0131 45010000 		.4byte	0x145
+ 802 0135 0B       		.uleb128 0xb
+ 803 0136 B1030000 		.4byte	.LASF27
+ 804 013a 01       		.byte	0x1
+ 805 013b 1701     		.2byte	0x117
+ 806 013d 6B000000 		.4byte	0x6b
+ 807 0141 02       		.uleb128 0x2
+ 808 0142 91       		.byte	0x91
+ 809 0143 77       		.sleb128 -9
+ 810 0144 00       		.byte	0
+ 811 0145 0C       		.uleb128 0xc
+ 812 0146 5D020000 		.4byte	.LASF23
+ 813 014a 01       		.byte	0x1
+ 814 014b 2E01     		.2byte	0x12e
+ 815 014d 00000000 		.4byte	.LFB5
+ 816 0151 14000000 		.4byte	.LFE5-.LFB5
+ 817 0155 01       		.uleb128 0x1
+ 818 0156 9C       		.byte	0x9c
+ 819 0157 0D       		.uleb128 0xd
+ 820 0158 1B010000 		.4byte	.LASF24
+ 821 015c 01       		.byte	0x1
+ 822 015d 4D01     		.2byte	0x14d
+ 823 015f 6B000000 		.4byte	0x6b
+ 824 0163 00000000 		.4byte	.LFB6
+ 825 0167 18000000 		.4byte	.LFE6-.LFB6
+ 826 016b 01       		.uleb128 0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 29
+
+
+ 827 016c 9C       		.byte	0x9c
+ 828 016d 0D       		.uleb128 0xd
+ 829 016e 94000000 		.4byte	.LASF25
+ 830 0172 01       		.byte	0x1
+ 831 0173 6401     		.2byte	0x164
+ 832 0175 6B000000 		.4byte	0x6b
+ 833 0179 00000000 		.4byte	.LFB7
+ 834 017d 18000000 		.4byte	.LFE7-.LFB7
+ 835 0181 01       		.uleb128 0x1
+ 836 0182 9C       		.byte	0x9c
+ 837 0183 0A       		.uleb128 0xa
+ 838 0184 E5030000 		.4byte	.LASF26
+ 839 0188 01       		.byte	0x1
+ 840 0189 7B01     		.2byte	0x17b
+ 841 018b 00000000 		.4byte	.LFB8
+ 842 018f 20000000 		.4byte	.LFE8-.LFB8
+ 843 0193 01       		.uleb128 0x1
+ 844 0194 9C       		.byte	0x9c
+ 845 0195 A9010000 		.4byte	0x1a9
+ 846 0199 0B       		.uleb128 0xb
+ 847 019a C2020000 		.4byte	.LASF28
+ 848 019e 01       		.byte	0x1
+ 849 019f 7B01     		.2byte	0x17b
+ 850 01a1 6B000000 		.4byte	0x6b
+ 851 01a5 02       		.uleb128 0x2
+ 852 01a6 91       		.byte	0x91
+ 853 01a7 77       		.sleb128 -9
+ 854 01a8 00       		.byte	0
+ 855 01a9 0D       		.uleb128 0xd
+ 856 01aa BE000000 		.4byte	.LASF29
+ 857 01ae 01       		.byte	0x1
+ 858 01af 9501     		.2byte	0x195
+ 859 01b1 77000000 		.4byte	0x77
+ 860 01b5 00000000 		.4byte	.LFB9
+ 861 01b9 18000000 		.4byte	.LFE9-.LFB9
+ 862 01bd 01       		.uleb128 0x1
+ 863 01be 9C       		.byte	0x9c
+ 864 01bf 0E       		.uleb128 0xe
+ 865 01c0 88020000 		.4byte	.LASF30
+ 866 01c4 01       		.byte	0x1
+ 867 01c5 AF01     		.2byte	0x1af
+ 868 01c7 00000000 		.4byte	.LFB10
+ 869 01cb 1C000000 		.4byte	.LFE10-.LFB10
+ 870 01cf 01       		.uleb128 0x1
+ 871 01d0 9C       		.byte	0x9c
+ 872 01d1 E5010000 		.4byte	0x1e5
+ 873 01d5 0B       		.uleb128 0xb
+ 874 01d6 01010000 		.4byte	.LASF31
+ 875 01da 01       		.byte	0x1
+ 876 01db AF01     		.2byte	0x1af
+ 877 01dd 77000000 		.4byte	0x77
+ 878 01e1 02       		.uleb128 0x2
+ 879 01e2 91       		.byte	0x91
+ 880 01e3 74       		.sleb128 -12
+ 881 01e4 00       		.byte	0
+ 882 01e5 0D       		.uleb128 0xd
+ 883 01e6 DF000000 		.4byte	.LASF32
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 30
+
+
+ 884 01ea 01       		.byte	0x1
+ 885 01eb C801     		.2byte	0x1c8
+ 886 01ed 77000000 		.4byte	0x77
+ 887 01f1 00000000 		.4byte	.LFB11
+ 888 01f5 18000000 		.4byte	.LFE11-.LFB11
+ 889 01f9 01       		.uleb128 0x1
+ 890 01fa 9C       		.byte	0x9c
+ 891 01fb 0E       		.uleb128 0xe
+ 892 01fc 48030000 		.4byte	.LASF33
+ 893 0200 01       		.byte	0x1
+ 894 0201 E001     		.2byte	0x1e0
+ 895 0203 00000000 		.4byte	.LFB12
+ 896 0207 1C000000 		.4byte	.LFE12-.LFB12
+ 897 020b 01       		.uleb128 0x1
+ 898 020c 9C       		.byte	0x9c
+ 899 020d 21020000 		.4byte	0x221
+ 900 0211 0B       		.uleb128 0xb
+ 901 0212 07020000 		.4byte	.LASF34
+ 902 0216 01       		.byte	0x1
+ 903 0217 E001     		.2byte	0x1e0
+ 904 0219 77000000 		.4byte	0x77
+ 905 021d 02       		.uleb128 0x2
+ 906 021e 91       		.byte	0x91
+ 907 021f 74       		.sleb128 -12
+ 908 0220 00       		.byte	0
+ 909 0221 0D       		.uleb128 0xd
+ 910 0222 0F020000 		.4byte	.LASF35
+ 911 0226 01       		.byte	0x1
+ 912 0227 FC01     		.2byte	0x1fc
+ 913 0229 77000000 		.4byte	0x77
+ 914 022d 00000000 		.4byte	.LFB13
+ 915 0231 20000000 		.4byte	.LFE13-.LFB13
+ 916 0235 01       		.uleb128 0x1
+ 917 0236 9C       		.byte	0x9c
+ 918 0237 0F       		.uleb128 0xf
+ 919 0238 10040000 		.4byte	.LASF36
+ 920 023c 01       		.byte	0x1
+ 921 023d FB02     		.2byte	0x2fb
+ 922 023f 00000000 		.4byte	.LFB14
+ 923 0243 1C000000 		.4byte	.LFE14-.LFB14
+ 924 0247 01       		.uleb128 0x1
+ 925 0248 9C       		.byte	0x9c
+ 926 0249 10       		.uleb128 0x10
+ 927 024a 3F020000 		.4byte	.LASF41
+ 928 024e 01       		.byte	0x1
+ 929 024f 1A       		.byte	0x1a
+ 930 0250 6B000000 		.4byte	0x6b
+ 931 0254 05       		.uleb128 0x5
+ 932 0255 03       		.byte	0x3
+ 933 0256 00000000 		.4byte	FlowSenseTimeOutTimer_initVar
+ 934 025a 00       		.byte	0
+ 935              		.section	.debug_abbrev,"",%progbits
+ 936              	.Ldebug_abbrev0:
+ 937 0000 01       		.uleb128 0x1
+ 938 0001 11       		.uleb128 0x11
+ 939 0002 01       		.byte	0x1
+ 940 0003 25       		.uleb128 0x25
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 31
+
+
+ 941 0004 0E       		.uleb128 0xe
+ 942 0005 13       		.uleb128 0x13
+ 943 0006 0B       		.uleb128 0xb
+ 944 0007 03       		.uleb128 0x3
+ 945 0008 0E       		.uleb128 0xe
+ 946 0009 1B       		.uleb128 0x1b
+ 947 000a 0E       		.uleb128 0xe
+ 948 000b 55       		.uleb128 0x55
+ 949 000c 17       		.uleb128 0x17
+ 950 000d 11       		.uleb128 0x11
+ 951 000e 01       		.uleb128 0x1
+ 952 000f 10       		.uleb128 0x10
+ 953 0010 17       		.uleb128 0x17
+ 954 0011 00       		.byte	0
+ 955 0012 00       		.byte	0
+ 956 0013 02       		.uleb128 0x2
+ 957 0014 24       		.uleb128 0x24
+ 958 0015 00       		.byte	0
+ 959 0016 0B       		.uleb128 0xb
+ 960 0017 0B       		.uleb128 0xb
+ 961 0018 3E       		.uleb128 0x3e
+ 962 0019 0B       		.uleb128 0xb
+ 963 001a 03       		.uleb128 0x3
+ 964 001b 0E       		.uleb128 0xe
+ 965 001c 00       		.byte	0
+ 966 001d 00       		.byte	0
+ 967 001e 03       		.uleb128 0x3
+ 968 001f 24       		.uleb128 0x24
+ 969 0020 00       		.byte	0
+ 970 0021 0B       		.uleb128 0xb
+ 971 0022 0B       		.uleb128 0xb
+ 972 0023 3E       		.uleb128 0x3e
+ 973 0024 0B       		.uleb128 0xb
+ 974 0025 03       		.uleb128 0x3
+ 975 0026 08       		.uleb128 0x8
+ 976 0027 00       		.byte	0
+ 977 0028 00       		.byte	0
+ 978 0029 04       		.uleb128 0x4
+ 979 002a 16       		.uleb128 0x16
+ 980 002b 00       		.byte	0
+ 981 002c 03       		.uleb128 0x3
+ 982 002d 0E       		.uleb128 0xe
+ 983 002e 3A       		.uleb128 0x3a
+ 984 002f 0B       		.uleb128 0xb
+ 985 0030 3B       		.uleb128 0x3b
+ 986 0031 05       		.uleb128 0x5
+ 987 0032 49       		.uleb128 0x49
+ 988 0033 13       		.uleb128 0x13
+ 989 0034 00       		.byte	0
+ 990 0035 00       		.byte	0
+ 991 0036 05       		.uleb128 0x5
+ 992 0037 35       		.uleb128 0x35
+ 993 0038 00       		.byte	0
+ 994 0039 49       		.uleb128 0x49
+ 995 003a 13       		.uleb128 0x13
+ 996 003b 00       		.byte	0
+ 997 003c 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 32
+
+
+ 998 003d 06       		.uleb128 0x6
+ 999 003e 2E       		.uleb128 0x2e
+ 1000 003f 01       		.byte	0x1
+ 1001 0040 3F       		.uleb128 0x3f
+ 1002 0041 19       		.uleb128 0x19
+ 1003 0042 03       		.uleb128 0x3
+ 1004 0043 0E       		.uleb128 0xe
+ 1005 0044 3A       		.uleb128 0x3a
+ 1006 0045 0B       		.uleb128 0xb
+ 1007 0046 3B       		.uleb128 0x3b
+ 1008 0047 0B       		.uleb128 0xb
+ 1009 0048 27       		.uleb128 0x27
+ 1010 0049 19       		.uleb128 0x19
+ 1011 004a 11       		.uleb128 0x11
+ 1012 004b 01       		.uleb128 0x1
+ 1013 004c 12       		.uleb128 0x12
+ 1014 004d 06       		.uleb128 0x6
+ 1015 004e 40       		.uleb128 0x40
+ 1016 004f 18       		.uleb128 0x18
+ 1017 0050 9642     		.uleb128 0x2116
+ 1018 0052 19       		.uleb128 0x19
+ 1019 0053 01       		.uleb128 0x1
+ 1020 0054 13       		.uleb128 0x13
+ 1021 0055 00       		.byte	0
+ 1022 0056 00       		.byte	0
+ 1023 0057 07       		.uleb128 0x7
+ 1024 0058 34       		.uleb128 0x34
+ 1025 0059 00       		.byte	0
+ 1026 005a 03       		.uleb128 0x3
+ 1027 005b 0E       		.uleb128 0xe
+ 1028 005c 3A       		.uleb128 0x3a
+ 1029 005d 0B       		.uleb128 0xb
+ 1030 005e 3B       		.uleb128 0x3b
+ 1031 005f 0B       		.uleb128 0xb
+ 1032 0060 49       		.uleb128 0x49
+ 1033 0061 13       		.uleb128 0x13
+ 1034 0062 02       		.uleb128 0x2
+ 1035 0063 18       		.uleb128 0x18
+ 1036 0064 00       		.byte	0
+ 1037 0065 00       		.byte	0
+ 1038 0066 08       		.uleb128 0x8
+ 1039 0067 2E       		.uleb128 0x2e
+ 1040 0068 00       		.byte	0
+ 1041 0069 3F       		.uleb128 0x3f
+ 1042 006a 19       		.uleb128 0x19
+ 1043 006b 03       		.uleb128 0x3
+ 1044 006c 0E       		.uleb128 0xe
+ 1045 006d 3A       		.uleb128 0x3a
+ 1046 006e 0B       		.uleb128 0xb
+ 1047 006f 3B       		.uleb128 0x3b
+ 1048 0070 0B       		.uleb128 0xb
+ 1049 0071 27       		.uleb128 0x27
+ 1050 0072 19       		.uleb128 0x19
+ 1051 0073 11       		.uleb128 0x11
+ 1052 0074 01       		.uleb128 0x1
+ 1053 0075 12       		.uleb128 0x12
+ 1054 0076 06       		.uleb128 0x6
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 33
+
+
+ 1055 0077 40       		.uleb128 0x40
+ 1056 0078 18       		.uleb128 0x18
+ 1057 0079 9742     		.uleb128 0x2117
+ 1058 007b 19       		.uleb128 0x19
+ 1059 007c 00       		.byte	0
+ 1060 007d 00       		.byte	0
+ 1061 007e 09       		.uleb128 0x9
+ 1062 007f 2E       		.uleb128 0x2e
+ 1063 0080 00       		.byte	0
+ 1064 0081 3F       		.uleb128 0x3f
+ 1065 0082 19       		.uleb128 0x19
+ 1066 0083 03       		.uleb128 0x3
+ 1067 0084 0E       		.uleb128 0xe
+ 1068 0085 3A       		.uleb128 0x3a
+ 1069 0086 0B       		.uleb128 0xb
+ 1070 0087 3B       		.uleb128 0x3b
+ 1071 0088 0B       		.uleb128 0xb
+ 1072 0089 27       		.uleb128 0x27
+ 1073 008a 19       		.uleb128 0x19
+ 1074 008b 11       		.uleb128 0x11
+ 1075 008c 01       		.uleb128 0x1
+ 1076 008d 12       		.uleb128 0x12
+ 1077 008e 06       		.uleb128 0x6
+ 1078 008f 40       		.uleb128 0x40
+ 1079 0090 18       		.uleb128 0x18
+ 1080 0091 9642     		.uleb128 0x2116
+ 1081 0093 19       		.uleb128 0x19
+ 1082 0094 00       		.byte	0
+ 1083 0095 00       		.byte	0
+ 1084 0096 0A       		.uleb128 0xa
+ 1085 0097 2E       		.uleb128 0x2e
+ 1086 0098 01       		.byte	0x1
+ 1087 0099 3F       		.uleb128 0x3f
+ 1088 009a 19       		.uleb128 0x19
+ 1089 009b 03       		.uleb128 0x3
+ 1090 009c 0E       		.uleb128 0xe
+ 1091 009d 3A       		.uleb128 0x3a
+ 1092 009e 0B       		.uleb128 0xb
+ 1093 009f 3B       		.uleb128 0x3b
+ 1094 00a0 05       		.uleb128 0x5
+ 1095 00a1 27       		.uleb128 0x27
+ 1096 00a2 19       		.uleb128 0x19
+ 1097 00a3 11       		.uleb128 0x11
+ 1098 00a4 01       		.uleb128 0x1
+ 1099 00a5 12       		.uleb128 0x12
+ 1100 00a6 06       		.uleb128 0x6
+ 1101 00a7 40       		.uleb128 0x40
+ 1102 00a8 18       		.uleb128 0x18
+ 1103 00a9 9742     		.uleb128 0x2117
+ 1104 00ab 19       		.uleb128 0x19
+ 1105 00ac 01       		.uleb128 0x1
+ 1106 00ad 13       		.uleb128 0x13
+ 1107 00ae 00       		.byte	0
+ 1108 00af 00       		.byte	0
+ 1109 00b0 0B       		.uleb128 0xb
+ 1110 00b1 05       		.uleb128 0x5
+ 1111 00b2 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 34
+
+
+ 1112 00b3 03       		.uleb128 0x3
+ 1113 00b4 0E       		.uleb128 0xe
+ 1114 00b5 3A       		.uleb128 0x3a
+ 1115 00b6 0B       		.uleb128 0xb
+ 1116 00b7 3B       		.uleb128 0x3b
+ 1117 00b8 05       		.uleb128 0x5
+ 1118 00b9 49       		.uleb128 0x49
+ 1119 00ba 13       		.uleb128 0x13
+ 1120 00bb 02       		.uleb128 0x2
+ 1121 00bc 18       		.uleb128 0x18
+ 1122 00bd 00       		.byte	0
+ 1123 00be 00       		.byte	0
+ 1124 00bf 0C       		.uleb128 0xc
+ 1125 00c0 2E       		.uleb128 0x2e
+ 1126 00c1 00       		.byte	0
+ 1127 00c2 3F       		.uleb128 0x3f
+ 1128 00c3 19       		.uleb128 0x19
+ 1129 00c4 03       		.uleb128 0x3
+ 1130 00c5 0E       		.uleb128 0xe
+ 1131 00c6 3A       		.uleb128 0x3a
+ 1132 00c7 0B       		.uleb128 0xb
+ 1133 00c8 3B       		.uleb128 0x3b
+ 1134 00c9 05       		.uleb128 0x5
+ 1135 00ca 27       		.uleb128 0x27
+ 1136 00cb 19       		.uleb128 0x19
+ 1137 00cc 11       		.uleb128 0x11
+ 1138 00cd 01       		.uleb128 0x1
+ 1139 00ce 12       		.uleb128 0x12
+ 1140 00cf 06       		.uleb128 0x6
+ 1141 00d0 40       		.uleb128 0x40
+ 1142 00d1 18       		.uleb128 0x18
+ 1143 00d2 9742     		.uleb128 0x2117
+ 1144 00d4 19       		.uleb128 0x19
+ 1145 00d5 00       		.byte	0
+ 1146 00d6 00       		.byte	0
+ 1147 00d7 0D       		.uleb128 0xd
+ 1148 00d8 2E       		.uleb128 0x2e
+ 1149 00d9 00       		.byte	0
+ 1150 00da 3F       		.uleb128 0x3f
+ 1151 00db 19       		.uleb128 0x19
+ 1152 00dc 03       		.uleb128 0x3
+ 1153 00dd 0E       		.uleb128 0xe
+ 1154 00de 3A       		.uleb128 0x3a
+ 1155 00df 0B       		.uleb128 0xb
+ 1156 00e0 3B       		.uleb128 0x3b
+ 1157 00e1 05       		.uleb128 0x5
+ 1158 00e2 27       		.uleb128 0x27
+ 1159 00e3 19       		.uleb128 0x19
+ 1160 00e4 49       		.uleb128 0x49
+ 1161 00e5 13       		.uleb128 0x13
+ 1162 00e6 11       		.uleb128 0x11
+ 1163 00e7 01       		.uleb128 0x1
+ 1164 00e8 12       		.uleb128 0x12
+ 1165 00e9 06       		.uleb128 0x6
+ 1166 00ea 40       		.uleb128 0x40
+ 1167 00eb 18       		.uleb128 0x18
+ 1168 00ec 9742     		.uleb128 0x2117
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 35
+
+
+ 1169 00ee 19       		.uleb128 0x19
+ 1170 00ef 00       		.byte	0
+ 1171 00f0 00       		.byte	0
+ 1172 00f1 0E       		.uleb128 0xe
+ 1173 00f2 2E       		.uleb128 0x2e
+ 1174 00f3 01       		.byte	0x1
+ 1175 00f4 3F       		.uleb128 0x3f
+ 1176 00f5 19       		.uleb128 0x19
+ 1177 00f6 03       		.uleb128 0x3
+ 1178 00f7 0E       		.uleb128 0xe
+ 1179 00f8 3A       		.uleb128 0x3a
+ 1180 00f9 0B       		.uleb128 0xb
+ 1181 00fa 3B       		.uleb128 0x3b
+ 1182 00fb 05       		.uleb128 0x5
+ 1183 00fc 27       		.uleb128 0x27
+ 1184 00fd 19       		.uleb128 0x19
+ 1185 00fe 11       		.uleb128 0x11
+ 1186 00ff 01       		.uleb128 0x1
+ 1187 0100 12       		.uleb128 0x12
+ 1188 0101 06       		.uleb128 0x6
+ 1189 0102 40       		.uleb128 0x40
+ 1190 0103 18       		.uleb128 0x18
+ 1191 0104 9642     		.uleb128 0x2116
+ 1192 0106 19       		.uleb128 0x19
+ 1193 0107 01       		.uleb128 0x1
+ 1194 0108 13       		.uleb128 0x13
+ 1195 0109 00       		.byte	0
+ 1196 010a 00       		.byte	0
+ 1197 010b 0F       		.uleb128 0xf
+ 1198 010c 2E       		.uleb128 0x2e
+ 1199 010d 00       		.byte	0
+ 1200 010e 3F       		.uleb128 0x3f
+ 1201 010f 19       		.uleb128 0x19
+ 1202 0110 03       		.uleb128 0x3
+ 1203 0111 0E       		.uleb128 0xe
+ 1204 0112 3A       		.uleb128 0x3a
+ 1205 0113 0B       		.uleb128 0xb
+ 1206 0114 3B       		.uleb128 0x3b
+ 1207 0115 05       		.uleb128 0x5
+ 1208 0116 27       		.uleb128 0x27
+ 1209 0117 19       		.uleb128 0x19
+ 1210 0118 11       		.uleb128 0x11
+ 1211 0119 01       		.uleb128 0x1
+ 1212 011a 12       		.uleb128 0x12
+ 1213 011b 06       		.uleb128 0x6
+ 1214 011c 40       		.uleb128 0x40
+ 1215 011d 18       		.uleb128 0x18
+ 1216 011e 9642     		.uleb128 0x2116
+ 1217 0120 19       		.uleb128 0x19
+ 1218 0121 00       		.byte	0
+ 1219 0122 00       		.byte	0
+ 1220 0123 10       		.uleb128 0x10
+ 1221 0124 34       		.uleb128 0x34
+ 1222 0125 00       		.byte	0
+ 1223 0126 03       		.uleb128 0x3
+ 1224 0127 0E       		.uleb128 0xe
+ 1225 0128 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 36
+
+
+ 1226 0129 0B       		.uleb128 0xb
+ 1227 012a 3B       		.uleb128 0x3b
+ 1228 012b 0B       		.uleb128 0xb
+ 1229 012c 49       		.uleb128 0x49
+ 1230 012d 13       		.uleb128 0x13
+ 1231 012e 3F       		.uleb128 0x3f
+ 1232 012f 19       		.uleb128 0x19
+ 1233 0130 02       		.uleb128 0x2
+ 1234 0131 18       		.uleb128 0x18
+ 1235 0132 00       		.byte	0
+ 1236 0133 00       		.byte	0
+ 1237 0134 00       		.byte	0
+ 1238              		.section	.debug_aranges,"",%progbits
+ 1239 0000 8C000000 		.4byte	0x8c
+ 1240 0004 0200     		.2byte	0x2
+ 1241 0006 00000000 		.4byte	.Ldebug_info0
+ 1242 000a 04       		.byte	0x4
+ 1243 000b 00       		.byte	0
+ 1244 000c 0000     		.2byte	0
+ 1245 000e 0000     		.2byte	0
+ 1246 0010 00000000 		.4byte	.LFB0
+ 1247 0014 4C000000 		.4byte	.LFE0-.LFB0
+ 1248 0018 00000000 		.4byte	.LFB1
+ 1249 001c 20000000 		.4byte	.LFE1-.LFB1
+ 1250 0020 00000000 		.4byte	.LFB2
+ 1251 0024 24000000 		.4byte	.LFE2-.LFB2
+ 1252 0028 00000000 		.4byte	.LFB3
+ 1253 002c 20000000 		.4byte	.LFE3-.LFB3
+ 1254 0030 00000000 		.4byte	.LFB4
+ 1255 0034 20000000 		.4byte	.LFE4-.LFB4
+ 1256 0038 00000000 		.4byte	.LFB5
+ 1257 003c 14000000 		.4byte	.LFE5-.LFB5
+ 1258 0040 00000000 		.4byte	.LFB6
+ 1259 0044 18000000 		.4byte	.LFE6-.LFB6
+ 1260 0048 00000000 		.4byte	.LFB7
+ 1261 004c 18000000 		.4byte	.LFE7-.LFB7
+ 1262 0050 00000000 		.4byte	.LFB8
+ 1263 0054 20000000 		.4byte	.LFE8-.LFB8
+ 1264 0058 00000000 		.4byte	.LFB9
+ 1265 005c 18000000 		.4byte	.LFE9-.LFB9
+ 1266 0060 00000000 		.4byte	.LFB10
+ 1267 0064 1C000000 		.4byte	.LFE10-.LFB10
+ 1268 0068 00000000 		.4byte	.LFB11
+ 1269 006c 18000000 		.4byte	.LFE11-.LFB11
+ 1270 0070 00000000 		.4byte	.LFB12
+ 1271 0074 1C000000 		.4byte	.LFE12-.LFB12
+ 1272 0078 00000000 		.4byte	.LFB13
+ 1273 007c 20000000 		.4byte	.LFE13-.LFB13
+ 1274 0080 00000000 		.4byte	.LFB14
+ 1275 0084 1C000000 		.4byte	.LFE14-.LFB14
+ 1276 0088 00000000 		.4byte	0
+ 1277 008c 00000000 		.4byte	0
+ 1278              		.section	.debug_ranges,"",%progbits
+ 1279              	.Ldebug_ranges0:
+ 1280 0000 00000000 		.4byte	.LFB0
+ 1281 0004 4C000000 		.4byte	.LFE0
+ 1282 0008 00000000 		.4byte	.LFB1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 37
+
+
+ 1283 000c 20000000 		.4byte	.LFE1
+ 1284 0010 00000000 		.4byte	.LFB2
+ 1285 0014 24000000 		.4byte	.LFE2
+ 1286 0018 00000000 		.4byte	.LFB3
+ 1287 001c 20000000 		.4byte	.LFE3
+ 1288 0020 00000000 		.4byte	.LFB4
+ 1289 0024 20000000 		.4byte	.LFE4
+ 1290 0028 00000000 		.4byte	.LFB5
+ 1291 002c 14000000 		.4byte	.LFE5
+ 1292 0030 00000000 		.4byte	.LFB6
+ 1293 0034 18000000 		.4byte	.LFE6
+ 1294 0038 00000000 		.4byte	.LFB7
+ 1295 003c 18000000 		.4byte	.LFE7
+ 1296 0040 00000000 		.4byte	.LFB8
+ 1297 0044 20000000 		.4byte	.LFE8
+ 1298 0048 00000000 		.4byte	.LFB9
+ 1299 004c 18000000 		.4byte	.LFE9
+ 1300 0050 00000000 		.4byte	.LFB10
+ 1301 0054 1C000000 		.4byte	.LFE10
+ 1302 0058 00000000 		.4byte	.LFB11
+ 1303 005c 18000000 		.4byte	.LFE11
+ 1304 0060 00000000 		.4byte	.LFB12
+ 1305 0064 1C000000 		.4byte	.LFE12
+ 1306 0068 00000000 		.4byte	.LFB13
+ 1307 006c 20000000 		.4byte	.LFE13
+ 1308 0070 00000000 		.4byte	.LFB14
+ 1309 0074 1C000000 		.4byte	.LFE14
+ 1310 0078 00000000 		.4byte	0
+ 1311 007c 00000000 		.4byte	0
+ 1312              		.section	.debug_line,"",%progbits
+ 1313              	.Ldebug_line0:
+ 1314 0000 7A010000 		.section	.debug_str,"MS",%progbits,1
+ 1314      02005200 
+ 1314      00000201 
+ 1314      FB0E0D00 
+ 1314      01010101 
+ 1315              	.LASF15:
+ 1316 0000 72656733 		.ascii	"reg32\000"
+ 1316      3200
+ 1317              	.LASF37:
+ 1318 0006 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1318      43313120 
+ 1318      352E342E 
+ 1318      31203230 
+ 1318      31363036 
+ 1319 0039 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1319      20726576 
+ 1319      6973696F 
+ 1319      6E203233 
+ 1319      37373135 
+ 1320 006c 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1320      66756E63 
+ 1320      74696F6E 
+ 1320      2D736563 
+ 1320      74696F6E 
+ 1321              	.LASF25:
+ 1322 0094 466C6F77 		.ascii	"FlowSenseTimeOutTimer_ReadControlRegister\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 38
+
+
+ 1322      53656E73 
+ 1322      6554696D 
+ 1322      654F7574 
+ 1322      54696D65 
+ 1323              	.LASF29:
+ 1324 00be 466C6F77 		.ascii	"FlowSenseTimeOutTimer_ReadPeriod\000"
+ 1324      53656E73 
+ 1324      6554696D 
+ 1324      654F7574 
+ 1324      54696D65 
+ 1325              	.LASF32:
+ 1326 00df 466C6F77 		.ascii	"FlowSenseTimeOutTimer_ReadCapture\000"
+ 1326      53656E73 
+ 1326      6554696D 
+ 1326      654F7574 
+ 1326      54696D65 
+ 1327              	.LASF31:
+ 1328 0101 70657269 		.ascii	"period\000"
+ 1328      6F6400
+ 1329              	.LASF3:
+ 1330 0108 73686F72 		.ascii	"short unsigned int\000"
+ 1330      7420756E 
+ 1330      7369676E 
+ 1330      65642069 
+ 1330      6E7400
+ 1331              	.LASF24:
+ 1332 011b 466C6F77 		.ascii	"FlowSenseTimeOutTimer_ReadStatusRegister\000"
+ 1332      53656E73 
+ 1332      6554696D 
+ 1332      654F7574 
+ 1332      54696D65 
+ 1333              	.LASF20:
+ 1334 0144 466C6F77 		.ascii	"FlowSenseTimeOutTimer_Stop\000"
+ 1334      53656E73 
+ 1334      6554696D 
+ 1334      654F7574 
+ 1334      54696D65 
+ 1335              	.LASF39:
+ 1336 015f 433A5C55 		.ascii	"C:\\Users\\tpbw4321\\AppData\\Roaming\\SPB_Data\\Hy"
+ 1336      73657273 
+ 1336      5C747062 
+ 1336      77343332 
+ 1336      315C4170 
+ 1337 018c 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
+ 1337      6F6E6963 
+ 1337      73417574 
+ 1337      6F6D6174 
+ 1337      696F6E5C 
+ 1338 01bb 536F435C 		.ascii	"SoC\\HydroponicAutomationSensorPerf.cydsn\000"
+ 1338      48796472 
+ 1338      6F706F6E 
+ 1338      69634175 
+ 1338      746F6D61 
+ 1339              	.LASF18:
+ 1340 01e4 466C6F77 		.ascii	"FlowSenseTimeOutTimer_Enable\000"
+ 1340      53656E73 
+ 1340      6554696D 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 39
+
+
+ 1340      654F7574 
+ 1340      54696D65 
+ 1341              	.LASF11:
+ 1342 0201 666C6F61 		.ascii	"float\000"
+ 1342      7400
+ 1343              	.LASF34:
+ 1344 0207 636F756E 		.ascii	"counter\000"
+ 1344      74657200 
+ 1345              	.LASF35:
+ 1346 020f 466C6F77 		.ascii	"FlowSenseTimeOutTimer_ReadCounter\000"
+ 1346      53656E73 
+ 1346      6554696D 
+ 1346      654F7574 
+ 1346      54696D65 
+ 1347              	.LASF1:
+ 1348 0231 756E7369 		.ascii	"unsigned char\000"
+ 1348      676E6564 
+ 1348      20636861 
+ 1348      7200
+ 1349              	.LASF41:
+ 1350 023f 466C6F77 		.ascii	"FlowSenseTimeOutTimer_initVar\000"
+ 1350      53656E73 
+ 1350      6554696D 
+ 1350      654F7574 
+ 1350      54696D65 
+ 1351              	.LASF23:
+ 1352 025d 466C6F77 		.ascii	"FlowSenseTimeOutTimer_SoftwareCapture\000"
+ 1352      53656E73 
+ 1352      6554696D 
+ 1352      654F7574 
+ 1352      54696D65 
+ 1353              	.LASF14:
+ 1354 0283 72656738 		.ascii	"reg8\000"
+ 1354      00
+ 1355              	.LASF30:
+ 1356 0288 466C6F77 		.ascii	"FlowSenseTimeOutTimer_WritePeriod\000"
+ 1356      53656E73 
+ 1356      6554696D 
+ 1356      654F7574 
+ 1356      54696D65 
+ 1357              	.LASF5:
+ 1358 02aa 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1358      20756E73 
+ 1358      69676E65 
+ 1358      6420696E 
+ 1358      7400
+ 1359              	.LASF9:
+ 1360 02bc 75696E74 		.ascii	"uint8\000"
+ 1360      3800
+ 1361              	.LASF28:
+ 1362 02c2 636F6E74 		.ascii	"control\000"
+ 1362      726F6C00 
+ 1363              	.LASF22:
+ 1364 02ca 466C6F77 		.ascii	"FlowSenseTimeOutTimer_SetInterruptMode\000"
+ 1364      53656E73 
+ 1364      6554696D 
+ 1364      654F7574 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 40
+
+
+ 1364      54696D65 
+ 1365              	.LASF12:
+ 1366 02f1 646F7562 		.ascii	"double\000"
+ 1366      6C6500
+ 1367              	.LASF40:
+ 1368 02f8 466C6F77 		.ascii	"FlowSenseTimeOutTimer_interruptState\000"
+ 1368      53656E73 
+ 1368      6554696D 
+ 1368      654F7574 
+ 1368      54696D65 
+ 1369              	.LASF10:
+ 1370 031d 75696E74 		.ascii	"uint32\000"
+ 1370      333200
+ 1371              	.LASF8:
+ 1372 0324 756E7369 		.ascii	"unsigned int\000"
+ 1372      676E6564 
+ 1372      20696E74 
+ 1372      00
+ 1373              	.LASF7:
+ 1374 0331 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1374      206C6F6E 
+ 1374      6720756E 
+ 1374      7369676E 
+ 1374      65642069 
+ 1375              	.LASF33:
+ 1376 0348 466C6F77 		.ascii	"FlowSenseTimeOutTimer_WriteCounter\000"
+ 1376      53656E73 
+ 1376      6554696D 
+ 1376      654F7574 
+ 1376      54696D65 
+ 1377              	.LASF17:
+ 1378 036b 73697A65 		.ascii	"sizetype\000"
+ 1378      74797065 
+ 1378      00
+ 1379              	.LASF6:
+ 1380 0374 6C6F6E67 		.ascii	"long long int\000"
+ 1380      206C6F6E 
+ 1380      6720696E 
+ 1380      7400
+ 1381              	.LASF38:
+ 1382 0382 47656E65 		.ascii	"Generated_Source\\PSoC5\\FlowSenseTimeOutTimer.c\000"
+ 1382      72617465 
+ 1382      645F536F 
+ 1382      75726365 
+ 1382      5C50536F 
+ 1383              	.LASF27:
+ 1384 03b1 696E7465 		.ascii	"interruptMode\000"
+ 1384      72727570 
+ 1384      744D6F64 
+ 1384      6500
+ 1385              	.LASF19:
+ 1386 03bf 466C6F77 		.ascii	"FlowSenseTimeOutTimer_Start\000"
+ 1386      53656E73 
+ 1386      6554696D 
+ 1386      654F7574 
+ 1386      54696D65 
+ 1387              	.LASF2:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccnekbbV.s 			page 41
+
+
+ 1388 03db 73686F72 		.ascii	"short int\000"
+ 1388      7420696E 
+ 1388      7400
+ 1389              	.LASF26:
+ 1390 03e5 466C6F77 		.ascii	"FlowSenseTimeOutTimer_WriteControlRegister\000"
+ 1390      53656E73 
+ 1390      6554696D 
+ 1390      654F7574 
+ 1390      54696D65 
+ 1391              	.LASF36:
+ 1392 0410 466C6F77 		.ascii	"FlowSenseTimeOutTimer_ClearFIFO\000"
+ 1392      53656E73 
+ 1392      6554696D 
+ 1392      654F7574 
+ 1392      54696D65 
+ 1393              	.LASF21:
+ 1394 0430 466C6F77 		.ascii	"FlowSenseTimeOutTimer_Init\000"
+ 1394      53656E73 
+ 1394      6554696D 
+ 1394      654F7574 
+ 1394      54696D65 
+ 1395              	.LASF4:
+ 1396 044b 6C6F6E67 		.ascii	"long int\000"
+ 1396      20696E74 
+ 1396      00
+ 1397              	.LASF13:
+ 1398 0454 63686172 		.ascii	"char\000"
+ 1398      00
+ 1399              	.LASF16:
+ 1400 0459 6C6F6E67 		.ascii	"long double\000"
+ 1400      20646F75 
+ 1400      626C6500 
+ 1401              	.LASF0:
+ 1402 0465 7369676E 		.ascii	"signed char\000"
+ 1402      65642063 
+ 1402      68617200 
+ 1403              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

@@ -202,15 +202,15 @@ int main(void)
     {
         if(ready == TRUE){
             ready = FALSE;
-            printf("h20_level: %0.2f\r\n", sd.flow_target);
-            printf("h20_stored: %0.2f\r\n", sd.h2o_stored);
-            printf("ph_measured: %0.2f\r\n", sd.ph_level);
-            printf("ph_up_stored: %0.2f\r\n", sd.ph_up_stored);
-            printf("ph_down_stored: %0.2f\r\n", sd.ph_down_stored);
-            printf("ec_measured: %0.2f\r\n", sd.ec_level);
-            printf("ec_stored: %0.2f\r\n", sd.ec_stored);
-            printf("temp_measured: %0.2f\r\n", sd.temp_measured);
-            printf("flow_measured: %0.2f\r\n", sd.flow_measured);
+//            printf("h20_level: %0.2f\r\n", sd.flow_target);
+//            printf("h20_stored: %0.2f\r\n", sd.h2o_stored);
+//            printf("ph_measured: %0.2f\r\n", sd.ph_level);
+//            printf("ph_up_stored: %0.2f\r\n", sd.ph_up_stored);
+//            printf("ph_down_stored: %0.2f\r\n", sd.ph_down_stored);
+//            printf("ec_measured: %0.2f\r\n", sd.ec_level);
+//            printf("ec_stored: %0.2f\r\n", sd.ec_stored);
+//            printf("temp_measured: %0.2f\r\n", sd.temp_measured);
+//            printf("flow_measured: %0.2f\r\n", sd.flow_measured);
         }
     }
 }

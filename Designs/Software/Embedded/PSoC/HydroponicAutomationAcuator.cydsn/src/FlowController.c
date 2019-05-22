@@ -38,8 +38,10 @@ extern struct SensorData sd;
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
     static float dutyCycle = 0.3;
-    float kp = 2.0;
+    float kp = 9.0;
     float error = 0;
+    
+    flow_ref = sd.flow_target;
      
     
     flowRate = FlowController_GetFlowRate();

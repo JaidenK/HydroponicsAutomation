@@ -21,8 +21,9 @@
 #include "pHController.h"
 #include "Mixing.h"
 #include "SensorRxCom.h"
-#include "ECSense.h"
+#include "WaterLevelController.h"
 #include "AD.h"
+#include "ECController.h"
 
 #define FLOW_REF 1.5
 #define PH_REF 7
@@ -41,11 +42,10 @@ int main(void)
     USBCom_Init();
     FlowController_Init();
     SerialCom_Init();
-    //AD_Init();
-    ECSense_Init();
     pHController_Init();
     Mixing_Init();
     SensorComRx_Init();
+    WaterLevelController_Init();
     
     
     
@@ -59,37 +59,39 @@ int main(void)
     for(;;)
     {
         if(SensorComRx_CheckStatus()){
+            //Flow
+            Protocol_EncodeOutput(flow_measured, sd.flow_measured, buffer);
+            USBCom_SendData(buffer);
             
-            //Encode and send data
+            //pH
             Protocol_EncodeOutput(ph_measured, sd.ph_level, buffer);
             USBCom_SendData(buffer);
 
-            //Encode and send data
-            sd.ec_level = ECSense_GetEC();
+            //EC
             Protocol_EncodeOutput(ec_measured, sd.ec_level, buffer);
             USBCom_SendData(buffer);
             
-            //Encode and send data
+            //Temp
             Protocol_EncodeOutput(temp_measured, sd.temp_measured, buffer);
             USBCom_SendData(buffer);
             
-            //Encode and send data
-            Protocol_EncodeOutput(h20_level, sd.h2o_level, buffer);
+            //Water Level
+            Protocol_EncodeOutput(h20_level, WaterLevelController_GetWaterLevel(), buffer);
             USBCom_SendData(buffer);
             
-            //Encode and send data
+            //Water Stored
             Protocol_EncodeOutput(h20_stored, sd.h2o_stored, buffer);
             USBCom_SendData(buffer);
 
-            //Encode and send data
+            //pH up stored
             Protocol_EncodeOutput(ph_up_stored, sd.ph_up_stored, buffer);
             USBCom_SendData(buffer);
 
-            //Encode and send data
+            //pH Down Stored
             Protocol_EncodeOutput(ph_down_stored, sd.ph_down_stored, buffer);
             USBCom_SendData(buffer);
 
-            //Encode and send data
+            //EC Stored
             Protocol_EncodeOutput(ec_stored, sd.ec_stored, buffer);
             USBCom_SendData(buffer);
             
