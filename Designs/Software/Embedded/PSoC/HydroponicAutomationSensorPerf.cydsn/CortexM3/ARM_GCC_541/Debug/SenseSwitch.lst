@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
    7:src/SenseSwitch.c ****  *
    8:src/SenseSwitch.c ****  *
    9:src/SenseSwitch.c ****  * PWM_TEST (in the .c file) conditionally compiles the test harness for the code. 
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 2
 
 
   10:src/SenseSwitch.c ****  * 
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
   50:src/SenseSwitch.c ****     
   51:src/SenseSwitch.c ****     switch(nextState){
   55              		.loc 1 51 0
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 3
 
 
   56 000c 2C4B     		ldr	r3, .L10
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
   97 0058 1B4B     		ldr	r3, .L10+8
   98 005a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
   99 005c 0133     		adds	r3, r3, #1
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 4
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 4
 
 
  100 005e DAB2     		uxtb	r2, r3
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  139 009e 0D48     		ldr	r0, .L10+20
  140 00a0 FFF7FEFF 		bl	puts
   79:src/SenseSwitch.c ****             SenseSwitchTimer_WritePeriod(EC_SAMPLE_TIME);
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 5
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 5
 
 
  141              		.loc 1 79 0
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
   97:src/SenseSwitch.c **** void SenseSwitch_Init(){
  178              		.loc 1 97 0
  179              		.cfi_startproc
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 6
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 6
 
 
  180              		@ args = 0, pretend = 0, frame = 0
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  231 0015 D5000000 		.4byte	.LASF28
  232 0019 00000000 		.4byte	.Ldebug_ranges0+0
  233 001d 00000000 		.4byte	0
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 7
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 7
 
 
  234 0021 00000000 		.4byte	.Ldebug_line0
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  288 0087 18       		.byte	0x18
  289 0088 2C000000 		.4byte	0x2c
  290 008c 03       		.uleb128 0x3
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 8
 
 
  291 008d 1D020000 		.4byte	.LASF12
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  345 00f9 01       		.uleb128 0x1
  346 00fa 9C       		.byte	0x9c
  347 00fb 33010000 		.4byte	0x133
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 9
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 9
 
 
  348 00ff 08       		.uleb128 0x8
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  402 000b 55       		.uleb128 0x55
  403 000c 17       		.uleb128 0x17
  404 000d 11       		.uleb128 0x11
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 10
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 10
 
 
  405 000e 01       		.uleb128 0x1
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  459 0044 00       		.byte	0
  460 0045 06       		.uleb128 0x6
  461 0046 28       		.uleb128 0x28
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 11
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 11
 
 
  462 0047 00       		.byte	0
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  516 007e 3A       		.uleb128 0x3a
  517 007f 0B       		.uleb128 0xb
  518 0080 3B       		.uleb128 0x3b
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 12
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 12
 
 
  519 0081 0B       		.uleb128 0xb
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  573 0008 00000000 		.4byte	.LFB65
  574 000c 18000000 		.4byte	.LFE65
  575 0010 00000000 		.4byte	0
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 13
 
 
  576 0014 00000000 		.4byte	0
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  597      77343332 
  597      315C4170 
  598 0102 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 14
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 14
 
 
  598      6F6E6963 
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  619      696D6572 
  619      49535248 
  620              	.LASF10:
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 15
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 15
 
 
  621 01e6 756E7369 		.ascii	"unsigned int\000"
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 1
  646              	.LASF0:
  647 027d 7369676E 		.ascii	"signed char\000"
  647      65642063 
-ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccJSkmzx.s 			page 16
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cchzwBDQ.s 			page 16
 
 
  647      68617200 

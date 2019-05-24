@@ -19,6 +19,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//#define A2 8.13E-05
+//#define A1 -0.491
+//#define A0 962
+
 #define SUCCESS 1
 #define ERROR -1
 #define FALSE 0
@@ -28,6 +32,8 @@
 static uint16_t ec = 0;
 static uint8_t ready = 0;
 static char RxBuffer[BUFF_SIZE];
+
+
 
 uint16_t CalcCheckSum(const char *s);
 
