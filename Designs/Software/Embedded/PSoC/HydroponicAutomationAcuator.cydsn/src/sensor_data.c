@@ -17,23 +17,7 @@
 #define PH_MIN 3
 #define EC_MIN 200
 #define EC_MAX 3000
-//struct SensorData {
-//	double h2o_level;
-//	double h2o_stored;
-//	double ph_level;
-//	double ph_up_stored;
-//	double ph_down_stored;
-//	double ec_level;
-//	double ec_stored;
-//	double temp_measured;
-//	double flow_measured;
-//	double flow_target;
-//	double ph_target;
-//	double ec_target;
-//	double h2o_target;
-//	double temp_target;
-//	char ProductID[256];
-//};
+
 /**
  * @function sensor_data_Init(char * input)
  * @param pointer to a SensorData Structure
