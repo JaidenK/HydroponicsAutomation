@@ -28,14 +28,14 @@
 //new and improved position macros
 //X positions
 #define RINSE_POSITION 75 //Check
-#define SPONGE_POSITION 1025 //Check
-#define PH4_POSITION 2300 //Check
-#define PH7_POSITION 3500 //Check   
-#define PH10_POSITION 4750 //
+#define SPONGE_POSITION 1100 //Check
+#define PH4_POSITION 2325 //Check
+#define PH7_POSITION 3600 //Check   
+#define PH10_POSITION 4800 //Check
 
 //Z positions
 #define BOTTOM_POSITION 3000
-#define CALIBRATION_POSITION 2000
+#define CALIBRATION_POSITION 2100
 
 //Timekeeping
 #define FIVE_SECONDS 1000000
