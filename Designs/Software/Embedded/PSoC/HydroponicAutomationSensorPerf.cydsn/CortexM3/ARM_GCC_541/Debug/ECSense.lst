@@ -1,0 +1,2108 @@
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"ECSense.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.rodata
+  20              		.align	2
+  21              	.LC0:
+  22 0000 696E7661 		.ascii	"invalid_key\000"
+  22      6C69645F 
+  22      6B657900 
+  23              		.align	2
+  24              	.LC1:
+  25 000c 666C6F77 		.ascii	"flow_target\000"
+  25      5F746172 
+  25      67657400 
+  26              		.align	2
+  27              	.LC2:
+  28 0018 70685F74 		.ascii	"ph_target\000"
+  28      61726765 
+  28      7400
+  29 0022 0000     		.align	2
+  30              	.LC3:
+  31 0024 65635F74 		.ascii	"ec_target\000"
+  31      61726765 
+  31      7400
+  32 002e 0000     		.align	2
+  33              	.LC4:
+  34 0030 6832305F 		.ascii	"h20_level_target\000"
+  34      6C657665 
+  34      6C5F7461 
+  34      72676574 
+  34      00
+  35 0041 000000   		.align	2
+  36              	.LC5:
+  37 0044 6832305F 		.ascii	"h20_level\000"
+  37      6C657665 
+  37      6C00
+  38 004e 0000     		.align	2
+  39              	.LC6:
+  40 0050 6832305F 		.ascii	"h20_stored\000"
+  40      73746F72 
+  40      656400
+  41 005b 00       		.align	2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 2
+
+
+  42              	.LC7:
+  43 005c 70685F6D 		.ascii	"ph_measured\000"
+  43      65617375 
+  43      72656400 
+  44              		.align	2
+  45              	.LC8:
+  46 0068 70685F75 		.ascii	"ph_up_stored\000"
+  46      705F7374 
+  46      6F726564 
+  46      00
+  47 0075 000000   		.align	2
+  48              	.LC9:
+  49 0078 70685F64 		.ascii	"ph_down_stored\000"
+  49      6F776E5F 
+  49      73746F72 
+  49      656400
+  50 0087 00       		.align	2
+  51              	.LC10:
+  52 0088 65635F6D 		.ascii	"ec_measured\000"
+  52      65617375 
+  52      72656400 
+  53              		.align	2
+  54              	.LC11:
+  55 0094 65635F73 		.ascii	"ec_stored\000"
+  55      746F7265 
+  55      6400
+  56 009e 0000     		.align	2
+  57              	.LC12:
+  58 00a0 74656D70 		.ascii	"temp_measured\000"
+  58      5F6D6561 
+  58      73757265 
+  58      6400
+  59 00ae 0000     		.align	2
+  60              	.LC13:
+  61 00b0 666C6F77 		.ascii	"flow_measured\000"
+  61      5F6D6561 
+  61      73757265 
+  61      6400
+  62              		.data
+  63              		.align	2
+  64              		.type	pkey_const, %object
+  65              		.size	pkey_const, 56
+  66              	pkey_const:
+  67 0000 00000000 		.word	.LC0
+  68 0004 0C000000 		.word	.LC1
+  69 0008 18000000 		.word	.LC2
+  70 000c 24000000 		.word	.LC3
+  71 0010 30000000 		.word	.LC4
+  72 0014 44000000 		.word	.LC5
+  73 0018 50000000 		.word	.LC6
+  74 001c 5C000000 		.word	.LC7
+  75 0020 68000000 		.word	.LC8
+  76 0024 78000000 		.word	.LC9
+  77 0028 88000000 		.word	.LC10
+  78 002c 94000000 		.word	.LC11
+  79 0030 A0000000 		.word	.LC12
+  80 0034 B0000000 		.word	.LC13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 3
+
+
+  81              		.bss
+  82              		.align	1
+  83              	ec:
+  84 0000 0000     		.space	2
+  85              	ready:
+  86 0002 00       		.space	1
+  87 0003 00       		.align	2
+  88              	RxBuffer:
+  89 0004 00000000 		.space	255
+  89      00000000 
+  89      00000000 
+  89      00000000 
+  89      00000000 
+  90              		.section	.text.ECSenseDataRxISRHandler,"ax",%progbits
+  91              		.align	2
+  92              		.global	ECSenseDataRxISRHandler
+  93              		.thumb
+  94              		.thumb_func
+  95              		.type	ECSenseDataRxISRHandler, %function
+  96              	ECSenseDataRxISRHandler:
+  97              	.LFB64:
+  98              		.file 1 "src\\ECSense.c"
+   1:src/ECSense.c **** /*
+   2:src/ECSense.c ****  * File:   ECSense.h
+   3:src/ECSense.c ****  * Author: bwong20
+   4:src/ECSense.c ****  *
+   5:src/ECSense.c ****  * Software to control the flow 
+   6:src/ECSense.c ****  *
+   7:src/ECSense.c ****  *
+   8:src/ECSense.c ****  *
+   9:src/ECSense.c ****  * PWM_TEST (in the .c file) conditionally compiles the test harness for the code. 
+  10:src/ECSense.c ****  * 
+  11:src/ECSense.c ****  *
+  12:src/ECSense.c ****  * Created on Janruary 25, 2019
+  13:src/ECSense.c ****  */
+  14:src/ECSense.c **** 
+  15:src/ECSense.c **** 
+  16:src/ECSense.c **** #include "project.h"
+  17:src/ECSense.c **** #include "ECSense.h"
+  18:src/ECSense.c **** #include "sensor_data.h"
+  19:src/ECSense.c **** #include <stdio.h>
+  20:src/ECSense.c **** #include <stdlib.h>
+  21:src/ECSense.c **** 
+  22:src/ECSense.c **** //#define A2 8.13E-05
+  23:src/ECSense.c **** //#define A1 -0.491
+  24:src/ECSense.c **** //#define A0 962
+  25:src/ECSense.c **** 
+  26:src/ECSense.c **** #define SUCCESS 1
+  27:src/ECSense.c **** #define ERROR -1
+  28:src/ECSense.c **** #define FALSE 0
+  29:src/ECSense.c **** #define TRUE 1
+  30:src/ECSense.c **** #define BUFF_SIZE 255
+  31:src/ECSense.c **** 
+  32:src/ECSense.c **** static uint16_t ec = 0;
+  33:src/ECSense.c **** static uint8_t ready = 0;
+  34:src/ECSense.c **** static char RxBuffer[BUFF_SIZE];
+  35:src/ECSense.c **** 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 4
+
+
+  36:src/ECSense.c **** 
+  37:src/ECSense.c **** 
+  38:src/ECSense.c **** uint16_t CalcCheckSum(const char *s);
+  39:src/ECSense.c **** 
+  40:src/ECSense.c **** /**
+  41:src/ECSense.c ****  * @function ECSenseDataRxISRHandler(void)
+  42:src/ECSense.c ****  * @param None
+  43:src/ECSense.c ****  * @return None
+  44:src/ECSense.c ****  * @brief Handler for when a byte is recieved
+  45:src/ECSense.c ****  * @author Barron Wong 05/15/19
+  46:src/ECSense.c ****  */
+  47:src/ECSense.c **** CY_ISR(ECSenseDataRxISRHandler){
+  99              		.loc 1 47 0
+ 100              		.cfi_startproc
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 1, uses_anonymous_args = 0
+ 103 0000 98B5     		push	{r3, r4, r7, lr}
+ 104              		.cfi_def_cfa_offset 16
+ 105              		.cfi_offset 3, -16
+ 106              		.cfi_offset 4, -12
+ 107              		.cfi_offset 7, -8
+ 108              		.cfi_offset 14, -4
+ 109 0002 00AF     		add	r7, sp, #0
+ 110              		.cfi_def_cfa_register 7
+  48:src/ECSense.c ****     static uint8_t count = 0;
+  49:src/ECSense.c ****     static uint8_t remainder = 0; 
+  50:src/ECSense.c ****     
+  51:src/ECSense.c ****     ECSenseDataRxISR_ClearPending();
+ 111              		.loc 1 51 0
+ 112 0004 FFF7FEFF 		bl	ECSenseDataRxISR_ClearPending
+  52:src/ECSense.c ****     //Set ready to false 
+  53:src/ECSense.c ****     //If ready is TRUE and we are in this ISR, 
+  54:src/ECSense.c ****     //then a new transmission is incoming
+  55:src/ECSense.c ****     if(ready == TRUE)
+ 113              		.loc 1 55 0
+ 114 0008 224B     		ldr	r3, .L9
+ 115 000a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 116 000c 012B     		cmp	r3, #1
+ 117 000e 10D1     		bne	.L3
+  56:src/ECSense.c ****         ready = FALSE;
+ 118              		.loc 1 56 0
+ 119 0010 204B     		ldr	r3, .L9
+ 120 0012 0022     		movs	r2, #0
+ 121 0014 1A70     		strb	r2, [r3]
+  57:src/ECSense.c ****     
+  58:src/ECSense.c ****     while(ECSenseUART_ReadRxStatus() == ECSenseUART_RX_STS_FIFO_NOTEMPTY){
+ 122              		.loc 1 58 0
+ 123 0016 0CE0     		b	.L3
+ 124              	.L4:
+  59:src/ECSense.c ****         RxBuffer[count++] = ECSenseUART_GetChar();
+ 125              		.loc 1 59 0
+ 126 0018 1F4B     		ldr	r3, .L9+4
+ 127 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 128 001c 5A1C     		adds	r2, r3, #1
+ 129 001e D1B2     		uxtb	r1, r2
+ 130 0020 1D4A     		ldr	r2, .L9+4
+ 131 0022 1170     		strb	r1, [r2]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 5
+
+
+ 132 0024 1C46     		mov	r4, r3
+ 133 0026 FFF7FEFF 		bl	ECSenseUART_GetChar
+ 134 002a 0346     		mov	r3, r0
+ 135 002c 1A46     		mov	r2, r3
+ 136 002e 1B4B     		ldr	r3, .L9+8
+ 137 0030 1A55     		strb	r2, [r3, r4]
+ 138              	.L3:
+  58:src/ECSense.c ****         RxBuffer[count++] = ECSenseUART_GetChar();
+ 139              		.loc 1 58 0
+ 140 0032 FFF7FEFF 		bl	ECSenseUART_ReadRxStatus
+ 141 0036 0346     		mov	r3, r0
+ 142 0038 202B     		cmp	r3, #32
+ 143 003a EDD0     		beq	.L4
+  60:src/ECSense.c ****     }
+  61:src/ECSense.c ****     RxBuffer[count] = '\0';
+ 144              		.loc 1 61 0
+ 145 003c 164B     		ldr	r3, .L9+4
+ 146 003e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 147 0040 1A46     		mov	r2, r3
+ 148 0042 164B     		ldr	r3, .L9+8
+ 149 0044 0021     		movs	r1, #0
+ 150 0046 9954     		strb	r1, [r3, r2]
+  62:src/ECSense.c ****     
+  63:src/ECSense.c ****     
+  64:src/ECSense.c ****     if(remainder){
+ 151              		.loc 1 64 0
+ 152 0048 154B     		ldr	r3, .L9+12
+ 153 004a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 154 004c 002B     		cmp	r3, #0
+ 155 004e 15D0     		beq	.L5
+  65:src/ECSense.c ****         if(remainder == 1){
+ 156              		.loc 1 65 0
+ 157 0050 134B     		ldr	r3, .L9+12
+ 158 0052 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 159 0054 012B     		cmp	r3, #1
+ 160 0056 0BD1     		bne	.L6
+  66:src/ECSense.c ****             count = 0;
+ 161              		.loc 1 66 0
+ 162 0058 0F4B     		ldr	r3, .L9+4
+ 163 005a 0022     		movs	r2, #0
+ 164 005c 1A70     		strb	r2, [r3]
+  67:src/ECSense.c ****             //printf("%s\r\n",RxBuffer);
+  68:src/ECSense.c ****             if(ECSense_DecodeMessage(RxBuffer)){
+ 165              		.loc 1 68 0
+ 166 005e 0F48     		ldr	r0, .L9+8
+ 167 0060 FFF7FEFF 		bl	ECSense_DecodeMessage
+ 168 0064 0346     		mov	r3, r0
+ 169 0066 002B     		cmp	r3, #0
+ 170 0068 02D0     		beq	.L6
+  69:src/ECSense.c ****                 ready = TRUE;
+ 171              		.loc 1 69 0
+ 172 006a 0A4B     		ldr	r3, .L9
+ 173 006c 0122     		movs	r2, #1
+ 174 006e 1A70     		strb	r2, [r3]
+ 175              	.L6:
+  70:src/ECSense.c ****             }
+  71:src/ECSense.c ****         }
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 6
+
+
+  72:src/ECSense.c ****         remainder--;
+ 176              		.loc 1 72 0
+ 177 0070 0B4B     		ldr	r3, .L9+12
+ 178 0072 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 179 0074 013B     		subs	r3, r3, #1
+ 180 0076 DAB2     		uxtb	r2, r3
+ 181 0078 094B     		ldr	r3, .L9+12
+ 182 007a 1A70     		strb	r2, [r3]
+ 183              	.L5:
+  73:src/ECSense.c ****     }
+  74:src/ECSense.c ****     
+  75:src/ECSense.c ****         //Check for end of message
+  76:src/ECSense.c ****     if(RxBuffer[count - 1] == '*'){
+ 184              		.loc 1 76 0
+ 185 007c 064B     		ldr	r3, .L9+4
+ 186 007e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 187 0080 013B     		subs	r3, r3, #1
+ 188 0082 064A     		ldr	r2, .L9+8
+ 189 0084 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 190 0086 2A2B     		cmp	r3, #42
+ 191 0088 02D1     		bne	.L8
+  77:src/ECSense.c ****         remainder = 2;
+ 192              		.loc 1 77 0
+ 193 008a 054B     		ldr	r3, .L9+12
+ 194 008c 0222     		movs	r2, #2
+ 195 008e 1A70     		strb	r2, [r3]
+ 196              	.L8:
+  78:src/ECSense.c ****     }
+  79:src/ECSense.c **** }
+ 197              		.loc 1 79 0
+ 198 0090 00BF     		nop
+ 199 0092 98BD     		pop	{r3, r4, r7, pc}
+ 200              	.L10:
+ 201              		.align	2
+ 202              	.L9:
+ 203 0094 02000000 		.word	ready
+ 204 0098 03010000 		.word	count.8085
+ 205 009c 04000000 		.word	RxBuffer
+ 206 00a0 04010000 		.word	remainder.8086
+ 207              		.cfi_endproc
+ 208              	.LFE64:
+ 209              		.size	ECSenseDataRxISRHandler, .-ECSenseDataRxISRHandler
+ 210              		.section	.text.CalcCheckSum,"ax",%progbits
+ 211              		.align	2
+ 212              		.global	CalcCheckSum
+ 213              		.thumb
+ 214              		.thumb_func
+ 215              		.type	CalcCheckSum, %function
+ 216              	CalcCheckSum:
+ 217              	.LFB65:
+  80:src/ECSense.c **** 
+  81:src/ECSense.c **** /**
+  82:src/ECSense.c ****  * @function checksum()
+  83:src/ECSense.c ****  * @param pointer to string that needs checksum generated
+  84:src/ECSense.c ****  * @return checksum
+  85:src/ECSense.c ****  * @brief computes and returns checksum of a string
+  86:src/ECSense.c ****  * @author NMEA0183 Wikipedia Page
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 7
+
+
+  87:src/ECSense.c ****  */
+  88:src/ECSense.c **** uint16_t CalcCheckSum(const char *s){
+ 218              		.loc 1 88 0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 16
+ 221              		@ frame_needed = 1, uses_anonymous_args = 0
+ 222              		@ link register save eliminated.
+ 223 0000 80B4     		push	{r7}
+ 224              		.cfi_def_cfa_offset 4
+ 225              		.cfi_offset 7, -4
+ 226 0002 85B0     		sub	sp, sp, #20
+ 227              		.cfi_def_cfa_offset 24
+ 228 0004 00AF     		add	r7, sp, #0
+ 229              		.cfi_def_cfa_register 7
+ 230 0006 7860     		str	r0, [r7, #4]
+  89:src/ECSense.c ****     uint16_t c = 0;
+ 231              		.loc 1 89 0
+ 232 0008 0023     		movs	r3, #0
+ 233 000a FB81     		strh	r3, [r7, #14]	@ movhi
+  90:src/ECSense.c **** 
+  91:src/ECSense.c ****     while(*s){
+ 234              		.loc 1 91 0
+ 235 000c 07E0     		b	.L12
+ 236              	.L13:
+  92:src/ECSense.c ****         c ^= *s++;
+ 237              		.loc 1 92 0
+ 238 000e 7B68     		ldr	r3, [r7, #4]
+ 239 0010 5A1C     		adds	r2, r3, #1
+ 240 0012 7A60     		str	r2, [r7, #4]
+ 241 0014 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 242 0016 9AB2     		uxth	r2, r3
+ 243 0018 FB89     		ldrh	r3, [r7, #14]	@ movhi
+ 244 001a 5340     		eors	r3, r3, r2
+ 245 001c FB81     		strh	r3, [r7, #14]	@ movhi
+ 246              	.L12:
+  91:src/ECSense.c ****         c ^= *s++;
+ 247              		.loc 1 91 0
+ 248 001e 7B68     		ldr	r3, [r7, #4]
+ 249 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 250 0022 002B     		cmp	r3, #0
+ 251 0024 F3D1     		bne	.L13
+  93:src/ECSense.c ****     }
+  94:src/ECSense.c ****     return c;
+ 252              		.loc 1 94 0
+ 253 0026 FB89     		ldrh	r3, [r7, #14]
+  95:src/ECSense.c **** }
+ 254              		.loc 1 95 0
+ 255 0028 1846     		mov	r0, r3
+ 256 002a 1437     		adds	r7, r7, #20
+ 257              		.cfi_def_cfa_offset 4
+ 258 002c BD46     		mov	sp, r7
+ 259              		.cfi_def_cfa_register 13
+ 260              		@ sp needed
+ 261 002e 80BC     		pop	{r7}
+ 262              		.cfi_restore 7
+ 263              		.cfi_def_cfa_offset 0
+ 264 0030 7047     		bx	lr
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 8
+
+
+ 265              		.cfi_endproc
+ 266              	.LFE65:
+ 267              		.size	CalcCheckSum, .-CalcCheckSum
+ 268 0032 00BF     		.section	.rodata
+ 269 00be 0000     		.align	2
+ 270              	.LC14:
+ 271 00c0 2C3A00   		.ascii	",:\000"
+ 272 00c3 00       		.align	2
+ 273              	.LC15:
+ 274 00c4 255800   		.ascii	"%X\000"
+ 275 00c7 00       		.align	2
+ 276              	.LC16:
+ 277 00c8 43686563 		.ascii	"Checksum Mismatch: Recvd %2X Actual %2X\015\012\000"
+ 277      6B73756D 
+ 277      204D6973 
+ 277      6D617463 
+ 277      683A2052 
+ 278 00f2 0000     		.align	2
+ 279              	.LC17:
+ 280 00f4 256400   		.ascii	"%d\000"
+ 281 00f7 00       		.align	2
+ 282              	.LC18:
+ 283 00f8 257300   		.ascii	"%s\000"
+ 284              		.global	__aeabi_d2uiz
+ 285              		.section	.text.ECSense_DecodeMessage,"ax",%progbits
+ 286              		.align	2
+ 287              		.global	ECSense_DecodeMessage
+ 288              		.thumb
+ 289              		.thumb_func
+ 290              		.type	ECSense_DecodeMessage, %function
+ 291              	ECSense_DecodeMessage:
+ 292              	.LFB66:
+  96:src/ECSense.c **** 
+  97:src/ECSense.c ****  uint16_t ECSense_DecodeMessage(char * buffer){
+ 293              		.loc 1 97 0
+ 294              		.cfi_startproc
+ 295              		@ args = 0, pretend = 0, frame = 296
+ 296              		@ frame_needed = 1, uses_anonymous_args = 0
+ 297 0000 90B5     		push	{r4, r7, lr}
+ 298              		.cfi_def_cfa_offset 12
+ 299              		.cfi_offset 4, -12
+ 300              		.cfi_offset 7, -8
+ 301              		.cfi_offset 14, -4
+ 302 0002 CBB0     		sub	sp, sp, #300
+ 303              		.cfi_def_cfa_offset 312
+ 304 0004 00AF     		add	r7, sp, #0
+ 305              		.cfi_def_cfa_register 7
+ 306 0006 3B1D     		adds	r3, r7, #4
+ 307 0008 1860     		str	r0, [r3]
+  98:src/ECSense.c ****     uint16_t len;
+  99:src/ECSense.c ****     unsigned int checksum;
+ 100:src/ECSense.c ****     unsigned int rchecksum;
+ 101:src/ECSense.c ****     char * token;
+ 102:src/ECSense.c ****     const char * delim = ",:";
+ 308              		.loc 1 102 0
+ 309 000a 464B     		ldr	r3, .L22
+ 310 000c C7F81C31 		str	r3, [r7, #284]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 9
+
+
+ 103:src/ECSense.c ****     char value_str[BUFF_SIZE];
+ 104:src/ECSense.c ****     uint8_t key;
+ 105:src/ECSense.c ****     uint16_t value;
+ 106:src/ECSense.c ****     uint8_t return_val = ERROR;
+ 311              		.loc 1 106 0
+ 312 0010 FF23     		movs	r3, #255
+ 313 0012 87F82331 		strb	r3, [r7, #291]
+ 107:src/ECSense.c ****     len = strlen(buffer);
+ 314              		.loc 1 107 0
+ 315 0016 3B1D     		adds	r3, r7, #4
+ 316 0018 1868     		ldr	r0, [r3]
+ 317 001a FFF7FEFF 		bl	strlen
+ 318 001e 0346     		mov	r3, r0
+ 319 0020 A7F81A31 		strh	r3, [r7, #282]	@ movhi
+ 108:src/ECSense.c ****     
+ 109:src/ECSense.c ****     sscanf(buffer+len-2,"%X",&rchecksum);
+ 320              		.loc 1 109 0
+ 321 0024 B7F81A31 		ldrh	r3, [r7, #282]
+ 322 0028 023B     		subs	r3, r3, #2
+ 323 002a 3A1D     		adds	r2, r7, #4
+ 324 002c 1268     		ldr	r2, [r2]
+ 325 002e 1344     		add	r3, r3, r2
+ 326 0030 07F58672 		add	r2, r7, #268
+ 327 0034 3C49     		ldr	r1, .L22+4
+ 328 0036 1846     		mov	r0, r3
+ 329 0038 FFF7FEFF 		bl	sscanf
+ 110:src/ECSense.c ****     
+ 111:src/ECSense.c ****     buffer[len - 3] = 0;
+ 330              		.loc 1 111 0
+ 331 003c B7F81A31 		ldrh	r3, [r7, #282]
+ 332 0040 033B     		subs	r3, r3, #3
+ 333 0042 3A1D     		adds	r2, r7, #4
+ 334 0044 1268     		ldr	r2, [r2]
+ 335 0046 1344     		add	r3, r3, r2
+ 336 0048 0022     		movs	r2, #0
+ 337 004a 1A70     		strb	r2, [r3]
+ 112:src/ECSense.c ****     buffer = buffer + 1;
+ 338              		.loc 1 112 0
+ 339 004c 3B1D     		adds	r3, r7, #4
+ 340 004e 3A1D     		adds	r2, r7, #4
+ 341 0050 1268     		ldr	r2, [r2]
+ 342 0052 0132     		adds	r2, r2, #1
+ 343 0054 1A60     		str	r2, [r3]
+ 113:src/ECSense.c ****     checksum = CalcCheckSum(buffer);
+ 344              		.loc 1 113 0
+ 345 0056 3B1D     		adds	r3, r7, #4
+ 346 0058 1868     		ldr	r0, [r3]
+ 347 005a FFF7FEFF 		bl	CalcCheckSum
+ 348 005e 0346     		mov	r3, r0
+ 349 0060 C7F81431 		str	r3, [r7, #276]
+ 114:src/ECSense.c ****     if(rchecksum != checksum){
+ 350              		.loc 1 114 0
+ 351 0064 D7F80C21 		ldr	r2, [r7, #268]
+ 352 0068 D7F81431 		ldr	r3, [r7, #276]
+ 353 006c 9A42     		cmp	r2, r3
+ 354 006e 0BD0     		beq	.L16
+ 115:src/ECSense.c ****         printf("Checksum Mismatch: Recvd %2X Actual %2X\r\n",rchecksum, checksum);
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 10
+
+
+ 355              		.loc 1 115 0
+ 356 0070 D7F80C31 		ldr	r3, [r7, #268]
+ 357 0074 D7F81421 		ldr	r2, [r7, #276]
+ 358 0078 1946     		mov	r1, r3
+ 359 007a 2C48     		ldr	r0, .L22+8
+ 360 007c FFF7FEFF 		bl	printf
+ 116:src/ECSense.c ****         return_val = ERROR;
+ 361              		.loc 1 116 0
+ 362 0080 FF23     		movs	r3, #255
+ 363 0082 87F82331 		strb	r3, [r7, #291]
+ 364 0086 44E0     		b	.L17
+ 365              	.L16:
+ 117:src/ECSense.c ****     }
+ 118:src/ECSense.c ****     else{
+ 119:src/ECSense.c ****         //Update sd
+ 120:src/ECSense.c ****         //printf("%s\r\n", buffer);
+ 121:src/ECSense.c ****         token = strtok(buffer,delim);
+ 366              		.loc 1 121 0
+ 367 0088 3B1D     		adds	r3, r7, #4
+ 368 008a D7F81C11 		ldr	r1, [r7, #284]
+ 369 008e 1868     		ldr	r0, [r3]
+ 370 0090 FFF7FEFF 		bl	strtok
+ 371 0094 C7F82401 		str	r0, [r7, #292]
+ 122:src/ECSense.c ****         while(token != NULL){;
+ 372              		.loc 1 122 0
+ 373 0098 37E0     		b	.L18
+ 374              	.L20:
+ 123:src/ECSense.c ****             sscanf(token,"%d", &key);
+ 375              		.loc 1 123 0
+ 376 009a 07F10B03 		add	r3, r7, #11
+ 377 009e 1A46     		mov	r2, r3
+ 378 00a0 2349     		ldr	r1, .L22+12
+ 379 00a2 D7F82401 		ldr	r0, [r7, #292]
+ 380 00a6 FFF7FEFF 		bl	sscanf
+ 124:src/ECSense.c ****             token = strtok(NULL,delim);
+ 381              		.loc 1 124 0
+ 382 00aa D7F81C11 		ldr	r1, [r7, #284]
+ 383 00ae 0020     		movs	r0, #0
+ 384 00b0 FFF7FEFF 		bl	strtok
+ 385 00b4 C7F82401 		str	r0, [r7, #292]
+ 125:src/ECSense.c ****             sscanf(token,"%s", value_str);
+ 386              		.loc 1 125 0
+ 387 00b8 07F10C03 		add	r3, r7, #12
+ 388 00bc 1A46     		mov	r2, r3
+ 389 00be 1D49     		ldr	r1, .L22+16
+ 390 00c0 D7F82401 		ldr	r0, [r7, #292]
+ 391 00c4 FFF7FEFF 		bl	sscanf
+ 126:src/ECSense.c ****             value = atof(value_str);
+ 392              		.loc 1 126 0
+ 393 00c8 07F10C03 		add	r3, r7, #12
+ 394 00cc 1846     		mov	r0, r3
+ 395 00ce FFF7FEFF 		bl	atof
+ 396 00d2 0346     		mov	r3, r0
+ 397 00d4 0C46     		mov	r4, r1
+ 398 00d6 1846     		mov	r0, r3
+ 399 00d8 2146     		mov	r1, r4
+ 400 00da FFF7FEFF 		bl	__aeabi_d2uiz
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 11
+
+
+ 401 00de 0346     		mov	r3, r0
+ 402 00e0 A7F81231 		strh	r3, [r7, #274]	@ movhi
+ 127:src/ECSense.c ****             if(key == ec_measured){
+ 403              		.loc 1 127 0
+ 404 00e4 07F10B03 		add	r3, r7, #11
+ 405 00e8 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 406 00ea 0A2B     		cmp	r3, #10
+ 407 00ec 06D1     		bne	.L19
+ 128:src/ECSense.c ****                 ec = value;
+ 408              		.loc 1 128 0
+ 409 00ee 124A     		ldr	r2, .L22+20
+ 410 00f0 B7F81231 		ldrh	r3, [r7, #274]	@ movhi
+ 411 00f4 1380     		strh	r3, [r2]	@ movhi
+ 129:src/ECSense.c ****                 return_val = SUCCESS;
+ 412              		.loc 1 129 0
+ 413 00f6 0123     		movs	r3, #1
+ 414 00f8 87F82331 		strb	r3, [r7, #291]
+ 415              	.L19:
+ 130:src/ECSense.c ****             }
+ 131:src/ECSense.c ****             token = strtok(NULL,delim);
+ 416              		.loc 1 131 0
+ 417 00fc D7F81C11 		ldr	r1, [r7, #284]
+ 418 0100 0020     		movs	r0, #0
+ 419 0102 FFF7FEFF 		bl	strtok
+ 420 0106 C7F82401 		str	r0, [r7, #292]
+ 421              	.L18:
+ 122:src/ECSense.c ****             sscanf(token,"%d", &key);
+ 422              		.loc 1 122 0
+ 423 010a D7F82431 		ldr	r3, [r7, #292]
+ 424 010e 002B     		cmp	r3, #0
+ 425 0110 C3D1     		bne	.L20
+ 426              	.L17:
+ 132:src/ECSense.c ****         }
+ 133:src/ECSense.c ****     }
+ 134:src/ECSense.c ****     return return_val;
+ 427              		.loc 1 134 0
+ 428 0112 97F82331 		ldrb	r3, [r7, #291]	@ zero_extendqisi2
+ 429 0116 9BB2     		uxth	r3, r3
+ 135:src/ECSense.c **** }
+ 430              		.loc 1 135 0
+ 431 0118 1846     		mov	r0, r3
+ 432 011a 07F59677 		add	r7, r7, #300
+ 433              		.cfi_def_cfa_offset 12
+ 434 011e BD46     		mov	sp, r7
+ 435              		.cfi_def_cfa_register 13
+ 436              		@ sp needed
+ 437 0120 90BD     		pop	{r4, r7, pc}
+ 438              	.L23:
+ 439 0122 00BF     		.align	2
+ 440              	.L22:
+ 441 0124 C0000000 		.word	.LC14
+ 442 0128 C4000000 		.word	.LC15
+ 443 012c C8000000 		.word	.LC16
+ 444 0130 F4000000 		.word	.LC17
+ 445 0134 F8000000 		.word	.LC18
+ 446 0138 00000000 		.word	ec
+ 447              		.cfi_endproc
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 12
+
+
+ 448              	.LFE66:
+ 449              		.size	ECSense_DecodeMessage, .-ECSense_DecodeMessage
+ 450              		.section	.text.ECSense_Init,"ax",%progbits
+ 451              		.align	2
+ 452              		.global	ECSense_Init
+ 453              		.thumb
+ 454              		.thumb_func
+ 455              		.type	ECSense_Init, %function
+ 456              	ECSense_Init:
+ 457              	.LFB67:
+ 136:src/ECSense.c **** 
+ 137:src/ECSense.c **** /**
+ 138:src/ECSense.c ****  * @function ECSense_Init(void)
+ 139:src/ECSense.c ****  * @param None
+ 140:src/ECSense.c ****  * @return None
+ 141:src/ECSense.c ****  * @brief Initializes hardware components necessary for flow control and monitoring
+ 142:src/ECSense.c ****  * @author Barron Wong 05/15/19
+ 143:src/ECSense.c **** */
+ 144:src/ECSense.c **** void ECSense_Init(){
+ 458              		.loc 1 144 0
+ 459              		.cfi_startproc
+ 460              		@ args = 0, pretend = 0, frame = 0
+ 461              		@ frame_needed = 1, uses_anonymous_args = 0
+ 462 0000 80B5     		push	{r7, lr}
+ 463              		.cfi_def_cfa_offset 8
+ 464              		.cfi_offset 7, -8
+ 465              		.cfi_offset 14, -4
+ 466 0002 00AF     		add	r7, sp, #0
+ 467              		.cfi_def_cfa_register 7
+ 145:src/ECSense.c ****     ECSenseUART_Start();
+ 468              		.loc 1 145 0
+ 469 0004 FFF7FEFF 		bl	ECSenseUART_Start
+ 146:src/ECSense.c ****     ECSenseDataRxISR_StartEx(ECSenseDataRxISRHandler);
+ 470              		.loc 1 146 0
+ 471 0008 0348     		ldr	r0, .L25
+ 472 000a FFF7FEFF 		bl	ECSenseDataRxISR_StartEx
+ 147:src/ECSense.c ****     ECSense_TurnOff();
+ 473              		.loc 1 147 0
+ 474 000e FFF7FEFF 		bl	ECSense_TurnOff
+ 148:src/ECSense.c **** }
+ 475              		.loc 1 148 0
+ 476 0012 00BF     		nop
+ 477 0014 80BD     		pop	{r7, pc}
+ 478              	.L26:
+ 479 0016 00BF     		.align	2
+ 480              	.L25:
+ 481 0018 00000000 		.word	ECSenseDataRxISRHandler
+ 482              		.cfi_endproc
+ 483              	.LFE67:
+ 484              		.size	ECSense_Init, .-ECSense_Init
+ 485              		.section	.text.ECSense_GetEC,"ax",%progbits
+ 486              		.align	2
+ 487              		.global	ECSense_GetEC
+ 488              		.thumb
+ 489              		.thumb_func
+ 490              		.type	ECSense_GetEC, %function
+ 491              	ECSense_GetEC:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 13
+
+
+ 492              	.LFB68:
+ 149:src/ECSense.c **** 
+ 150:src/ECSense.c **** /**
+ 151:src/ECSense.c ****  * @function ECSense_GetEC(void)
+ 152:src/ECSense.c ****  * @param None
+ 153:src/ECSense.c ****  * @return EC value
+ 154:src/ECSense.c ****  * @brief Returns current EC value
+ 155:src/ECSense.c ****  * @author Barron Wong 05/15/19
+ 156:src/ECSense.c **** */
+ 157:src/ECSense.c **** uint16_t ECSense_GetEC(){
+ 493              		.loc 1 157 0
+ 494              		.cfi_startproc
+ 495              		@ args = 0, pretend = 0, frame = 0
+ 496              		@ frame_needed = 1, uses_anonymous_args = 0
+ 497              		@ link register save eliminated.
+ 498 0000 80B4     		push	{r7}
+ 499              		.cfi_def_cfa_offset 4
+ 500              		.cfi_offset 7, -4
+ 501 0002 00AF     		add	r7, sp, #0
+ 502              		.cfi_def_cfa_register 7
+ 158:src/ECSense.c ****     return ec;
+ 503              		.loc 1 158 0
+ 504 0004 024B     		ldr	r3, .L29
+ 505 0006 1B88     		ldrh	r3, [r3]
+ 159:src/ECSense.c **** }
+ 506              		.loc 1 159 0
+ 507 0008 1846     		mov	r0, r3
+ 508 000a BD46     		mov	sp, r7
+ 509              		.cfi_def_cfa_register 13
+ 510              		@ sp needed
+ 511 000c 80BC     		pop	{r7}
+ 512              		.cfi_restore 7
+ 513              		.cfi_def_cfa_offset 0
+ 514 000e 7047     		bx	lr
+ 515              	.L30:
+ 516              		.align	2
+ 517              	.L29:
+ 518 0010 00000000 		.word	ec
+ 519              		.cfi_endproc
+ 520              	.LFE68:
+ 521              		.size	ECSense_GetEC, .-ECSense_GetEC
+ 522              		.section	.text.ECSense_TurnOff,"ax",%progbits
+ 523              		.align	2
+ 524              		.global	ECSense_TurnOff
+ 525              		.thumb
+ 526              		.thumb_func
+ 527              		.type	ECSense_TurnOff, %function
+ 528              	ECSense_TurnOff:
+ 529              	.LFB69:
+ 160:src/ECSense.c **** 
+ 161:src/ECSense.c **** /**
+ 162:src/ECSense.c ****  * @function ECSense_TurnOff(void)
+ 163:src/ECSense.c ****  * @param None
+ 164:src/ECSense.c ****  * @return EC value
+ 165:src/ECSense.c ****  * @brief Turns off the ECSenses
+ 166:src/ECSense.c ****  * @author Barron Wong 05/21/19
+ 167:src/ECSense.c **** */
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 14
+
+
+ 168:src/ECSense.c **** void ECSense_TurnOff(){
+ 530              		.loc 1 168 0
+ 531              		.cfi_startproc
+ 532              		@ args = 0, pretend = 0, frame = 0
+ 533              		@ frame_needed = 1, uses_anonymous_args = 0
+ 534 0000 80B5     		push	{r7, lr}
+ 535              		.cfi_def_cfa_offset 8
+ 536              		.cfi_offset 7, -8
+ 537              		.cfi_offset 14, -4
+ 538 0002 00AF     		add	r7, sp, #0
+ 539              		.cfi_def_cfa_register 7
+ 169:src/ECSense.c ****     ECSenseControlReg_Write(0);
+ 540              		.loc 1 169 0
+ 541 0004 0020     		movs	r0, #0
+ 542 0006 FFF7FEFF 		bl	ECSenseControlReg_Write
+ 170:src/ECSense.c **** }
+ 543              		.loc 1 170 0
+ 544 000a 00BF     		nop
+ 545 000c 80BD     		pop	{r7, pc}
+ 546              		.cfi_endproc
+ 547              	.LFE69:
+ 548              		.size	ECSense_TurnOff, .-ECSense_TurnOff
+ 549 000e 00BF     		.section	.text.ECSense_TurnOn,"ax",%progbits
+ 550              		.align	2
+ 551              		.global	ECSense_TurnOn
+ 552              		.thumb
+ 553              		.thumb_func
+ 554              		.type	ECSense_TurnOn, %function
+ 555              	ECSense_TurnOn:
+ 556              	.LFB70:
+ 171:src/ECSense.c **** 
+ 172:src/ECSense.c **** /**
+ 173:src/ECSense.c ****  * @function ECSense_TurnOn(void)
+ 174:src/ECSense.c ****  * @param None
+ 175:src/ECSense.c ****  * @return EC value
+ 176:src/ECSense.c ****  * @brief Turns on ECSense and enables updates
+ 177:src/ECSense.c ****  * @author Barron Wong 05/21/19
+ 178:src/ECSense.c **** */
+ 179:src/ECSense.c **** void ECSense_TurnOn(){
+ 557              		.loc 1 179 0
+ 558              		.cfi_startproc
+ 559              		@ args = 0, pretend = 0, frame = 0
+ 560              		@ frame_needed = 1, uses_anonymous_args = 0
+ 561 0000 80B5     		push	{r7, lr}
+ 562              		.cfi_def_cfa_offset 8
+ 563              		.cfi_offset 7, -8
+ 564              		.cfi_offset 14, -4
+ 565 0002 00AF     		add	r7, sp, #0
+ 566              		.cfi_def_cfa_register 7
+ 180:src/ECSense.c ****     ECSenseControlReg_Write(1);
+ 567              		.loc 1 180 0
+ 568 0004 0120     		movs	r0, #1
+ 569 0006 FFF7FEFF 		bl	ECSenseControlReg_Write
+ 181:src/ECSense.c **** }
+ 570              		.loc 1 181 0
+ 571 000a 00BF     		nop
+ 572 000c 80BD     		pop	{r7, pc}
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 15
+
+
+ 573              		.cfi_endproc
+ 574              	.LFE70:
+ 575              		.size	ECSense_TurnOn, .-ECSense_TurnOn
+ 576 000e 00BF     		.section	.text.ECSense_StartSampling,"ax",%progbits
+ 577              		.align	2
+ 578              		.global	ECSense_StartSampling
+ 579              		.thumb
+ 580              		.thumb_func
+ 581              		.type	ECSense_StartSampling, %function
+ 582              	ECSense_StartSampling:
+ 583              	.LFB71:
+ 182:src/ECSense.c **** /**
+ 183:src/ECSense.c ****  * @function ECSense_StartSampling(void)
+ 184:src/ECSense.c ****  * @param None
+ 185:src/ECSense.c ****  * @return None
+ 186:src/ECSense.c ****  * @brief Enables EC Sampling
+ 187:src/ECSense.c ****  * @author Barron Wong 05/21/19
+ 188:src/ECSense.c **** */
+ 189:src/ECSense.c **** void ECSense_StartSampling(){
+ 584              		.loc 1 189 0
+ 585              		.cfi_startproc
+ 586              		@ args = 0, pretend = 0, frame = 0
+ 587              		@ frame_needed = 1, uses_anonymous_args = 0
+ 588 0000 80B5     		push	{r7, lr}
+ 589              		.cfi_def_cfa_offset 8
+ 590              		.cfi_offset 7, -8
+ 591              		.cfi_offset 14, -4
+ 592 0002 00AF     		add	r7, sp, #0
+ 593              		.cfi_def_cfa_register 7
+ 190:src/ECSense.c ****     ECSenseUART_Start();
+ 594              		.loc 1 190 0
+ 595 0004 FFF7FEFF 		bl	ECSenseUART_Start
+ 191:src/ECSense.c ****     ECSenseDataRxISR_StartEx(ECSenseDataRxISRHandler);
+ 596              		.loc 1 191 0
+ 597 0008 0248     		ldr	r0, .L34
+ 598 000a FFF7FEFF 		bl	ECSenseDataRxISR_StartEx
+ 192:src/ECSense.c **** }
+ 599              		.loc 1 192 0
+ 600 000e 00BF     		nop
+ 601 0010 80BD     		pop	{r7, pc}
+ 602              	.L35:
+ 603 0012 00BF     		.align	2
+ 604              	.L34:
+ 605 0014 00000000 		.word	ECSenseDataRxISRHandler
+ 606              		.cfi_endproc
+ 607              	.LFE71:
+ 608              		.size	ECSense_StartSampling, .-ECSense_StartSampling
+ 609              		.section	.text.ECSense_StopSampling,"ax",%progbits
+ 610              		.align	2
+ 611              		.global	ECSense_StopSampling
+ 612              		.thumb
+ 613              		.thumb_func
+ 614              		.type	ECSense_StopSampling, %function
+ 615              	ECSense_StopSampling:
+ 616              	.LFB72:
+ 193:src/ECSense.c **** /**
+ 194:src/ECSense.c ****  * @function ECSense_StartSampling(void)
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 16
+
+
+ 195:src/ECSense.c ****  * @param None
+ 196:src/ECSense.c ****  * @return None
+ 197:src/ECSense.c ****  * @brief Disables EC Sampling
+ 198:src/ECSense.c ****  * @author Barron Wong 05/21/19
+ 199:src/ECSense.c **** */
+ 200:src/ECSense.c **** void ECSense_StopSampling(){
+ 617              		.loc 1 200 0
+ 618              		.cfi_startproc
+ 619              		@ args = 0, pretend = 0, frame = 0
+ 620              		@ frame_needed = 1, uses_anonymous_args = 0
+ 621 0000 80B5     		push	{r7, lr}
+ 622              		.cfi_def_cfa_offset 8
+ 623              		.cfi_offset 7, -8
+ 624              		.cfi_offset 14, -4
+ 625 0002 00AF     		add	r7, sp, #0
+ 626              		.cfi_def_cfa_register 7
+ 201:src/ECSense.c ****     ECSenseDataRxISR_Disable();
+ 627              		.loc 1 201 0
+ 628 0004 FFF7FEFF 		bl	ECSenseDataRxISR_Disable
+ 202:src/ECSense.c ****     ECSenseUART_ClearRxBuffer();
+ 629              		.loc 1 202 0
+ 630 0008 FFF7FEFF 		bl	ECSenseUART_ClearRxBuffer
+ 203:src/ECSense.c ****     ECSenseDataRxISR_ClearPending();
+ 631              		.loc 1 203 0
+ 632 000c FFF7FEFF 		bl	ECSenseDataRxISR_ClearPending
+ 204:src/ECSense.c ****     ECSenseUART_Stop();
+ 633              		.loc 1 204 0
+ 634 0010 FFF7FEFF 		bl	ECSenseUART_Stop
+ 205:src/ECSense.c **** }
+ 635              		.loc 1 205 0
+ 636 0014 00BF     		nop
+ 637 0016 80BD     		pop	{r7, pc}
+ 638              		.cfi_endproc
+ 639              	.LFE72:
+ 640              		.size	ECSense_StopSampling, .-ECSense_StopSampling
+ 641              		.bss
+ 642              	count.8085:
+ 643 0103 00       		.space	1
+ 644              	remainder.8086:
+ 645 0104 00       		.space	1
+ 646              		.text
+ 647              	.Letext0:
+ 648              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 649              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 650              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 651              		.file 5 ".\\include/Protocol.h"
+ 652              		.file 6 "Generated_Source\\PSoC5/core_cm3.h"
+ 653              		.section	.debug_info,"",%progbits
+ 654              	.Ldebug_info0:
+ 655 0000 40030000 		.4byte	0x340
+ 656 0004 0400     		.2byte	0x4
+ 657 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 658 000a 04       		.byte	0x4
+ 659 000b 01       		.uleb128 0x1
+ 660 000c 58000000 		.4byte	.LASF55
+ 661 0010 0C       		.byte	0xc
+ 662 0011 CA020000 		.4byte	.LASF56
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 17
+
+
+ 663 0015 34030000 		.4byte	.LASF57
+ 664 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 665 001d 00000000 		.4byte	0
+ 666 0021 00000000 		.4byte	.Ldebug_line0
+ 667 0025 02       		.uleb128 0x2
+ 668 0026 01       		.byte	0x1
+ 669 0027 06       		.byte	0x6
+ 670 0028 C8010000 		.4byte	.LASF0
+ 671 002c 03       		.uleb128 0x3
+ 672 002d 87010000 		.4byte	.LASF3
+ 673 0031 02       		.byte	0x2
+ 674 0032 1D       		.byte	0x1d
+ 675 0033 37000000 		.4byte	0x37
+ 676 0037 02       		.uleb128 0x2
+ 677 0038 01       		.byte	0x1
+ 678 0039 08       		.byte	0x8
+ 679 003a BA010000 		.4byte	.LASF1
+ 680 003e 02       		.uleb128 0x2
+ 681 003f 02       		.byte	0x2
+ 682 0040 05       		.byte	0x5
+ 683 0041 45000000 		.4byte	.LASF2
+ 684 0045 03       		.uleb128 0x3
+ 685 0046 F1000000 		.4byte	.LASF4
+ 686 004a 02       		.byte	0x2
+ 687 004b 2B       		.byte	0x2b
+ 688 004c 50000000 		.4byte	0x50
+ 689 0050 02       		.uleb128 0x2
+ 690 0051 02       		.byte	0x2
+ 691 0052 07       		.byte	0x7
+ 692 0053 19020000 		.4byte	.LASF5
+ 693 0057 03       		.uleb128 0x3
+ 694 0058 DE020000 		.4byte	.LASF6
+ 695 005c 02       		.byte	0x2
+ 696 005d 3F       		.byte	0x3f
+ 697 005e 62000000 		.4byte	0x62
+ 698 0062 02       		.uleb128 0x2
+ 699 0063 04       		.byte	0x4
+ 700 0064 05       		.byte	0x5
+ 701 0065 61010000 		.4byte	.LASF7
+ 702 0069 02       		.uleb128 0x2
+ 703 006a 04       		.byte	0x4
+ 704 006b 07       		.byte	0x7
+ 705 006c 87020000 		.4byte	.LASF8
+ 706 0070 02       		.uleb128 0x2
+ 707 0071 08       		.byte	0x8
+ 708 0072 05       		.byte	0x5
+ 709 0073 53010000 		.4byte	.LASF9
+ 710 0077 02       		.uleb128 0x2
+ 711 0078 08       		.byte	0x8
+ 712 0079 07       		.byte	0x7
+ 713 007a D4010000 		.4byte	.LASF10
+ 714 007e 04       		.uleb128 0x4
+ 715 007f 04       		.byte	0x4
+ 716 0080 05       		.byte	0x5
+ 717 0081 696E7400 		.ascii	"int\000"
+ 718 0085 02       		.uleb128 0x2
+ 719 0086 04       		.byte	0x4
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 18
+
+
+ 720 0087 07       		.byte	0x7
+ 721 0088 EB010000 		.4byte	.LASF11
+ 722 008c 03       		.uleb128 0x3
+ 723 008d E8020000 		.4byte	.LASF12
+ 724 0091 03       		.byte	0x3
+ 725 0092 18       		.byte	0x18
+ 726 0093 2C000000 		.4byte	0x2c
+ 727 0097 03       		.uleb128 0x3
+ 728 0098 F8010000 		.4byte	.LASF13
+ 729 009c 03       		.byte	0x3
+ 730 009d 24       		.byte	0x24
+ 731 009e 45000000 		.4byte	0x45
+ 732 00a2 03       		.uleb128 0x3
+ 733 00a3 50020000 		.4byte	.LASF14
+ 734 00a7 03       		.byte	0x3
+ 735 00a8 2C       		.byte	0x2c
+ 736 00a9 57000000 		.4byte	0x57
+ 737 00ad 05       		.uleb128 0x5
+ 738 00ae 65020000 		.4byte	.LASF15
+ 739 00b2 04       		.byte	0x4
+ 740 00b3 9201     		.2byte	0x192
+ 741 00b5 37000000 		.4byte	0x37
+ 742 00b9 02       		.uleb128 0x2
+ 743 00ba 04       		.byte	0x4
+ 744 00bb 04       		.byte	0x4
+ 745 00bc 3F010000 		.4byte	.LASF16
+ 746 00c0 02       		.uleb128 0x2
+ 747 00c1 08       		.byte	0x8
+ 748 00c2 04       		.byte	0x4
+ 749 00c3 99020000 		.4byte	.LASF17
+ 750 00c7 02       		.uleb128 0x2
+ 751 00c8 01       		.byte	0x1
+ 752 00c9 08       		.byte	0x8
+ 753 00ca 36020000 		.4byte	.LASF18
+ 754 00ce 02       		.uleb128 0x2
+ 755 00cf 08       		.byte	0x8
+ 756 00d0 04       		.byte	0x4
+ 757 00d1 AE010000 		.4byte	.LASF19
+ 758 00d5 02       		.uleb128 0x2
+ 759 00d6 04       		.byte	0x4
+ 760 00d7 07       		.byte	0x7
+ 761 00d8 4F000000 		.4byte	.LASF20
+ 762 00dc 06       		.uleb128 0x6
+ 763 00dd 04       		.byte	0x4
+ 764 00de C7000000 		.4byte	0xc7
+ 765 00e2 06       		.uleb128 0x6
+ 766 00e3 04       		.byte	0x4
+ 767 00e4 E8000000 		.4byte	0xe8
+ 768 00e8 07       		.uleb128 0x7
+ 769 00e9 C7000000 		.4byte	0xc7
+ 770 00ed 08       		.uleb128 0x8
+ 771 00ee 29000000 		.4byte	.LASF58
+ 772 00f2 01       		.byte	0x1
+ 773 00f3 37000000 		.4byte	0x37
+ 774 00f7 05       		.byte	0x5
+ 775 00f8 13       		.byte	0x13
+ 776 00f9 52010000 		.4byte	0x152
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 19
+
+
+ 777 00fd 09       		.uleb128 0x9
+ 778 00fe 12030000 		.4byte	.LASF21
+ 779 0102 00       		.byte	0
+ 780 0103 09       		.uleb128 0x9
+ 781 0104 F0020000 		.4byte	.LASF22
+ 782 0108 01       		.byte	0x1
+ 783 0109 09       		.uleb128 0x9
+ 784 010a FC000000 		.4byte	.LASF23
+ 785 010e 02       		.byte	0x2
+ 786 010f 09       		.uleb128 0x9
+ 787 0110 3B000000 		.4byte	.LASF24
+ 788 0114 03       		.byte	0x3
+ 789 0115 09       		.uleb128 0x9
+ 790 0116 9D010000 		.4byte	.LASF25
+ 791 011a 04       		.byte	0x4
+ 792 011b 09       		.uleb128 0x9
+ 793 011c 1C010000 		.4byte	.LASF26
+ 794 0120 05       		.byte	0x5
+ 795 0121 09       		.uleb128 0x9
+ 796 0122 E6000000 		.4byte	.LASF27
+ 797 0126 06       		.byte	0x6
+ 798 0127 09       		.uleb128 0x9
+ 799 0128 91010000 		.4byte	.LASF28
+ 800 012c 07       		.byte	0x7
+ 801 012d 09       		.uleb128 0x9
+ 802 012e AD020000 		.4byte	.LASF29
+ 803 0132 08       		.byte	0x8
+ 804 0133 09       		.uleb128 0x9
+ 805 0134 3B020000 		.4byte	.LASF30
+ 806 0138 09       		.byte	0x9
+ 807 0139 09       		.uleb128 0x9
+ 808 013a BF030000 		.4byte	.LASF31
+ 809 013e 0A       		.byte	0xa
+ 810 013f 09       		.uleb128 0x9
+ 811 0140 2C020000 		.4byte	.LASF32
+ 812 0144 0B       		.byte	0xb
+ 813 0145 09       		.uleb128 0x9
+ 814 0146 45010000 		.4byte	.LASF33
+ 815 014a 0C       		.byte	0xc
+ 816 014b 09       		.uleb128 0x9
+ 817 014c 00000000 		.4byte	.LASF34
+ 818 0150 0D       		.byte	0xd
+ 819 0151 00       		.byte	0
+ 820 0152 0A       		.uleb128 0xa
+ 821 0153 01020000 		.4byte	.LASF59
+ 822 0157 01       		.byte	0x1
+ 823 0158 2F       		.byte	0x2f
+ 824 0159 00000000 		.4byte	.LFB64
+ 825 015d A4000000 		.4byte	.LFE64-.LFB64
+ 826 0161 01       		.uleb128 0x1
+ 827 0162 9C       		.byte	0x9c
+ 828 0163 8A010000 		.4byte	0x18a
+ 829 0167 0B       		.uleb128 0xb
+ 830 0168 D8020000 		.4byte	.LASF35
+ 831 016c 01       		.byte	0x1
+ 832 016d 30       		.byte	0x30
+ 833 016e 8C000000 		.4byte	0x8c
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 20
+
+
+ 834 0172 05       		.uleb128 0x5
+ 835 0173 03       		.byte	0x3
+ 836 0174 03010000 		.4byte	count.8085
+ 837 0178 0B       		.uleb128 0xb
+ 838 0179 1F000000 		.4byte	.LASF36
+ 839 017d 01       		.byte	0x1
+ 840 017e 31       		.byte	0x31
+ 841 017f 8C000000 		.4byte	0x8c
+ 842 0183 05       		.uleb128 0x5
+ 843 0184 03       		.byte	0x3
+ 844 0185 04010000 		.4byte	remainder.8086
+ 845 0189 00       		.byte	0
+ 846 018a 0C       		.uleb128 0xc
+ 847 018b 27030000 		.4byte	.LASF37
+ 848 018f 01       		.byte	0x1
+ 849 0190 58       		.byte	0x58
+ 850 0191 97000000 		.4byte	0x97
+ 851 0195 00000000 		.4byte	.LFB65
+ 852 0199 32000000 		.4byte	.LFE65-.LFB65
+ 853 019d 01       		.uleb128 0x1
+ 854 019e 9C       		.byte	0x9c
+ 855 019f BC010000 		.4byte	0x1bc
+ 856 01a3 0D       		.uleb128 0xd
+ 857 01a4 7300     		.ascii	"s\000"
+ 858 01a6 01       		.byte	0x1
+ 859 01a7 58       		.byte	0x58
+ 860 01a8 E2000000 		.4byte	0xe2
+ 861 01ac 02       		.uleb128 0x2
+ 862 01ad 91       		.byte	0x91
+ 863 01ae 6C       		.sleb128 -20
+ 864 01af 0E       		.uleb128 0xe
+ 865 01b0 6300     		.ascii	"c\000"
+ 866 01b2 01       		.byte	0x1
+ 867 01b3 59       		.byte	0x59
+ 868 01b4 97000000 		.4byte	0x97
+ 869 01b8 02       		.uleb128 0x2
+ 870 01b9 91       		.byte	0x91
+ 871 01ba 76       		.sleb128 -10
+ 872 01bb 00       		.byte	0
+ 873 01bc 0F       		.uleb128 0xf
+ 874 01bd 06010000 		.4byte	.LASF38
+ 875 01c1 01       		.byte	0x1
+ 876 01c2 61       		.byte	0x61
+ 877 01c3 97000000 		.4byte	0x97
+ 878 01c7 00000000 		.4byte	.LFB66
+ 879 01cb 3C010000 		.4byte	.LFE66-.LFB66
+ 880 01cf 01       		.uleb128 0x1
+ 881 01d0 9C       		.byte	0x9c
+ 882 01d1 65020000 		.4byte	0x265
+ 883 01d5 10       		.uleb128 0x10
+ 884 01d6 80020000 		.4byte	.LASF39
+ 885 01da 01       		.byte	0x1
+ 886 01db 61       		.byte	0x61
+ 887 01dc DC000000 		.4byte	0xdc
+ 888 01e0 03       		.uleb128 0x3
+ 889 01e1 91       		.byte	0x91
+ 890 01e2 CC7D     		.sleb128 -308
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 21
+
+
+ 891 01e4 0E       		.uleb128 0xe
+ 892 01e5 6C656E00 		.ascii	"len\000"
+ 893 01e9 01       		.byte	0x1
+ 894 01ea 62       		.byte	0x62
+ 895 01eb 97000000 		.4byte	0x97
+ 896 01ef 02       		.uleb128 0x2
+ 897 01f0 91       		.byte	0x91
+ 898 01f1 62       		.sleb128 -30
+ 899 01f2 0B       		.uleb128 0xb
+ 900 01f3 26010000 		.4byte	.LASF40
+ 901 01f7 01       		.byte	0x1
+ 902 01f8 63       		.byte	0x63
+ 903 01f9 85000000 		.4byte	0x85
+ 904 01fd 02       		.uleb128 0x2
+ 905 01fe 91       		.byte	0x91
+ 906 01ff 5C       		.sleb128 -36
+ 907 0200 0B       		.uleb128 0xb
+ 908 0201 35010000 		.4byte	.LASF41
+ 909 0205 01       		.byte	0x1
+ 910 0206 64       		.byte	0x64
+ 911 0207 85000000 		.4byte	0x85
+ 912 020b 02       		.uleb128 0x2
+ 913 020c 91       		.byte	0x91
+ 914 020d 54       		.sleb128 -44
+ 915 020e 0B       		.uleb128 0xb
+ 916 020f 0E000000 		.4byte	.LASF42
+ 917 0213 01       		.byte	0x1
+ 918 0214 65       		.byte	0x65
+ 919 0215 DC000000 		.4byte	0xdc
+ 920 0219 02       		.uleb128 0x2
+ 921 021a 91       		.byte	0x91
+ 922 021b 6C       		.sleb128 -20
+ 923 021c 0B       		.uleb128 0xb
+ 924 021d 2F010000 		.4byte	.LASF43
+ 925 0221 01       		.byte	0x1
+ 926 0222 66       		.byte	0x66
+ 927 0223 E2000000 		.4byte	0xe2
+ 928 0227 02       		.uleb128 0x2
+ 929 0228 91       		.byte	0x91
+ 930 0229 64       		.sleb128 -28
+ 931 022a 0B       		.uleb128 0xb
+ 932 022b CB030000 		.4byte	.LASF44
+ 933 022f 01       		.byte	0x1
+ 934 0230 67       		.byte	0x67
+ 935 0231 65020000 		.4byte	0x265
+ 936 0235 03       		.uleb128 0x3
+ 937 0236 91       		.byte	0x91
+ 938 0237 D47D     		.sleb128 -300
+ 939 0239 0E       		.uleb128 0xe
+ 940 023a 6B657900 		.ascii	"key\000"
+ 941 023e 01       		.byte	0x1
+ 942 023f 68       		.byte	0x68
+ 943 0240 8C000000 		.4byte	0x8c
+ 944 0244 03       		.uleb128 0x3
+ 945 0245 91       		.byte	0x91
+ 946 0246 D37D     		.sleb128 -301
+ 947 0248 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 22
+
+
+ 948 0249 B9030000 		.4byte	.LASF45
+ 949 024d 01       		.byte	0x1
+ 950 024e 69       		.byte	0x69
+ 951 024f 97000000 		.4byte	0x97
+ 952 0253 02       		.uleb128 0x2
+ 953 0254 91       		.byte	0x91
+ 954 0255 5A       		.sleb128 -38
+ 955 0256 0B       		.uleb128 0xb
+ 956 0257 30000000 		.4byte	.LASF46
+ 957 025b 01       		.byte	0x1
+ 958 025c 6A       		.byte	0x6a
+ 959 025d 8C000000 		.4byte	0x8c
+ 960 0261 02       		.uleb128 0x2
+ 961 0262 91       		.byte	0x91
+ 962 0263 6B       		.sleb128 -21
+ 963 0264 00       		.byte	0
+ 964 0265 11       		.uleb128 0x11
+ 965 0266 C7000000 		.4byte	0xc7
+ 966 026a 75020000 		.4byte	0x275
+ 967 026e 12       		.uleb128 0x12
+ 968 026f D5000000 		.4byte	0xd5
+ 969 0273 FE       		.byte	0xfe
+ 970 0274 00       		.byte	0
+ 971 0275 13       		.uleb128 0x13
+ 972 0276 58020000 		.4byte	.LASF47
+ 973 027a 01       		.byte	0x1
+ 974 027b 90       		.byte	0x90
+ 975 027c 00000000 		.4byte	.LFB67
+ 976 0280 1C000000 		.4byte	.LFE67-.LFB67
+ 977 0284 01       		.uleb128 0x1
+ 978 0285 9C       		.byte	0x9c
+ 979 0286 14       		.uleb128 0x14
+ 980 0287 79010000 		.4byte	.LASF60
+ 981 028b 01       		.byte	0x1
+ 982 028c 9D       		.byte	0x9d
+ 983 028d 97000000 		.4byte	0x97
+ 984 0291 00000000 		.4byte	.LFB68
+ 985 0295 14000000 		.4byte	.LFE68-.LFB68
+ 986 0299 01       		.uleb128 0x1
+ 987 029a 9C       		.byte	0x9c
+ 988 029b 13       		.uleb128 0x13
+ 989 029c BA020000 		.4byte	.LASF48
+ 990 02a0 01       		.byte	0x1
+ 991 02a1 A8       		.byte	0xa8
+ 992 02a2 00000000 		.4byte	.LFB69
+ 993 02a6 0E000000 		.4byte	.LFE69-.LFB69
+ 994 02aa 01       		.uleb128 0x1
+ 995 02ab 9C       		.byte	0x9c
+ 996 02ac 13       		.uleb128 0x13
+ 997 02ad 6A010000 		.4byte	.LASF49
+ 998 02b1 01       		.byte	0x1
+ 999 02b2 B3       		.byte	0xb3
+ 1000 02b3 00000000 		.4byte	.LFB70
+ 1001 02b7 0E000000 		.4byte	.LFE70-.LFB70
+ 1002 02bb 01       		.uleb128 0x1
+ 1003 02bc 9C       		.byte	0x9c
+ 1004 02bd 13       		.uleb128 0x13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 23
+
+
+ 1005 02be FC020000 		.4byte	.LASF50
+ 1006 02c2 01       		.byte	0x1
+ 1007 02c3 BD       		.byte	0xbd
+ 1008 02c4 00000000 		.4byte	.LFB71
+ 1009 02c8 18000000 		.4byte	.LFE71-.LFB71
+ 1010 02cc 01       		.uleb128 0x1
+ 1011 02cd 9C       		.byte	0x9c
+ 1012 02ce 13       		.uleb128 0x13
+ 1013 02cf 6B020000 		.4byte	.LASF51
+ 1014 02d3 01       		.byte	0x1
+ 1015 02d4 C8       		.byte	0xc8
+ 1016 02d5 00000000 		.4byte	.LFB72
+ 1017 02d9 18000000 		.4byte	.LFE72-.LFB72
+ 1018 02dd 01       		.uleb128 0x1
+ 1019 02de 9C       		.byte	0x9c
+ 1020 02df 11       		.uleb128 0x11
+ 1021 02e0 E2000000 		.4byte	0xe2
+ 1022 02e4 EF020000 		.4byte	0x2ef
+ 1023 02e8 12       		.uleb128 0x12
+ 1024 02e9 D5000000 		.4byte	0xd5
+ 1025 02ed 0D       		.byte	0xd
+ 1026 02ee 00       		.byte	0
+ 1027 02ef 0B       		.uleb128 0xb
+ 1028 02f0 14000000 		.4byte	.LASF52
+ 1029 02f4 05       		.byte	0x5
+ 1030 02f5 28       		.byte	0x28
+ 1031 02f6 DF020000 		.4byte	0x2df
+ 1032 02fa 05       		.uleb128 0x5
+ 1033 02fb 03       		.byte	0x3
+ 1034 02fc 00000000 		.4byte	pkey_const
+ 1035 0300 0E       		.uleb128 0xe
+ 1036 0301 656300   		.ascii	"ec\000"
+ 1037 0304 01       		.byte	0x1
+ 1038 0305 20       		.byte	0x20
+ 1039 0306 97000000 		.4byte	0x97
+ 1040 030a 05       		.uleb128 0x5
+ 1041 030b 03       		.byte	0x3
+ 1042 030c 00000000 		.4byte	ec
+ 1043 0310 0B       		.uleb128 0xb
+ 1044 0311 4A020000 		.4byte	.LASF53
+ 1045 0315 01       		.byte	0x1
+ 1046 0316 21       		.byte	0x21
+ 1047 0317 8C000000 		.4byte	0x8c
+ 1048 031b 05       		.uleb128 0x5
+ 1049 031c 03       		.byte	0x3
+ 1050 031d 02000000 		.4byte	ready
+ 1051 0321 0B       		.uleb128 0xb
+ 1052 0322 1E030000 		.4byte	.LASF54
+ 1053 0326 01       		.byte	0x1
+ 1054 0327 22       		.byte	0x22
+ 1055 0328 65020000 		.4byte	0x265
+ 1056 032c 05       		.uleb128 0x5
+ 1057 032d 03       		.byte	0x3
+ 1058 032e 04000000 		.4byte	RxBuffer
+ 1059 0332 15       		.uleb128 0x15
+ 1060 0333 A0020000 		.4byte	.LASF61
+ 1061 0337 06       		.byte	0x6
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 24
+
+
+ 1062 0338 1207     		.2byte	0x712
+ 1063 033a 3E030000 		.4byte	0x33e
+ 1064 033e 16       		.uleb128 0x16
+ 1065 033f A2000000 		.4byte	0xa2
+ 1066 0343 00       		.byte	0
+ 1067              		.section	.debug_abbrev,"",%progbits
+ 1068              	.Ldebug_abbrev0:
+ 1069 0000 01       		.uleb128 0x1
+ 1070 0001 11       		.uleb128 0x11
+ 1071 0002 01       		.byte	0x1
+ 1072 0003 25       		.uleb128 0x25
+ 1073 0004 0E       		.uleb128 0xe
+ 1074 0005 13       		.uleb128 0x13
+ 1075 0006 0B       		.uleb128 0xb
+ 1076 0007 03       		.uleb128 0x3
+ 1077 0008 0E       		.uleb128 0xe
+ 1078 0009 1B       		.uleb128 0x1b
+ 1079 000a 0E       		.uleb128 0xe
+ 1080 000b 55       		.uleb128 0x55
+ 1081 000c 17       		.uleb128 0x17
+ 1082 000d 11       		.uleb128 0x11
+ 1083 000e 01       		.uleb128 0x1
+ 1084 000f 10       		.uleb128 0x10
+ 1085 0010 17       		.uleb128 0x17
+ 1086 0011 00       		.byte	0
+ 1087 0012 00       		.byte	0
+ 1088 0013 02       		.uleb128 0x2
+ 1089 0014 24       		.uleb128 0x24
+ 1090 0015 00       		.byte	0
+ 1091 0016 0B       		.uleb128 0xb
+ 1092 0017 0B       		.uleb128 0xb
+ 1093 0018 3E       		.uleb128 0x3e
+ 1094 0019 0B       		.uleb128 0xb
+ 1095 001a 03       		.uleb128 0x3
+ 1096 001b 0E       		.uleb128 0xe
+ 1097 001c 00       		.byte	0
+ 1098 001d 00       		.byte	0
+ 1099 001e 03       		.uleb128 0x3
+ 1100 001f 16       		.uleb128 0x16
+ 1101 0020 00       		.byte	0
+ 1102 0021 03       		.uleb128 0x3
+ 1103 0022 0E       		.uleb128 0xe
+ 1104 0023 3A       		.uleb128 0x3a
+ 1105 0024 0B       		.uleb128 0xb
+ 1106 0025 3B       		.uleb128 0x3b
+ 1107 0026 0B       		.uleb128 0xb
+ 1108 0027 49       		.uleb128 0x49
+ 1109 0028 13       		.uleb128 0x13
+ 1110 0029 00       		.byte	0
+ 1111 002a 00       		.byte	0
+ 1112 002b 04       		.uleb128 0x4
+ 1113 002c 24       		.uleb128 0x24
+ 1114 002d 00       		.byte	0
+ 1115 002e 0B       		.uleb128 0xb
+ 1116 002f 0B       		.uleb128 0xb
+ 1117 0030 3E       		.uleb128 0x3e
+ 1118 0031 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 25
+
+
+ 1119 0032 03       		.uleb128 0x3
+ 1120 0033 08       		.uleb128 0x8
+ 1121 0034 00       		.byte	0
+ 1122 0035 00       		.byte	0
+ 1123 0036 05       		.uleb128 0x5
+ 1124 0037 16       		.uleb128 0x16
+ 1125 0038 00       		.byte	0
+ 1126 0039 03       		.uleb128 0x3
+ 1127 003a 0E       		.uleb128 0xe
+ 1128 003b 3A       		.uleb128 0x3a
+ 1129 003c 0B       		.uleb128 0xb
+ 1130 003d 3B       		.uleb128 0x3b
+ 1131 003e 05       		.uleb128 0x5
+ 1132 003f 49       		.uleb128 0x49
+ 1133 0040 13       		.uleb128 0x13
+ 1134 0041 00       		.byte	0
+ 1135 0042 00       		.byte	0
+ 1136 0043 06       		.uleb128 0x6
+ 1137 0044 0F       		.uleb128 0xf
+ 1138 0045 00       		.byte	0
+ 1139 0046 0B       		.uleb128 0xb
+ 1140 0047 0B       		.uleb128 0xb
+ 1141 0048 49       		.uleb128 0x49
+ 1142 0049 13       		.uleb128 0x13
+ 1143 004a 00       		.byte	0
+ 1144 004b 00       		.byte	0
+ 1145 004c 07       		.uleb128 0x7
+ 1146 004d 26       		.uleb128 0x26
+ 1147 004e 00       		.byte	0
+ 1148 004f 49       		.uleb128 0x49
+ 1149 0050 13       		.uleb128 0x13
+ 1150 0051 00       		.byte	0
+ 1151 0052 00       		.byte	0
+ 1152 0053 08       		.uleb128 0x8
+ 1153 0054 04       		.uleb128 0x4
+ 1154 0055 01       		.byte	0x1
+ 1155 0056 03       		.uleb128 0x3
+ 1156 0057 0E       		.uleb128 0xe
+ 1157 0058 0B       		.uleb128 0xb
+ 1158 0059 0B       		.uleb128 0xb
+ 1159 005a 49       		.uleb128 0x49
+ 1160 005b 13       		.uleb128 0x13
+ 1161 005c 3A       		.uleb128 0x3a
+ 1162 005d 0B       		.uleb128 0xb
+ 1163 005e 3B       		.uleb128 0x3b
+ 1164 005f 0B       		.uleb128 0xb
+ 1165 0060 01       		.uleb128 0x1
+ 1166 0061 13       		.uleb128 0x13
+ 1167 0062 00       		.byte	0
+ 1168 0063 00       		.byte	0
+ 1169 0064 09       		.uleb128 0x9
+ 1170 0065 28       		.uleb128 0x28
+ 1171 0066 00       		.byte	0
+ 1172 0067 03       		.uleb128 0x3
+ 1173 0068 0E       		.uleb128 0xe
+ 1174 0069 1C       		.uleb128 0x1c
+ 1175 006a 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 26
+
+
+ 1176 006b 00       		.byte	0
+ 1177 006c 00       		.byte	0
+ 1178 006d 0A       		.uleb128 0xa
+ 1179 006e 2E       		.uleb128 0x2e
+ 1180 006f 01       		.byte	0x1
+ 1181 0070 3F       		.uleb128 0x3f
+ 1182 0071 19       		.uleb128 0x19
+ 1183 0072 03       		.uleb128 0x3
+ 1184 0073 0E       		.uleb128 0xe
+ 1185 0074 3A       		.uleb128 0x3a
+ 1186 0075 0B       		.uleb128 0xb
+ 1187 0076 3B       		.uleb128 0x3b
+ 1188 0077 0B       		.uleb128 0xb
+ 1189 0078 27       		.uleb128 0x27
+ 1190 0079 19       		.uleb128 0x19
+ 1191 007a 11       		.uleb128 0x11
+ 1192 007b 01       		.uleb128 0x1
+ 1193 007c 12       		.uleb128 0x12
+ 1194 007d 06       		.uleb128 0x6
+ 1195 007e 40       		.uleb128 0x40
+ 1196 007f 18       		.uleb128 0x18
+ 1197 0080 9642     		.uleb128 0x2116
+ 1198 0082 19       		.uleb128 0x19
+ 1199 0083 01       		.uleb128 0x1
+ 1200 0084 13       		.uleb128 0x13
+ 1201 0085 00       		.byte	0
+ 1202 0086 00       		.byte	0
+ 1203 0087 0B       		.uleb128 0xb
+ 1204 0088 34       		.uleb128 0x34
+ 1205 0089 00       		.byte	0
+ 1206 008a 03       		.uleb128 0x3
+ 1207 008b 0E       		.uleb128 0xe
+ 1208 008c 3A       		.uleb128 0x3a
+ 1209 008d 0B       		.uleb128 0xb
+ 1210 008e 3B       		.uleb128 0x3b
+ 1211 008f 0B       		.uleb128 0xb
+ 1212 0090 49       		.uleb128 0x49
+ 1213 0091 13       		.uleb128 0x13
+ 1214 0092 02       		.uleb128 0x2
+ 1215 0093 18       		.uleb128 0x18
+ 1216 0094 00       		.byte	0
+ 1217 0095 00       		.byte	0
+ 1218 0096 0C       		.uleb128 0xc
+ 1219 0097 2E       		.uleb128 0x2e
+ 1220 0098 01       		.byte	0x1
+ 1221 0099 3F       		.uleb128 0x3f
+ 1222 009a 19       		.uleb128 0x19
+ 1223 009b 03       		.uleb128 0x3
+ 1224 009c 0E       		.uleb128 0xe
+ 1225 009d 3A       		.uleb128 0x3a
+ 1226 009e 0B       		.uleb128 0xb
+ 1227 009f 3B       		.uleb128 0x3b
+ 1228 00a0 0B       		.uleb128 0xb
+ 1229 00a1 27       		.uleb128 0x27
+ 1230 00a2 19       		.uleb128 0x19
+ 1231 00a3 49       		.uleb128 0x49
+ 1232 00a4 13       		.uleb128 0x13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 27
+
+
+ 1233 00a5 11       		.uleb128 0x11
+ 1234 00a6 01       		.uleb128 0x1
+ 1235 00a7 12       		.uleb128 0x12
+ 1236 00a8 06       		.uleb128 0x6
+ 1237 00a9 40       		.uleb128 0x40
+ 1238 00aa 18       		.uleb128 0x18
+ 1239 00ab 9742     		.uleb128 0x2117
+ 1240 00ad 19       		.uleb128 0x19
+ 1241 00ae 01       		.uleb128 0x1
+ 1242 00af 13       		.uleb128 0x13
+ 1243 00b0 00       		.byte	0
+ 1244 00b1 00       		.byte	0
+ 1245 00b2 0D       		.uleb128 0xd
+ 1246 00b3 05       		.uleb128 0x5
+ 1247 00b4 00       		.byte	0
+ 1248 00b5 03       		.uleb128 0x3
+ 1249 00b6 08       		.uleb128 0x8
+ 1250 00b7 3A       		.uleb128 0x3a
+ 1251 00b8 0B       		.uleb128 0xb
+ 1252 00b9 3B       		.uleb128 0x3b
+ 1253 00ba 0B       		.uleb128 0xb
+ 1254 00bb 49       		.uleb128 0x49
+ 1255 00bc 13       		.uleb128 0x13
+ 1256 00bd 02       		.uleb128 0x2
+ 1257 00be 18       		.uleb128 0x18
+ 1258 00bf 00       		.byte	0
+ 1259 00c0 00       		.byte	0
+ 1260 00c1 0E       		.uleb128 0xe
+ 1261 00c2 34       		.uleb128 0x34
+ 1262 00c3 00       		.byte	0
+ 1263 00c4 03       		.uleb128 0x3
+ 1264 00c5 08       		.uleb128 0x8
+ 1265 00c6 3A       		.uleb128 0x3a
+ 1266 00c7 0B       		.uleb128 0xb
+ 1267 00c8 3B       		.uleb128 0x3b
+ 1268 00c9 0B       		.uleb128 0xb
+ 1269 00ca 49       		.uleb128 0x49
+ 1270 00cb 13       		.uleb128 0x13
+ 1271 00cc 02       		.uleb128 0x2
+ 1272 00cd 18       		.uleb128 0x18
+ 1273 00ce 00       		.byte	0
+ 1274 00cf 00       		.byte	0
+ 1275 00d0 0F       		.uleb128 0xf
+ 1276 00d1 2E       		.uleb128 0x2e
+ 1277 00d2 01       		.byte	0x1
+ 1278 00d3 3F       		.uleb128 0x3f
+ 1279 00d4 19       		.uleb128 0x19
+ 1280 00d5 03       		.uleb128 0x3
+ 1281 00d6 0E       		.uleb128 0xe
+ 1282 00d7 3A       		.uleb128 0x3a
+ 1283 00d8 0B       		.uleb128 0xb
+ 1284 00d9 3B       		.uleb128 0x3b
+ 1285 00da 0B       		.uleb128 0xb
+ 1286 00db 27       		.uleb128 0x27
+ 1287 00dc 19       		.uleb128 0x19
+ 1288 00dd 49       		.uleb128 0x49
+ 1289 00de 13       		.uleb128 0x13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 28
+
+
+ 1290 00df 11       		.uleb128 0x11
+ 1291 00e0 01       		.uleb128 0x1
+ 1292 00e1 12       		.uleb128 0x12
+ 1293 00e2 06       		.uleb128 0x6
+ 1294 00e3 40       		.uleb128 0x40
+ 1295 00e4 18       		.uleb128 0x18
+ 1296 00e5 9642     		.uleb128 0x2116
+ 1297 00e7 19       		.uleb128 0x19
+ 1298 00e8 01       		.uleb128 0x1
+ 1299 00e9 13       		.uleb128 0x13
+ 1300 00ea 00       		.byte	0
+ 1301 00eb 00       		.byte	0
+ 1302 00ec 10       		.uleb128 0x10
+ 1303 00ed 05       		.uleb128 0x5
+ 1304 00ee 00       		.byte	0
+ 1305 00ef 03       		.uleb128 0x3
+ 1306 00f0 0E       		.uleb128 0xe
+ 1307 00f1 3A       		.uleb128 0x3a
+ 1308 00f2 0B       		.uleb128 0xb
+ 1309 00f3 3B       		.uleb128 0x3b
+ 1310 00f4 0B       		.uleb128 0xb
+ 1311 00f5 49       		.uleb128 0x49
+ 1312 00f6 13       		.uleb128 0x13
+ 1313 00f7 02       		.uleb128 0x2
+ 1314 00f8 18       		.uleb128 0x18
+ 1315 00f9 00       		.byte	0
+ 1316 00fa 00       		.byte	0
+ 1317 00fb 11       		.uleb128 0x11
+ 1318 00fc 01       		.uleb128 0x1
+ 1319 00fd 01       		.byte	0x1
+ 1320 00fe 49       		.uleb128 0x49
+ 1321 00ff 13       		.uleb128 0x13
+ 1322 0100 01       		.uleb128 0x1
+ 1323 0101 13       		.uleb128 0x13
+ 1324 0102 00       		.byte	0
+ 1325 0103 00       		.byte	0
+ 1326 0104 12       		.uleb128 0x12
+ 1327 0105 21       		.uleb128 0x21
+ 1328 0106 00       		.byte	0
+ 1329 0107 49       		.uleb128 0x49
+ 1330 0108 13       		.uleb128 0x13
+ 1331 0109 2F       		.uleb128 0x2f
+ 1332 010a 0B       		.uleb128 0xb
+ 1333 010b 00       		.byte	0
+ 1334 010c 00       		.byte	0
+ 1335 010d 13       		.uleb128 0x13
+ 1336 010e 2E       		.uleb128 0x2e
+ 1337 010f 00       		.byte	0
+ 1338 0110 3F       		.uleb128 0x3f
+ 1339 0111 19       		.uleb128 0x19
+ 1340 0112 03       		.uleb128 0x3
+ 1341 0113 0E       		.uleb128 0xe
+ 1342 0114 3A       		.uleb128 0x3a
+ 1343 0115 0B       		.uleb128 0xb
+ 1344 0116 3B       		.uleb128 0x3b
+ 1345 0117 0B       		.uleb128 0xb
+ 1346 0118 11       		.uleb128 0x11
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 29
+
+
+ 1347 0119 01       		.uleb128 0x1
+ 1348 011a 12       		.uleb128 0x12
+ 1349 011b 06       		.uleb128 0x6
+ 1350 011c 40       		.uleb128 0x40
+ 1351 011d 18       		.uleb128 0x18
+ 1352 011e 9642     		.uleb128 0x2116
+ 1353 0120 19       		.uleb128 0x19
+ 1354 0121 00       		.byte	0
+ 1355 0122 00       		.byte	0
+ 1356 0123 14       		.uleb128 0x14
+ 1357 0124 2E       		.uleb128 0x2e
+ 1358 0125 00       		.byte	0
+ 1359 0126 3F       		.uleb128 0x3f
+ 1360 0127 19       		.uleb128 0x19
+ 1361 0128 03       		.uleb128 0x3
+ 1362 0129 0E       		.uleb128 0xe
+ 1363 012a 3A       		.uleb128 0x3a
+ 1364 012b 0B       		.uleb128 0xb
+ 1365 012c 3B       		.uleb128 0x3b
+ 1366 012d 0B       		.uleb128 0xb
+ 1367 012e 49       		.uleb128 0x49
+ 1368 012f 13       		.uleb128 0x13
+ 1369 0130 11       		.uleb128 0x11
+ 1370 0131 01       		.uleb128 0x1
+ 1371 0132 12       		.uleb128 0x12
+ 1372 0133 06       		.uleb128 0x6
+ 1373 0134 40       		.uleb128 0x40
+ 1374 0135 18       		.uleb128 0x18
+ 1375 0136 9742     		.uleb128 0x2117
+ 1376 0138 19       		.uleb128 0x19
+ 1377 0139 00       		.byte	0
+ 1378 013a 00       		.byte	0
+ 1379 013b 15       		.uleb128 0x15
+ 1380 013c 34       		.uleb128 0x34
+ 1381 013d 00       		.byte	0
+ 1382 013e 03       		.uleb128 0x3
+ 1383 013f 0E       		.uleb128 0xe
+ 1384 0140 3A       		.uleb128 0x3a
+ 1385 0141 0B       		.uleb128 0xb
+ 1386 0142 3B       		.uleb128 0x3b
+ 1387 0143 05       		.uleb128 0x5
+ 1388 0144 49       		.uleb128 0x49
+ 1389 0145 13       		.uleb128 0x13
+ 1390 0146 3F       		.uleb128 0x3f
+ 1391 0147 19       		.uleb128 0x19
+ 1392 0148 3C       		.uleb128 0x3c
+ 1393 0149 19       		.uleb128 0x19
+ 1394 014a 00       		.byte	0
+ 1395 014b 00       		.byte	0
+ 1396 014c 16       		.uleb128 0x16
+ 1397 014d 35       		.uleb128 0x35
+ 1398 014e 00       		.byte	0
+ 1399 014f 49       		.uleb128 0x49
+ 1400 0150 13       		.uleb128 0x13
+ 1401 0151 00       		.byte	0
+ 1402 0152 00       		.byte	0
+ 1403 0153 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 30
+
+
+ 1404              		.section	.debug_aranges,"",%progbits
+ 1405 0000 5C000000 		.4byte	0x5c
+ 1406 0004 0200     		.2byte	0x2
+ 1407 0006 00000000 		.4byte	.Ldebug_info0
+ 1408 000a 04       		.byte	0x4
+ 1409 000b 00       		.byte	0
+ 1410 000c 0000     		.2byte	0
+ 1411 000e 0000     		.2byte	0
+ 1412 0010 00000000 		.4byte	.LFB64
+ 1413 0014 A4000000 		.4byte	.LFE64-.LFB64
+ 1414 0018 00000000 		.4byte	.LFB65
+ 1415 001c 32000000 		.4byte	.LFE65-.LFB65
+ 1416 0020 00000000 		.4byte	.LFB66
+ 1417 0024 3C010000 		.4byte	.LFE66-.LFB66
+ 1418 0028 00000000 		.4byte	.LFB67
+ 1419 002c 1C000000 		.4byte	.LFE67-.LFB67
+ 1420 0030 00000000 		.4byte	.LFB68
+ 1421 0034 14000000 		.4byte	.LFE68-.LFB68
+ 1422 0038 00000000 		.4byte	.LFB69
+ 1423 003c 0E000000 		.4byte	.LFE69-.LFB69
+ 1424 0040 00000000 		.4byte	.LFB70
+ 1425 0044 0E000000 		.4byte	.LFE70-.LFB70
+ 1426 0048 00000000 		.4byte	.LFB71
+ 1427 004c 18000000 		.4byte	.LFE71-.LFB71
+ 1428 0050 00000000 		.4byte	.LFB72
+ 1429 0054 18000000 		.4byte	.LFE72-.LFB72
+ 1430 0058 00000000 		.4byte	0
+ 1431 005c 00000000 		.4byte	0
+ 1432              		.section	.debug_ranges,"",%progbits
+ 1433              	.Ldebug_ranges0:
+ 1434 0000 00000000 		.4byte	.LFB64
+ 1435 0004 A4000000 		.4byte	.LFE64
+ 1436 0008 00000000 		.4byte	.LFB65
+ 1437 000c 32000000 		.4byte	.LFE65
+ 1438 0010 00000000 		.4byte	.LFB66
+ 1439 0014 3C010000 		.4byte	.LFE66
+ 1440 0018 00000000 		.4byte	.LFB67
+ 1441 001c 1C000000 		.4byte	.LFE67
+ 1442 0020 00000000 		.4byte	.LFB68
+ 1443 0024 14000000 		.4byte	.LFE68
+ 1444 0028 00000000 		.4byte	.LFB69
+ 1445 002c 0E000000 		.4byte	.LFE69
+ 1446 0030 00000000 		.4byte	.LFB70
+ 1447 0034 0E000000 		.4byte	.LFE70
+ 1448 0038 00000000 		.4byte	.LFB71
+ 1449 003c 18000000 		.4byte	.LFE71
+ 1450 0040 00000000 		.4byte	.LFB72
+ 1451 0044 18000000 		.4byte	.LFE72
+ 1452 0048 00000000 		.4byte	0
+ 1453 004c 00000000 		.4byte	0
+ 1454              		.section	.debug_line,"",%progbits
+ 1455              	.Ldebug_line0:
+ 1456 0000 43020000 		.section	.debug_str,"MS",%progbits,1
+ 1456      02006B01 
+ 1456      00000201 
+ 1456      FB0E0D00 
+ 1456      01010101 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 31
+
+
+ 1457              	.LASF34:
+ 1458 0000 666C6F77 		.ascii	"flow_measured\000"
+ 1458      5F6D6561 
+ 1458      73757265 
+ 1458      6400
+ 1459              	.LASF42:
+ 1460 000e 746F6B65 		.ascii	"token\000"
+ 1460      6E00
+ 1461              	.LASF52:
+ 1462 0014 706B6579 		.ascii	"pkey_const\000"
+ 1462      5F636F6E 
+ 1462      737400
+ 1463              	.LASF36:
+ 1464 001f 72656D61 		.ascii	"remainder\000"
+ 1464      696E6465 
+ 1464      7200
+ 1465              	.LASF58:
+ 1466 0029 706B6579 		.ascii	"pkey_t\000"
+ 1466      5F7400
+ 1467              	.LASF46:
+ 1468 0030 72657475 		.ascii	"return_val\000"
+ 1468      726E5F76 
+ 1468      616C00
+ 1469              	.LASF24:
+ 1470 003b 65635F74 		.ascii	"ec_target\000"
+ 1470      61726765 
+ 1470      7400
+ 1471              	.LASF2:
+ 1472 0045 73686F72 		.ascii	"short int\000"
+ 1472      7420696E 
+ 1472      7400
+ 1473              	.LASF20:
+ 1474 004f 73697A65 		.ascii	"sizetype\000"
+ 1474      74797065 
+ 1474      00
+ 1475              	.LASF55:
+ 1476 0058 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1476      43313120 
+ 1476      352E342E 
+ 1476      31203230 
+ 1476      31363036 
+ 1477 008b 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1477      20726576 
+ 1477      6973696F 
+ 1477      6E203233 
+ 1477      37373135 
+ 1478 00be 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1478      66756E63 
+ 1478      74696F6E 
+ 1478      2D736563 
+ 1478      74696F6E 
+ 1479              	.LASF27:
+ 1480 00e6 6832305F 		.ascii	"h20_stored\000"
+ 1480      73746F72 
+ 1480      656400
+ 1481              	.LASF4:
+ 1482 00f1 5F5F7569 		.ascii	"__uint16_t\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 32
+
+
+ 1482      6E743136 
+ 1482      5F7400
+ 1483              	.LASF23:
+ 1484 00fc 70685F74 		.ascii	"ph_target\000"
+ 1484      61726765 
+ 1484      7400
+ 1485              	.LASF38:
+ 1486 0106 45435365 		.ascii	"ECSense_DecodeMessage\000"
+ 1486      6E73655F 
+ 1486      4465636F 
+ 1486      64654D65 
+ 1486      73736167 
+ 1487              	.LASF26:
+ 1488 011c 6832305F 		.ascii	"h20_level\000"
+ 1488      6C657665 
+ 1488      6C00
+ 1489              	.LASF40:
+ 1490 0126 63686563 		.ascii	"checksum\000"
+ 1490      6B73756D 
+ 1490      00
+ 1491              	.LASF43:
+ 1492 012f 64656C69 		.ascii	"delim\000"
+ 1492      6D00
+ 1493              	.LASF41:
+ 1494 0135 72636865 		.ascii	"rchecksum\000"
+ 1494      636B7375 
+ 1494      6D00
+ 1495              	.LASF16:
+ 1496 013f 666C6F61 		.ascii	"float\000"
+ 1496      7400
+ 1497              	.LASF33:
+ 1498 0145 74656D70 		.ascii	"temp_measured\000"
+ 1498      5F6D6561 
+ 1498      73757265 
+ 1498      6400
+ 1499              	.LASF9:
+ 1500 0153 6C6F6E67 		.ascii	"long long int\000"
+ 1500      206C6F6E 
+ 1500      6720696E 
+ 1500      7400
+ 1501              	.LASF7:
+ 1502 0161 6C6F6E67 		.ascii	"long int\000"
+ 1502      20696E74 
+ 1502      00
+ 1503              	.LASF49:
+ 1504 016a 45435365 		.ascii	"ECSense_TurnOn\000"
+ 1504      6E73655F 
+ 1504      5475726E 
+ 1504      4F6E00
+ 1505              	.LASF60:
+ 1506 0179 45435365 		.ascii	"ECSense_GetEC\000"
+ 1506      6E73655F 
+ 1506      47657445 
+ 1506      4300
+ 1507              	.LASF3:
+ 1508 0187 5F5F7569 		.ascii	"__uint8_t\000"
+ 1508      6E74385F 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 33
+
+
+ 1508      7400
+ 1509              	.LASF28:
+ 1510 0191 70685F6D 		.ascii	"ph_measured\000"
+ 1510      65617375 
+ 1510      72656400 
+ 1511              	.LASF25:
+ 1512 019d 6832305F 		.ascii	"h20_level_target\000"
+ 1512      6C657665 
+ 1512      6C5F7461 
+ 1512      72676574 
+ 1512      00
+ 1513              	.LASF19:
+ 1514 01ae 6C6F6E67 		.ascii	"long double\000"
+ 1514      20646F75 
+ 1514      626C6500 
+ 1515              	.LASF1:
+ 1516 01ba 756E7369 		.ascii	"unsigned char\000"
+ 1516      676E6564 
+ 1516      20636861 
+ 1516      7200
+ 1517              	.LASF0:
+ 1518 01c8 7369676E 		.ascii	"signed char\000"
+ 1518      65642063 
+ 1518      68617200 
+ 1519              	.LASF10:
+ 1520 01d4 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1520      206C6F6E 
+ 1520      6720756E 
+ 1520      7369676E 
+ 1520      65642069 
+ 1521              	.LASF11:
+ 1522 01eb 756E7369 		.ascii	"unsigned int\000"
+ 1522      676E6564 
+ 1522      20696E74 
+ 1522      00
+ 1523              	.LASF13:
+ 1524 01f8 75696E74 		.ascii	"uint16_t\000"
+ 1524      31365F74 
+ 1524      00
+ 1525              	.LASF59:
+ 1526 0201 45435365 		.ascii	"ECSenseDataRxISRHandler\000"
+ 1526      6E736544 
+ 1526      61746152 
+ 1526      78495352 
+ 1526      48616E64 
+ 1527              	.LASF5:
+ 1528 0219 73686F72 		.ascii	"short unsigned int\000"
+ 1528      7420756E 
+ 1528      7369676E 
+ 1528      65642069 
+ 1528      6E7400
+ 1529              	.LASF32:
+ 1530 022c 65635F73 		.ascii	"ec_stored\000"
+ 1530      746F7265 
+ 1530      6400
+ 1531              	.LASF18:
+ 1532 0236 63686172 		.ascii	"char\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 34
+
+
+ 1532      00
+ 1533              	.LASF30:
+ 1534 023b 70685F64 		.ascii	"ph_down_stored\000"
+ 1534      6F776E5F 
+ 1534      73746F72 
+ 1534      656400
+ 1535              	.LASF53:
+ 1536 024a 72656164 		.ascii	"ready\000"
+ 1536      7900
+ 1537              	.LASF14:
+ 1538 0250 696E7433 		.ascii	"int32_t\000"
+ 1538      325F7400 
+ 1539              	.LASF47:
+ 1540 0258 45435365 		.ascii	"ECSense_Init\000"
+ 1540      6E73655F 
+ 1540      496E6974 
+ 1540      00
+ 1541              	.LASF15:
+ 1542 0265 75696E74 		.ascii	"uint8\000"
+ 1542      3800
+ 1543              	.LASF51:
+ 1544 026b 45435365 		.ascii	"ECSense_StopSampling\000"
+ 1544      6E73655F 
+ 1544      53746F70 
+ 1544      53616D70 
+ 1544      6C696E67 
+ 1545              	.LASF39:
+ 1546 0280 62756666 		.ascii	"buffer\000"
+ 1546      657200
+ 1547              	.LASF8:
+ 1548 0287 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1548      20756E73 
+ 1548      69676E65 
+ 1548      6420696E 
+ 1548      7400
+ 1549              	.LASF17:
+ 1550 0299 646F7562 		.ascii	"double\000"
+ 1550      6C6500
+ 1551              	.LASF61:
+ 1552 02a0 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1552      52784275 
+ 1552      66666572 
+ 1552      00
+ 1553              	.LASF29:
+ 1554 02ad 70685F75 		.ascii	"ph_up_stored\000"
+ 1554      705F7374 
+ 1554      6F726564 
+ 1554      00
+ 1555              	.LASF48:
+ 1556 02ba 45435365 		.ascii	"ECSense_TurnOff\000"
+ 1556      6E73655F 
+ 1556      5475726E 
+ 1556      4F666600 
+ 1557              	.LASF56:
+ 1558 02ca 7372635C 		.ascii	"src\\ECSense.c\000"
+ 1558      45435365 
+ 1558      6E73652E 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 35
+
+
+ 1558      6300
+ 1559              	.LASF35:
+ 1560 02d8 636F756E 		.ascii	"count\000"
+ 1560      7400
+ 1561              	.LASF6:
+ 1562 02de 5F5F696E 		.ascii	"__int32_t\000"
+ 1562      7433325F 
+ 1562      7400
+ 1563              	.LASF12:
+ 1564 02e8 75696E74 		.ascii	"uint8_t\000"
+ 1564      385F7400 
+ 1565              	.LASF22:
+ 1566 02f0 666C6F77 		.ascii	"flow_target\000"
+ 1566      5F746172 
+ 1566      67657400 
+ 1567              	.LASF50:
+ 1568 02fc 45435365 		.ascii	"ECSense_StartSampling\000"
+ 1568      6E73655F 
+ 1568      53746172 
+ 1568      7453616D 
+ 1568      706C696E 
+ 1569              	.LASF21:
+ 1570 0312 696E7661 		.ascii	"invalid_key\000"
+ 1570      6C69645F 
+ 1570      6B657900 
+ 1571              	.LASF54:
+ 1572 031e 52784275 		.ascii	"RxBuffer\000"
+ 1572      66666572 
+ 1572      00
+ 1573              	.LASF37:
+ 1574 0327 43616C63 		.ascii	"CalcCheckSum\000"
+ 1574      43686563 
+ 1574      6B53756D 
+ 1574      00
+ 1575              	.LASF57:
+ 1576 0334 433A5C55 		.ascii	"C:\\Users\\tpbw4321\\AppData\\Roaming\\SPB_Data\\Hy"
+ 1576      73657273 
+ 1576      5C747062 
+ 1576      77343332 
+ 1576      315C4170 
+ 1577 0361 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
+ 1577      6F6E6963 
+ 1577      73417574 
+ 1577      6F6D6174 
+ 1577      696F6E5C 
+ 1578 0390 536F435C 		.ascii	"SoC\\HydroponicAutomationSensorPerf.cydsn\000"
+ 1578      48796472 
+ 1578      6F706F6E 
+ 1578      69634175 
+ 1578      746F6D61 
+ 1579              	.LASF45:
+ 1580 03b9 76616C75 		.ascii	"value\000"
+ 1580      6500
+ 1581              	.LASF31:
+ 1582 03bf 65635F6D 		.ascii	"ec_measured\000"
+ 1582      65617375 
+ 1582      72656400 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\ccdLEV6F.s 			page 36
+
+
+ 1583              	.LASF44:
+ 1584 03cb 76616C75 		.ascii	"value_str\000"
+ 1584      655F7374 
+ 1584      7200
+ 1585              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

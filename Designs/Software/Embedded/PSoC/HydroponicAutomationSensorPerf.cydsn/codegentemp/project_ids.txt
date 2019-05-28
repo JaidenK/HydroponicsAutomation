@@ -1,0 +1,12 @@
+C:\Users\tpbw4321\AppData\Roaming\SPB_Data\HydroponicsAutomation\Designs\Software\Embedded\PSoC\HydroponicAutomation.cydsn\HydroponicAutomation.cyprj|08fb81a0-396d-4d01-898b-85fd5f33621b
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|0a5df361-94c4-4e74-afbc-fd940aa85b44
+C:\Users\tpbw4321\Documents\PSoC Creator\4.2\Downloads ( 4.2).cylib\Downloads ( 4.2).cyprj|741c05ef-c5d8-4a4f-bd5c-32b2d9b6eefd
+C:\Users\tpbw4321\Documents\PSoC Creator\4.1\Downloads ( 4.1).cylib\Downloads ( 4.1).cyprj|9c9b64b6-7f3c-42b0-965c-26a337dd3459
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|36ca5228-19d6-486e-bf2d-a321def525f5
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|c032b3bd-7856-4f1f-98cc-3ae9fef85c07
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|e57189c4-1f03-4a3c-bd05-fab8b740a1ff
+C:\Users\tpbw4321\AppData\Roaming\SPB_Data\HydroponicsAutomation\Designs\Software\Embedded\PSoC\HydroponicAutomationSensor.cydsn\HydroponicAutomationSensor.cyprj|820a8a93-c777-4a78-890a-8322ae90c74b
+C:\Users\tpbw4321\AppData\Roaming\SPB_Data\HydroponicsAutomation\Designs\Software\Embedded\PSoC\HydroponicAutomationAcuator.cydsn\HydroponicAutomationAcuator.cyprj|358ef9c5-33fe-4e4e-90dc-93053a0fc096
+C:\Users\tpbw4321\AppData\Roaming\SPB_Data\HydroponicsAutomation\Designs\Software\Embedded\PSoC\SwitchingPowerSupply.cydsn\SwitchingPowerSupply.cyprj|976fc5ec-73bd-4128-a162-1b76dcec95a3
+C:\Users\tpbw4321\AppData\Roaming\SPB_Data\HydroponicsAutomation\Designs\Software\Embedded\PSoC\HydroponicAutomationCalibration.cydsn\HydroponicAutomationCalibration.cyprj|e5a3a14b-9e05-42a4-ae0a-b951516ec7db
+C:\Users\tpbw4321\AppData\Roaming\SPB_Data\HydroponicsAutomation\Designs\Software\Embedded\PSoC\HydroponicAutomationSensorPerf.cydsn\HydroponicAutomationSensorPerf.cyprj|ee70cd6c-7e53-4a6e-a0f3-893bf01039cc

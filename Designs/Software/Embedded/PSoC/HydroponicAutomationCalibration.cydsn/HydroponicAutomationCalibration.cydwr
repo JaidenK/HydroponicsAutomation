@@ -3627,12 +3627,12 @@
     </Group>
     <Group key="526bb1aa-33da-413e-8e7e-a68e693d3555">
       <Group key="0">
-        <Data key="Port Format" value="1,6" />
+        <Data key="Port Format" value="1,4" />
       </Group>
     </Group>
     <Group key="776da561-6d2c-4ab5-ac7a-d5924a5cd654">
       <Group key="0">
-        <Data key="Port Format" value="1,7" />
+        <Data key="Port Format" value="1,5" />
       </Group>
     </Group>
     <Group key="790d44c0-5575-45c8-9b02-708f2116db71">

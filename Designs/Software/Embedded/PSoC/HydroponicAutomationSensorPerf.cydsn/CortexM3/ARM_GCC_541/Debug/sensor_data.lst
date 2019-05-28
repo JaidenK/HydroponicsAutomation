@@ -1,0 +1,4709 @@
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"sensor_data.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.rodata
+  20              		.align	2
+  21              	.LC0:
+  22 0000 696E7661 		.ascii	"invalid_key\000"
+  22      6C69645F 
+  22      6B657900 
+  23              		.align	2
+  24              	.LC1:
+  25 000c 666C6F77 		.ascii	"flow_target\000"
+  25      5F746172 
+  25      67657400 
+  26              		.align	2
+  27              	.LC2:
+  28 0018 70685F74 		.ascii	"ph_target\000"
+  28      61726765 
+  28      7400
+  29 0022 0000     		.align	2
+  30              	.LC3:
+  31 0024 65635F74 		.ascii	"ec_target\000"
+  31      61726765 
+  31      7400
+  32 002e 0000     		.align	2
+  33              	.LC4:
+  34 0030 6832305F 		.ascii	"h20_level_target\000"
+  34      6C657665 
+  34      6C5F7461 
+  34      72676574 
+  34      00
+  35 0041 000000   		.align	2
+  36              	.LC5:
+  37 0044 6832305F 		.ascii	"h20_level\000"
+  37      6C657665 
+  37      6C00
+  38 004e 0000     		.align	2
+  39              	.LC6:
+  40 0050 6832305F 		.ascii	"h20_stored\000"
+  40      73746F72 
+  40      656400
+  41 005b 00       		.align	2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 2
+
+
+  42              	.LC7:
+  43 005c 70685F6D 		.ascii	"ph_measured\000"
+  43      65617375 
+  43      72656400 
+  44              		.align	2
+  45              	.LC8:
+  46 0068 70685F75 		.ascii	"ph_up_stored\000"
+  46      705F7374 
+  46      6F726564 
+  46      00
+  47 0075 000000   		.align	2
+  48              	.LC9:
+  49 0078 70685F64 		.ascii	"ph_down_stored\000"
+  49      6F776E5F 
+  49      73746F72 
+  49      656400
+  50 0087 00       		.align	2
+  51              	.LC10:
+  52 0088 65635F6D 		.ascii	"ec_measured\000"
+  52      65617375 
+  52      72656400 
+  53              		.align	2
+  54              	.LC11:
+  55 0094 65635F73 		.ascii	"ec_stored\000"
+  55      746F7265 
+  55      6400
+  56 009e 0000     		.align	2
+  57              	.LC12:
+  58 00a0 74656D70 		.ascii	"temp_measured\000"
+  58      5F6D6561 
+  58      73757265 
+  58      6400
+  59 00ae 0000     		.align	2
+  60              	.LC13:
+  61 00b0 666C6F77 		.ascii	"flow_measured\000"
+  61      5F6D6561 
+  61      73757265 
+  61      6400
+  62              		.data
+  63              		.align	2
+  64              		.type	pkey_const, %object
+  65              		.size	pkey_const, 56
+  66              	pkey_const:
+  67 0000 00000000 		.word	.LC0
+  68 0004 0C000000 		.word	.LC1
+  69 0008 18000000 		.word	.LC2
+  70 000c 24000000 		.word	.LC3
+  71 0010 30000000 		.word	.LC4
+  72 0014 44000000 		.word	.LC5
+  73 0018 50000000 		.word	.LC6
+  74 001c 5C000000 		.word	.LC7
+  75 0020 68000000 		.word	.LC8
+  76 0024 78000000 		.word	.LC9
+  77 0028 88000000 		.word	.LC10
+  78 002c 94000000 		.word	.LC11
+  79 0030 A0000000 		.word	.LC12
+  80 0034 B0000000 		.word	.LC13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 3
+
+
+  81              		.global	__aeabi_f2d
+  82              		.section	.text.updateSensors,"ax",%progbits
+  83              		.align	2
+  84              		.global	updateSensors
+  85              		.thumb
+  86              		.thumb_func
+  87              		.type	updateSensors, %function
+  88              	updateSensors:
+  89              	.LFB1:
+  90              		.file 1 "src\\sensor_data.c"
+   1:src/sensor_data.c **** //This file generates random sensor data and stores it into a sensor data structure.
+   2:src/sensor_data.c **** 
+   3:src/sensor_data.c **** #include "sensor_data.h"
+   4:src/sensor_data.c **** #include <time.h> // for random
+   5:src/sensor_data.c **** #include <stdio.h>
+   6:src/sensor_data.c **** #include <stdlib.h>
+   7:src/sensor_data.c **** #include <math.h>
+   8:src/sensor_data.c **** #include <string.h>
+   9:src/sensor_data.c **** //struct SensorData {
+  10:src/sensor_data.c **** //	double h2o_level;
+  11:src/sensor_data.c **** //	double h2o_stored;
+  12:src/sensor_data.c **** //	double ph_level;
+  13:src/sensor_data.c **** //	double ph_up_stored;
+  14:src/sensor_data.c **** //	double ph_down_stored;
+  15:src/sensor_data.c **** //	double ec_level;
+  16:src/sensor_data.c **** //	double ec_stored;
+  17:src/sensor_data.c **** //	double temp_measured;
+  18:src/sensor_data.c **** //	double flow_measured;
+  19:src/sensor_data.c **** //	double flow_target;
+  20:src/sensor_data.c **** //	double ph_target;
+  21:src/sensor_data.c **** //	double ec_target;
+  22:src/sensor_data.c **** //	double h2o_target;
+  23:src/sensor_data.c **** //	double temp_target;
+  24:src/sensor_data.c **** //	char ProductID[256];
+  25:src/sensor_data.c **** //};
+  26:src/sensor_data.c **** /**
+  27:src/sensor_data.c ****  * @function sensor_data_Init(char * input)
+  28:src/sensor_data.c ****  * @param pointer to a SensorData Structure
+  29:src/sensor_data.c ****  * @return None
+  30:src/sensor_data.c ****  * @brief Initializes sensor data structure.
+  31:src/sensor_data.c ****  * @author Barron Wong 02/08/19
+  32:src/sensor_data.c **** */
+  33:src/sensor_data.c **** int updateSensors(message_t * msg, struct SensorData * sd) {
+  91              		.loc 1 33 0
+  92              		.cfi_startproc
+  93              		@ args = 0, pretend = 0, frame = 16
+  94              		@ frame_needed = 1, uses_anonymous_args = 0
+  95 0000 90B5     		push	{r4, r7, lr}
+  96              		.cfi_def_cfa_offset 12
+  97              		.cfi_offset 4, -12
+  98              		.cfi_offset 7, -8
+  99              		.cfi_offset 14, -4
+ 100 0002 85B0     		sub	sp, sp, #20
+ 101              		.cfi_def_cfa_offset 32
+ 102 0004 00AF     		add	r7, sp, #0
+ 103              		.cfi_def_cfa_register 7
+ 104 0006 7860     		str	r0, [r7, #4]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 4
+
+
+ 105 0008 3960     		str	r1, [r7]
+  34:src/sensor_data.c **** 	int return_val = 0;
+ 106              		.loc 1 34 0
+ 107 000a 0023     		movs	r3, #0
+ 108 000c FB60     		str	r3, [r7, #12]
+  35:src/sensor_data.c **** 	switch (msg->key) {
+ 109              		.loc 1 35 0
+ 110 000e 7B68     		ldr	r3, [r7, #4]
+ 111 0010 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 112 0012 053B     		subs	r3, r3, #5
+ 113 0014 082B     		cmp	r3, #8
+ 114 0016 78D8     		bhi	.L2
+ 115 0018 01A2     		adr	r2, .L4
+ 116 001a 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 117 001e 00BF     		.p2align 2
+ 118              	.L4:
+ 119 0020 45000000 		.word	.L3+1
+ 120 0024 5B000000 		.word	.L5+1
+ 121 0028 71000000 		.word	.L6+1
+ 122 002c 87000000 		.word	.L7+1
+ 123 0030 9D000000 		.word	.L8+1
+ 124 0034 B3000000 		.word	.L9+1
+ 125 0038 C9000000 		.word	.L10+1
+ 126 003c DF000000 		.word	.L11+1
+ 127 0040 F5000000 		.word	.L12+1
+ 128              		.p2align 1
+ 129              	.L3:
+  36:src/sensor_data.c **** 	case h20_level:
+  37:src/sensor_data.c **** 		sd->h2o_level = msg->value;
+ 130              		.loc 1 37 0
+ 131 0044 7B68     		ldr	r3, [r7, #4]
+ 132 0046 5B68     		ldr	r3, [r3, #4]	@ float
+ 133 0048 1846     		mov	r0, r3
+ 134 004a FFF7FEFF 		bl	__aeabi_f2d
+ 135 004e 0346     		mov	r3, r0
+ 136 0050 0C46     		mov	r4, r1
+ 137 0052 3A68     		ldr	r2, [r7]
+ 138 0054 C2E90034 		strd	r3, [r2]
+  38:src/sensor_data.c **** 		break;
+ 139              		.loc 1 38 0
+ 140 0058 5AE0     		b	.L13
+ 141              	.L5:
+  39:src/sensor_data.c **** 	case h20_stored:
+  40:src/sensor_data.c **** 		sd->h2o_stored = msg->value;
+ 142              		.loc 1 40 0
+ 143 005a 7B68     		ldr	r3, [r7, #4]
+ 144 005c 5B68     		ldr	r3, [r3, #4]	@ float
+ 145 005e 1846     		mov	r0, r3
+ 146 0060 FFF7FEFF 		bl	__aeabi_f2d
+ 147 0064 0346     		mov	r3, r0
+ 148 0066 0C46     		mov	r4, r1
+ 149 0068 3A68     		ldr	r2, [r7]
+ 150 006a C2E90234 		strd	r3, [r2, #8]
+  41:src/sensor_data.c **** 		break;
+ 151              		.loc 1 41 0
+ 152 006e 4FE0     		b	.L13
+ 153              	.L6:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 5
+
+
+  42:src/sensor_data.c **** 	case ph_measured:
+  43:src/sensor_data.c **** 		sd->ph_level = msg->value;
+ 154              		.loc 1 43 0
+ 155 0070 7B68     		ldr	r3, [r7, #4]
+ 156 0072 5B68     		ldr	r3, [r3, #4]	@ float
+ 157 0074 1846     		mov	r0, r3
+ 158 0076 FFF7FEFF 		bl	__aeabi_f2d
+ 159 007a 0346     		mov	r3, r0
+ 160 007c 0C46     		mov	r4, r1
+ 161 007e 3A68     		ldr	r2, [r7]
+ 162 0080 C2E90434 		strd	r3, [r2, #16]
+  44:src/sensor_data.c **** 		break;
+ 163              		.loc 1 44 0
+ 164 0084 44E0     		b	.L13
+ 165              	.L7:
+  45:src/sensor_data.c **** 	case ph_up_stored:
+  46:src/sensor_data.c **** 		sd->ph_up_stored = msg->value;
+ 166              		.loc 1 46 0
+ 167 0086 7B68     		ldr	r3, [r7, #4]
+ 168 0088 5B68     		ldr	r3, [r3, #4]	@ float
+ 169 008a 1846     		mov	r0, r3
+ 170 008c FFF7FEFF 		bl	__aeabi_f2d
+ 171 0090 0346     		mov	r3, r0
+ 172 0092 0C46     		mov	r4, r1
+ 173 0094 3A68     		ldr	r2, [r7]
+ 174 0096 C2E90634 		strd	r3, [r2, #24]
+  47:src/sensor_data.c **** 		break;
+ 175              		.loc 1 47 0
+ 176 009a 39E0     		b	.L13
+ 177              	.L8:
+  48:src/sensor_data.c **** 	case ph_down_stored:
+  49:src/sensor_data.c **** 		sd->ph_down_stored = msg->value;
+ 178              		.loc 1 49 0
+ 179 009c 7B68     		ldr	r3, [r7, #4]
+ 180 009e 5B68     		ldr	r3, [r3, #4]	@ float
+ 181 00a0 1846     		mov	r0, r3
+ 182 00a2 FFF7FEFF 		bl	__aeabi_f2d
+ 183 00a6 0346     		mov	r3, r0
+ 184 00a8 0C46     		mov	r4, r1
+ 185 00aa 3A68     		ldr	r2, [r7]
+ 186 00ac C2E90834 		strd	r3, [r2, #32]
+  50:src/sensor_data.c **** 		break;
+ 187              		.loc 1 50 0
+ 188 00b0 2EE0     		b	.L13
+ 189              	.L9:
+  51:src/sensor_data.c **** 	case ec_measured:
+  52:src/sensor_data.c **** 		sd->ec_level = msg->value;
+ 190              		.loc 1 52 0
+ 191 00b2 7B68     		ldr	r3, [r7, #4]
+ 192 00b4 5B68     		ldr	r3, [r3, #4]	@ float
+ 193 00b6 1846     		mov	r0, r3
+ 194 00b8 FFF7FEFF 		bl	__aeabi_f2d
+ 195 00bc 0346     		mov	r3, r0
+ 196 00be 0C46     		mov	r4, r1
+ 197 00c0 3A68     		ldr	r2, [r7]
+ 198 00c2 C2E90A34 		strd	r3, [r2, #40]
+  53:src/sensor_data.c **** 		break;
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 6
+
+
+ 199              		.loc 1 53 0
+ 200 00c6 23E0     		b	.L13
+ 201              	.L10:
+  54:src/sensor_data.c **** 	case ec_stored:
+  55:src/sensor_data.c **** 		sd->ec_stored = msg->value;
+ 202              		.loc 1 55 0
+ 203 00c8 7B68     		ldr	r3, [r7, #4]
+ 204 00ca 5B68     		ldr	r3, [r3, #4]	@ float
+ 205 00cc 1846     		mov	r0, r3
+ 206 00ce FFF7FEFF 		bl	__aeabi_f2d
+ 207 00d2 0346     		mov	r3, r0
+ 208 00d4 0C46     		mov	r4, r1
+ 209 00d6 3A68     		ldr	r2, [r7]
+ 210 00d8 C2E90C34 		strd	r3, [r2, #48]
+  56:src/sensor_data.c **** 		break;
+ 211              		.loc 1 56 0
+ 212 00dc 18E0     		b	.L13
+ 213              	.L11:
+  57:src/sensor_data.c **** 	case temp_measured:
+  58:src/sensor_data.c **** 		sd->temp_measured = msg->value;
+ 214              		.loc 1 58 0
+ 215 00de 7B68     		ldr	r3, [r7, #4]
+ 216 00e0 5B68     		ldr	r3, [r3, #4]	@ float
+ 217 00e2 1846     		mov	r0, r3
+ 218 00e4 FFF7FEFF 		bl	__aeabi_f2d
+ 219 00e8 0346     		mov	r3, r0
+ 220 00ea 0C46     		mov	r4, r1
+ 221 00ec 3A68     		ldr	r2, [r7]
+ 222 00ee C2E90E34 		strd	r3, [r2, #56]
+  59:src/sensor_data.c **** 		break;
+ 223              		.loc 1 59 0
+ 224 00f2 0DE0     		b	.L13
+ 225              	.L12:
+  60:src/sensor_data.c **** 	case flow_measured:
+  61:src/sensor_data.c **** 		sd->flow_measured = msg->value;
+ 226              		.loc 1 61 0
+ 227 00f4 7B68     		ldr	r3, [r7, #4]
+ 228 00f6 5B68     		ldr	r3, [r3, #4]	@ float
+ 229 00f8 1846     		mov	r0, r3
+ 230 00fa FFF7FEFF 		bl	__aeabi_f2d
+ 231 00fe 0346     		mov	r3, r0
+ 232 0100 0C46     		mov	r4, r1
+ 233 0102 3A68     		ldr	r2, [r7]
+ 234 0104 C2E91034 		strd	r3, [r2, #64]
+  62:src/sensor_data.c **** 		break;
+ 235              		.loc 1 62 0
+ 236 0108 02E0     		b	.L13
+ 237              	.L2:
+  63:src/sensor_data.c **** 	default:
+  64:src/sensor_data.c **** 		return_val = -1;
+ 238              		.loc 1 64 0
+ 239 010a 4FF0FF33 		mov	r3, #-1
+ 240 010e FB60     		str	r3, [r7, #12]
+ 241              	.L13:
+  65:src/sensor_data.c **** 
+  66:src/sensor_data.c **** 	}
+  67:src/sensor_data.c **** 	return return_val;
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 7
+
+
+ 242              		.loc 1 67 0
+ 243 0110 FB68     		ldr	r3, [r7, #12]
+  68:src/sensor_data.c **** }
+ 244              		.loc 1 68 0
+ 245 0112 1846     		mov	r0, r3
+ 246 0114 1437     		adds	r7, r7, #20
+ 247              		.cfi_def_cfa_offset 12
+ 248 0116 BD46     		mov	sp, r7
+ 249              		.cfi_def_cfa_register 13
+ 250              		@ sp needed
+ 251 0118 90BD     		pop	{r4, r7, pc}
+ 252              		.cfi_endproc
+ 253              	.LFE1:
+ 254              		.size	updateSensors, .-updateSensors
+ 255 011a 00BF     		.section	.rodata
+ 256 00be 0000     		.align	2
+ 257              	.LC14:
+ 258 00c0 41424344 		.ascii	"ABCD1234EFGH5678\000"
+ 258      31323334 
+ 258      45464748 
+ 258      35363738 
+ 258      00
+ 259              		.section	.text.sensor_data_init,"ax",%progbits
+ 260              		.align	2
+ 261              		.global	sensor_data_init
+ 262              		.thumb
+ 263              		.thumb_func
+ 264              		.type	sensor_data_init, %function
+ 265              	sensor_data_init:
+ 266              	.LFB2:
+  69:src/sensor_data.c **** /**
+  70:src/sensor_data.c ****  * @function sensor_data_Init(char * input)
+  71:src/sensor_data.c ****  * @param pointer to a SensorData Structure
+  72:src/sensor_data.c ****  * @return None
+  73:src/sensor_data.c ****  * @brief Initializes sensor data structure.
+  74:src/sensor_data.c ****  * @author Barron Wong 02/08/19
+  75:src/sensor_data.c **** */
+  76:src/sensor_data.c **** void sensor_data_init(struct SensorData *sd) {
+ 267              		.loc 1 76 0
+ 268              		.cfi_startproc
+ 269              		@ args = 0, pretend = 0, frame = 8
+ 270              		@ frame_needed = 1, uses_anonymous_args = 0
+ 271              		@ link register save eliminated.
+ 272 0000 B0B4     		push	{r4, r5, r7}
+ 273              		.cfi_def_cfa_offset 12
+ 274              		.cfi_offset 4, -12
+ 275              		.cfi_offset 5, -8
+ 276              		.cfi_offset 7, -4
+ 277 0002 83B0     		sub	sp, sp, #12
+ 278              		.cfi_def_cfa_offset 24
+ 279 0004 00AF     		add	r7, sp, #0
+ 280              		.cfi_def_cfa_register 7
+ 281 0006 7860     		str	r0, [r7, #4]
+  77:src/sensor_data.c **** 	sd->h2o_level = 0;
+ 282              		.loc 1 77 0
+ 283 0008 7A68     		ldr	r2, [r7, #4]
+ 284 000a 4FF00003 		mov	r3, #0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 8
+
+
+ 285 000e 4FF00004 		mov	r4, #0
+ 286 0012 C2E90034 		strd	r3, [r2]
+  78:src/sensor_data.c **** 	sd->h2o_stored = 0;
+ 287              		.loc 1 78 0
+ 288 0016 7A68     		ldr	r2, [r7, #4]
+ 289 0018 4FF00003 		mov	r3, #0
+ 290 001c 4FF00004 		mov	r4, #0
+ 291 0020 C2E90234 		strd	r3, [r2, #8]
+  79:src/sensor_data.c **** 	sd->ph_level = 0;
+ 292              		.loc 1 79 0
+ 293 0024 7A68     		ldr	r2, [r7, #4]
+ 294 0026 4FF00003 		mov	r3, #0
+ 295 002a 4FF00004 		mov	r4, #0
+ 296 002e C2E90434 		strd	r3, [r2, #16]
+  80:src/sensor_data.c **** 	sd->ph_up_stored = 0;
+ 297              		.loc 1 80 0
+ 298 0032 7A68     		ldr	r2, [r7, #4]
+ 299 0034 4FF00003 		mov	r3, #0
+ 300 0038 4FF00004 		mov	r4, #0
+ 301 003c C2E90634 		strd	r3, [r2, #24]
+  81:src/sensor_data.c **** 	sd->ph_down_stored = 0;
+ 302              		.loc 1 81 0
+ 303 0040 7A68     		ldr	r2, [r7, #4]
+ 304 0042 4FF00003 		mov	r3, #0
+ 305 0046 4FF00004 		mov	r4, #0
+ 306 004a C2E90834 		strd	r3, [r2, #32]
+  82:src/sensor_data.c **** 	sd->ec_level = 0;
+ 307              		.loc 1 82 0
+ 308 004e 7A68     		ldr	r2, [r7, #4]
+ 309 0050 4FF00003 		mov	r3, #0
+ 310 0054 4FF00004 		mov	r4, #0
+ 311 0058 C2E90A34 		strd	r3, [r2, #40]
+  83:src/sensor_data.c **** 	sd->ec_stored = 0;
+ 312              		.loc 1 83 0
+ 313 005c 7A68     		ldr	r2, [r7, #4]
+ 314 005e 4FF00003 		mov	r3, #0
+ 315 0062 4FF00004 		mov	r4, #0
+ 316 0066 C2E90C34 		strd	r3, [r2, #48]
+  84:src/sensor_data.c **** 	sd->temp_measured = 0;
+ 317              		.loc 1 84 0
+ 318 006a 7A68     		ldr	r2, [r7, #4]
+ 319 006c 4FF00003 		mov	r3, #0
+ 320 0070 4FF00004 		mov	r4, #0
+ 321 0074 C2E90E34 		strd	r3, [r2, #56]
+  85:src/sensor_data.c **** 	sd->flow_measured = 0;
+ 322              		.loc 1 85 0
+ 323 0078 7A68     		ldr	r2, [r7, #4]
+ 324 007a 4FF00003 		mov	r3, #0
+ 325 007e 4FF00004 		mov	r4, #0
+ 326 0082 C2E91034 		strd	r3, [r2, #64]
+  86:src/sensor_data.c **** 	sd->flow_target = 0;
+ 327              		.loc 1 86 0
+ 328 0086 7A68     		ldr	r2, [r7, #4]
+ 329 0088 4FF00003 		mov	r3, #0
+ 330 008c 4FF00004 		mov	r4, #0
+ 331 0090 C2E91234 		strd	r3, [r2, #72]
+  87:src/sensor_data.c **** 	sd->ph_target = 0;
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 9
+
+
+ 332              		.loc 1 87 0
+ 333 0094 7A68     		ldr	r2, [r7, #4]
+ 334 0096 4FF00003 		mov	r3, #0
+ 335 009a 4FF00004 		mov	r4, #0
+ 336 009e C2E91434 		strd	r3, [r2, #80]
+  88:src/sensor_data.c **** 	sd->ec_target = 0;
+ 337              		.loc 1 88 0
+ 338 00a2 7A68     		ldr	r2, [r7, #4]
+ 339 00a4 4FF00003 		mov	r3, #0
+ 340 00a8 4FF00004 		mov	r4, #0
+ 341 00ac C2E91634 		strd	r3, [r2, #88]
+  89:src/sensor_data.c **** 	sd->h2o_target = 0;
+ 342              		.loc 1 89 0
+ 343 00b0 7A68     		ldr	r2, [r7, #4]
+ 344 00b2 4FF00003 		mov	r3, #0
+ 345 00b6 4FF00004 		mov	r4, #0
+ 346 00ba C2E91834 		strd	r3, [r2, #96]
+  90:src/sensor_data.c **** 	sd->temp_target = 0;
+ 347              		.loc 1 90 0
+ 348 00be 7A68     		ldr	r2, [r7, #4]
+ 349 00c0 4FF00003 		mov	r3, #0
+ 350 00c4 4FF00004 		mov	r4, #0
+ 351 00c8 C2E91A34 		strd	r3, [r2, #104]
+  91:src/sensor_data.c **** 	strcpy(sd->ProductID, "ABCD1234EFGH5678");
+ 352              		.loc 1 91 0
+ 353 00cc 7B68     		ldr	r3, [r7, #4]
+ 354 00ce 7033     		adds	r3, r3, #112
+ 355 00d0 074A     		ldr	r2, .L16
+ 356 00d2 1D46     		mov	r5, r3
+ 357 00d4 1446     		mov	r4, r2
+ 358 00d6 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 359 00d8 2860     		str	r0, [r5]	@ unaligned
+ 360 00da 6960     		str	r1, [r5, #4]	@ unaligned
+ 361 00dc AA60     		str	r2, [r5, #8]	@ unaligned
+ 362 00de EB60     		str	r3, [r5, #12]	@ unaligned
+ 363 00e0 2378     		ldrb	r3, [r4]
+ 364 00e2 2B74     		strb	r3, [r5, #16]
+  92:src/sensor_data.c **** }
+ 365              		.loc 1 92 0
+ 366 00e4 00BF     		nop
+ 367 00e6 0C37     		adds	r7, r7, #12
+ 368              		.cfi_def_cfa_offset 12
+ 369 00e8 BD46     		mov	sp, r7
+ 370              		.cfi_def_cfa_register 13
+ 371              		@ sp needed
+ 372 00ea B0BC     		pop	{r4, r5, r7}
+ 373              		.cfi_restore 7
+ 374              		.cfi_restore 5
+ 375              		.cfi_restore 4
+ 376              		.cfi_def_cfa_offset 0
+ 377 00ec 7047     		bx	lr
+ 378              	.L17:
+ 379 00ee 00BF     		.align	2
+ 380              	.L16:
+ 381 00f0 C0000000 		.word	.LC14
+ 382              		.cfi_endproc
+ 383              	.LFE2:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 10
+
+
+ 384              		.size	sensor_data_init, .-sensor_data_init
+ 385              		.global	__aeabi_i2d
+ 386              		.section	.text.setRandomData,"ax",%progbits
+ 387              		.align	2
+ 388              		.global	setRandomData
+ 389              		.thumb
+ 390              		.thumb_func
+ 391              		.type	setRandomData, %function
+ 392              	setRandomData:
+ 393              	.LFB3:
+  93:src/sensor_data.c **** 
+  94:src/sensor_data.c **** 
+  95:src/sensor_data.c **** void setRandomData(struct SensorData *sd) {
+ 394              		.loc 1 95 0
+ 395              		.cfi_startproc
+ 396              		@ args = 0, pretend = 0, frame = 16
+ 397              		@ frame_needed = 1, uses_anonymous_args = 0
+ 398 0000 B0B5     		push	{r4, r5, r7, lr}
+ 399              		.cfi_def_cfa_offset 16
+ 400              		.cfi_offset 4, -16
+ 401              		.cfi_offset 5, -12
+ 402              		.cfi_offset 7, -8
+ 403              		.cfi_offset 14, -4
+ 404 0002 84B0     		sub	sp, sp, #16
+ 405              		.cfi_def_cfa_offset 32
+ 406 0004 00AF     		add	r7, sp, #0
+ 407              		.cfi_def_cfa_register 7
+ 408 0006 7860     		str	r0, [r7, #4]
+  96:src/sensor_data.c **** 	time_t t;
+  97:src/sensor_data.c **** 	srand((unsigned)time(&t));
+ 409              		.loc 1 97 0
+ 410 0008 07F10C03 		add	r3, r7, #12
+ 411 000c 1846     		mov	r0, r3
+ 412 000e FFF7FEFF 		bl	time
+ 413 0012 0346     		mov	r3, r0
+ 414 0014 1846     		mov	r0, r3
+ 415 0016 FFF7FEFF 		bl	srand
+  98:src/sensor_data.c **** 	sd->h2o_level = rand() % 256;
+ 416              		.loc 1 98 0
+ 417 001a FFF7FEFF 		bl	rand
+ 418 001e 0246     		mov	r2, r0
+ 419 0020 734B     		ldr	r3, .L29
+ 420 0022 1340     		ands	r3, r3, r2
+ 421 0024 002B     		cmp	r3, #0
+ 422 0026 03DA     		bge	.L19
+ 423 0028 013B     		subs	r3, r3, #1
+ 424 002a 63F0FF03 		orn	r3, r3, #255
+ 425 002e 0133     		adds	r3, r3, #1
+ 426              	.L19:
+ 427 0030 1846     		mov	r0, r3
+ 428 0032 FFF7FEFF 		bl	__aeabi_i2d
+ 429 0036 0346     		mov	r3, r0
+ 430 0038 0C46     		mov	r4, r1
+ 431 003a 7A68     		ldr	r2, [r7, #4]
+ 432 003c C2E90034 		strd	r3, [r2]
+  99:src/sensor_data.c **** 	sd->h2o_stored = rand() % 256;
+ 433              		.loc 1 99 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 11
+
+
+ 434 0040 FFF7FEFF 		bl	rand
+ 435 0044 0246     		mov	r2, r0
+ 436 0046 6A4B     		ldr	r3, .L29
+ 437 0048 1340     		ands	r3, r3, r2
+ 438 004a 002B     		cmp	r3, #0
+ 439 004c 03DA     		bge	.L20
+ 440 004e 013B     		subs	r3, r3, #1
+ 441 0050 63F0FF03 		orn	r3, r3, #255
+ 442 0054 0133     		adds	r3, r3, #1
+ 443              	.L20:
+ 444 0056 1846     		mov	r0, r3
+ 445 0058 FFF7FEFF 		bl	__aeabi_i2d
+ 446 005c 0346     		mov	r3, r0
+ 447 005e 0C46     		mov	r4, r1
+ 448 0060 7A68     		ldr	r2, [r7, #4]
+ 449 0062 C2E90234 		strd	r3, [r2, #8]
+ 100:src/sensor_data.c **** 	sd->ph_level = rand() % 256;
+ 450              		.loc 1 100 0
+ 451 0066 FFF7FEFF 		bl	rand
+ 452 006a 0246     		mov	r2, r0
+ 453 006c 604B     		ldr	r3, .L29
+ 454 006e 1340     		ands	r3, r3, r2
+ 455 0070 002B     		cmp	r3, #0
+ 456 0072 03DA     		bge	.L21
+ 457 0074 013B     		subs	r3, r3, #1
+ 458 0076 63F0FF03 		orn	r3, r3, #255
+ 459 007a 0133     		adds	r3, r3, #1
+ 460              	.L21:
+ 461 007c 1846     		mov	r0, r3
+ 462 007e FFF7FEFF 		bl	__aeabi_i2d
+ 463 0082 0346     		mov	r3, r0
+ 464 0084 0C46     		mov	r4, r1
+ 465 0086 7A68     		ldr	r2, [r7, #4]
+ 466 0088 C2E90434 		strd	r3, [r2, #16]
+ 101:src/sensor_data.c **** 	sd->ph_up_stored = rand() % 256;
+ 467              		.loc 1 101 0
+ 468 008c FFF7FEFF 		bl	rand
+ 469 0090 0246     		mov	r2, r0
+ 470 0092 574B     		ldr	r3, .L29
+ 471 0094 1340     		ands	r3, r3, r2
+ 472 0096 002B     		cmp	r3, #0
+ 473 0098 03DA     		bge	.L22
+ 474 009a 013B     		subs	r3, r3, #1
+ 475 009c 63F0FF03 		orn	r3, r3, #255
+ 476 00a0 0133     		adds	r3, r3, #1
+ 477              	.L22:
+ 478 00a2 1846     		mov	r0, r3
+ 479 00a4 FFF7FEFF 		bl	__aeabi_i2d
+ 480 00a8 0346     		mov	r3, r0
+ 481 00aa 0C46     		mov	r4, r1
+ 482 00ac 7A68     		ldr	r2, [r7, #4]
+ 483 00ae C2E90634 		strd	r3, [r2, #24]
+ 102:src/sensor_data.c **** 	sd->ph_down_stored = rand() % 256;
+ 484              		.loc 1 102 0
+ 485 00b2 FFF7FEFF 		bl	rand
+ 486 00b6 0246     		mov	r2, r0
+ 487 00b8 4D4B     		ldr	r3, .L29
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 12
+
+
+ 488 00ba 1340     		ands	r3, r3, r2
+ 489 00bc 002B     		cmp	r3, #0
+ 490 00be 03DA     		bge	.L23
+ 491 00c0 013B     		subs	r3, r3, #1
+ 492 00c2 63F0FF03 		orn	r3, r3, #255
+ 493 00c6 0133     		adds	r3, r3, #1
+ 494              	.L23:
+ 495 00c8 1846     		mov	r0, r3
+ 496 00ca FFF7FEFF 		bl	__aeabi_i2d
+ 497 00ce 0346     		mov	r3, r0
+ 498 00d0 0C46     		mov	r4, r1
+ 499 00d2 7A68     		ldr	r2, [r7, #4]
+ 500 00d4 C2E90834 		strd	r3, [r2, #32]
+ 103:src/sensor_data.c **** 	sd->ec_level = rand() % 256;
+ 501              		.loc 1 103 0
+ 502 00d8 FFF7FEFF 		bl	rand
+ 503 00dc 0246     		mov	r2, r0
+ 504 00de 444B     		ldr	r3, .L29
+ 505 00e0 1340     		ands	r3, r3, r2
+ 506 00e2 002B     		cmp	r3, #0
+ 507 00e4 03DA     		bge	.L24
+ 508 00e6 013B     		subs	r3, r3, #1
+ 509 00e8 63F0FF03 		orn	r3, r3, #255
+ 510 00ec 0133     		adds	r3, r3, #1
+ 511              	.L24:
+ 512 00ee 1846     		mov	r0, r3
+ 513 00f0 FFF7FEFF 		bl	__aeabi_i2d
+ 514 00f4 0346     		mov	r3, r0
+ 515 00f6 0C46     		mov	r4, r1
+ 516 00f8 7A68     		ldr	r2, [r7, #4]
+ 517 00fa C2E90A34 		strd	r3, [r2, #40]
+ 104:src/sensor_data.c **** 	sd->ec_stored = rand() % 256;
+ 518              		.loc 1 104 0
+ 519 00fe FFF7FEFF 		bl	rand
+ 520 0102 0246     		mov	r2, r0
+ 521 0104 3A4B     		ldr	r3, .L29
+ 522 0106 1340     		ands	r3, r3, r2
+ 523 0108 002B     		cmp	r3, #0
+ 524 010a 03DA     		bge	.L25
+ 525 010c 013B     		subs	r3, r3, #1
+ 526 010e 63F0FF03 		orn	r3, r3, #255
+ 527 0112 0133     		adds	r3, r3, #1
+ 528              	.L25:
+ 529 0114 1846     		mov	r0, r3
+ 530 0116 FFF7FEFF 		bl	__aeabi_i2d
+ 531 011a 0346     		mov	r3, r0
+ 532 011c 0C46     		mov	r4, r1
+ 533 011e 7A68     		ldr	r2, [r7, #4]
+ 534 0120 C2E90C34 		strd	r3, [r2, #48]
+ 105:src/sensor_data.c **** 	sd->temp_measured = rand() % 256;
+ 535              		.loc 1 105 0
+ 536 0124 FFF7FEFF 		bl	rand
+ 537 0128 0246     		mov	r2, r0
+ 538 012a 314B     		ldr	r3, .L29
+ 539 012c 1340     		ands	r3, r3, r2
+ 540 012e 002B     		cmp	r3, #0
+ 541 0130 03DA     		bge	.L26
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 13
+
+
+ 542 0132 013B     		subs	r3, r3, #1
+ 543 0134 63F0FF03 		orn	r3, r3, #255
+ 544 0138 0133     		adds	r3, r3, #1
+ 545              	.L26:
+ 546 013a 1846     		mov	r0, r3
+ 547 013c FFF7FEFF 		bl	__aeabi_i2d
+ 548 0140 0346     		mov	r3, r0
+ 549 0142 0C46     		mov	r4, r1
+ 550 0144 7A68     		ldr	r2, [r7, #4]
+ 551 0146 C2E90E34 		strd	r3, [r2, #56]
+ 106:src/sensor_data.c **** 	sd->flow_measured = rand() % 256;
+ 552              		.loc 1 106 0
+ 553 014a FFF7FEFF 		bl	rand
+ 554 014e 0246     		mov	r2, r0
+ 555 0150 274B     		ldr	r3, .L29
+ 556 0152 1340     		ands	r3, r3, r2
+ 557 0154 002B     		cmp	r3, #0
+ 558 0156 03DA     		bge	.L27
+ 559 0158 013B     		subs	r3, r3, #1
+ 560 015a 63F0FF03 		orn	r3, r3, #255
+ 561 015e 0133     		adds	r3, r3, #1
+ 562              	.L27:
+ 563 0160 1846     		mov	r0, r3
+ 564 0162 FFF7FEFF 		bl	__aeabi_i2d
+ 565 0166 0346     		mov	r3, r0
+ 566 0168 0C46     		mov	r4, r1
+ 567 016a 7A68     		ldr	r2, [r7, #4]
+ 568 016c C2E91034 		strd	r3, [r2, #64]
+ 107:src/sensor_data.c **** 	sd->flow_target = rand() % 256;
+ 569              		.loc 1 107 0
+ 570 0170 FFF7FEFF 		bl	rand
+ 571 0174 0246     		mov	r2, r0
+ 572 0176 1E4B     		ldr	r3, .L29
+ 573 0178 1340     		ands	r3, r3, r2
+ 574 017a 002B     		cmp	r3, #0
+ 575 017c 03DA     		bge	.L28
+ 576 017e 013B     		subs	r3, r3, #1
+ 577 0180 63F0FF03 		orn	r3, r3, #255
+ 578 0184 0133     		adds	r3, r3, #1
+ 579              	.L28:
+ 580 0186 1846     		mov	r0, r3
+ 581 0188 FFF7FEFF 		bl	__aeabi_i2d
+ 582 018c 0346     		mov	r3, r0
+ 583 018e 0C46     		mov	r4, r1
+ 584 0190 7A68     		ldr	r2, [r7, #4]
+ 585 0192 C2E91234 		strd	r3, [r2, #72]
+ 108:src/sensor_data.c **** 	sd->ph_target = 0;//rand() % 256;
+ 586              		.loc 1 108 0
+ 587 0196 7A68     		ldr	r2, [r7, #4]
+ 588 0198 4FF00003 		mov	r3, #0
+ 589 019c 4FF00004 		mov	r4, #0
+ 590 01a0 C2E91434 		strd	r3, [r2, #80]
+ 109:src/sensor_data.c **** 	sd->ec_target = 0;//rand() % 256;
+ 591              		.loc 1 109 0
+ 592 01a4 7A68     		ldr	r2, [r7, #4]
+ 593 01a6 4FF00003 		mov	r3, #0
+ 594 01aa 4FF00004 		mov	r4, #0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 14
+
+
+ 595 01ae C2E91634 		strd	r3, [r2, #88]
+ 110:src/sensor_data.c **** 	sd->h2o_target = 0;//rand() % 256;
+ 596              		.loc 1 110 0
+ 597 01b2 7A68     		ldr	r2, [r7, #4]
+ 598 01b4 4FF00003 		mov	r3, #0
+ 599 01b8 4FF00004 		mov	r4, #0
+ 600 01bc C2E91834 		strd	r3, [r2, #96]
+ 111:src/sensor_data.c **** 	sd->temp_target = 0;//rand() % 256;
+ 601              		.loc 1 111 0
+ 602 01c0 7A68     		ldr	r2, [r7, #4]
+ 603 01c2 4FF00003 		mov	r3, #0
+ 604 01c6 4FF00004 		mov	r4, #0
+ 605 01ca C2E91A34 		strd	r3, [r2, #104]
+ 112:src/sensor_data.c **** 	strcpy(sd->ProductID, "ABCD1234EFGH5678");
+ 606              		.loc 1 112 0
+ 607 01ce 7B68     		ldr	r3, [r7, #4]
+ 608 01d0 7033     		adds	r3, r3, #112
+ 609 01d2 084A     		ldr	r2, .L29+4
+ 610 01d4 1D46     		mov	r5, r3
+ 611 01d6 1446     		mov	r4, r2
+ 612 01d8 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 613 01da 2860     		str	r0, [r5]	@ unaligned
+ 614 01dc 6960     		str	r1, [r5, #4]	@ unaligned
+ 615 01de AA60     		str	r2, [r5, #8]	@ unaligned
+ 616 01e0 EB60     		str	r3, [r5, #12]	@ unaligned
+ 617 01e2 2378     		ldrb	r3, [r4]
+ 618 01e4 2B74     		strb	r3, [r5, #16]
+ 113:src/sensor_data.c **** }
+ 619              		.loc 1 113 0
+ 620 01e6 00BF     		nop
+ 621 01e8 1037     		adds	r7, r7, #16
+ 622              		.cfi_def_cfa_offset 16
+ 623 01ea BD46     		mov	sp, r7
+ 624              		.cfi_def_cfa_register 13
+ 625              		@ sp needed
+ 626 01ec B0BD     		pop	{r4, r5, r7, pc}
+ 627              	.L30:
+ 628 01ee 00BF     		.align	2
+ 629              	.L29:
+ 630 01f0 FF000080 		.word	-2147483393
+ 631 01f4 C0000000 		.word	.LC14
+ 632              		.cfi_endproc
+ 633              	.LFE3:
+ 634              		.size	setRandomData, .-setRandomData
+ 635              		.global	__aeabi_ddiv
+ 636              		.global	__aeabi_dsub
+ 637              		.global	__aeabi_dmul
+ 638              		.section	.text.randomExponentially,"ax",%progbits
+ 639              		.align	2
+ 640              		.global	randomExponentially
+ 641              		.thumb
+ 642              		.thumb_func
+ 643              		.type	randomExponentially, %function
+ 644              	randomExponentially:
+ 645              	.LFB4:
+ 114:src/sensor_data.c **** 
+ 115:src/sensor_data.c **** //Produces a random number
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 15
+
+
+ 116:src/sensor_data.c **** double randomExponentially(double current, double max, double min) {
+ 646              		.loc 1 116 0
+ 647              		.cfi_startproc
+ 648              		@ args = 8, pretend = 0, frame = 40
+ 649              		@ frame_needed = 1, uses_anonymous_args = 0
+ 650 0000 B0B5     		push	{r4, r5, r7, lr}
+ 651              		.cfi_def_cfa_offset 16
+ 652              		.cfi_offset 4, -16
+ 653              		.cfi_offset 5, -12
+ 654              		.cfi_offset 7, -8
+ 655              		.cfi_offset 14, -4
+ 656 0002 8AB0     		sub	sp, sp, #40
+ 657              		.cfi_def_cfa_offset 56
+ 658 0004 00AF     		add	r7, sp, #0
+ 659              		.cfi_def_cfa_register 7
+ 660 0006 C7E90201 		strd	r0, [r7, #8]
+ 661 000a C7E90023 		strd	r2, [r7]
+ 117:src/sensor_data.c **** 	double strength = 20.0;
+ 662              		.loc 1 117 0
+ 663 000e 4FF00003 		mov	r3, #0
+ 664 0012 234C     		ldr	r4, .L33+8
+ 665 0014 C7E90834 		strd	r3, [r7, #32]
+ 118:src/sensor_data.c **** 	double randDouble = ((double)rand()) / RAND_MAX;
+ 666              		.loc 1 118 0
+ 667 0018 FFF7FEFF 		bl	rand
+ 668 001c 0346     		mov	r3, r0
+ 669 001e 1846     		mov	r0, r3
+ 670 0020 FFF7FEFF 		bl	__aeabi_i2d
+ 671 0024 1CA3     		adr	r3, .L33
+ 672 0026 D3E90023 		ldrd	r2, [r3]
+ 673 002a FFF7FEFF 		bl	__aeabi_ddiv
+ 674 002e 0346     		mov	r3, r0
+ 675 0030 0C46     		mov	r4, r1
+ 676 0032 C7E90634 		strd	r3, [r7, #24]
+ 119:src/sensor_data.c **** 	double shift = (current - min) / (max - min); // 0.5 = no bias
+ 677              		.loc 1 119 0
+ 678 0036 D7E90E23 		ldrd	r2, [r7, #56]
+ 679 003a D7E90201 		ldrd	r0, [r7, #8]
+ 680 003e FFF7FEFF 		bl	__aeabi_dsub
+ 681 0042 0346     		mov	r3, r0
+ 682 0044 0C46     		mov	r4, r1
+ 683 0046 2546     		mov	r5, r4
+ 684 0048 1C46     		mov	r4, r3
+ 685 004a D7E90E23 		ldrd	r2, [r7, #56]
+ 686 004e D7E90001 		ldrd	r0, [r7]
+ 687 0052 FFF7FEFF 		bl	__aeabi_dsub
+ 688 0056 0246     		mov	r2, r0
+ 689 0058 0B46     		mov	r3, r1
+ 690 005a 2046     		mov	r0, r4
+ 691 005c 2946     		mov	r1, r5
+ 692 005e FFF7FEFF 		bl	__aeabi_ddiv
+ 693 0062 0346     		mov	r3, r0
+ 694 0064 0C46     		mov	r4, r1
+ 695 0066 C7E90434 		strd	r3, [r7, #16]
+ 120:src/sensor_data.c **** 	//double coeff = randDouble - shift;
+ 121:src/sensor_data.c **** 	return (randDouble - shift) * strength;
+ 696              		.loc 1 121 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 16
+
+
+ 697 006a D7E90423 		ldrd	r2, [r7, #16]
+ 698 006e D7E90601 		ldrd	r0, [r7, #24]
+ 699 0072 FFF7FEFF 		bl	__aeabi_dsub
+ 700 0076 0346     		mov	r3, r0
+ 701 0078 0C46     		mov	r4, r1
+ 702 007a 1846     		mov	r0, r3
+ 703 007c 2146     		mov	r1, r4
+ 704 007e D7E90823 		ldrd	r2, [r7, #32]
+ 705 0082 FFF7FEFF 		bl	__aeabi_dmul
+ 706 0086 0346     		mov	r3, r0
+ 707 0088 0C46     		mov	r4, r1
+ 122:src/sensor_data.c **** }
+ 708              		.loc 1 122 0
+ 709 008a 1846     		mov	r0, r3
+ 710 008c 2146     		mov	r1, r4
+ 711 008e 2837     		adds	r7, r7, #40
+ 712              		.cfi_def_cfa_offset 16
+ 713 0090 BD46     		mov	sp, r7
+ 714              		.cfi_def_cfa_register 13
+ 715              		@ sp needed
+ 716 0092 B0BD     		pop	{r4, r5, r7, pc}
+ 717              	.L34:
+ 718 0094 AFF30080 		.align	3
+ 719              	.L33:
+ 720 0098 0000C0FF 		.word	-4194304
+ 721 009c FFFFDF41 		.word	1105199103
+ 722 00a0 00003440 		.word	1077149696
+ 723              		.cfi_endproc
+ 724              	.LFE4:
+ 725              		.size	randomExponentially, .-randomExponentially
+ 726              		.global	__aeabi_dadd
+ 727              		.section	.text.randomWalk,"ax",%progbits
+ 728              		.align	2
+ 729              		.global	randomWalk
+ 730              		.thumb
+ 731              		.thumb_func
+ 732              		.type	randomWalk, %function
+ 733              	randomWalk:
+ 734              	.LFB5:
+ 123:src/sensor_data.c **** 
+ 124:src/sensor_data.c **** //Adds random walk data to a sensor data structure.
+ 125:src/sensor_data.c **** void randomWalk(struct SensorData *sd) {
+ 735              		.loc 1 125 0
+ 736              		.cfi_startproc
+ 737              		@ args = 0, pretend = 0, frame = 8
+ 738              		@ frame_needed = 1, uses_anonymous_args = 0
+ 739 0000 B0B5     		push	{r4, r5, r7, lr}
+ 740              		.cfi_def_cfa_offset 16
+ 741              		.cfi_offset 4, -16
+ 742              		.cfi_offset 5, -12
+ 743              		.cfi_offset 7, -8
+ 744              		.cfi_offset 14, -4
+ 745 0002 84B0     		sub	sp, sp, #16
+ 746              		.cfi_def_cfa_offset 32
+ 747 0004 02AF     		add	r7, sp, #8
+ 748              		.cfi_def_cfa 7, 24
+ 749 0006 7860     		str	r0, [r7, #4]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 17
+
+
+ 126:src/sensor_data.c **** 	sd->h2o_level += randomExponentially(sd->h2o_level, 300, 10);
+ 750              		.loc 1 126 0
+ 751 0008 7B68     		ldr	r3, [r7, #4]
+ 752 000a D3E90001 		ldrd	r0, [r3]
+ 753 000e 4FF00003 		mov	r3, #0
+ 754 0012 7D4C     		ldr	r4, .L36+16
+ 755 0014 CDE90034 		strd	r3, [sp]
+ 756 0018 77A3     		adr	r3, .L36
+ 757 001a D3E90023 		ldrd	r2, [r3]
+ 758 001e FFF7FEFF 		bl	randomExponentially
+ 759 0022 0446     		mov	r4, r0
+ 760 0024 0D46     		mov	r5, r1
+ 761 0026 7B68     		ldr	r3, [r7, #4]
+ 762 0028 D3E90001 		ldrd	r0, [r3]
+ 763 002c 2246     		mov	r2, r4
+ 764 002e 2B46     		mov	r3, r5
+ 765 0030 FFF7FEFF 		bl	__aeabi_dadd
+ 766 0034 0346     		mov	r3, r0
+ 767 0036 0C46     		mov	r4, r1
+ 768 0038 7A68     		ldr	r2, [r7, #4]
+ 769 003a C2E90034 		strd	r3, [r2]
+ 127:src/sensor_data.c **** 	sd->h2o_stored += randomExponentially(sd->h2o_stored, 245, 10);
+ 770              		.loc 1 127 0
+ 771 003e 7B68     		ldr	r3, [r7, #4]
+ 772 0040 D3E90201 		ldrd	r0, [r3, #8]
+ 773 0044 4FF00003 		mov	r3, #0
+ 774 0048 6F4C     		ldr	r4, .L36+16
+ 775 004a CDE90034 		strd	r3, [sp]
+ 776 004e 6CA3     		adr	r3, .L36+8
+ 777 0050 D3E90023 		ldrd	r2, [r3]
+ 778 0054 FFF7FEFF 		bl	randomExponentially
+ 779 0058 0446     		mov	r4, r0
+ 780 005a 0D46     		mov	r5, r1
+ 781 005c 7B68     		ldr	r3, [r7, #4]
+ 782 005e D3E90201 		ldrd	r0, [r3, #8]
+ 783 0062 2246     		mov	r2, r4
+ 784 0064 2B46     		mov	r3, r5
+ 785 0066 FFF7FEFF 		bl	__aeabi_dadd
+ 786 006a 0346     		mov	r3, r0
+ 787 006c 0C46     		mov	r4, r1
+ 788 006e 7A68     		ldr	r2, [r7, #4]
+ 789 0070 C2E90234 		strd	r3, [r2, #8]
+ 128:src/sensor_data.c **** 	sd->ph_level += randomExponentially(sd->ph_level, 14, 1);
+ 790              		.loc 1 128 0
+ 791 0074 7B68     		ldr	r3, [r7, #4]
+ 792 0076 D3E90401 		ldrd	r0, [r3, #16]
+ 793 007a 4FF00003 		mov	r3, #0
+ 794 007e 634C     		ldr	r4, .L36+20
+ 795 0080 CDE90034 		strd	r3, [sp]
+ 796 0084 4FF00002 		mov	r2, #0
+ 797 0088 614B     		ldr	r3, .L36+24
+ 798 008a FFF7FEFF 		bl	randomExponentially
+ 799 008e 0446     		mov	r4, r0
+ 800 0090 0D46     		mov	r5, r1
+ 801 0092 7B68     		ldr	r3, [r7, #4]
+ 802 0094 D3E90401 		ldrd	r0, [r3, #16]
+ 803 0098 2246     		mov	r2, r4
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 18
+
+
+ 804 009a 2B46     		mov	r3, r5
+ 805 009c FFF7FEFF 		bl	__aeabi_dadd
+ 806 00a0 0346     		mov	r3, r0
+ 807 00a2 0C46     		mov	r4, r1
+ 808 00a4 7A68     		ldr	r2, [r7, #4]
+ 809 00a6 C2E90434 		strd	r3, [r2, #16]
+ 129:src/sensor_data.c **** 	sd->ph_up_stored += randomExponentially(sd->ph_up_stored, 245, 10);
+ 810              		.loc 1 129 0
+ 811 00aa 7B68     		ldr	r3, [r7, #4]
+ 812 00ac D3E90601 		ldrd	r0, [r3, #24]
+ 813 00b0 4FF00003 		mov	r3, #0
+ 814 00b4 544C     		ldr	r4, .L36+16
+ 815 00b6 CDE90034 		strd	r3, [sp]
+ 816 00ba 51A3     		adr	r3, .L36+8
+ 817 00bc D3E90023 		ldrd	r2, [r3]
+ 818 00c0 FFF7FEFF 		bl	randomExponentially
+ 819 00c4 0446     		mov	r4, r0
+ 820 00c6 0D46     		mov	r5, r1
+ 821 00c8 7B68     		ldr	r3, [r7, #4]
+ 822 00ca D3E90601 		ldrd	r0, [r3, #24]
+ 823 00ce 2246     		mov	r2, r4
+ 824 00d0 2B46     		mov	r3, r5
+ 825 00d2 FFF7FEFF 		bl	__aeabi_dadd
+ 826 00d6 0346     		mov	r3, r0
+ 827 00d8 0C46     		mov	r4, r1
+ 828 00da 7A68     		ldr	r2, [r7, #4]
+ 829 00dc C2E90634 		strd	r3, [r2, #24]
+ 130:src/sensor_data.c **** 	sd->ph_down_stored += randomExponentially(sd->ph_down_stored, 245, 10);
+ 830              		.loc 1 130 0
+ 831 00e0 7B68     		ldr	r3, [r7, #4]
+ 832 00e2 D3E90801 		ldrd	r0, [r3, #32]
+ 833 00e6 4FF00003 		mov	r3, #0
+ 834 00ea 474C     		ldr	r4, .L36+16
+ 835 00ec CDE90034 		strd	r3, [sp]
+ 836 00f0 43A3     		adr	r3, .L36+8
+ 837 00f2 D3E90023 		ldrd	r2, [r3]
+ 838 00f6 FFF7FEFF 		bl	randomExponentially
+ 839 00fa 0446     		mov	r4, r0
+ 840 00fc 0D46     		mov	r5, r1
+ 841 00fe 7B68     		ldr	r3, [r7, #4]
+ 842 0100 D3E90801 		ldrd	r0, [r3, #32]
+ 843 0104 2246     		mov	r2, r4
+ 844 0106 2B46     		mov	r3, r5
+ 845 0108 FFF7FEFF 		bl	__aeabi_dadd
+ 846 010c 0346     		mov	r3, r0
+ 847 010e 0C46     		mov	r4, r1
+ 848 0110 7A68     		ldr	r2, [r7, #4]
+ 849 0112 C2E90834 		strd	r3, [r2, #32]
+ 131:src/sensor_data.c **** 	sd->ec_level += randomExponentially(sd->ec_level, 500, 10);
+ 850              		.loc 1 131 0
+ 851 0116 7B68     		ldr	r3, [r7, #4]
+ 852 0118 D3E90A01 		ldrd	r0, [r3, #40]
+ 853 011c 4FF00003 		mov	r3, #0
+ 854 0120 394C     		ldr	r4, .L36+16
+ 855 0122 CDE90034 		strd	r3, [sp]
+ 856 0126 4FF00002 		mov	r2, #0
+ 857 012a 3A4B     		ldr	r3, .L36+28
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 19
+
+
+ 858 012c FFF7FEFF 		bl	randomExponentially
+ 859 0130 0446     		mov	r4, r0
+ 860 0132 0D46     		mov	r5, r1
+ 861 0134 7B68     		ldr	r3, [r7, #4]
+ 862 0136 D3E90A01 		ldrd	r0, [r3, #40]
+ 863 013a 2246     		mov	r2, r4
+ 864 013c 2B46     		mov	r3, r5
+ 865 013e FFF7FEFF 		bl	__aeabi_dadd
+ 866 0142 0346     		mov	r3, r0
+ 867 0144 0C46     		mov	r4, r1
+ 868 0146 7A68     		ldr	r2, [r7, #4]
+ 869 0148 C2E90A34 		strd	r3, [r2, #40]
+ 132:src/sensor_data.c **** 	sd->ec_stored += randomExponentially(sd->ec_stored, 245, 10);
+ 870              		.loc 1 132 0
+ 871 014c 7B68     		ldr	r3, [r7, #4]
+ 872 014e D3E90C01 		ldrd	r0, [r3, #48]
+ 873 0152 4FF00003 		mov	r3, #0
+ 874 0156 2C4C     		ldr	r4, .L36+16
+ 875 0158 CDE90034 		strd	r3, [sp]
+ 876 015c 28A3     		adr	r3, .L36+8
+ 877 015e D3E90023 		ldrd	r2, [r3]
+ 878 0162 FFF7FEFF 		bl	randomExponentially
+ 879 0166 0446     		mov	r4, r0
+ 880 0168 0D46     		mov	r5, r1
+ 881 016a 7B68     		ldr	r3, [r7, #4]
+ 882 016c D3E90C01 		ldrd	r0, [r3, #48]
+ 883 0170 2246     		mov	r2, r4
+ 884 0172 2B46     		mov	r3, r5
+ 885 0174 FFF7FEFF 		bl	__aeabi_dadd
+ 886 0178 0346     		mov	r3, r0
+ 887 017a 0C46     		mov	r4, r1
+ 888 017c 7A68     		ldr	r2, [r7, #4]
+ 889 017e C2E90C34 		strd	r3, [r2, #48]
+ 133:src/sensor_data.c **** 	sd->temp_measured += randomExponentially(sd->temp_measured, 80, 10);
+ 890              		.loc 1 133 0
+ 891 0182 7B68     		ldr	r3, [r7, #4]
+ 892 0184 D3E90E01 		ldrd	r0, [r3, #56]
+ 893 0188 4FF00003 		mov	r3, #0
+ 894 018c 1E4C     		ldr	r4, .L36+16
+ 895 018e CDE90034 		strd	r3, [sp]
+ 896 0192 4FF00002 		mov	r2, #0
+ 897 0196 204B     		ldr	r3, .L36+32
+ 898 0198 FFF7FEFF 		bl	randomExponentially
+ 899 019c 0446     		mov	r4, r0
+ 900 019e 0D46     		mov	r5, r1
+ 901 01a0 7B68     		ldr	r3, [r7, #4]
+ 902 01a2 D3E90E01 		ldrd	r0, [r3, #56]
+ 903 01a6 2246     		mov	r2, r4
+ 904 01a8 2B46     		mov	r3, r5
+ 905 01aa FFF7FEFF 		bl	__aeabi_dadd
+ 906 01ae 0346     		mov	r3, r0
+ 907 01b0 0C46     		mov	r4, r1
+ 908 01b2 7A68     		ldr	r2, [r7, #4]
+ 909 01b4 C2E90E34 		strd	r3, [r2, #56]
+ 134:src/sensor_data.c **** 	sd->flow_measured += randomExponentially(sd->flow_measured, 245, 10);
+ 910              		.loc 1 134 0
+ 911 01b8 7B68     		ldr	r3, [r7, #4]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 20
+
+
+ 912 01ba D3E91001 		ldrd	r0, [r3, #64]
+ 913 01be 4FF00003 		mov	r3, #0
+ 914 01c2 114C     		ldr	r4, .L36+16
+ 915 01c4 CDE90034 		strd	r3, [sp]
+ 916 01c8 0DA3     		adr	r3, .L36+8
+ 917 01ca D3E90023 		ldrd	r2, [r3]
+ 918 01ce FFF7FEFF 		bl	randomExponentially
+ 919 01d2 0446     		mov	r4, r0
+ 920 01d4 0D46     		mov	r5, r1
+ 921 01d6 7B68     		ldr	r3, [r7, #4]
+ 922 01d8 D3E91001 		ldrd	r0, [r3, #64]
+ 923 01dc 2246     		mov	r2, r4
+ 924 01de 2B46     		mov	r3, r5
+ 925 01e0 FFF7FEFF 		bl	__aeabi_dadd
+ 926 01e4 0346     		mov	r3, r0
+ 927 01e6 0C46     		mov	r4, r1
+ 928 01e8 7A68     		ldr	r2, [r7, #4]
+ 929 01ea C2E91034 		strd	r3, [r2, #64]
+ 135:src/sensor_data.c **** 	// sd->flow_target +=     randomExponentially(sd->flow_target,245,10);
+ 136:src/sensor_data.c **** 	// sd->ph_target +=       randomExponentially(sd->ph_target,245,10);
+ 137:src/sensor_data.c **** 	// sd->ec_target +=       randomExponentially(sd->ec_target,245,10);
+ 138:src/sensor_data.c **** 	// sd->h2o_target +=      randomExponentially(sd->h2o_target,245,10);
+ 139:src/sensor_data.c **** }
+ 930              		.loc 1 139 0
+ 931 01ee 00BF     		nop
+ 932 01f0 0837     		adds	r7, r7, #8
+ 933              		.cfi_def_cfa_offset 16
+ 934 01f2 BD46     		mov	sp, r7
+ 935              		.cfi_def_cfa_register 13
+ 936              		@ sp needed
+ 937 01f4 B0BD     		pop	{r4, r5, r7, pc}
+ 938              	.L37:
+ 939 01f6 00BF     		.align	3
+ 940              	.L36:
+ 941 01f8 00000000 		.word	0
+ 942 01fc 00C07240 		.word	1081262080
+ 943 0200 00000000 		.word	0
+ 944 0204 00A06E40 		.word	1080991744
+ 945 0208 00002440 		.word	1076101120
+ 946 020c 0000F03F 		.word	1072693248
+ 947 0210 00002C40 		.word	1076625408
+ 948 0214 00407F40 		.word	1082081280
+ 949 0218 00005440 		.word	1079246848
+ 950              		.cfi_endproc
+ 951              	.LFE5:
+ 952              		.size	randomWalk, .-randomWalk
+ 953              		.section	.rodata
+ 954 00d1 000000   		.align	2
+ 955              	.LC15:
+ 956 00d4 7200     		.ascii	"r\000"
+ 957 00d6 0000     		.align	2
+ 958              	.LC16:
+ 959 00d8 73617665 		.ascii	"save_data.dat\000"
+ 959      5F646174 
+ 959      612E6461 
+ 959      7400
+ 960 00e6 0000     		.align	2
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 21
+
+
+ 961              	.LC17:
+ 962 00e8 4572726F 		.ascii	"Error opening saved data.\000"
+ 962      72206F70 
+ 962      656E696E 
+ 962      67207361 
+ 962      76656420 
+ 963 0102 0000     		.align	2
+ 964              	.LC18:
+ 965 0104 68326F5F 		.ascii	"h2o_level=%lf\012h2o_stored=%lf\012ph_level=%lf\012"
+ 965      6C657665 
+ 965      6C3D256C 
+ 965      660A6832 
+ 965      6F5F7374 
+ 966 012e 70685F75 		.ascii	"ph_up_stored=%lf\012ph_down_stored=%lf\012ec_level="
+ 966      705F7374 
+ 966      6F726564 
+ 966      3D256C66 
+ 966      0A70685F 
+ 967 015b 256C660A 		.ascii	"%lf\012ec_stored=%lf\012temp_measured=%lf\012flow_m"
+ 967      65635F73 
+ 967      746F7265 
+ 967      643D256C 
+ 967      660A7465 
+ 968 0185 65617375 		.ascii	"easured=%lf\012flow_target=%lf\012ph_target=%lf\012"
+ 968      7265643D 
+ 968      256C660A 
+ 968      666C6F77 
+ 968      5F746172 
+ 969 01af 65635F74 		.ascii	"ec_target=%lf\012h2o_target=%lf\012temp_target=%lf\012"
+ 969      61726765 
+ 969      743D256C 
+ 969      660A6832 
+ 969      6F5F7461 
+ 970 01dc 50726F64 		.ascii	"ProductID=%s\012\000"
+ 970      75637449 
+ 970      443D2573 
+ 970      0A00
+ 971              		.section	.text.loadData,"ax",%progbits
+ 972              		.align	2
+ 973              		.global	loadData
+ 974              		.thumb
+ 975              		.thumb_func
+ 976              		.type	loadData, %function
+ 977              	loadData:
+ 978              	.LFB6:
+ 140:src/sensor_data.c **** 
+ 141:src/sensor_data.c **** //Reads sensor data from a file
+ 142:src/sensor_data.c **** int loadData(struct SensorData *sd, char *filename) {
+ 979              		.loc 1 142 0
+ 980              		.cfi_startproc
+ 981              		@ args = 0, pretend = 0, frame = 48
+ 982              		@ frame_needed = 1, uses_anonymous_args = 0
+ 983 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 984              		.cfi_def_cfa_offset 20
+ 985              		.cfi_offset 4, -20
+ 986              		.cfi_offset 5, -16
+ 987              		.cfi_offset 6, -12
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 22
+
+
+ 988              		.cfi_offset 7, -8
+ 989              		.cfi_offset 14, -4
+ 990 0002 9BB0     		sub	sp, sp, #108
+ 991              		.cfi_def_cfa_offset 128
+ 992 0004 0EAF     		add	r7, sp, #56
+ 993              		.cfi_def_cfa 7, 72
+ 994 0006 7862     		str	r0, [r7, #36]
+ 995 0008 3962     		str	r1, [r7, #32]
+ 143:src/sensor_data.c **** 	FILE *save_file = fopen("save_data.dat", "r");
+ 996              		.loc 1 143 0
+ 997 000a 3049     		ldr	r1, .L42
+ 998 000c 3048     		ldr	r0, .L42+4
+ 999 000e FFF7FEFF 		bl	fopen
+ 1000 0012 F862     		str	r0, [r7, #44]
+ 144:src/sensor_data.c **** 	if (!save_file) {
+ 1001              		.loc 1 144 0
+ 1002 0014 FB6A     		ldr	r3, [r7, #44]
+ 1003 0016 002B     		cmp	r3, #0
+ 1004 0018 06D1     		bne	.L39
+ 145:src/sensor_data.c **** 		printf("Error opening saved data.\n");
+ 1005              		.loc 1 145 0
+ 1006 001a 2E48     		ldr	r0, .L42+8
+ 1007 001c FFF7FEFF 		bl	puts
+ 146:src/sensor_data.c **** 		setRandomData(sd);
+ 1008              		.loc 1 146 0
+ 1009 0020 786A     		ldr	r0, [r7, #36]
+ 1010 0022 FFF7FEFF 		bl	setRandomData
+ 1011 0026 4CE0     		b	.L40
+ 1012              	.L39:
+ 147:src/sensor_data.c **** 	}
+ 148:src/sensor_data.c **** 	else {
+ 149:src/sensor_data.c **** 		fscanf(
+ 1013              		.loc 1 149 0
+ 1014 0028 7B6A     		ldr	r3, [r7, #36]
+ 1015 002a FB61     		str	r3, [r7, #28]
+ 1016 002c 7B6A     		ldr	r3, [r7, #36]
+ 1017 002e 03F1080E 		add	lr, r3, #8
+ 1018 0032 7B6A     		ldr	r3, [r7, #36]
+ 1019 0034 03F11001 		add	r1, r3, #16
+ 1020 0038 7B6A     		ldr	r3, [r7, #36]
+ 1021 003a 03F11800 		add	r0, r3, #24
+ 1022 003e 7B6A     		ldr	r3, [r7, #36]
+ 1023 0040 03F12004 		add	r4, r3, #32
+ 1024 0044 7B6A     		ldr	r3, [r7, #36]
+ 1025 0046 03F12805 		add	r5, r3, #40
+ 1026 004a 7B6A     		ldr	r3, [r7, #36]
+ 1027 004c 03F13006 		add	r6, r3, #48
+ 1028 0050 7B6A     		ldr	r3, [r7, #36]
+ 1029 0052 3833     		adds	r3, r3, #56
+ 1030 0054 BB61     		str	r3, [r7, #24]
+ 1031 0056 7B6A     		ldr	r3, [r7, #36]
+ 1032 0058 03F14002 		add	r2, r3, #64
+ 1033 005c 7A61     		str	r2, [r7, #20]
+ 1034 005e 7B6A     		ldr	r3, [r7, #36]
+ 1035 0060 03F1480C 		add	ip, r3, #72
+ 1036 0064 6346     		mov	r3, ip
+ 1037 0066 3B61     		str	r3, [r7, #16]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 23
+
+
+ 1038 0068 7B6A     		ldr	r3, [r7, #36]
+ 1039 006a 03F1500C 		add	ip, r3, #80
+ 1040 006e 6246     		mov	r2, ip
+ 1041 0070 FA60     		str	r2, [r7, #12]
+ 1042 0072 7B6A     		ldr	r3, [r7, #36]
+ 1043 0074 03F1580C 		add	ip, r3, #88
+ 1044 0078 6346     		mov	r3, ip
+ 1045 007a BB60     		str	r3, [r7, #8]
+ 1046 007c 7B6A     		ldr	r3, [r7, #36]
+ 1047 007e 03F1600C 		add	ip, r3, #96
+ 1048 0082 6246     		mov	r2, ip
+ 1049 0084 7A60     		str	r2, [r7, #4]
+ 1050 0086 7B6A     		ldr	r3, [r7, #36]
+ 1051 0088 03F16802 		add	r2, r3, #104
+ 150:src/sensor_data.c **** 			save_file,
+ 151:src/sensor_data.c **** 			"h2o_level=%lf\n"
+ 152:src/sensor_data.c **** 			"h2o_stored=%lf\n"
+ 153:src/sensor_data.c **** 			"ph_level=%lf\n"
+ 154:src/sensor_data.c **** 			"ph_up_stored=%lf\n"
+ 155:src/sensor_data.c **** 			"ph_down_stored=%lf\n"
+ 156:src/sensor_data.c **** 			"ec_level=%lf\n"
+ 157:src/sensor_data.c **** 			"ec_stored=%lf\n"
+ 158:src/sensor_data.c **** 			"temp_measured=%lf\n"
+ 159:src/sensor_data.c **** 			"flow_measured=%lf\n"
+ 160:src/sensor_data.c **** 			"flow_target=%lf\n"
+ 161:src/sensor_data.c **** 			"ph_target=%lf\n"
+ 162:src/sensor_data.c **** 			"ec_target=%lf\n"
+ 163:src/sensor_data.c **** 			"h2o_target=%lf\n"
+ 164:src/sensor_data.c **** 			"temp_target=%lf\n"
+ 165:src/sensor_data.c **** 			"ProductID=%s\n",
+ 166:src/sensor_data.c **** 			&(sd->h2o_level),
+ 167:src/sensor_data.c **** 			&(sd->h2o_stored),
+ 168:src/sensor_data.c **** 			&(sd->ph_level),
+ 169:src/sensor_data.c **** 			&(sd->ph_up_stored),
+ 170:src/sensor_data.c **** 			&(sd->ph_down_stored),
+ 171:src/sensor_data.c **** 			&(sd->ec_level),
+ 172:src/sensor_data.c **** 			&(sd->ec_stored),
+ 173:src/sensor_data.c **** 			&(sd->temp_measured),
+ 174:src/sensor_data.c **** 			&(sd->flow_measured),
+ 175:src/sensor_data.c **** 			&(sd->flow_target),
+ 176:src/sensor_data.c **** 			&(sd->ph_target),
+ 177:src/sensor_data.c **** 			&(sd->ec_target),
+ 178:src/sensor_data.c **** 			&(sd->h2o_target),
+ 179:src/sensor_data.c **** 			&(sd->temp_target),
+ 180:src/sensor_data.c **** 			(sd->ProductID)
+ 1052              		.loc 1 180 0
+ 1053 008c 7B6A     		ldr	r3, [r7, #36]
+ 1054 008e 7033     		adds	r3, r3, #112
+ 149:src/sensor_data.c **** 			save_file,
+ 1055              		.loc 1 149 0
+ 1056 0090 0C93     		str	r3, [sp, #48]
+ 1057 0092 0B92     		str	r2, [sp, #44]
+ 1058 0094 7A68     		ldr	r2, [r7, #4]
+ 1059 0096 0A92     		str	r2, [sp, #40]
+ 1060 0098 BB68     		ldr	r3, [r7, #8]
+ 1061 009a 0993     		str	r3, [sp, #36]
+ 1062 009c FA68     		ldr	r2, [r7, #12]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 24
+
+
+ 1063 009e 0892     		str	r2, [sp, #32]
+ 1064 00a0 3B69     		ldr	r3, [r7, #16]
+ 1065 00a2 0793     		str	r3, [sp, #28]
+ 1066 00a4 7A69     		ldr	r2, [r7, #20]
+ 1067 00a6 0692     		str	r2, [sp, #24]
+ 1068 00a8 BB69     		ldr	r3, [r7, #24]
+ 1069 00aa 0593     		str	r3, [sp, #20]
+ 1070 00ac 0496     		str	r6, [sp, #16]
+ 1071 00ae 0395     		str	r5, [sp, #12]
+ 1072 00b0 0294     		str	r4, [sp, #8]
+ 1073 00b2 0190     		str	r0, [sp, #4]
+ 1074 00b4 0091     		str	r1, [sp]
+ 1075 00b6 7346     		mov	r3, lr
+ 1076 00b8 FA69     		ldr	r2, [r7, #28]
+ 1077 00ba 0749     		ldr	r1, .L42+12
+ 1078 00bc F86A     		ldr	r0, [r7, #44]
+ 1079 00be FFF7FEFF 		bl	fscanf
+ 1080              	.L40:
+ 181:src/sensor_data.c **** 		);
+ 182:src/sensor_data.c **** 	}
+ 183:src/sensor_data.c **** 	return 0;
+ 1081              		.loc 1 183 0
+ 1082 00c2 0023     		movs	r3, #0
+ 184:src/sensor_data.c **** }
+ 1083              		.loc 1 184 0
+ 1084 00c4 1846     		mov	r0, r3
+ 1085 00c6 3437     		adds	r7, r7, #52
+ 1086              		.cfi_def_cfa_offset 20
+ 1087 00c8 BD46     		mov	sp, r7
+ 1088              		.cfi_def_cfa_register 13
+ 1089              		@ sp needed
+ 1090 00ca F0BD     		pop	{r4, r5, r6, r7, pc}
+ 1091              	.L43:
+ 1092              		.align	2
+ 1093              	.L42:
+ 1094 00cc D4000000 		.word	.LC15
+ 1095 00d0 D8000000 		.word	.LC16
+ 1096 00d4 E8000000 		.word	.LC17
+ 1097 00d8 04010000 		.word	.LC18
+ 1098              		.cfi_endproc
+ 1099              	.LFE6:
+ 1100              		.size	loadData, .-loadData
+ 1101              		.section	.rodata
+ 1102 01ea 0000     		.align	2
+ 1103              	.LC19:
+ 1104 01ec 7700     		.ascii	"w\000"
+ 1105              		.section	.text.saveData,"ax",%progbits
+ 1106              		.align	2
+ 1107              		.global	saveData
+ 1108              		.thumb
+ 1109              		.thumb_func
+ 1110              		.type	saveData, %function
+ 1111              	saveData:
+ 1112              	.LFB7:
+ 185:src/sensor_data.c **** 
+ 186:src/sensor_data.c **** int saveData(struct SensorData *sd, char *filename) {
+ 1113              		.loc 1 186 0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 25
+
+
+ 1114              		.cfi_startproc
+ 1115              		@ args = 0, pretend = 0, frame = 96
+ 1116              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1117 0000 2DE9B04F 		push	{r4, r5, r7, r8, r9, r10, fp, lr}
+ 1118              		.cfi_def_cfa_offset 32
+ 1119              		.cfi_offset 4, -32
+ 1120              		.cfi_offset 5, -28
+ 1121              		.cfi_offset 7, -24
+ 1122              		.cfi_offset 8, -20
+ 1123              		.cfi_offset 9, -16
+ 1124              		.cfi_offset 10, -12
+ 1125              		.cfi_offset 11, -8
+ 1126              		.cfi_offset 14, -4
+ 1127 0004 B4B0     		sub	sp, sp, #208
+ 1128              		.cfi_def_cfa_offset 240
+ 1129 0006 1CAF     		add	r7, sp, #112
+ 1130              		.cfi_def_cfa 7, 128
+ 1131 0008 7865     		str	r0, [r7, #84]
+ 1132 000a 3965     		str	r1, [r7, #80]
+ 187:src/sensor_data.c **** 	FILE *save_file = fopen("save_data.dat", "w");
+ 1133              		.loc 1 187 0
+ 1134 000c 4449     		ldr	r1, .L48
+ 1135 000e 4548     		ldr	r0, .L48+4
+ 1136 0010 FFF7FEFF 		bl	fopen
+ 1137 0014 F865     		str	r0, [r7, #92]
+ 188:src/sensor_data.c **** 	if (!save_file) {
+ 1138              		.loc 1 188 0
+ 1139 0016 FB6D     		ldr	r3, [r7, #92]
+ 1140 0018 002B     		cmp	r3, #0
+ 1141 001a 06D1     		bne	.L45
+ 189:src/sensor_data.c **** 		printf("Error opening saved data.\n");
+ 1142              		.loc 1 189 0
+ 1143 001c 4248     		ldr	r0, .L48+8
+ 1144 001e FFF7FEFF 		bl	puts
+ 190:src/sensor_data.c **** 		setRandomData(sd);
+ 1145              		.loc 1 190 0
+ 1146 0022 786D     		ldr	r0, [r7, #84]
+ 1147 0024 FFF7FEFF 		bl	setRandomData
+ 1148 0028 73E0     		b	.L46
+ 1149              	.L45:
+ 191:src/sensor_data.c **** 	}
+ 192:src/sensor_data.c **** 	else {
+ 193:src/sensor_data.c **** 		fprintf(
+ 1150              		.loc 1 193 0
+ 1151 002a 7B6D     		ldr	r3, [r7, #84]
+ 1152 002c 18CB     		ldmia	r3, {r3-r4}
+ 1153 002e C7E91234 		strd	r3, [r7, #72]
+ 1154 0032 7B6D     		ldr	r3, [r7, #84]
+ 1155 0034 D3E90212 		ldrd	r1, [r3, #8]
+ 1156 0038 C7E91012 		strd	r1, [r7, #64]
+ 1157 003c 7B6D     		ldr	r3, [r7, #84]
+ 1158 003e D3E90401 		ldrd	r0, [r3, #16]
+ 1159 0042 C7E90E01 		strd	r0, [r7, #56]
+ 1160 0046 7B6D     		ldr	r3, [r7, #84]
+ 1161 0048 D3E90645 		ldrd	r4, [r3, #24]
+ 1162 004c C7E90C45 		strd	r4, [r7, #48]
+ 1163 0050 7B6D     		ldr	r3, [r7, #84]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 26
+
+
+ 1164 0052 D3E90889 		ldrd	r8, [r3, #32]
+ 1165 0056 C7E90A89 		strd	r8, [r7, #40]
+ 1166 005a 7B6D     		ldr	r3, [r7, #84]
+ 1167 005c D3E90A9A 		ldrd	r9, [r3, #40]
+ 1168 0060 C7E9089A 		strd	r9, [r7, #32]
+ 1169 0064 7B6D     		ldr	r3, [r7, #84]
+ 1170 0066 D3E90CAB 		ldrd	r10, [r3, #48]
+ 1171 006a C7E906AB 		strd	r10, [r7, #24]
+ 1172 006e 7B6D     		ldr	r3, [r7, #84]
+ 1173 0070 D3E90EBC 		ldrd	fp, [r3, #56]
+ 1174 0074 C7E904BC 		strd	fp, [r7, #16]
+ 1175 0078 7B6D     		ldr	r3, [r7, #84]
+ 1176 007a 03F14004 		add	r4, r3, #64
+ 1177 007e D4E90034 		ldrd	r3, [r4]
+ 1178 0082 C7E90234 		strd	r3, [r7, #8]
+ 1179 0086 7B6D     		ldr	r3, [r7, #84]
+ 1180 0088 D3E91223 		ldrd	r2, [r3, #72]
+ 1181 008c C7E90023 		strd	r2, [r7]
+ 1182 0090 7B6D     		ldr	r3, [r7, #84]
+ 1183 0092 D3E914AB 		ldrd	r10, [r3, #80]
+ 1184 0096 7B6D     		ldr	r3, [r7, #84]
+ 1185 0098 D3E91689 		ldrd	r8, [r3, #88]
+ 1186 009c 7B6D     		ldr	r3, [r7, #84]
+ 1187 009e D3E91845 		ldrd	r4, [r3, #96]
+ 1188 00a2 7B6D     		ldr	r3, [r7, #84]
+ 1189 00a4 D3E91A12 		ldrd	r1, [r3, #104]
+ 194:src/sensor_data.c **** 			save_file,
+ 195:src/sensor_data.c **** 			"h2o_level=%lf\n"
+ 196:src/sensor_data.c **** 			"h2o_stored=%lf\n"
+ 197:src/sensor_data.c **** 			"ph_level=%lf\n"
+ 198:src/sensor_data.c **** 			"ph_up_stored=%lf\n"
+ 199:src/sensor_data.c **** 			"ph_down_stored=%lf\n"
+ 200:src/sensor_data.c **** 			"ec_level=%lf\n"
+ 201:src/sensor_data.c **** 			"ec_stored=%lf\n"
+ 202:src/sensor_data.c **** 			"temp_measured=%lf\n"
+ 203:src/sensor_data.c **** 			"flow_measured=%lf\n"
+ 204:src/sensor_data.c **** 			"flow_target=%lf\n"
+ 205:src/sensor_data.c **** 			"ph_target=%lf\n"
+ 206:src/sensor_data.c **** 			"ec_target=%lf\n"
+ 207:src/sensor_data.c **** 			"h2o_target=%lf\n"
+ 208:src/sensor_data.c **** 			"temp_target=%lf\n"
+ 209:src/sensor_data.c **** 			"ProductID=%s\n",
+ 210:src/sensor_data.c **** 			sd->h2o_level,
+ 211:src/sensor_data.c **** 			sd->h2o_stored,
+ 212:src/sensor_data.c **** 			sd->ph_level,
+ 213:src/sensor_data.c **** 			sd->ph_up_stored,
+ 214:src/sensor_data.c **** 			sd->ph_down_stored,
+ 215:src/sensor_data.c **** 			sd->ec_level,
+ 216:src/sensor_data.c **** 			sd->ec_stored,
+ 217:src/sensor_data.c **** 			sd->temp_measured,
+ 218:src/sensor_data.c **** 			sd->flow_measured,
+ 219:src/sensor_data.c **** 			sd->flow_target,
+ 220:src/sensor_data.c **** 			sd->ph_target,
+ 221:src/sensor_data.c **** 			sd->ec_target,
+ 222:src/sensor_data.c **** 			sd->h2o_target,
+ 223:src/sensor_data.c **** 			sd->temp_target,
+ 224:src/sensor_data.c **** 			sd->ProductID
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 27
+
+
+ 1190              		.loc 1 224 0
+ 1191 00a8 7B6D     		ldr	r3, [r7, #84]
+ 1192 00aa 7033     		adds	r3, r3, #112
+ 193:src/sensor_data.c **** 			save_file,
+ 1193              		.loc 1 193 0
+ 1194 00ac 1A93     		str	r3, [sp, #104]
+ 1195 00ae CDE91812 		strd	r1, [sp, #96]
+ 1196 00b2 CDE91645 		strd	r4, [sp, #88]
+ 1197 00b6 CDE91489 		strd	r8, [sp, #80]
+ 1198 00ba CDE912AB 		strd	r10, [sp, #72]
+ 1199 00be D7E90023 		ldrd	r2, [r7]
+ 1200 00c2 CDE91023 		strd	r2, [sp, #64]
+ 1201 00c6 D7E90234 		ldrd	r3, [r7, #8]
+ 1202 00ca CDE90E34 		strd	r3, [sp, #56]
+ 1203 00ce D7E904BC 		ldrd	fp, [r7, #16]
+ 1204 00d2 CDE90CBC 		strd	fp, [sp, #48]
+ 1205 00d6 D7E906AB 		ldrd	r10, [r7, #24]
+ 1206 00da CDE90AAB 		strd	r10, [sp, #40]
+ 1207 00de D7E9089A 		ldrd	r9, [r7, #32]
+ 1208 00e2 CDE9089A 		strd	r9, [sp, #32]
+ 1209 00e6 D7E90A89 		ldrd	r8, [r7, #40]
+ 1210 00ea CDE90689 		strd	r8, [sp, #24]
+ 1211 00ee D7E90C45 		ldrd	r4, [r7, #48]
+ 1212 00f2 CDE90445 		strd	r4, [sp, #16]
+ 1213 00f6 D7E90E01 		ldrd	r0, [r7, #56]
+ 1214 00fa CDE90201 		strd	r0, [sp, #8]
+ 1215 00fe D7E91012 		ldrd	r1, [r7, #64]
+ 1216 0102 CDE90012 		strd	r1, [sp]
+ 1217 0106 D7E91223 		ldrd	r2, [r7, #72]
+ 1218 010a 0849     		ldr	r1, .L48+12
+ 1219 010c F86D     		ldr	r0, [r7, #92]
+ 1220 010e FFF7FEFF 		bl	fprintf
+ 1221              	.L46:
+ 225:src/sensor_data.c **** 		);
+ 226:src/sensor_data.c **** 	}
+ 227:src/sensor_data.c **** 	return 0;
+ 1222              		.loc 1 227 0
+ 1223 0112 0023     		movs	r3, #0
+ 228:src/sensor_data.c **** }
+ 1224              		.loc 1 228 0
+ 1225 0114 1846     		mov	r0, r3
+ 1226 0116 6037     		adds	r7, r7, #96
+ 1227              		.cfi_def_cfa_offset 32
+ 1228 0118 BD46     		mov	sp, r7
+ 1229              		.cfi_def_cfa_register 13
+ 1230              		@ sp needed
+ 1231 011a BDE8B08F 		pop	{r4, r5, r7, r8, r9, r10, fp, pc}
+ 1232              	.L49:
+ 1233 011e 00BF     		.align	2
+ 1234              	.L48:
+ 1235 0120 EC010000 		.word	.LC19
+ 1236 0124 D8000000 		.word	.LC16
+ 1237 0128 E8000000 		.word	.LC17
+ 1238 012c 04010000 		.word	.LC18
+ 1239              		.cfi_endproc
+ 1240              	.LFE7:
+ 1241              		.size	saveData, .-saveData
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 28
+
+
+ 1242              		.section	.rodata
+ 1243 01ee 0000     		.align	2
+ 1244              	.LC20:
+ 1245 01f0 68326F5F 		.ascii	"h2o_level=%f&h2o_stored=%f&ph_level=%f&ph_up_stored"
+ 1245      6C657665 
+ 1245      6C3D2566 
+ 1245      2668326F 
+ 1245      5F73746F 
+ 1246 0223 3D256626 		.ascii	"=%f&ph_down_stored=%f&ec_level=%f&ec_stored=%f&temp"
+ 1246      70685F64 
+ 1246      6F776E5F 
+ 1246      73746F72 
+ 1246      65643D25 
+ 1247 0256 5F6D6561 		.ascii	"_measured=%f&flow_measured=%f&flow_target=%f&ph_tar"
+ 1247      73757265 
+ 1247      643D2566 
+ 1247      26666C6F 
+ 1247      775F6D65 
+ 1248 0289 6765743D 		.ascii	"get=%f&ec_target=%f&h2o_target=%f&temp_target=%f&Pr"
+ 1248      25662665 
+ 1248      635F7461 
+ 1248      72676574 
+ 1248      3D256626 
+ 1249 02bc 6F647563 		.ascii	"oductID=%s&\000"
+ 1249      7449443D 
+ 1249      25732600 
+ 1250              		.section	.text.getGETstr,"ax",%progbits
+ 1251              		.align	2
+ 1252              		.global	getGETstr
+ 1253              		.thumb
+ 1254              		.thumb_func
+ 1255              		.type	getGETstr, %function
+ 1256              	getGETstr:
+ 1257              	.LFB8:
+ 229:src/sensor_data.c **** 
+ 230:src/sensor_data.c **** //Gets a string of data.
+ 231:src/sensor_data.c **** void getGETstr(char *buf, struct SensorData *sd) {
+ 1258              		.loc 1 231 0
+ 1259              		.cfi_startproc
+ 1260              		@ args = 0, pretend = 0, frame = 88
+ 1261              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1262 0000 2DE9B04F 		push	{r4, r5, r7, r8, r9, r10, fp, lr}
+ 1263              		.cfi_def_cfa_offset 32
+ 1264              		.cfi_offset 4, -32
+ 1265              		.cfi_offset 5, -28
+ 1266              		.cfi_offset 7, -24
+ 1267              		.cfi_offset 8, -20
+ 1268              		.cfi_offset 9, -16
+ 1269              		.cfi_offset 10, -12
+ 1270              		.cfi_offset 11, -8
+ 1271              		.cfi_offset 14, -4
+ 1272 0004 B2B0     		sub	sp, sp, #200
+ 1273              		.cfi_def_cfa_offset 232
+ 1274 0006 1CAF     		add	r7, sp, #112
+ 1275              		.cfi_def_cfa 7, 120
+ 1276 0008 7865     		str	r0, [r7, #84]
+ 1277 000a 3965     		str	r1, [r7, #80]
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 29
+
+
+ 232:src/sensor_data.c **** 	sprintf(
+ 1278              		.loc 1 232 0
+ 1279 000c 3B6D     		ldr	r3, [r7, #80]
+ 1280 000e 18CB     		ldmia	r3, {r3-r4}
+ 1281 0010 C7E91234 		strd	r3, [r7, #72]
+ 1282 0014 3B6D     		ldr	r3, [r7, #80]
+ 1283 0016 D3E90212 		ldrd	r1, [r3, #8]
+ 1284 001a C7E91012 		strd	r1, [r7, #64]
+ 1285 001e 3B6D     		ldr	r3, [r7, #80]
+ 1286 0020 D3E90401 		ldrd	r0, [r3, #16]
+ 1287 0024 C7E90E01 		strd	r0, [r7, #56]
+ 1288 0028 3B6D     		ldr	r3, [r7, #80]
+ 1289 002a D3E90645 		ldrd	r4, [r3, #24]
+ 1290 002e C7E90C45 		strd	r4, [r7, #48]
+ 1291 0032 3B6D     		ldr	r3, [r7, #80]
+ 1292 0034 D3E90889 		ldrd	r8, [r3, #32]
+ 1293 0038 C7E90A89 		strd	r8, [r7, #40]
+ 1294 003c 3B6D     		ldr	r3, [r7, #80]
+ 1295 003e D3E90A9A 		ldrd	r9, [r3, #40]
+ 1296 0042 C7E9089A 		strd	r9, [r7, #32]
+ 1297 0046 3B6D     		ldr	r3, [r7, #80]
+ 1298 0048 D3E90CAB 		ldrd	r10, [r3, #48]
+ 1299 004c C7E906AB 		strd	r10, [r7, #24]
+ 1300 0050 3B6D     		ldr	r3, [r7, #80]
+ 1301 0052 D3E90EBC 		ldrd	fp, [r3, #56]
+ 1302 0056 C7E904BC 		strd	fp, [r7, #16]
+ 1303 005a 3B6D     		ldr	r3, [r7, #80]
+ 1304 005c 03F14004 		add	r4, r3, #64
+ 1305 0060 D4E90034 		ldrd	r3, [r4]
+ 1306 0064 C7E90234 		strd	r3, [r7, #8]
+ 1307 0068 3B6D     		ldr	r3, [r7, #80]
+ 1308 006a D3E91223 		ldrd	r2, [r3, #72]
+ 1309 006e C7E90023 		strd	r2, [r7]
+ 1310 0072 3B6D     		ldr	r3, [r7, #80]
+ 1311 0074 D3E914AB 		ldrd	r10, [r3, #80]
+ 1312 0078 3B6D     		ldr	r3, [r7, #80]
+ 1313 007a D3E91689 		ldrd	r8, [r3, #88]
+ 1314 007e 3B6D     		ldr	r3, [r7, #80]
+ 1315 0080 D3E91845 		ldrd	r4, [r3, #96]
+ 1316 0084 3B6D     		ldr	r3, [r7, #80]
+ 1317 0086 D3E91A12 		ldrd	r1, [r3, #104]
+ 233:src/sensor_data.c **** 		buf,
+ 234:src/sensor_data.c **** 		"h2o_level=%f&"
+ 235:src/sensor_data.c **** 		"h2o_stored=%f&"
+ 236:src/sensor_data.c **** 		"ph_level=%f&"
+ 237:src/sensor_data.c **** 		"ph_up_stored=%f&"
+ 238:src/sensor_data.c **** 		"ph_down_stored=%f&"
+ 239:src/sensor_data.c **** 		"ec_level=%f&"
+ 240:src/sensor_data.c **** 		"ec_stored=%f&"
+ 241:src/sensor_data.c **** 		"temp_measured=%f&"
+ 242:src/sensor_data.c **** 		"flow_measured=%f&"
+ 243:src/sensor_data.c **** 		"flow_target=%f&"
+ 244:src/sensor_data.c **** 		"ph_target=%f&"
+ 245:src/sensor_data.c **** 		"ec_target=%f&"
+ 246:src/sensor_data.c **** 		"h2o_target=%f&"
+ 247:src/sensor_data.c **** 		"temp_target=%f&"
+ 248:src/sensor_data.c **** 		"ProductID=%s&"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 30
+
+
+ 249:src/sensor_data.c **** 		"",
+ 250:src/sensor_data.c **** 		sd->h2o_level,
+ 251:src/sensor_data.c **** 		sd->h2o_stored,
+ 252:src/sensor_data.c **** 		sd->ph_level,
+ 253:src/sensor_data.c **** 		sd->ph_up_stored,
+ 254:src/sensor_data.c **** 		sd->ph_down_stored,
+ 255:src/sensor_data.c **** 		sd->ec_level,
+ 256:src/sensor_data.c **** 		sd->ec_stored,
+ 257:src/sensor_data.c **** 		sd->temp_measured,
+ 258:src/sensor_data.c **** 		sd->flow_measured,
+ 259:src/sensor_data.c **** 		sd->flow_target,
+ 260:src/sensor_data.c **** 		sd->ph_target,
+ 261:src/sensor_data.c **** 		sd->ec_target,
+ 262:src/sensor_data.c **** 		sd->h2o_target,
+ 263:src/sensor_data.c **** 		sd->temp_target,
+ 264:src/sensor_data.c **** 		sd->ProductID
+ 1318              		.loc 1 264 0
+ 1319 008a 3B6D     		ldr	r3, [r7, #80]
+ 1320 008c 7033     		adds	r3, r3, #112
+ 232:src/sensor_data.c **** 	sprintf(
+ 1321              		.loc 1 232 0
+ 1322 008e 1A93     		str	r3, [sp, #104]
+ 1323 0090 CDE91812 		strd	r1, [sp, #96]
+ 1324 0094 CDE91645 		strd	r4, [sp, #88]
+ 1325 0098 CDE91489 		strd	r8, [sp, #80]
+ 1326 009c CDE912AB 		strd	r10, [sp, #72]
+ 1327 00a0 D7E90023 		ldrd	r2, [r7]
+ 1328 00a4 CDE91023 		strd	r2, [sp, #64]
+ 1329 00a8 D7E90234 		ldrd	r3, [r7, #8]
+ 1330 00ac CDE90E34 		strd	r3, [sp, #56]
+ 1331 00b0 D7E904BC 		ldrd	fp, [r7, #16]
+ 1332 00b4 CDE90CBC 		strd	fp, [sp, #48]
+ 1333 00b8 D7E906AB 		ldrd	r10, [r7, #24]
+ 1334 00bc CDE90AAB 		strd	r10, [sp, #40]
+ 1335 00c0 D7E9089A 		ldrd	r9, [r7, #32]
+ 1336 00c4 CDE9089A 		strd	r9, [sp, #32]
+ 1337 00c8 D7E90A89 		ldrd	r8, [r7, #40]
+ 1338 00cc CDE90689 		strd	r8, [sp, #24]
+ 1339 00d0 D7E90C45 		ldrd	r4, [r7, #48]
+ 1340 00d4 CDE90445 		strd	r4, [sp, #16]
+ 1341 00d8 D7E90E01 		ldrd	r0, [r7, #56]
+ 1342 00dc CDE90201 		strd	r0, [sp, #8]
+ 1343 00e0 D7E91012 		ldrd	r1, [r7, #64]
+ 1344 00e4 CDE90012 		strd	r1, [sp]
+ 1345 00e8 D7E91223 		ldrd	r2, [r7, #72]
+ 1346 00ec 0449     		ldr	r1, .L51
+ 1347 00ee 786D     		ldr	r0, [r7, #84]
+ 1348 00f0 FFF7FEFF 		bl	sprintf
+ 265:src/sensor_data.c **** 	);
+ 266:src/sensor_data.c **** }
+ 1349              		.loc 1 266 0
+ 1350 00f4 00BF     		nop
+ 1351 00f6 5837     		adds	r7, r7, #88
+ 1352              		.cfi_def_cfa_offset 32
+ 1353 00f8 BD46     		mov	sp, r7
+ 1354              		.cfi_def_cfa_register 13
+ 1355              		@ sp needed
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 31
+
+
+ 1356 00fa BDE8B08F 		pop	{r4, r5, r7, r8, r9, r10, fp, pc}
+ 1357              	.L52:
+ 1358 00fe 00BF     		.align	2
+ 1359              	.L51:
+ 1360 0100 F0010000 		.word	.LC20
+ 1361              		.cfi_endproc
+ 1362              	.LFE8:
+ 1363              		.size	getGETstr, .-getGETstr
+ 1364              		.text
+ 1365              	.Letext0:
+ 1366              		.file 2 ".\\include/Protocol.h"
+ 1367              		.file 3 ".\\include/sensor_data.h"
+ 1368              		.file 4 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1369              		.file 5 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1370              		.file 6 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1371              		.file 7 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1372              		.file 8 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1373              		.file 9 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1374              		.section	.debug_info,"",%progbits
+ 1375              	.Ldebug_info0:
+ 1376 0000 0B0C0000 		.4byte	0xc0b
+ 1377 0004 0400     		.2byte	0x4
+ 1378 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1379 000a 04       		.byte	0x4
+ 1380 000b 01       		.uleb128 0x1
+ 1381 000c 47000000 		.4byte	.LASF163
+ 1382 0010 0C       		.byte	0xc
+ 1383 0011 6F010000 		.4byte	.LASF164
+ 1384 0015 49040000 		.4byte	.LASF165
+ 1385 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 1386 001d 00000000 		.4byte	0
+ 1387 0021 00000000 		.4byte	.Ldebug_line0
+ 1388 0025 02       		.uleb128 0x2
+ 1389 0026 B2020000 		.4byte	.LASF17
+ 1390 002a 01       		.byte	0x1
+ 1391 002b 8A000000 		.4byte	0x8a
+ 1392 002f 02       		.byte	0x2
+ 1393 0030 13       		.byte	0x13
+ 1394 0031 8A000000 		.4byte	0x8a
+ 1395 0035 03       		.uleb128 0x3
+ 1396 0036 12030000 		.4byte	.LASF0
+ 1397 003a 00       		.byte	0
+ 1398 003b 03       		.uleb128 0x3
+ 1399 003c FC010000 		.4byte	.LASF1
+ 1400 0040 01       		.byte	0x1
+ 1401 0041 03       		.uleb128 0x3
+ 1402 0042 5C010000 		.4byte	.LASF2
+ 1403 0046 02       		.byte	0x2
+ 1404 0047 03       		.uleb128 0x3
+ 1405 0048 0C000000 		.4byte	.LASF3
+ 1406 004c 03       		.byte	0x3
+ 1407 004d 03       		.uleb128 0x3
+ 1408 004e D2010000 		.4byte	.LASF4
+ 1409 0052 04       		.byte	0x4
+ 1410 0053 03       		.uleb128 0x3
+ 1411 0054 9C020000 		.4byte	.LASF5
+ 1412 0058 05       		.byte	0x5
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 32
+
+
+ 1413 0059 03       		.uleb128 0x3
+ 1414 005a 1A010000 		.4byte	.LASF6
+ 1415 005e 06       		.byte	0x6
+ 1416 005f 03       		.uleb128 0x3
+ 1417 0060 50010000 		.4byte	.LASF7
+ 1418 0064 07       		.byte	0x7
+ 1419 0065 03       		.uleb128 0x3
+ 1420 0066 43010000 		.4byte	.LASF8
+ 1421 006a 08       		.byte	0x8
+ 1422 006b 03       		.uleb128 0x3
+ 1423 006c 25010000 		.4byte	.LASF9
+ 1424 0070 09       		.byte	0x9
+ 1425 0071 03       		.uleb128 0x3
+ 1426 0072 62020000 		.4byte	.LASF10
+ 1427 0076 0A       		.byte	0xa
+ 1428 0077 03       		.uleb128 0x3
+ 1429 0078 70060000 		.4byte	.LASF11
+ 1430 007c 0B       		.byte	0xb
+ 1431 007d 03       		.uleb128 0x3
+ 1432 007e 15060000 		.4byte	.LASF12
+ 1433 0082 0C       		.byte	0xc
+ 1434 0083 03       		.uleb128 0x3
+ 1435 0084 37050000 		.4byte	.LASF13
+ 1436 0088 0D       		.byte	0xd
+ 1437 0089 00       		.byte	0
+ 1438 008a 04       		.uleb128 0x4
+ 1439 008b 01       		.byte	0x1
+ 1440 008c 08       		.byte	0x8
+ 1441 008d FA040000 		.4byte	.LASF15
+ 1442 0091 05       		.uleb128 0x5
+ 1443 0092 B2020000 		.4byte	.LASF17
+ 1444 0096 02       		.byte	0x2
+ 1445 0097 26       		.byte	0x26
+ 1446 0098 25000000 		.4byte	0x25
+ 1447 009c 06       		.uleb128 0x6
+ 1448 009d 9A060000 		.4byte	.LASF18
+ 1449 00a1 08       		.byte	0x8
+ 1450 00a2 02       		.byte	0x2
+ 1451 00a3 3C       		.byte	0x3c
+ 1452 00a4 C1000000 		.4byte	0xc1
+ 1453 00a8 07       		.uleb128 0x7
+ 1454 00a9 6B657900 		.ascii	"key\000"
+ 1455 00ad 02       		.byte	0x2
+ 1456 00ae 3D       		.byte	0x3d
+ 1457 00af 91000000 		.4byte	0x91
+ 1458 00b3 00       		.byte	0
+ 1459 00b4 08       		.uleb128 0x8
+ 1460 00b5 AC020000 		.4byte	.LASF14
+ 1461 00b9 02       		.byte	0x2
+ 1462 00ba 3E       		.byte	0x3e
+ 1463 00bb C1000000 		.4byte	0xc1
+ 1464 00bf 04       		.byte	0x4
+ 1465 00c0 00       		.byte	0
+ 1466 00c1 04       		.uleb128 0x4
+ 1467 00c2 04       		.byte	0x4
+ 1468 00c3 04       		.byte	0x4
+ 1469 00c4 D8040000 		.4byte	.LASF16
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 33
+
+
+ 1470 00c8 05       		.uleb128 0x5
+ 1471 00c9 9A060000 		.4byte	.LASF18
+ 1472 00cd 02       		.byte	0x2
+ 1473 00ce 3F       		.byte	0x3f
+ 1474 00cf 9C000000 		.4byte	0x9c
+ 1475 00d3 09       		.uleb128 0x9
+ 1476 00d4 F5060000 		.4byte	.LASF19
+ 1477 00d8 7001     		.2byte	0x170
+ 1478 00da 03       		.byte	0x3
+ 1479 00db 05       		.byte	0x5
+ 1480 00dc 95010000 		.4byte	0x195
+ 1481 00e0 08       		.uleb128 0x8
+ 1482 00e1 28070000 		.4byte	.LASF20
+ 1483 00e5 03       		.byte	0x3
+ 1484 00e6 06       		.byte	0x6
+ 1485 00e7 95010000 		.4byte	0x195
+ 1486 00eb 00       		.byte	0
+ 1487 00ec 08       		.uleb128 0x8
+ 1488 00ed 96030000 		.4byte	.LASF21
+ 1489 00f1 03       		.byte	0x3
+ 1490 00f2 07       		.byte	0x7
+ 1491 00f3 95010000 		.4byte	0x195
+ 1492 00f7 08       		.byte	0x8
+ 1493 00f8 08       		.uleb128 0x8
+ 1494 00f9 38000000 		.4byte	.LASF22
+ 1495 00fd 03       		.byte	0x3
+ 1496 00fe 08       		.byte	0x8
+ 1497 00ff 95010000 		.4byte	0x195
+ 1498 0103 10       		.byte	0x10
+ 1499 0104 08       		.uleb128 0x8
+ 1500 0105 43010000 		.4byte	.LASF8
+ 1501 0109 03       		.byte	0x3
+ 1502 010a 09       		.byte	0x9
+ 1503 010b 95010000 		.4byte	0x195
+ 1504 010f 18       		.byte	0x18
+ 1505 0110 08       		.uleb128 0x8
+ 1506 0111 25010000 		.4byte	.LASF9
+ 1507 0115 03       		.byte	0x3
+ 1508 0116 0A       		.byte	0xa
+ 1509 0117 95010000 		.4byte	0x195
+ 1510 011b 20       		.byte	0x20
+ 1511 011c 08       		.uleb128 0x8
+ 1512 011d BE030000 		.4byte	.LASF23
+ 1513 0121 03       		.byte	0x3
+ 1514 0122 0B       		.byte	0xb
+ 1515 0123 95010000 		.4byte	0x195
+ 1516 0127 28       		.byte	0x28
+ 1517 0128 08       		.uleb128 0x8
+ 1518 0129 70060000 		.4byte	.LASF11
+ 1519 012d 03       		.byte	0x3
+ 1520 012e 0C       		.byte	0xc
+ 1521 012f 95010000 		.4byte	0x195
+ 1522 0133 30       		.byte	0x30
+ 1523 0134 08       		.uleb128 0x8
+ 1524 0135 15060000 		.4byte	.LASF12
+ 1525 0139 03       		.byte	0x3
+ 1526 013a 0D       		.byte	0xd
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 34
+
+
+ 1527 013b 95010000 		.4byte	0x195
+ 1528 013f 38       		.byte	0x38
+ 1529 0140 08       		.uleb128 0x8
+ 1530 0141 37050000 		.4byte	.LASF13
+ 1531 0145 03       		.byte	0x3
+ 1532 0146 0E       		.byte	0xe
+ 1533 0147 95010000 		.4byte	0x195
+ 1534 014b 40       		.byte	0x40
+ 1535 014c 08       		.uleb128 0x8
+ 1536 014d FC010000 		.4byte	.LASF1
+ 1537 0151 03       		.byte	0x3
+ 1538 0152 0F       		.byte	0xf
+ 1539 0153 95010000 		.4byte	0x195
+ 1540 0157 48       		.byte	0x48
+ 1541 0158 08       		.uleb128 0x8
+ 1542 0159 5C010000 		.4byte	.LASF2
+ 1543 015d 03       		.byte	0x3
+ 1544 015e 10       		.byte	0x10
+ 1545 015f 95010000 		.4byte	0x195
+ 1546 0163 50       		.byte	0x50
+ 1547 0164 08       		.uleb128 0x8
+ 1548 0165 0C000000 		.4byte	.LASF3
+ 1549 0169 03       		.byte	0x3
+ 1550 016a 11       		.byte	0x11
+ 1551 016b 95010000 		.4byte	0x195
+ 1552 016f 58       		.byte	0x58
+ 1553 0170 08       		.uleb128 0x8
+ 1554 0171 CB020000 		.4byte	.LASF24
+ 1555 0175 03       		.byte	0x3
+ 1556 0176 12       		.byte	0x12
+ 1557 0177 95010000 		.4byte	0x195
+ 1558 017b 60       		.byte	0x60
+ 1559 017c 08       		.uleb128 0x8
+ 1560 017d A1030000 		.4byte	.LASF25
+ 1561 0181 03       		.byte	0x3
+ 1562 0182 13       		.byte	0x13
+ 1563 0183 95010000 		.4byte	0x195
+ 1564 0187 68       		.byte	0x68
+ 1565 0188 08       		.uleb128 0x8
+ 1566 0189 29060000 		.4byte	.LASF26
+ 1567 018d 03       		.byte	0x3
+ 1568 018e 14       		.byte	0x14
+ 1569 018f 9C010000 		.4byte	0x19c
+ 1570 0193 70       		.byte	0x70
+ 1571 0194 00       		.byte	0
+ 1572 0195 04       		.uleb128 0x4
+ 1573 0196 08       		.byte	0x8
+ 1574 0197 04       		.byte	0x4
+ 1575 0198 1E020000 		.4byte	.LASF27
+ 1576 019c 0A       		.uleb128 0xa
+ 1577 019d B3010000 		.4byte	0x1b3
+ 1578 01a1 AC010000 		.4byte	0x1ac
+ 1579 01a5 0B       		.uleb128 0xb
+ 1580 01a6 AC010000 		.4byte	0x1ac
+ 1581 01aa FF       		.byte	0xff
+ 1582 01ab 00       		.byte	0
+ 1583 01ac 04       		.uleb128 0x4
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 35
+
+
+ 1584 01ad 04       		.byte	0x4
+ 1585 01ae 07       		.byte	0x7
+ 1586 01af C7030000 		.4byte	.LASF28
+ 1587 01b3 04       		.uleb128 0x4
+ 1588 01b4 01       		.byte	0x1
+ 1589 01b5 08       		.byte	0x8
+ 1590 01b6 FE050000 		.4byte	.LASF29
+ 1591 01ba 04       		.uleb128 0x4
+ 1592 01bb 01       		.byte	0x1
+ 1593 01bc 06       		.byte	0x6
+ 1594 01bd 8F010000 		.4byte	.LASF30
+ 1595 01c1 04       		.uleb128 0x4
+ 1596 01c2 02       		.byte	0x2
+ 1597 01c3 05       		.byte	0x5
+ 1598 01c4 16050000 		.4byte	.LASF31
+ 1599 01c8 04       		.uleb128 0x4
+ 1600 01c9 02       		.byte	0x2
+ 1601 01ca 07       		.byte	0x7
+ 1602 01cb 2B030000 		.4byte	.LASF32
+ 1603 01cf 04       		.uleb128 0x4
+ 1604 01d0 04       		.byte	0x4
+ 1605 01d1 05       		.byte	0x5
+ 1606 01d2 F3010000 		.4byte	.LASF33
+ 1607 01d6 04       		.uleb128 0x4
+ 1608 01d7 04       		.byte	0x4
+ 1609 01d8 07       		.byte	0x7
+ 1610 01d9 E5050000 		.4byte	.LASF34
+ 1611 01dd 04       		.uleb128 0x4
+ 1612 01de 08       		.byte	0x8
+ 1613 01df 05       		.byte	0x5
+ 1614 01e0 81010000 		.4byte	.LASF35
+ 1615 01e4 04       		.uleb128 0x4
+ 1616 01e5 08       		.byte	0x8
+ 1617 01e6 07       		.byte	0x7
+ 1618 01e7 F0000000 		.4byte	.LASF36
+ 1619 01eb 0C       		.uleb128 0xc
+ 1620 01ec 04       		.byte	0x4
+ 1621 01ed 05       		.byte	0x5
+ 1622 01ee 696E7400 		.ascii	"int\000"
+ 1623 01f2 04       		.uleb128 0x4
+ 1624 01f3 04       		.byte	0x4
+ 1625 01f4 07       		.byte	0x7
+ 1626 01f5 BE020000 		.4byte	.LASF37
+ 1627 01f9 04       		.uleb128 0x4
+ 1628 01fa 08       		.byte	0x8
+ 1629 01fb 04       		.byte	0x4
+ 1630 01fc D0030000 		.4byte	.LASF38
+ 1631 0200 05       		.uleb128 0x5
+ 1632 0201 E8040000 		.4byte	.LASF39
+ 1633 0205 04       		.byte	0x4
+ 1634 0206 07       		.byte	0x7
+ 1635 0207 EB010000 		.4byte	0x1eb
+ 1636 020b 05       		.uleb128 0x5
+ 1637 020c 29040000 		.4byte	.LASF40
+ 1638 0210 05       		.byte	0x5
+ 1639 0211 2C       		.byte	0x2c
+ 1640 0212 CF010000 		.4byte	0x1cf
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 36
+
+
+ 1641 0216 05       		.uleb128 0x5
+ 1642 0217 D4050000 		.4byte	.LASF41
+ 1643 021b 05       		.byte	0x5
+ 1644 021c 72       		.byte	0x72
+ 1645 021d CF010000 		.4byte	0x1cf
+ 1646 0221 0D       		.uleb128 0xd
+ 1647 0222 78030000 		.4byte	.LASF42
+ 1648 0226 06       		.byte	0x6
+ 1649 0227 6501     		.2byte	0x165
+ 1650 0229 F2010000 		.4byte	0x1f2
+ 1651 022d 0E       		.uleb128 0xe
+ 1652 022e 04       		.byte	0x4
+ 1653 022f 05       		.byte	0x5
+ 1654 0230 A6       		.byte	0xa6
+ 1655 0231 4C020000 		.4byte	0x24c
+ 1656 0235 0F       		.uleb128 0xf
+ 1657 0236 61030000 		.4byte	.LASF43
+ 1658 023a 05       		.byte	0x5
+ 1659 023b A8       		.byte	0xa8
+ 1660 023c 21020000 		.4byte	0x221
+ 1661 0240 0F       		.uleb128 0xf
+ 1662 0241 D6020000 		.4byte	.LASF44
+ 1663 0245 05       		.byte	0x5
+ 1664 0246 A9       		.byte	0xa9
+ 1665 0247 4C020000 		.4byte	0x24c
+ 1666 024b 00       		.byte	0
+ 1667 024c 0A       		.uleb128 0xa
+ 1668 024d 8A000000 		.4byte	0x8a
+ 1669 0251 5C020000 		.4byte	0x25c
+ 1670 0255 0B       		.uleb128 0xb
+ 1671 0256 AC010000 		.4byte	0x1ac
+ 1672 025a 03       		.byte	0x3
+ 1673 025b 00       		.byte	0
+ 1674 025c 10       		.uleb128 0x10
+ 1675 025d 08       		.byte	0x8
+ 1676 025e 05       		.byte	0x5
+ 1677 025f A3       		.byte	0xa3
+ 1678 0260 7D020000 		.4byte	0x27d
+ 1679 0264 08       		.uleb128 0x8
+ 1680 0265 BE050000 		.4byte	.LASF45
+ 1681 0269 05       		.byte	0x5
+ 1682 026a A5       		.byte	0xa5
+ 1683 026b EB010000 		.4byte	0x1eb
+ 1684 026f 00       		.byte	0
+ 1685 0270 08       		.uleb128 0x8
+ 1686 0271 C6050000 		.4byte	.LASF46
+ 1687 0275 05       		.byte	0x5
+ 1688 0276 AA       		.byte	0xaa
+ 1689 0277 2D020000 		.4byte	0x22d
+ 1690 027b 04       		.byte	0x4
+ 1691 027c 00       		.byte	0
+ 1692 027d 05       		.uleb128 0x5
+ 1693 027e 4C050000 		.4byte	.LASF47
+ 1694 0282 05       		.byte	0x5
+ 1695 0283 AB       		.byte	0xab
+ 1696 0284 5C020000 		.4byte	0x25c
+ 1697 0288 05       		.uleb128 0x5
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 37
+
+
+ 1698 0289 74020000 		.4byte	.LASF48
+ 1699 028d 05       		.byte	0x5
+ 1700 028e AF       		.byte	0xaf
+ 1701 028f 00020000 		.4byte	0x200
+ 1702 0293 11       		.uleb128 0x11
+ 1703 0294 04       		.byte	0x4
+ 1704 0295 05       		.uleb128 0x5
+ 1705 0296 7A060000 		.4byte	.LASF49
+ 1706 029a 07       		.byte	0x7
+ 1707 029b 16       		.byte	0x16
+ 1708 029c D6010000 		.4byte	0x1d6
+ 1709 02a0 06       		.uleb128 0x6
+ 1710 02a1 85020000 		.4byte	.LASF50
+ 1711 02a5 18       		.byte	0x18
+ 1712 02a6 07       		.byte	0x7
+ 1713 02a7 2D       		.byte	0x2d
+ 1714 02a8 F3020000 		.4byte	0x2f3
+ 1715 02ac 08       		.uleb128 0x8
+ 1716 02ad 33060000 		.4byte	.LASF51
+ 1717 02b1 07       		.byte	0x7
+ 1718 02b2 2F       		.byte	0x2f
+ 1719 02b3 F3020000 		.4byte	0x2f3
+ 1720 02b7 00       		.byte	0
+ 1721 02b8 07       		.uleb128 0x7
+ 1722 02b9 5F6B00   		.ascii	"_k\000"
+ 1723 02bc 07       		.byte	0x7
+ 1724 02bd 30       		.byte	0x30
+ 1725 02be EB010000 		.4byte	0x1eb
+ 1726 02c2 04       		.byte	0x4
+ 1727 02c3 08       		.uleb128 0x8
+ 1728 02c4 A9050000 		.4byte	.LASF52
+ 1729 02c8 07       		.byte	0x7
+ 1730 02c9 30       		.byte	0x30
+ 1731 02ca EB010000 		.4byte	0x1eb
+ 1732 02ce 08       		.byte	0x8
+ 1733 02cf 08       		.uleb128 0x8
+ 1734 02d0 6E020000 		.4byte	.LASF53
+ 1735 02d4 07       		.byte	0x7
+ 1736 02d5 30       		.byte	0x30
+ 1737 02d6 EB010000 		.4byte	0x1eb
+ 1738 02da 0C       		.byte	0xc
+ 1739 02db 08       		.uleb128 0x8
+ 1740 02dc C3060000 		.4byte	.LASF54
+ 1741 02e0 07       		.byte	0x7
+ 1742 02e1 30       		.byte	0x30
+ 1743 02e2 EB010000 		.4byte	0x1eb
+ 1744 02e6 10       		.byte	0x10
+ 1745 02e7 07       		.uleb128 0x7
+ 1746 02e8 5F7800   		.ascii	"_x\000"
+ 1747 02eb 07       		.byte	0x7
+ 1748 02ec 31       		.byte	0x31
+ 1749 02ed F9020000 		.4byte	0x2f9
+ 1750 02f1 14       		.byte	0x14
+ 1751 02f2 00       		.byte	0
+ 1752 02f3 12       		.uleb128 0x12
+ 1753 02f4 04       		.byte	0x4
+ 1754 02f5 A0020000 		.4byte	0x2a0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 38
+
+
+ 1755 02f9 0A       		.uleb128 0xa
+ 1756 02fa 95020000 		.4byte	0x295
+ 1757 02fe 09030000 		.4byte	0x309
+ 1758 0302 0B       		.uleb128 0xb
+ 1759 0303 AC010000 		.4byte	0x1ac
+ 1760 0307 00       		.byte	0
+ 1761 0308 00       		.byte	0
+ 1762 0309 06       		.uleb128 0x6
+ 1763 030a B9020000 		.4byte	.LASF55
+ 1764 030e 24       		.byte	0x24
+ 1765 030f 07       		.byte	0x7
+ 1766 0310 35       		.byte	0x35
+ 1767 0311 82030000 		.4byte	0x382
+ 1768 0315 08       		.uleb128 0x8
+ 1769 0316 66010000 		.4byte	.LASF56
+ 1770 031a 07       		.byte	0x7
+ 1771 031b 37       		.byte	0x37
+ 1772 031c EB010000 		.4byte	0x1eb
+ 1773 0320 00       		.byte	0
+ 1774 0321 08       		.uleb128 0x8
+ 1775 0322 0C060000 		.4byte	.LASF57
+ 1776 0326 07       		.byte	0x7
+ 1777 0327 38       		.byte	0x38
+ 1778 0328 EB010000 		.4byte	0x1eb
+ 1779 032c 04       		.byte	0x4
+ 1780 032d 08       		.uleb128 0x8
+ 1781 032e A7010000 		.4byte	.LASF58
+ 1782 0332 07       		.byte	0x7
+ 1783 0333 39       		.byte	0x39
+ 1784 0334 EB010000 		.4byte	0x1eb
+ 1785 0338 08       		.byte	0x8
+ 1786 0339 08       		.uleb128 0x8
+ 1787 033a 51070000 		.4byte	.LASF59
+ 1788 033e 07       		.byte	0x7
+ 1789 033f 3A       		.byte	0x3a
+ 1790 0340 EB010000 		.4byte	0x1eb
+ 1791 0344 0C       		.byte	0xc
+ 1792 0345 08       		.uleb128 0x8
+ 1793 0346 02040000 		.4byte	.LASF60
+ 1794 034a 07       		.byte	0x7
+ 1795 034b 3B       		.byte	0x3b
+ 1796 034c EB010000 		.4byte	0x1eb
+ 1797 0350 10       		.byte	0x10
+ 1798 0351 08       		.uleb128 0x8
+ 1799 0352 B4030000 		.4byte	.LASF61
+ 1800 0356 07       		.byte	0x7
+ 1801 0357 3C       		.byte	0x3c
+ 1802 0358 EB010000 		.4byte	0x1eb
+ 1803 035c 14       		.byte	0x14
+ 1804 035d 08       		.uleb128 0x8
+ 1805 035e C8060000 		.4byte	.LASF62
+ 1806 0362 07       		.byte	0x7
+ 1807 0363 3D       		.byte	0x3d
+ 1808 0364 EB010000 		.4byte	0x1eb
+ 1809 0368 18       		.byte	0x18
+ 1810 0369 08       		.uleb128 0x8
+ 1811 036a 20050000 		.4byte	.LASF63
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 39
+
+
+ 1812 036e 07       		.byte	0x7
+ 1813 036f 3E       		.byte	0x3e
+ 1814 0370 EB010000 		.4byte	0x1eb
+ 1815 0374 1C       		.byte	0x1c
+ 1816 0375 08       		.uleb128 0x8
+ 1817 0376 0E070000 		.4byte	.LASF64
+ 1818 037a 07       		.byte	0x7
+ 1819 037b 3F       		.byte	0x3f
+ 1820 037c EB010000 		.4byte	0x1eb
+ 1821 0380 20       		.byte	0x20
+ 1822 0381 00       		.byte	0
+ 1823 0382 09       		.uleb128 0x9
+ 1824 0383 C4010000 		.4byte	.LASF65
+ 1825 0387 0801     		.2byte	0x108
+ 1826 0389 07       		.byte	0x7
+ 1827 038a 48       		.byte	0x48
+ 1828 038b C2030000 		.4byte	0x3c2
+ 1829 038f 08       		.uleb128 0x8
+ 1830 0390 5A020000 		.4byte	.LASF66
+ 1831 0394 07       		.byte	0x7
+ 1832 0395 49       		.byte	0x49
+ 1833 0396 C2030000 		.4byte	0x3c2
+ 1834 039a 00       		.byte	0
+ 1835 039b 08       		.uleb128 0x8
+ 1836 039c 00000000 		.4byte	.LASF67
+ 1837 03a0 07       		.byte	0x7
+ 1838 03a1 4A       		.byte	0x4a
+ 1839 03a2 C2030000 		.4byte	0x3c2
+ 1840 03a6 80       		.byte	0x80
+ 1841 03a7 13       		.uleb128 0x13
+ 1842 03a8 62060000 		.4byte	.LASF68
+ 1843 03ac 07       		.byte	0x7
+ 1844 03ad 4C       		.byte	0x4c
+ 1845 03ae 95020000 		.4byte	0x295
+ 1846 03b2 0001     		.2byte	0x100
+ 1847 03b4 13       		.uleb128 0x13
+ 1848 03b5 0F020000 		.4byte	.LASF69
+ 1849 03b9 07       		.byte	0x7
+ 1850 03ba 4F       		.byte	0x4f
+ 1851 03bb 95020000 		.4byte	0x295
+ 1852 03bf 0401     		.2byte	0x104
+ 1853 03c1 00       		.byte	0
+ 1854 03c2 0A       		.uleb128 0xa
+ 1855 03c3 93020000 		.4byte	0x293
+ 1856 03c7 D2030000 		.4byte	0x3d2
+ 1857 03cb 0B       		.uleb128 0xb
+ 1858 03cc AC010000 		.4byte	0x1ac
+ 1859 03d0 1F       		.byte	0x1f
+ 1860 03d1 00       		.byte	0
+ 1861 03d2 09       		.uleb128 0x9
+ 1862 03d3 16040000 		.4byte	.LASF70
+ 1863 03d7 9001     		.2byte	0x190
+ 1864 03d9 07       		.byte	0x7
+ 1865 03da 5B       		.byte	0x5b
+ 1866 03db 10040000 		.4byte	0x410
+ 1867 03df 08       		.uleb128 0x8
+ 1868 03e0 33060000 		.4byte	.LASF51
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 40
+
+
+ 1869 03e4 07       		.byte	0x7
+ 1870 03e5 5C       		.byte	0x5c
+ 1871 03e6 10040000 		.4byte	0x410
+ 1872 03ea 00       		.byte	0
+ 1873 03eb 08       		.uleb128 0x8
+ 1874 03ec 85050000 		.4byte	.LASF71
+ 1875 03f0 07       		.byte	0x7
+ 1876 03f1 5D       		.byte	0x5d
+ 1877 03f2 EB010000 		.4byte	0x1eb
+ 1878 03f6 04       		.byte	0x4
+ 1879 03f7 08       		.uleb128 0x8
+ 1880 03f8 47030000 		.4byte	.LASF72
+ 1881 03fc 07       		.byte	0x7
+ 1882 03fd 5F       		.byte	0x5f
+ 1883 03fe 16040000 		.4byte	0x416
+ 1884 0402 08       		.byte	0x8
+ 1885 0403 08       		.uleb128 0x8
+ 1886 0404 C4010000 		.4byte	.LASF65
+ 1887 0408 07       		.byte	0x7
+ 1888 0409 60       		.byte	0x60
+ 1889 040a 82030000 		.4byte	0x382
+ 1890 040e 88       		.byte	0x88
+ 1891 040f 00       		.byte	0
+ 1892 0410 12       		.uleb128 0x12
+ 1893 0411 04       		.byte	0x4
+ 1894 0412 D2030000 		.4byte	0x3d2
+ 1895 0416 0A       		.uleb128 0xa
+ 1896 0417 26040000 		.4byte	0x426
+ 1897 041b 26040000 		.4byte	0x426
+ 1898 041f 0B       		.uleb128 0xb
+ 1899 0420 AC010000 		.4byte	0x1ac
+ 1900 0424 1F       		.byte	0x1f
+ 1901 0425 00       		.byte	0
+ 1902 0426 12       		.uleb128 0x12
+ 1903 0427 04       		.byte	0x4
+ 1904 0428 2C040000 		.4byte	0x42c
+ 1905 042c 14       		.uleb128 0x14
+ 1906 042d 06       		.uleb128 0x6
+ 1907 042e 2A050000 		.4byte	.LASF73
+ 1908 0432 08       		.byte	0x8
+ 1909 0433 07       		.byte	0x7
+ 1910 0434 73       		.byte	0x73
+ 1911 0435 52040000 		.4byte	0x452
+ 1912 0439 08       		.uleb128 0x8
+ 1913 043a A1010000 		.4byte	.LASF74
+ 1914 043e 07       		.byte	0x7
+ 1915 043f 74       		.byte	0x74
+ 1916 0440 52040000 		.4byte	0x452
+ 1917 0444 00       		.byte	0
+ 1918 0445 08       		.uleb128 0x8
+ 1919 0446 16000000 		.4byte	.LASF75
+ 1920 044a 07       		.byte	0x7
+ 1921 044b 75       		.byte	0x75
+ 1922 044c EB010000 		.4byte	0x1eb
+ 1923 0450 04       		.byte	0x4
+ 1924 0451 00       		.byte	0
+ 1925 0452 12       		.uleb128 0x12
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 41
+
+
+ 1926 0453 04       		.byte	0x4
+ 1927 0454 8A000000 		.4byte	0x8a
+ 1928 0458 06       		.uleb128 0x6
+ 1929 0459 57050000 		.4byte	.LASF76
+ 1930 045d 68       		.byte	0x68
+ 1931 045e 07       		.byte	0x7
+ 1932 045f B3       		.byte	0xb3
+ 1933 0460 82050000 		.4byte	0x582
+ 1934 0464 07       		.uleb128 0x7
+ 1935 0465 5F7000   		.ascii	"_p\000"
+ 1936 0468 07       		.byte	0x7
+ 1937 0469 B4       		.byte	0xb4
+ 1938 046a 52040000 		.4byte	0x452
+ 1939 046e 00       		.byte	0
+ 1940 046f 07       		.uleb128 0x7
+ 1941 0470 5F7200   		.ascii	"_r\000"
+ 1942 0473 07       		.byte	0x7
+ 1943 0474 B5       		.byte	0xb5
+ 1944 0475 EB010000 		.4byte	0x1eb
+ 1945 0479 04       		.byte	0x4
+ 1946 047a 07       		.uleb128 0x7
+ 1947 047b 5F7700   		.ascii	"_w\000"
+ 1948 047e 07       		.byte	0x7
+ 1949 047f B6       		.byte	0xb6
+ 1950 0480 EB010000 		.4byte	0x1eb
+ 1951 0484 08       		.byte	0x8
+ 1952 0485 08       		.uleb128 0x8
+ 1953 0486 08020000 		.4byte	.LASF77
+ 1954 048a 07       		.byte	0x7
+ 1955 048b B7       		.byte	0xb7
+ 1956 048c C1010000 		.4byte	0x1c1
+ 1957 0490 0C       		.byte	0xc
+ 1958 0491 08       		.uleb128 0x8
+ 1959 0492 1E030000 		.4byte	.LASF78
+ 1960 0496 07       		.byte	0x7
+ 1961 0497 B8       		.byte	0xb8
+ 1962 0498 C1010000 		.4byte	0x1c1
+ 1963 049c 0E       		.byte	0xe
+ 1964 049d 07       		.uleb128 0x7
+ 1965 049e 5F626600 		.ascii	"_bf\000"
+ 1966 04a2 07       		.byte	0x7
+ 1967 04a3 B9       		.byte	0xb9
+ 1968 04a4 2D040000 		.4byte	0x42d
+ 1969 04a8 10       		.byte	0x10
+ 1970 04a9 08       		.uleb128 0x8
+ 1971 04aa 11010000 		.4byte	.LASF79
+ 1972 04ae 07       		.byte	0x7
+ 1973 04af BA       		.byte	0xba
+ 1974 04b0 EB010000 		.4byte	0x1eb
+ 1975 04b4 18       		.byte	0x18
+ 1976 04b5 08       		.uleb128 0x8
+ 1977 04b6 E3010000 		.4byte	.LASF80
+ 1978 04ba 07       		.byte	0x7
+ 1979 04bb C1       		.byte	0xc1
+ 1980 04bc 93020000 		.4byte	0x293
+ 1981 04c0 1C       		.byte	0x1c
+ 1982 04c1 08       		.uleb128 0x8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 42
+
+
+ 1983 04c2 A6020000 		.4byte	.LASF81
+ 1984 04c6 07       		.byte	0x7
+ 1985 04c7 C3       		.byte	0xc3
+ 1986 04c8 DE060000 		.4byte	0x6de
+ 1987 04cc 20       		.byte	0x20
+ 1988 04cd 08       		.uleb128 0x8
+ 1989 04ce AD030000 		.4byte	.LASF82
+ 1990 04d2 07       		.byte	0x7
+ 1991 04d3 C5       		.byte	0xc5
+ 1992 04d4 0D070000 		.4byte	0x70d
+ 1993 04d8 24       		.byte	0x24
+ 1994 04d9 08       		.uleb128 0x8
+ 1995 04da CE050000 		.4byte	.LASF83
+ 1996 04de 07       		.byte	0x7
+ 1997 04df C8       		.byte	0xc8
+ 1998 04e0 31070000 		.4byte	0x731
+ 1999 04e4 28       		.byte	0x28
+ 2000 04e5 08       		.uleb128 0x8
+ 2001 04e6 32070000 		.4byte	.LASF84
+ 2002 04ea 07       		.byte	0x7
+ 2003 04eb C9       		.byte	0xc9
+ 2004 04ec 4B070000 		.4byte	0x74b
+ 2005 04f0 2C       		.byte	0x2c
+ 2006 04f1 07       		.uleb128 0x7
+ 2007 04f2 5F756200 		.ascii	"_ub\000"
+ 2008 04f6 07       		.byte	0x7
+ 2009 04f7 CC       		.byte	0xcc
+ 2010 04f8 2D040000 		.4byte	0x42d
+ 2011 04fc 30       		.byte	0x30
+ 2012 04fd 07       		.uleb128 0x7
+ 2013 04fe 5F757000 		.ascii	"_up\000"
+ 2014 0502 07       		.byte	0x7
+ 2015 0503 CD       		.byte	0xcd
+ 2016 0504 52040000 		.4byte	0x452
+ 2017 0508 38       		.byte	0x38
+ 2018 0509 07       		.uleb128 0x7
+ 2019 050a 5F757200 		.ascii	"_ur\000"
+ 2020 050e 07       		.byte	0x7
+ 2021 050f CE       		.byte	0xce
+ 2022 0510 EB010000 		.4byte	0x1eb
+ 2023 0514 3C       		.byte	0x3c
+ 2024 0515 08       		.uleb128 0x8
+ 2025 0516 9B010000 		.4byte	.LASF85
+ 2026 051a 07       		.byte	0x7
+ 2027 051b D1       		.byte	0xd1
+ 2028 051c 51070000 		.4byte	0x751
+ 2029 0520 40       		.byte	0x40
+ 2030 0521 08       		.uleb128 0x8
+ 2031 0522 00070000 		.4byte	.LASF86
+ 2032 0526 07       		.byte	0x7
+ 2033 0527 D2       		.byte	0xd2
+ 2034 0528 61070000 		.4byte	0x761
+ 2035 052c 43       		.byte	0x43
+ 2036 052d 07       		.uleb128 0x7
+ 2037 052e 5F6C6200 		.ascii	"_lb\000"
+ 2038 0532 07       		.byte	0x7
+ 2039 0533 D5       		.byte	0xd5
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 43
+
+
+ 2040 0534 2D040000 		.4byte	0x42d
+ 2041 0538 44       		.byte	0x44
+ 2042 0539 08       		.uleb128 0x8
+ 2043 053a 03060000 		.4byte	.LASF87
+ 2044 053e 07       		.byte	0x7
+ 2045 053f D8       		.byte	0xd8
+ 2046 0540 EB010000 		.4byte	0x1eb
+ 2047 0544 4C       		.byte	0x4c
+ 2048 0545 08       		.uleb128 0x8
+ 2049 0546 2D020000 		.4byte	.LASF88
+ 2050 054a 07       		.byte	0x7
+ 2051 054b D9       		.byte	0xd9
+ 2052 054c 0B020000 		.4byte	0x20b
+ 2053 0550 50       		.byte	0x50
+ 2054 0551 08       		.uleb128 0x8
+ 2055 0552 41000000 		.4byte	.LASF89
+ 2056 0556 07       		.byte	0x7
+ 2057 0557 DC       		.byte	0xdc
+ 2058 0558 A0050000 		.4byte	0x5a0
+ 2059 055c 54       		.byte	0x54
+ 2060 055d 08       		.uleb128 0x8
+ 2061 055e 88030000 		.4byte	.LASF90
+ 2062 0562 07       		.byte	0x7
+ 2063 0563 E0       		.byte	0xe0
+ 2064 0564 88020000 		.4byte	0x288
+ 2065 0568 58       		.byte	0x58
+ 2066 0569 08       		.uleb128 0x8
+ 2067 056a 5F050000 		.4byte	.LASF91
+ 2068 056e 07       		.byte	0x7
+ 2069 056f E2       		.byte	0xe2
+ 2070 0570 7D020000 		.4byte	0x27d
+ 2071 0574 5C       		.byte	0x5c
+ 2072 0575 08       		.uleb128 0x8
+ 2073 0576 8E030000 		.4byte	.LASF92
+ 2074 057a 07       		.byte	0x7
+ 2075 057b E3       		.byte	0xe3
+ 2076 057c EB010000 		.4byte	0x1eb
+ 2077 0580 64       		.byte	0x64
+ 2078 0581 00       		.byte	0
+ 2079 0582 15       		.uleb128 0x15
+ 2080 0583 EB010000 		.4byte	0x1eb
+ 2081 0587 A0050000 		.4byte	0x5a0
+ 2082 058b 16       		.uleb128 0x16
+ 2083 058c A0050000 		.4byte	0x5a0
+ 2084 0590 16       		.uleb128 0x16
+ 2085 0591 93020000 		.4byte	0x293
+ 2086 0595 16       		.uleb128 0x16
+ 2087 0596 D8060000 		.4byte	0x6d8
+ 2088 059a 16       		.uleb128 0x16
+ 2089 059b EB010000 		.4byte	0x1eb
+ 2090 059f 00       		.byte	0
+ 2091 05a0 12       		.uleb128 0x12
+ 2092 05a1 04       		.byte	0x4
+ 2093 05a2 A6050000 		.4byte	0x5a6
+ 2094 05a6 17       		.uleb128 0x17
+ 2095 05a7 B1050000 		.4byte	.LASF93
+ 2096 05ab 2804     		.2byte	0x428
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 44
+
+
+ 2097 05ad 07       		.byte	0x7
+ 2098 05ae 3802     		.2byte	0x238
+ 2099 05b0 D8060000 		.4byte	0x6d8
+ 2100 05b4 18       		.uleb128 0x18
+ 2101 05b5 F7050000 		.4byte	.LASF94
+ 2102 05b9 07       		.byte	0x7
+ 2103 05ba 3A02     		.2byte	0x23a
+ 2104 05bc EB010000 		.4byte	0x1eb
+ 2105 05c0 00       		.byte	0
+ 2106 05c1 18       		.uleb128 0x18
+ 2107 05c2 17020000 		.4byte	.LASF95
+ 2108 05c6 07       		.byte	0x7
+ 2109 05c7 3F02     		.2byte	0x23f
+ 2110 05c9 B8070000 		.4byte	0x7b8
+ 2111 05cd 04       		.byte	0x4
+ 2112 05ce 18       		.uleb128 0x18
+ 2113 05cf EE020000 		.4byte	.LASF96
+ 2114 05d3 07       		.byte	0x7
+ 2115 05d4 3F02     		.2byte	0x23f
+ 2116 05d6 B8070000 		.4byte	0x7b8
+ 2117 05da 08       		.byte	0x8
+ 2118 05db 18       		.uleb128 0x18
+ 2119 05dc 7D020000 		.4byte	.LASF97
+ 2120 05e0 07       		.byte	0x7
+ 2121 05e1 3F02     		.2byte	0x23f
+ 2122 05e3 B8070000 		.4byte	0x7b8
+ 2123 05e7 0C       		.byte	0xc
+ 2124 05e8 18       		.uleb128 0x18
+ 2125 05e9 80050000 		.4byte	.LASF98
+ 2126 05ed 07       		.byte	0x7
+ 2127 05ee 4102     		.2byte	0x241
+ 2128 05f0 EB010000 		.4byte	0x1eb
+ 2129 05f4 10       		.byte	0x10
+ 2130 05f5 18       		.uleb128 0x18
+ 2131 05f6 2D000000 		.4byte	.LASF99
+ 2132 05fa 07       		.byte	0x7
+ 2133 05fb 4202     		.2byte	0x242
+ 2134 05fd 9A090000 		.4byte	0x99a
+ 2135 0601 14       		.byte	0x14
+ 2136 0602 18       		.uleb128 0x18
+ 2137 0603 A4060000 		.4byte	.LASF100
+ 2138 0607 07       		.byte	0x7
+ 2139 0608 4402     		.2byte	0x244
+ 2140 060a EB010000 		.4byte	0x1eb
+ 2141 060e 30       		.byte	0x30
+ 2142 060f 18       		.uleb128 0x18
+ 2143 0610 8A050000 		.4byte	.LASF101
+ 2144 0614 07       		.byte	0x7
+ 2145 0615 4502     		.2byte	0x245
+ 2146 0617 02070000 		.4byte	0x702
+ 2147 061b 34       		.byte	0x34
+ 2148 061c 18       		.uleb128 0x18
+ 2149 061d 1E040000 		.4byte	.LASF102
+ 2150 0621 07       		.byte	0x7
+ 2151 0622 4702     		.2byte	0x247
+ 2152 0624 EB010000 		.4byte	0x1eb
+ 2153 0628 38       		.byte	0x38
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 45
+
+
+ 2154 0629 18       		.uleb128 0x18
+ 2155 062a 9A050000 		.4byte	.LASF103
+ 2156 062e 07       		.byte	0x7
+ 2157 062f 4902     		.2byte	0x249
+ 2158 0631 B5090000 		.4byte	0x9b5
+ 2159 0635 3C       		.byte	0x3c
+ 2160 0636 18       		.uleb128 0x18
+ 2161 0637 59030000 		.4byte	.LASF104
+ 2162 063b 07       		.byte	0x7
+ 2163 063c 4C02     		.2byte	0x24c
+ 2164 063e F3020000 		.4byte	0x2f3
+ 2165 0642 40       		.byte	0x40
+ 2166 0643 18       		.uleb128 0x18
+ 2167 0644 3F040000 		.4byte	.LASF105
+ 2168 0648 07       		.byte	0x7
+ 2169 0649 4D02     		.2byte	0x24d
+ 2170 064b EB010000 		.4byte	0x1eb
+ 2171 064f 44       		.byte	0x44
+ 2172 0650 18       		.uleb128 0x18
+ 2173 0651 4C070000 		.4byte	.LASF106
+ 2174 0655 07       		.byte	0x7
+ 2175 0656 4E02     		.2byte	0x24e
+ 2176 0658 F3020000 		.4byte	0x2f3
+ 2177 065c 48       		.byte	0x48
+ 2178 065d 18       		.uleb128 0x18
+ 2179 065e DE040000 		.4byte	.LASF107
+ 2180 0662 07       		.byte	0x7
+ 2181 0663 4F02     		.2byte	0x24f
+ 2182 0665 BB090000 		.4byte	0x9bb
+ 2183 0669 4C       		.byte	0x4c
+ 2184 066a 18       		.uleb128 0x18
+ 2185 066b F6020000 		.4byte	.LASF108
+ 2186 066f 07       		.byte	0x7
+ 2187 0670 5202     		.2byte	0x252
+ 2188 0672 EB010000 		.4byte	0x1eb
+ 2189 0676 50       		.byte	0x50
+ 2190 0677 18       		.uleb128 0x18
+ 2191 0678 25020000 		.4byte	.LASF109
+ 2192 067c 07       		.byte	0x7
+ 2193 067d 5302     		.2byte	0x253
+ 2194 067f D8060000 		.4byte	0x6d8
+ 2195 0683 54       		.byte	0x54
+ 2196 0684 18       		.uleb128 0x18
+ 2197 0685 08050000 		.4byte	.LASF110
+ 2198 0689 07       		.byte	0x7
+ 2199 068a 7602     		.2byte	0x276
+ 2200 068c 78090000 		.4byte	0x978
+ 2201 0690 58       		.byte	0x58
+ 2202 0691 19       		.uleb128 0x19
+ 2203 0692 16040000 		.4byte	.LASF70
+ 2204 0696 07       		.byte	0x7
+ 2205 0697 7A02     		.2byte	0x27a
+ 2206 0699 10040000 		.4byte	0x410
+ 2207 069d 4801     		.2byte	0x148
+ 2208 069f 19       		.uleb128 0x19
+ 2209 06a0 3E030000 		.4byte	.LASF111
+ 2210 06a4 07       		.byte	0x7
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 46
+
+
+ 2211 06a5 7B02     		.2byte	0x27b
+ 2212 06a7 D2030000 		.4byte	0x3d2
+ 2213 06ab 4C01     		.2byte	0x14c
+ 2214 06ad 19       		.uleb128 0x19
+ 2215 06ae EB060000 		.4byte	.LASF112
+ 2216 06b2 07       		.byte	0x7
+ 2217 06b3 7F02     		.2byte	0x27f
+ 2218 06b5 CC090000 		.4byte	0x9cc
+ 2219 06b9 DC02     		.2byte	0x2dc
+ 2220 06bb 19       		.uleb128 0x19
+ 2221 06bc EB010000 		.4byte	.LASF113
+ 2222 06c0 07       		.byte	0x7
+ 2223 06c1 8402     		.2byte	0x284
+ 2224 06c3 7D070000 		.4byte	0x77d
+ 2225 06c7 E002     		.2byte	0x2e0
+ 2226 06c9 19       		.uleb128 0x19
+ 2227 06ca BF010000 		.4byte	.LASF114
+ 2228 06ce 07       		.byte	0x7
+ 2229 06cf 8502     		.2byte	0x285
+ 2230 06d1 D8090000 		.4byte	0x9d8
+ 2231 06d5 EC02     		.2byte	0x2ec
+ 2232 06d7 00       		.byte	0
+ 2233 06d8 12       		.uleb128 0x12
+ 2234 06d9 04       		.byte	0x4
+ 2235 06da B3010000 		.4byte	0x1b3
+ 2236 06de 12       		.uleb128 0x12
+ 2237 06df 04       		.byte	0x4
+ 2238 06e0 82050000 		.4byte	0x582
+ 2239 06e4 15       		.uleb128 0x15
+ 2240 06e5 EB010000 		.4byte	0x1eb
+ 2241 06e9 02070000 		.4byte	0x702
+ 2242 06ed 16       		.uleb128 0x16
+ 2243 06ee A0050000 		.4byte	0x5a0
+ 2244 06f2 16       		.uleb128 0x16
+ 2245 06f3 93020000 		.4byte	0x293
+ 2246 06f7 16       		.uleb128 0x16
+ 2247 06f8 02070000 		.4byte	0x702
+ 2248 06fc 16       		.uleb128 0x16
+ 2249 06fd EB010000 		.4byte	0x1eb
+ 2250 0701 00       		.byte	0
+ 2251 0702 12       		.uleb128 0x12
+ 2252 0703 04       		.byte	0x4
+ 2253 0704 08070000 		.4byte	0x708
+ 2254 0708 1A       		.uleb128 0x1a
+ 2255 0709 B3010000 		.4byte	0x1b3
+ 2256 070d 12       		.uleb128 0x12
+ 2257 070e 04       		.byte	0x4
+ 2258 070f E4060000 		.4byte	0x6e4
+ 2259 0713 15       		.uleb128 0x15
+ 2260 0714 16020000 		.4byte	0x216
+ 2261 0718 31070000 		.4byte	0x731
+ 2262 071c 16       		.uleb128 0x16
+ 2263 071d A0050000 		.4byte	0x5a0
+ 2264 0721 16       		.uleb128 0x16
+ 2265 0722 93020000 		.4byte	0x293
+ 2266 0726 16       		.uleb128 0x16
+ 2267 0727 16020000 		.4byte	0x216
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 47
+
+
+ 2268 072b 16       		.uleb128 0x16
+ 2269 072c EB010000 		.4byte	0x1eb
+ 2270 0730 00       		.byte	0
+ 2271 0731 12       		.uleb128 0x12
+ 2272 0732 04       		.byte	0x4
+ 2273 0733 13070000 		.4byte	0x713
+ 2274 0737 15       		.uleb128 0x15
+ 2275 0738 EB010000 		.4byte	0x1eb
+ 2276 073c 4B070000 		.4byte	0x74b
+ 2277 0740 16       		.uleb128 0x16
+ 2278 0741 A0050000 		.4byte	0x5a0
+ 2279 0745 16       		.uleb128 0x16
+ 2280 0746 93020000 		.4byte	0x293
+ 2281 074a 00       		.byte	0
+ 2282 074b 12       		.uleb128 0x12
+ 2283 074c 04       		.byte	0x4
+ 2284 074d 37070000 		.4byte	0x737
+ 2285 0751 0A       		.uleb128 0xa
+ 2286 0752 8A000000 		.4byte	0x8a
+ 2287 0756 61070000 		.4byte	0x761
+ 2288 075a 0B       		.uleb128 0xb
+ 2289 075b AC010000 		.4byte	0x1ac
+ 2290 075f 02       		.byte	0x2
+ 2291 0760 00       		.byte	0
+ 2292 0761 0A       		.uleb128 0xa
+ 2293 0762 8A000000 		.4byte	0x8a
+ 2294 0766 71070000 		.4byte	0x771
+ 2295 076a 0B       		.uleb128 0xb
+ 2296 076b AC010000 		.4byte	0x1ac
+ 2297 076f 00       		.byte	0
+ 2298 0770 00       		.byte	0
+ 2299 0771 0D       		.uleb128 0xd
+ 2300 0772 45050000 		.4byte	.LASF115
+ 2301 0776 07       		.byte	0x7
+ 2302 0777 1D01     		.2byte	0x11d
+ 2303 0779 58040000 		.4byte	0x458
+ 2304 077d 1B       		.uleb128 0x1b
+ 2305 077e D2060000 		.4byte	.LASF116
+ 2306 0782 0C       		.byte	0xc
+ 2307 0783 07       		.byte	0x7
+ 2308 0784 2101     		.2byte	0x121
+ 2309 0786 B2070000 		.4byte	0x7b2
+ 2310 078a 18       		.uleb128 0x18
+ 2311 078b 33060000 		.4byte	.LASF51
+ 2312 078f 07       		.byte	0x7
+ 2313 0790 2301     		.2byte	0x123
+ 2314 0792 B2070000 		.4byte	0x7b2
+ 2315 0796 00       		.byte	0
+ 2316 0797 18       		.uleb128 0x18
+ 2317 0798 24030000 		.4byte	.LASF117
+ 2318 079c 07       		.byte	0x7
+ 2319 079d 2401     		.2byte	0x124
+ 2320 079f EB010000 		.4byte	0x1eb
+ 2321 07a3 04       		.byte	0x4
+ 2322 07a4 18       		.uleb128 0x18
+ 2323 07a5 31050000 		.4byte	.LASF118
+ 2324 07a9 07       		.byte	0x7
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 48
+
+
+ 2325 07aa 2501     		.2byte	0x125
+ 2326 07ac B8070000 		.4byte	0x7b8
+ 2327 07b0 08       		.byte	0x8
+ 2328 07b1 00       		.byte	0
+ 2329 07b2 12       		.uleb128 0x12
+ 2330 07b3 04       		.byte	0x4
+ 2331 07b4 7D070000 		.4byte	0x77d
+ 2332 07b8 12       		.uleb128 0x12
+ 2333 07b9 04       		.byte	0x4
+ 2334 07ba 71070000 		.4byte	0x771
+ 2335 07be 1B       		.uleb128 0x1b
+ 2336 07bf 25000000 		.4byte	.LASF119
+ 2337 07c3 0E       		.byte	0xe
+ 2338 07c4 07       		.byte	0x7
+ 2339 07c5 3D01     		.2byte	0x13d
+ 2340 07c7 F3070000 		.4byte	0x7f3
+ 2341 07cb 18       		.uleb128 0x18
+ 2342 07cc B8050000 		.4byte	.LASF120
+ 2343 07d0 07       		.byte	0x7
+ 2344 07d1 3E01     		.2byte	0x13e
+ 2345 07d3 F3070000 		.4byte	0x7f3
+ 2346 07d7 00       		.byte	0
+ 2347 07d8 18       		.uleb128 0x18
+ 2348 07d9 23060000 		.4byte	.LASF121
+ 2349 07dd 07       		.byte	0x7
+ 2350 07de 3F01     		.2byte	0x13f
+ 2351 07e0 F3070000 		.4byte	0x7f3
+ 2352 07e4 06       		.byte	0x6
+ 2353 07e5 18       		.uleb128 0x18
+ 2354 07e6 6B060000 		.4byte	.LASF122
+ 2355 07ea 07       		.byte	0x7
+ 2356 07eb 4001     		.2byte	0x140
+ 2357 07ed C8010000 		.4byte	0x1c8
+ 2358 07f1 0C       		.byte	0xc
+ 2359 07f2 00       		.byte	0
+ 2360 07f3 0A       		.uleb128 0xa
+ 2361 07f4 C8010000 		.4byte	0x1c8
+ 2362 07f8 03080000 		.4byte	0x803
+ 2363 07fc 0B       		.uleb128 0xb
+ 2364 07fd AC010000 		.4byte	0x1ac
+ 2365 0801 02       		.byte	0x2
+ 2366 0802 00       		.byte	0
+ 2367 0803 1C       		.uleb128 0x1c
+ 2368 0804 D0       		.byte	0xd0
+ 2369 0805 07       		.byte	0x7
+ 2370 0806 5702     		.2byte	0x257
+ 2371 0808 04090000 		.4byte	0x904
+ 2372 080c 18       		.uleb128 0x18
+ 2373 080d B6060000 		.4byte	.LASF123
+ 2374 0811 07       		.byte	0x7
+ 2375 0812 5902     		.2byte	0x259
+ 2376 0814 F2010000 		.4byte	0x1f2
+ 2377 0818 00       		.byte	0
+ 2378 0819 18       		.uleb128 0x18
+ 2379 081a 39060000 		.4byte	.LASF124
+ 2380 081e 07       		.byte	0x7
+ 2381 081f 5A02     		.2byte	0x25a
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 49
+
+
+ 2382 0821 D8060000 		.4byte	0x6d8
+ 2383 0825 04       		.byte	0x4
+ 2384 0826 18       		.uleb128 0x18
+ 2385 0827 4C030000 		.4byte	.LASF125
+ 2386 082b 07       		.byte	0x7
+ 2387 082c 5B02     		.2byte	0x25b
+ 2388 082e 04090000 		.4byte	0x904
+ 2389 0832 08       		.byte	0x8
+ 2390 0833 18       		.uleb128 0x18
+ 2391 0834 19070000 		.4byte	.LASF126
+ 2392 0838 07       		.byte	0x7
+ 2393 0839 5C02     		.2byte	0x25c
+ 2394 083b 09030000 		.4byte	0x309
+ 2395 083f 24       		.byte	0x24
+ 2396 0840 18       		.uleb128 0x18
+ 2397 0841 8D020000 		.4byte	.LASF127
+ 2398 0845 07       		.byte	0x7
+ 2399 0846 5D02     		.2byte	0x25d
+ 2400 0848 EB010000 		.4byte	0x1eb
+ 2401 084c 48       		.byte	0x48
+ 2402 084d 18       		.uleb128 0x18
+ 2403 084e 68050000 		.4byte	.LASF128
+ 2404 0852 07       		.byte	0x7
+ 2405 0853 5E02     		.2byte	0x25e
+ 2406 0855 E4010000 		.4byte	0x1e4
+ 2407 0859 50       		.byte	0x50
+ 2408 085a 18       		.uleb128 0x18
+ 2409 085b 39070000 		.4byte	.LASF129
+ 2410 085f 07       		.byte	0x7
+ 2411 0860 5F02     		.2byte	0x25f
+ 2412 0862 BE070000 		.4byte	0x7be
+ 2413 0866 58       		.byte	0x58
+ 2414 0867 18       		.uleb128 0x18
+ 2415 0868 73050000 		.4byte	.LASF130
+ 2416 086c 07       		.byte	0x7
+ 2417 086d 6002     		.2byte	0x260
+ 2418 086f 7D020000 		.4byte	0x27d
+ 2419 0873 68       		.byte	0x68
+ 2420 0874 18       		.uleb128 0x18
+ 2421 0875 3E070000 		.4byte	.LASF131
+ 2422 0879 07       		.byte	0x7
+ 2423 087a 6102     		.2byte	0x261
+ 2424 087c 7D020000 		.4byte	0x27d
+ 2425 0880 70       		.byte	0x70
+ 2426 0881 18       		.uleb128 0x18
+ 2427 0882 B1010000 		.4byte	.LASF132
+ 2428 0886 07       		.byte	0x7
+ 2429 0887 6202     		.2byte	0x262
+ 2430 0889 7D020000 		.4byte	0x27d
+ 2431 088d 78       		.byte	0x78
+ 2432 088e 18       		.uleb128 0x18
+ 2433 088f E1060000 		.4byte	.LASF133
+ 2434 0893 07       		.byte	0x7
+ 2435 0894 6302     		.2byte	0x263
+ 2436 0896 14090000 		.4byte	0x914
+ 2437 089a 80       		.byte	0x80
+ 2438 089b 18       		.uleb128 0x18
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 50
+
+
+ 2439 089c E4000000 		.4byte	.LASF134
+ 2440 08a0 07       		.byte	0x7
+ 2441 08a1 6402     		.2byte	0x264
+ 2442 08a3 24090000 		.4byte	0x924
+ 2443 08a7 88       		.byte	0x88
+ 2444 08a8 18       		.uleb128 0x18
+ 2445 08a9 8D060000 		.4byte	.LASF135
+ 2446 08ad 07       		.byte	0x7
+ 2447 08ae 6502     		.2byte	0x265
+ 2448 08b0 EB010000 		.4byte	0x1eb
+ 2449 08b4 A0       		.byte	0xa0
+ 2450 08b5 18       		.uleb128 0x18
+ 2451 08b6 4C020000 		.4byte	.LASF136
+ 2452 08ba 07       		.byte	0x7
+ 2453 08bb 6602     		.2byte	0x266
+ 2454 08bd 7D020000 		.4byte	0x27d
+ 2455 08c1 A4       		.byte	0xa4
+ 2456 08c2 18       		.uleb128 0x18
+ 2457 08c3 34010000 		.4byte	.LASF137
+ 2458 08c7 07       		.byte	0x7
+ 2459 08c8 6702     		.2byte	0x267
+ 2460 08ca 7D020000 		.4byte	0x27d
+ 2461 08ce AC       		.byte	0xac
+ 2462 08cf 18       		.uleb128 0x18
+ 2463 08d0 3B020000 		.4byte	.LASF138
+ 2464 08d4 07       		.byte	0x7
+ 2465 08d5 6802     		.2byte	0x268
+ 2466 08d7 7D020000 		.4byte	0x27d
+ 2467 08db B4       		.byte	0xb4
+ 2468 08dc 18       		.uleb128 0x18
+ 2469 08dd D5000000 		.4byte	.LASF139
+ 2470 08e1 07       		.byte	0x7
+ 2471 08e2 6902     		.2byte	0x269
+ 2472 08e4 7D020000 		.4byte	0x27d
+ 2473 08e8 BC       		.byte	0xbc
+ 2474 08e9 18       		.uleb128 0x18
+ 2475 08ea DD020000 		.4byte	.LASF140
+ 2476 08ee 07       		.byte	0x7
+ 2477 08ef 6A02     		.2byte	0x26a
+ 2478 08f1 7D020000 		.4byte	0x27d
+ 2479 08f5 C4       		.byte	0xc4
+ 2480 08f6 18       		.uleb128 0x18
+ 2481 08f7 0D050000 		.4byte	.LASF141
+ 2482 08fb 07       		.byte	0x7
+ 2483 08fc 6B02     		.2byte	0x26b
+ 2484 08fe EB010000 		.4byte	0x1eb
+ 2485 0902 CC       		.byte	0xcc
+ 2486 0903 00       		.byte	0
+ 2487 0904 0A       		.uleb128 0xa
+ 2488 0905 B3010000 		.4byte	0x1b3
+ 2489 0909 14090000 		.4byte	0x914
+ 2490 090d 0B       		.uleb128 0xb
+ 2491 090e AC010000 		.4byte	0x1ac
+ 2492 0912 19       		.byte	0x19
+ 2493 0913 00       		.byte	0
+ 2494 0914 0A       		.uleb128 0xa
+ 2495 0915 B3010000 		.4byte	0x1b3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 51
+
+
+ 2496 0919 24090000 		.4byte	0x924
+ 2497 091d 0B       		.uleb128 0xb
+ 2498 091e AC010000 		.4byte	0x1ac
+ 2499 0922 07       		.byte	0x7
+ 2500 0923 00       		.byte	0
+ 2501 0924 0A       		.uleb128 0xa
+ 2502 0925 B3010000 		.4byte	0x1b3
+ 2503 0929 34090000 		.4byte	0x934
+ 2504 092d 0B       		.uleb128 0xb
+ 2505 092e AC010000 		.4byte	0x1ac
+ 2506 0932 17       		.byte	0x17
+ 2507 0933 00       		.byte	0
+ 2508 0934 1C       		.uleb128 0x1c
+ 2509 0935 F0       		.byte	0xf0
+ 2510 0936 07       		.byte	0x7
+ 2511 0937 7002     		.2byte	0x270
+ 2512 0939 58090000 		.4byte	0x958
+ 2513 093d 18       		.uleb128 0x18
+ 2514 093e F0030000 		.4byte	.LASF142
+ 2515 0942 07       		.byte	0x7
+ 2516 0943 7302     		.2byte	0x273
+ 2517 0945 58090000 		.4byte	0x958
+ 2518 0949 00       		.byte	0
+ 2519 094a 18       		.uleb128 0x18
+ 2520 094b D8060000 		.4byte	.LASF143
+ 2521 094f 07       		.byte	0x7
+ 2522 0950 7402     		.2byte	0x274
+ 2523 0952 68090000 		.4byte	0x968
+ 2524 0956 78       		.byte	0x78
+ 2525 0957 00       		.byte	0
+ 2526 0958 0A       		.uleb128 0xa
+ 2527 0959 52040000 		.4byte	0x452
+ 2528 095d 68090000 		.4byte	0x968
+ 2529 0961 0B       		.uleb128 0xb
+ 2530 0962 AC010000 		.4byte	0x1ac
+ 2531 0966 1D       		.byte	0x1d
+ 2532 0967 00       		.byte	0
+ 2533 0968 0A       		.uleb128 0xa
+ 2534 0969 F2010000 		.4byte	0x1f2
+ 2535 096d 78090000 		.4byte	0x978
+ 2536 0971 0B       		.uleb128 0xb
+ 2537 0972 AC010000 		.4byte	0x1ac
+ 2538 0976 1D       		.byte	0x1d
+ 2539 0977 00       		.byte	0
+ 2540 0978 1D       		.uleb128 0x1d
+ 2541 0979 F0       		.byte	0xf0
+ 2542 097a 07       		.byte	0x7
+ 2543 097b 5502     		.2byte	0x255
+ 2544 097d 9A090000 		.4byte	0x99a
+ 2545 0981 1E       		.uleb128 0x1e
+ 2546 0982 B1050000 		.4byte	.LASF93
+ 2547 0986 07       		.byte	0x7
+ 2548 0987 6C02     		.2byte	0x26c
+ 2549 0989 03080000 		.4byte	0x803
+ 2550 098d 1E       		.uleb128 0x1e
+ 2551 098e 06070000 		.4byte	.LASF144
+ 2552 0992 07       		.byte	0x7
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 52
+
+
+ 2553 0993 7502     		.2byte	0x275
+ 2554 0995 34090000 		.4byte	0x934
+ 2555 0999 00       		.byte	0
+ 2556 099a 0A       		.uleb128 0xa
+ 2557 099b B3010000 		.4byte	0x1b3
+ 2558 099f AA090000 		.4byte	0x9aa
+ 2559 09a3 0B       		.uleb128 0xb
+ 2560 09a4 AC010000 		.4byte	0x1ac
+ 2561 09a8 18       		.byte	0x18
+ 2562 09a9 00       		.byte	0
+ 2563 09aa 1F       		.uleb128 0x1f
+ 2564 09ab B5090000 		.4byte	0x9b5
+ 2565 09af 16       		.uleb128 0x16
+ 2566 09b0 A0050000 		.4byte	0x5a0
+ 2567 09b4 00       		.byte	0
+ 2568 09b5 12       		.uleb128 0x12
+ 2569 09b6 04       		.byte	0x4
+ 2570 09b7 AA090000 		.4byte	0x9aa
+ 2571 09bb 12       		.uleb128 0x12
+ 2572 09bc 04       		.byte	0x4
+ 2573 09bd F3020000 		.4byte	0x2f3
+ 2574 09c1 1F       		.uleb128 0x1f
+ 2575 09c2 CC090000 		.4byte	0x9cc
+ 2576 09c6 16       		.uleb128 0x16
+ 2577 09c7 EB010000 		.4byte	0x1eb
+ 2578 09cb 00       		.byte	0
+ 2579 09cc 12       		.uleb128 0x12
+ 2580 09cd 04       		.byte	0x4
+ 2581 09ce D2090000 		.4byte	0x9d2
+ 2582 09d2 12       		.uleb128 0x12
+ 2583 09d3 04       		.byte	0x4
+ 2584 09d4 C1090000 		.4byte	0x9c1
+ 2585 09d8 0A       		.uleb128 0xa
+ 2586 09d9 71070000 		.4byte	0x771
+ 2587 09dd E8090000 		.4byte	0x9e8
+ 2588 09e1 0B       		.uleb128 0xb
+ 2589 09e2 AC010000 		.4byte	0x1ac
+ 2590 09e6 02       		.byte	0x2
+ 2591 09e7 00       		.byte	0
+ 2592 09e8 05       		.uleb128 0x5
+ 2593 09e9 38040000 		.4byte	.LASF145
+ 2594 09ed 08       		.byte	0x8
+ 2595 09ee 28       		.byte	0x28
+ 2596 09ef CF010000 		.4byte	0x1cf
+ 2597 09f3 05       		.uleb128 0x5
+ 2598 09f4 A4050000 		.4byte	.LASF146
+ 2599 09f8 09       		.byte	0x9
+ 2600 09f9 35       		.byte	0x35
+ 2601 09fa 71070000 		.4byte	0x771
+ 2602 09fe 20       		.uleb128 0x20
+ 2603 09ff 46060000 		.4byte	.LASF150
+ 2604 0a03 01       		.byte	0x1
+ 2605 0a04 21       		.byte	0x21
+ 2606 0a05 EB010000 		.4byte	0x1eb
+ 2607 0a09 00000000 		.4byte	.LFB1
+ 2608 0a0d 1A010000 		.4byte	.LFE1-.LFB1
+ 2609 0a11 01       		.uleb128 0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 53
+
+
+ 2610 0a12 9C       		.byte	0x9c
+ 2611 0a13 410A0000 		.4byte	0xa41
+ 2612 0a17 21       		.uleb128 0x21
+ 2613 0a18 6D736700 		.ascii	"msg\000"
+ 2614 0a1c 01       		.byte	0x1
+ 2615 0a1d 21       		.byte	0x21
+ 2616 0a1e 410A0000 		.4byte	0xa41
+ 2617 0a22 02       		.uleb128 0x2
+ 2618 0a23 91       		.byte	0x91
+ 2619 0a24 64       		.sleb128 -28
+ 2620 0a25 21       		.uleb128 0x21
+ 2621 0a26 736400   		.ascii	"sd\000"
+ 2622 0a29 01       		.byte	0x1
+ 2623 0a2a 21       		.byte	0x21
+ 2624 0a2b 470A0000 		.4byte	0xa47
+ 2625 0a2f 02       		.uleb128 0x2
+ 2626 0a30 91       		.byte	0x91
+ 2627 0a31 60       		.sleb128 -32
+ 2628 0a32 22       		.uleb128 0x22
+ 2629 0a33 0B040000 		.4byte	.LASF149
+ 2630 0a37 01       		.byte	0x1
+ 2631 0a38 22       		.byte	0x22
+ 2632 0a39 EB010000 		.4byte	0x1eb
+ 2633 0a3d 02       		.uleb128 0x2
+ 2634 0a3e 91       		.byte	0x91
+ 2635 0a3f 6C       		.sleb128 -20
+ 2636 0a40 00       		.byte	0
+ 2637 0a41 12       		.uleb128 0x12
+ 2638 0a42 04       		.byte	0x4
+ 2639 0a43 C8000000 		.4byte	0xc8
+ 2640 0a47 12       		.uleb128 0x12
+ 2641 0a48 04       		.byte	0x4
+ 2642 0a49 D3000000 		.4byte	0xd3
+ 2643 0a4d 23       		.uleb128 0x23
+ 2644 0a4e 67030000 		.4byte	.LASF147
+ 2645 0a52 01       		.byte	0x1
+ 2646 0a53 4C       		.byte	0x4c
+ 2647 0a54 00000000 		.4byte	.LFB2
+ 2648 0a58 F4000000 		.4byte	.LFE2-.LFB2
+ 2649 0a5c 01       		.uleb128 0x1
+ 2650 0a5d 9C       		.byte	0x9c
+ 2651 0a5e 700A0000 		.4byte	0xa70
+ 2652 0a62 21       		.uleb128 0x21
+ 2653 0a63 736400   		.ascii	"sd\000"
+ 2654 0a66 01       		.byte	0x1
+ 2655 0a67 4C       		.byte	0x4c
+ 2656 0a68 470A0000 		.4byte	0xa47
+ 2657 0a6c 02       		.uleb128 0x2
+ 2658 0a6d 91       		.byte	0x91
+ 2659 0a6e 6C       		.sleb128 -20
+ 2660 0a6f 00       		.byte	0
+ 2661 0a70 24       		.uleb128 0x24
+ 2662 0a71 54060000 		.4byte	.LASF148
+ 2663 0a75 01       		.byte	0x1
+ 2664 0a76 5F       		.byte	0x5f
+ 2665 0a77 00000000 		.4byte	.LFB3
+ 2666 0a7b F8010000 		.4byte	.LFE3-.LFB3
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 54
+
+
+ 2667 0a7f 01       		.uleb128 0x1
+ 2668 0a80 9C       		.byte	0x9c
+ 2669 0a81 9F0A0000 		.4byte	0xa9f
+ 2670 0a85 21       		.uleb128 0x21
+ 2671 0a86 736400   		.ascii	"sd\000"
+ 2672 0a89 01       		.byte	0x1
+ 2673 0a8a 5F       		.byte	0x5f
+ 2674 0a8b 470A0000 		.4byte	0xa47
+ 2675 0a8f 02       		.uleb128 0x2
+ 2676 0a90 91       		.byte	0x91
+ 2677 0a91 64       		.sleb128 -28
+ 2678 0a92 25       		.uleb128 0x25
+ 2679 0a93 7400     		.ascii	"t\000"
+ 2680 0a95 01       		.byte	0x1
+ 2681 0a96 60       		.byte	0x60
+ 2682 0a97 E8090000 		.4byte	0x9e8
+ 2683 0a9b 02       		.uleb128 0x2
+ 2684 0a9c 91       		.byte	0x91
+ 2685 0a9d 6C       		.sleb128 -20
+ 2686 0a9e 00       		.byte	0
+ 2687 0a9f 20       		.uleb128 0x20
+ 2688 0aa0 FE020000 		.4byte	.LASF151
+ 2689 0aa4 01       		.byte	0x1
+ 2690 0aa5 74       		.byte	0x74
+ 2691 0aa6 95010000 		.4byte	0x195
+ 2692 0aaa 00000000 		.4byte	.LFB4
+ 2693 0aae A4000000 		.4byte	.LFE4-.LFB4
+ 2694 0ab2 01       		.uleb128 0x1
+ 2695 0ab3 9C       		.byte	0x9c
+ 2696 0ab4 0D0B0000 		.4byte	0xb0d
+ 2697 0ab8 26       		.uleb128 0x26
+ 2698 0ab9 30040000 		.4byte	.LASF152
+ 2699 0abd 01       		.byte	0x1
+ 2700 0abe 74       		.byte	0x74
+ 2701 0abf 95010000 		.4byte	0x195
+ 2702 0ac3 02       		.uleb128 0x2
+ 2703 0ac4 91       		.byte	0x91
+ 2704 0ac5 50       		.sleb128 -48
+ 2705 0ac6 21       		.uleb128 0x21
+ 2706 0ac7 6D617800 		.ascii	"max\000"
+ 2707 0acb 01       		.byte	0x1
+ 2708 0acc 74       		.byte	0x74
+ 2709 0acd 95010000 		.4byte	0x195
+ 2710 0ad1 02       		.uleb128 0x2
+ 2711 0ad2 91       		.byte	0x91
+ 2712 0ad3 48       		.sleb128 -56
+ 2713 0ad4 21       		.uleb128 0x21
+ 2714 0ad5 6D696E00 		.ascii	"min\000"
+ 2715 0ad9 01       		.byte	0x1
+ 2716 0ada 74       		.byte	0x74
+ 2717 0adb 95010000 		.4byte	0x195
+ 2718 0adf 02       		.uleb128 0x2
+ 2719 0ae0 91       		.byte	0x91
+ 2720 0ae1 00       		.sleb128 0
+ 2721 0ae2 22       		.uleb128 0x22
+ 2722 0ae3 1C000000 		.4byte	.LASF153
+ 2723 0ae7 01       		.byte	0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 55
+
+
+ 2724 0ae8 75       		.byte	0x75
+ 2725 0ae9 95010000 		.4byte	0x195
+ 2726 0aed 02       		.uleb128 0x2
+ 2727 0aee 91       		.byte	0x91
+ 2728 0aef 68       		.sleb128 -24
+ 2729 0af0 22       		.uleb128 0x22
+ 2730 0af1 82060000 		.4byte	.LASF154
+ 2731 0af5 01       		.byte	0x1
+ 2732 0af6 76       		.byte	0x76
+ 2733 0af7 95010000 		.4byte	0x195
+ 2734 0afb 02       		.uleb128 0x2
+ 2735 0afc 91       		.byte	0x91
+ 2736 0afd 60       		.sleb128 -32
+ 2737 0afe 22       		.uleb128 0x22
+ 2738 0aff 35020000 		.4byte	.LASF155
+ 2739 0b03 01       		.byte	0x1
+ 2740 0b04 77       		.byte	0x77
+ 2741 0b05 95010000 		.4byte	0x195
+ 2742 0b09 02       		.uleb128 0x2
+ 2743 0b0a 91       		.byte	0x91
+ 2744 0b0b 58       		.sleb128 -40
+ 2745 0b0c 00       		.byte	0
+ 2746 0b0d 24       		.uleb128 0x24
+ 2747 0b0e F7030000 		.4byte	.LASF156
+ 2748 0b12 01       		.byte	0x1
+ 2749 0b13 7D       		.byte	0x7d
+ 2750 0b14 00000000 		.4byte	.LFB5
+ 2751 0b18 1C020000 		.4byte	.LFE5-.LFB5
+ 2752 0b1c 01       		.uleb128 0x1
+ 2753 0b1d 9C       		.byte	0x9c
+ 2754 0b1e 300B0000 		.4byte	0xb30
+ 2755 0b22 21       		.uleb128 0x21
+ 2756 0b23 736400   		.ascii	"sd\000"
+ 2757 0b26 01       		.byte	0x1
+ 2758 0b27 7D       		.byte	0x7d
+ 2759 0b28 470A0000 		.4byte	0xa47
+ 2760 0b2c 02       		.uleb128 0x2
+ 2761 0b2d 91       		.byte	0x91
+ 2762 0b2e 6C       		.sleb128 -20
+ 2763 0b2f 00       		.byte	0
+ 2764 0b30 20       		.uleb128 0x20
+ 2765 0b31 DC050000 		.4byte	.LASF157
+ 2766 0b35 01       		.byte	0x1
+ 2767 0b36 8E       		.byte	0x8e
+ 2768 0b37 EB010000 		.4byte	0x1eb
+ 2769 0b3b 00000000 		.4byte	.LFB6
+ 2770 0b3f DC000000 		.4byte	.LFE6-.LFB6
+ 2771 0b43 01       		.uleb128 0x1
+ 2772 0b44 9C       		.byte	0x9c
+ 2773 0b45 730B0000 		.4byte	0xb73
+ 2774 0b49 21       		.uleb128 0x21
+ 2775 0b4a 736400   		.ascii	"sd\000"
+ 2776 0b4d 01       		.byte	0x1
+ 2777 0b4e 8E       		.byte	0x8e
+ 2778 0b4f 470A0000 		.4byte	0xa47
+ 2779 0b53 02       		.uleb128 0x2
+ 2780 0b54 91       		.byte	0x91
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 56
+
+
+ 2781 0b55 5C       		.sleb128 -36
+ 2782 0b56 26       		.uleb128 0x26
+ 2783 0b57 DC030000 		.4byte	.LASF158
+ 2784 0b5b 01       		.byte	0x1
+ 2785 0b5c 8E       		.byte	0x8e
+ 2786 0b5d D8060000 		.4byte	0x6d8
+ 2787 0b61 02       		.uleb128 0x2
+ 2788 0b62 91       		.byte	0x91
+ 2789 0b63 58       		.sleb128 -40
+ 2790 0b64 22       		.uleb128 0x22
+ 2791 0b65 07010000 		.4byte	.LASF159
+ 2792 0b69 01       		.byte	0x1
+ 2793 0b6a 8F       		.byte	0x8f
+ 2794 0b6b 730B0000 		.4byte	0xb73
+ 2795 0b6f 02       		.uleb128 0x2
+ 2796 0b70 91       		.byte	0x91
+ 2797 0b71 64       		.sleb128 -28
+ 2798 0b72 00       		.byte	0
+ 2799 0b73 12       		.uleb128 0x12
+ 2800 0b74 04       		.byte	0x4
+ 2801 0b75 F3090000 		.4byte	0x9f3
+ 2802 0b79 20       		.uleb128 0x20
+ 2803 0b7a 7F030000 		.4byte	.LASF160
+ 2804 0b7e 01       		.byte	0x1
+ 2805 0b7f BA       		.byte	0xba
+ 2806 0b80 EB010000 		.4byte	0x1eb
+ 2807 0b84 00000000 		.4byte	.LFB7
+ 2808 0b88 30010000 		.4byte	.LFE7-.LFB7
+ 2809 0b8c 01       		.uleb128 0x1
+ 2810 0b8d 9C       		.byte	0x9c
+ 2811 0b8e BC0B0000 		.4byte	0xbbc
+ 2812 0b92 21       		.uleb128 0x21
+ 2813 0b93 736400   		.ascii	"sd\000"
+ 2814 0b96 01       		.byte	0x1
+ 2815 0b97 BA       		.byte	0xba
+ 2816 0b98 470A0000 		.4byte	0xa47
+ 2817 0b9c 02       		.uleb128 0x2
+ 2818 0b9d 91       		.byte	0x91
+ 2819 0b9e 54       		.sleb128 -44
+ 2820 0b9f 26       		.uleb128 0x26
+ 2821 0ba0 DC030000 		.4byte	.LASF158
+ 2822 0ba4 01       		.byte	0x1
+ 2823 0ba5 BA       		.byte	0xba
+ 2824 0ba6 D8060000 		.4byte	0x6d8
+ 2825 0baa 02       		.uleb128 0x2
+ 2826 0bab 91       		.byte	0x91
+ 2827 0bac 50       		.sleb128 -48
+ 2828 0bad 22       		.uleb128 0x22
+ 2829 0bae 07010000 		.4byte	.LASF159
+ 2830 0bb2 01       		.byte	0x1
+ 2831 0bb3 BB       		.byte	0xbb
+ 2832 0bb4 730B0000 		.4byte	0xb73
+ 2833 0bb8 02       		.uleb128 0x2
+ 2834 0bb9 91       		.byte	0x91
+ 2835 0bba 5C       		.sleb128 -36
+ 2836 0bbb 00       		.byte	0
+ 2837 0bbc 24       		.uleb128 0x24
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 57
+
+
+ 2838 0bbd CE040000 		.4byte	.LASF161
+ 2839 0bc1 01       		.byte	0x1
+ 2840 0bc2 E7       		.byte	0xe7
+ 2841 0bc3 00000000 		.4byte	.LFB8
+ 2842 0bc7 04010000 		.4byte	.LFE8-.LFB8
+ 2843 0bcb 01       		.uleb128 0x1
+ 2844 0bcc 9C       		.byte	0x9c
+ 2845 0bcd ED0B0000 		.4byte	0xbed
+ 2846 0bd1 21       		.uleb128 0x21
+ 2847 0bd2 62756600 		.ascii	"buf\000"
+ 2848 0bd6 01       		.byte	0x1
+ 2849 0bd7 E7       		.byte	0xe7
+ 2850 0bd8 D8060000 		.4byte	0x6d8
+ 2851 0bdc 02       		.uleb128 0x2
+ 2852 0bdd 91       		.byte	0x91
+ 2853 0bde 5C       		.sleb128 -36
+ 2854 0bdf 21       		.uleb128 0x21
+ 2855 0be0 736400   		.ascii	"sd\000"
+ 2856 0be3 01       		.byte	0x1
+ 2857 0be4 E7       		.byte	0xe7
+ 2858 0be5 470A0000 		.4byte	0xa47
+ 2859 0be9 02       		.uleb128 0x2
+ 2860 0bea 91       		.byte	0x91
+ 2861 0beb 58       		.sleb128 -40
+ 2862 0bec 00       		.byte	0
+ 2863 0bed 0A       		.uleb128 0xa
+ 2864 0bee 02070000 		.4byte	0x702
+ 2865 0bf2 FD0B0000 		.4byte	0xbfd
+ 2866 0bf6 0B       		.uleb128 0xb
+ 2867 0bf7 AC010000 		.4byte	0x1ac
+ 2868 0bfb 0D       		.byte	0xd
+ 2869 0bfc 00       		.byte	0
+ 2870 0bfd 22       		.uleb128 0x22
+ 2871 0bfe E5030000 		.4byte	.LASF162
+ 2872 0c02 02       		.byte	0x2
+ 2873 0c03 28       		.byte	0x28
+ 2874 0c04 ED0B0000 		.4byte	0xbed
+ 2875 0c08 05       		.uleb128 0x5
+ 2876 0c09 03       		.byte	0x3
+ 2877 0c0a 00000000 		.4byte	pkey_const
+ 2878 0c0e 00       		.byte	0
+ 2879              		.section	.debug_abbrev,"",%progbits
+ 2880              	.Ldebug_abbrev0:
+ 2881 0000 01       		.uleb128 0x1
+ 2882 0001 11       		.uleb128 0x11
+ 2883 0002 01       		.byte	0x1
+ 2884 0003 25       		.uleb128 0x25
+ 2885 0004 0E       		.uleb128 0xe
+ 2886 0005 13       		.uleb128 0x13
+ 2887 0006 0B       		.uleb128 0xb
+ 2888 0007 03       		.uleb128 0x3
+ 2889 0008 0E       		.uleb128 0xe
+ 2890 0009 1B       		.uleb128 0x1b
+ 2891 000a 0E       		.uleb128 0xe
+ 2892 000b 55       		.uleb128 0x55
+ 2893 000c 17       		.uleb128 0x17
+ 2894 000d 11       		.uleb128 0x11
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 58
+
+
+ 2895 000e 01       		.uleb128 0x1
+ 2896 000f 10       		.uleb128 0x10
+ 2897 0010 17       		.uleb128 0x17
+ 2898 0011 00       		.byte	0
+ 2899 0012 00       		.byte	0
+ 2900 0013 02       		.uleb128 0x2
+ 2901 0014 04       		.uleb128 0x4
+ 2902 0015 01       		.byte	0x1
+ 2903 0016 03       		.uleb128 0x3
+ 2904 0017 0E       		.uleb128 0xe
+ 2905 0018 0B       		.uleb128 0xb
+ 2906 0019 0B       		.uleb128 0xb
+ 2907 001a 49       		.uleb128 0x49
+ 2908 001b 13       		.uleb128 0x13
+ 2909 001c 3A       		.uleb128 0x3a
+ 2910 001d 0B       		.uleb128 0xb
+ 2911 001e 3B       		.uleb128 0x3b
+ 2912 001f 0B       		.uleb128 0xb
+ 2913 0020 01       		.uleb128 0x1
+ 2914 0021 13       		.uleb128 0x13
+ 2915 0022 00       		.byte	0
+ 2916 0023 00       		.byte	0
+ 2917 0024 03       		.uleb128 0x3
+ 2918 0025 28       		.uleb128 0x28
+ 2919 0026 00       		.byte	0
+ 2920 0027 03       		.uleb128 0x3
+ 2921 0028 0E       		.uleb128 0xe
+ 2922 0029 1C       		.uleb128 0x1c
+ 2923 002a 0B       		.uleb128 0xb
+ 2924 002b 00       		.byte	0
+ 2925 002c 00       		.byte	0
+ 2926 002d 04       		.uleb128 0x4
+ 2927 002e 24       		.uleb128 0x24
+ 2928 002f 00       		.byte	0
+ 2929 0030 0B       		.uleb128 0xb
+ 2930 0031 0B       		.uleb128 0xb
+ 2931 0032 3E       		.uleb128 0x3e
+ 2932 0033 0B       		.uleb128 0xb
+ 2933 0034 03       		.uleb128 0x3
+ 2934 0035 0E       		.uleb128 0xe
+ 2935 0036 00       		.byte	0
+ 2936 0037 00       		.byte	0
+ 2937 0038 05       		.uleb128 0x5
+ 2938 0039 16       		.uleb128 0x16
+ 2939 003a 00       		.byte	0
+ 2940 003b 03       		.uleb128 0x3
+ 2941 003c 0E       		.uleb128 0xe
+ 2942 003d 3A       		.uleb128 0x3a
+ 2943 003e 0B       		.uleb128 0xb
+ 2944 003f 3B       		.uleb128 0x3b
+ 2945 0040 0B       		.uleb128 0xb
+ 2946 0041 49       		.uleb128 0x49
+ 2947 0042 13       		.uleb128 0x13
+ 2948 0043 00       		.byte	0
+ 2949 0044 00       		.byte	0
+ 2950 0045 06       		.uleb128 0x6
+ 2951 0046 13       		.uleb128 0x13
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 59
+
+
+ 2952 0047 01       		.byte	0x1
+ 2953 0048 03       		.uleb128 0x3
+ 2954 0049 0E       		.uleb128 0xe
+ 2955 004a 0B       		.uleb128 0xb
+ 2956 004b 0B       		.uleb128 0xb
+ 2957 004c 3A       		.uleb128 0x3a
+ 2958 004d 0B       		.uleb128 0xb
+ 2959 004e 3B       		.uleb128 0x3b
+ 2960 004f 0B       		.uleb128 0xb
+ 2961 0050 01       		.uleb128 0x1
+ 2962 0051 13       		.uleb128 0x13
+ 2963 0052 00       		.byte	0
+ 2964 0053 00       		.byte	0
+ 2965 0054 07       		.uleb128 0x7
+ 2966 0055 0D       		.uleb128 0xd
+ 2967 0056 00       		.byte	0
+ 2968 0057 03       		.uleb128 0x3
+ 2969 0058 08       		.uleb128 0x8
+ 2970 0059 3A       		.uleb128 0x3a
+ 2971 005a 0B       		.uleb128 0xb
+ 2972 005b 3B       		.uleb128 0x3b
+ 2973 005c 0B       		.uleb128 0xb
+ 2974 005d 49       		.uleb128 0x49
+ 2975 005e 13       		.uleb128 0x13
+ 2976 005f 38       		.uleb128 0x38
+ 2977 0060 0B       		.uleb128 0xb
+ 2978 0061 00       		.byte	0
+ 2979 0062 00       		.byte	0
+ 2980 0063 08       		.uleb128 0x8
+ 2981 0064 0D       		.uleb128 0xd
+ 2982 0065 00       		.byte	0
+ 2983 0066 03       		.uleb128 0x3
+ 2984 0067 0E       		.uleb128 0xe
+ 2985 0068 3A       		.uleb128 0x3a
+ 2986 0069 0B       		.uleb128 0xb
+ 2987 006a 3B       		.uleb128 0x3b
+ 2988 006b 0B       		.uleb128 0xb
+ 2989 006c 49       		.uleb128 0x49
+ 2990 006d 13       		.uleb128 0x13
+ 2991 006e 38       		.uleb128 0x38
+ 2992 006f 0B       		.uleb128 0xb
+ 2993 0070 00       		.byte	0
+ 2994 0071 00       		.byte	0
+ 2995 0072 09       		.uleb128 0x9
+ 2996 0073 13       		.uleb128 0x13
+ 2997 0074 01       		.byte	0x1
+ 2998 0075 03       		.uleb128 0x3
+ 2999 0076 0E       		.uleb128 0xe
+ 3000 0077 0B       		.uleb128 0xb
+ 3001 0078 05       		.uleb128 0x5
+ 3002 0079 3A       		.uleb128 0x3a
+ 3003 007a 0B       		.uleb128 0xb
+ 3004 007b 3B       		.uleb128 0x3b
+ 3005 007c 0B       		.uleb128 0xb
+ 3006 007d 01       		.uleb128 0x1
+ 3007 007e 13       		.uleb128 0x13
+ 3008 007f 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 60
+
+
+ 3009 0080 00       		.byte	0
+ 3010 0081 0A       		.uleb128 0xa
+ 3011 0082 01       		.uleb128 0x1
+ 3012 0083 01       		.byte	0x1
+ 3013 0084 49       		.uleb128 0x49
+ 3014 0085 13       		.uleb128 0x13
+ 3015 0086 01       		.uleb128 0x1
+ 3016 0087 13       		.uleb128 0x13
+ 3017 0088 00       		.byte	0
+ 3018 0089 00       		.byte	0
+ 3019 008a 0B       		.uleb128 0xb
+ 3020 008b 21       		.uleb128 0x21
+ 3021 008c 00       		.byte	0
+ 3022 008d 49       		.uleb128 0x49
+ 3023 008e 13       		.uleb128 0x13
+ 3024 008f 2F       		.uleb128 0x2f
+ 3025 0090 0B       		.uleb128 0xb
+ 3026 0091 00       		.byte	0
+ 3027 0092 00       		.byte	0
+ 3028 0093 0C       		.uleb128 0xc
+ 3029 0094 24       		.uleb128 0x24
+ 3030 0095 00       		.byte	0
+ 3031 0096 0B       		.uleb128 0xb
+ 3032 0097 0B       		.uleb128 0xb
+ 3033 0098 3E       		.uleb128 0x3e
+ 3034 0099 0B       		.uleb128 0xb
+ 3035 009a 03       		.uleb128 0x3
+ 3036 009b 08       		.uleb128 0x8
+ 3037 009c 00       		.byte	0
+ 3038 009d 00       		.byte	0
+ 3039 009e 0D       		.uleb128 0xd
+ 3040 009f 16       		.uleb128 0x16
+ 3041 00a0 00       		.byte	0
+ 3042 00a1 03       		.uleb128 0x3
+ 3043 00a2 0E       		.uleb128 0xe
+ 3044 00a3 3A       		.uleb128 0x3a
+ 3045 00a4 0B       		.uleb128 0xb
+ 3046 00a5 3B       		.uleb128 0x3b
+ 3047 00a6 05       		.uleb128 0x5
+ 3048 00a7 49       		.uleb128 0x49
+ 3049 00a8 13       		.uleb128 0x13
+ 3050 00a9 00       		.byte	0
+ 3051 00aa 00       		.byte	0
+ 3052 00ab 0E       		.uleb128 0xe
+ 3053 00ac 17       		.uleb128 0x17
+ 3054 00ad 01       		.byte	0x1
+ 3055 00ae 0B       		.uleb128 0xb
+ 3056 00af 0B       		.uleb128 0xb
+ 3057 00b0 3A       		.uleb128 0x3a
+ 3058 00b1 0B       		.uleb128 0xb
+ 3059 00b2 3B       		.uleb128 0x3b
+ 3060 00b3 0B       		.uleb128 0xb
+ 3061 00b4 01       		.uleb128 0x1
+ 3062 00b5 13       		.uleb128 0x13
+ 3063 00b6 00       		.byte	0
+ 3064 00b7 00       		.byte	0
+ 3065 00b8 0F       		.uleb128 0xf
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 61
+
+
+ 3066 00b9 0D       		.uleb128 0xd
+ 3067 00ba 00       		.byte	0
+ 3068 00bb 03       		.uleb128 0x3
+ 3069 00bc 0E       		.uleb128 0xe
+ 3070 00bd 3A       		.uleb128 0x3a
+ 3071 00be 0B       		.uleb128 0xb
+ 3072 00bf 3B       		.uleb128 0x3b
+ 3073 00c0 0B       		.uleb128 0xb
+ 3074 00c1 49       		.uleb128 0x49
+ 3075 00c2 13       		.uleb128 0x13
+ 3076 00c3 00       		.byte	0
+ 3077 00c4 00       		.byte	0
+ 3078 00c5 10       		.uleb128 0x10
+ 3079 00c6 13       		.uleb128 0x13
+ 3080 00c7 01       		.byte	0x1
+ 3081 00c8 0B       		.uleb128 0xb
+ 3082 00c9 0B       		.uleb128 0xb
+ 3083 00ca 3A       		.uleb128 0x3a
+ 3084 00cb 0B       		.uleb128 0xb
+ 3085 00cc 3B       		.uleb128 0x3b
+ 3086 00cd 0B       		.uleb128 0xb
+ 3087 00ce 01       		.uleb128 0x1
+ 3088 00cf 13       		.uleb128 0x13
+ 3089 00d0 00       		.byte	0
+ 3090 00d1 00       		.byte	0
+ 3091 00d2 11       		.uleb128 0x11
+ 3092 00d3 0F       		.uleb128 0xf
+ 3093 00d4 00       		.byte	0
+ 3094 00d5 0B       		.uleb128 0xb
+ 3095 00d6 0B       		.uleb128 0xb
+ 3096 00d7 00       		.byte	0
+ 3097 00d8 00       		.byte	0
+ 3098 00d9 12       		.uleb128 0x12
+ 3099 00da 0F       		.uleb128 0xf
+ 3100 00db 00       		.byte	0
+ 3101 00dc 0B       		.uleb128 0xb
+ 3102 00dd 0B       		.uleb128 0xb
+ 3103 00de 49       		.uleb128 0x49
+ 3104 00df 13       		.uleb128 0x13
+ 3105 00e0 00       		.byte	0
+ 3106 00e1 00       		.byte	0
+ 3107 00e2 13       		.uleb128 0x13
+ 3108 00e3 0D       		.uleb128 0xd
+ 3109 00e4 00       		.byte	0
+ 3110 00e5 03       		.uleb128 0x3
+ 3111 00e6 0E       		.uleb128 0xe
+ 3112 00e7 3A       		.uleb128 0x3a
+ 3113 00e8 0B       		.uleb128 0xb
+ 3114 00e9 3B       		.uleb128 0x3b
+ 3115 00ea 0B       		.uleb128 0xb
+ 3116 00eb 49       		.uleb128 0x49
+ 3117 00ec 13       		.uleb128 0x13
+ 3118 00ed 38       		.uleb128 0x38
+ 3119 00ee 05       		.uleb128 0x5
+ 3120 00ef 00       		.byte	0
+ 3121 00f0 00       		.byte	0
+ 3122 00f1 14       		.uleb128 0x14
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 62
+
+
+ 3123 00f2 15       		.uleb128 0x15
+ 3124 00f3 00       		.byte	0
+ 3125 00f4 27       		.uleb128 0x27
+ 3126 00f5 19       		.uleb128 0x19
+ 3127 00f6 00       		.byte	0
+ 3128 00f7 00       		.byte	0
+ 3129 00f8 15       		.uleb128 0x15
+ 3130 00f9 15       		.uleb128 0x15
+ 3131 00fa 01       		.byte	0x1
+ 3132 00fb 27       		.uleb128 0x27
+ 3133 00fc 19       		.uleb128 0x19
+ 3134 00fd 49       		.uleb128 0x49
+ 3135 00fe 13       		.uleb128 0x13
+ 3136 00ff 01       		.uleb128 0x1
+ 3137 0100 13       		.uleb128 0x13
+ 3138 0101 00       		.byte	0
+ 3139 0102 00       		.byte	0
+ 3140 0103 16       		.uleb128 0x16
+ 3141 0104 05       		.uleb128 0x5
+ 3142 0105 00       		.byte	0
+ 3143 0106 49       		.uleb128 0x49
+ 3144 0107 13       		.uleb128 0x13
+ 3145 0108 00       		.byte	0
+ 3146 0109 00       		.byte	0
+ 3147 010a 17       		.uleb128 0x17
+ 3148 010b 13       		.uleb128 0x13
+ 3149 010c 01       		.byte	0x1
+ 3150 010d 03       		.uleb128 0x3
+ 3151 010e 0E       		.uleb128 0xe
+ 3152 010f 0B       		.uleb128 0xb
+ 3153 0110 05       		.uleb128 0x5
+ 3154 0111 3A       		.uleb128 0x3a
+ 3155 0112 0B       		.uleb128 0xb
+ 3156 0113 3B       		.uleb128 0x3b
+ 3157 0114 05       		.uleb128 0x5
+ 3158 0115 01       		.uleb128 0x1
+ 3159 0116 13       		.uleb128 0x13
+ 3160 0117 00       		.byte	0
+ 3161 0118 00       		.byte	0
+ 3162 0119 18       		.uleb128 0x18
+ 3163 011a 0D       		.uleb128 0xd
+ 3164 011b 00       		.byte	0
+ 3165 011c 03       		.uleb128 0x3
+ 3166 011d 0E       		.uleb128 0xe
+ 3167 011e 3A       		.uleb128 0x3a
+ 3168 011f 0B       		.uleb128 0xb
+ 3169 0120 3B       		.uleb128 0x3b
+ 3170 0121 05       		.uleb128 0x5
+ 3171 0122 49       		.uleb128 0x49
+ 3172 0123 13       		.uleb128 0x13
+ 3173 0124 38       		.uleb128 0x38
+ 3174 0125 0B       		.uleb128 0xb
+ 3175 0126 00       		.byte	0
+ 3176 0127 00       		.byte	0
+ 3177 0128 19       		.uleb128 0x19
+ 3178 0129 0D       		.uleb128 0xd
+ 3179 012a 00       		.byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 63
+
+
+ 3180 012b 03       		.uleb128 0x3
+ 3181 012c 0E       		.uleb128 0xe
+ 3182 012d 3A       		.uleb128 0x3a
+ 3183 012e 0B       		.uleb128 0xb
+ 3184 012f 3B       		.uleb128 0x3b
+ 3185 0130 05       		.uleb128 0x5
+ 3186 0131 49       		.uleb128 0x49
+ 3187 0132 13       		.uleb128 0x13
+ 3188 0133 38       		.uleb128 0x38
+ 3189 0134 05       		.uleb128 0x5
+ 3190 0135 00       		.byte	0
+ 3191 0136 00       		.byte	0
+ 3192 0137 1A       		.uleb128 0x1a
+ 3193 0138 26       		.uleb128 0x26
+ 3194 0139 00       		.byte	0
+ 3195 013a 49       		.uleb128 0x49
+ 3196 013b 13       		.uleb128 0x13
+ 3197 013c 00       		.byte	0
+ 3198 013d 00       		.byte	0
+ 3199 013e 1B       		.uleb128 0x1b
+ 3200 013f 13       		.uleb128 0x13
+ 3201 0140 01       		.byte	0x1
+ 3202 0141 03       		.uleb128 0x3
+ 3203 0142 0E       		.uleb128 0xe
+ 3204 0143 0B       		.uleb128 0xb
+ 3205 0144 0B       		.uleb128 0xb
+ 3206 0145 3A       		.uleb128 0x3a
+ 3207 0146 0B       		.uleb128 0xb
+ 3208 0147 3B       		.uleb128 0x3b
+ 3209 0148 05       		.uleb128 0x5
+ 3210 0149 01       		.uleb128 0x1
+ 3211 014a 13       		.uleb128 0x13
+ 3212 014b 00       		.byte	0
+ 3213 014c 00       		.byte	0
+ 3214 014d 1C       		.uleb128 0x1c
+ 3215 014e 13       		.uleb128 0x13
+ 3216 014f 01       		.byte	0x1
+ 3217 0150 0B       		.uleb128 0xb
+ 3218 0151 0B       		.uleb128 0xb
+ 3219 0152 3A       		.uleb128 0x3a
+ 3220 0153 0B       		.uleb128 0xb
+ 3221 0154 3B       		.uleb128 0x3b
+ 3222 0155 05       		.uleb128 0x5
+ 3223 0156 01       		.uleb128 0x1
+ 3224 0157 13       		.uleb128 0x13
+ 3225 0158 00       		.byte	0
+ 3226 0159 00       		.byte	0
+ 3227 015a 1D       		.uleb128 0x1d
+ 3228 015b 17       		.uleb128 0x17
+ 3229 015c 01       		.byte	0x1
+ 3230 015d 0B       		.uleb128 0xb
+ 3231 015e 0B       		.uleb128 0xb
+ 3232 015f 3A       		.uleb128 0x3a
+ 3233 0160 0B       		.uleb128 0xb
+ 3234 0161 3B       		.uleb128 0x3b
+ 3235 0162 05       		.uleb128 0x5
+ 3236 0163 01       		.uleb128 0x1
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 64
+
+
+ 3237 0164 13       		.uleb128 0x13
+ 3238 0165 00       		.byte	0
+ 3239 0166 00       		.byte	0
+ 3240 0167 1E       		.uleb128 0x1e
+ 3241 0168 0D       		.uleb128 0xd
+ 3242 0169 00       		.byte	0
+ 3243 016a 03       		.uleb128 0x3
+ 3244 016b 0E       		.uleb128 0xe
+ 3245 016c 3A       		.uleb128 0x3a
+ 3246 016d 0B       		.uleb128 0xb
+ 3247 016e 3B       		.uleb128 0x3b
+ 3248 016f 05       		.uleb128 0x5
+ 3249 0170 49       		.uleb128 0x49
+ 3250 0171 13       		.uleb128 0x13
+ 3251 0172 00       		.byte	0
+ 3252 0173 00       		.byte	0
+ 3253 0174 1F       		.uleb128 0x1f
+ 3254 0175 15       		.uleb128 0x15
+ 3255 0176 01       		.byte	0x1
+ 3256 0177 27       		.uleb128 0x27
+ 3257 0178 19       		.uleb128 0x19
+ 3258 0179 01       		.uleb128 0x1
+ 3259 017a 13       		.uleb128 0x13
+ 3260 017b 00       		.byte	0
+ 3261 017c 00       		.byte	0
+ 3262 017d 20       		.uleb128 0x20
+ 3263 017e 2E       		.uleb128 0x2e
+ 3264 017f 01       		.byte	0x1
+ 3265 0180 3F       		.uleb128 0x3f
+ 3266 0181 19       		.uleb128 0x19
+ 3267 0182 03       		.uleb128 0x3
+ 3268 0183 0E       		.uleb128 0xe
+ 3269 0184 3A       		.uleb128 0x3a
+ 3270 0185 0B       		.uleb128 0xb
+ 3271 0186 3B       		.uleb128 0x3b
+ 3272 0187 0B       		.uleb128 0xb
+ 3273 0188 27       		.uleb128 0x27
+ 3274 0189 19       		.uleb128 0x19
+ 3275 018a 49       		.uleb128 0x49
+ 3276 018b 13       		.uleb128 0x13
+ 3277 018c 11       		.uleb128 0x11
+ 3278 018d 01       		.uleb128 0x1
+ 3279 018e 12       		.uleb128 0x12
+ 3280 018f 06       		.uleb128 0x6
+ 3281 0190 40       		.uleb128 0x40
+ 3282 0191 18       		.uleb128 0x18
+ 3283 0192 9642     		.uleb128 0x2116
+ 3284 0194 19       		.uleb128 0x19
+ 3285 0195 01       		.uleb128 0x1
+ 3286 0196 13       		.uleb128 0x13
+ 3287 0197 00       		.byte	0
+ 3288 0198 00       		.byte	0
+ 3289 0199 21       		.uleb128 0x21
+ 3290 019a 05       		.uleb128 0x5
+ 3291 019b 00       		.byte	0
+ 3292 019c 03       		.uleb128 0x3
+ 3293 019d 08       		.uleb128 0x8
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 65
+
+
+ 3294 019e 3A       		.uleb128 0x3a
+ 3295 019f 0B       		.uleb128 0xb
+ 3296 01a0 3B       		.uleb128 0x3b
+ 3297 01a1 0B       		.uleb128 0xb
+ 3298 01a2 49       		.uleb128 0x49
+ 3299 01a3 13       		.uleb128 0x13
+ 3300 01a4 02       		.uleb128 0x2
+ 3301 01a5 18       		.uleb128 0x18
+ 3302 01a6 00       		.byte	0
+ 3303 01a7 00       		.byte	0
+ 3304 01a8 22       		.uleb128 0x22
+ 3305 01a9 34       		.uleb128 0x34
+ 3306 01aa 00       		.byte	0
+ 3307 01ab 03       		.uleb128 0x3
+ 3308 01ac 0E       		.uleb128 0xe
+ 3309 01ad 3A       		.uleb128 0x3a
+ 3310 01ae 0B       		.uleb128 0xb
+ 3311 01af 3B       		.uleb128 0x3b
+ 3312 01b0 0B       		.uleb128 0xb
+ 3313 01b1 49       		.uleb128 0x49
+ 3314 01b2 13       		.uleb128 0x13
+ 3315 01b3 02       		.uleb128 0x2
+ 3316 01b4 18       		.uleb128 0x18
+ 3317 01b5 00       		.byte	0
+ 3318 01b6 00       		.byte	0
+ 3319 01b7 23       		.uleb128 0x23
+ 3320 01b8 2E       		.uleb128 0x2e
+ 3321 01b9 01       		.byte	0x1
+ 3322 01ba 3F       		.uleb128 0x3f
+ 3323 01bb 19       		.uleb128 0x19
+ 3324 01bc 03       		.uleb128 0x3
+ 3325 01bd 0E       		.uleb128 0xe
+ 3326 01be 3A       		.uleb128 0x3a
+ 3327 01bf 0B       		.uleb128 0xb
+ 3328 01c0 3B       		.uleb128 0x3b
+ 3329 01c1 0B       		.uleb128 0xb
+ 3330 01c2 27       		.uleb128 0x27
+ 3331 01c3 19       		.uleb128 0x19
+ 3332 01c4 11       		.uleb128 0x11
+ 3333 01c5 01       		.uleb128 0x1
+ 3334 01c6 12       		.uleb128 0x12
+ 3335 01c7 06       		.uleb128 0x6
+ 3336 01c8 40       		.uleb128 0x40
+ 3337 01c9 18       		.uleb128 0x18
+ 3338 01ca 9742     		.uleb128 0x2117
+ 3339 01cc 19       		.uleb128 0x19
+ 3340 01cd 01       		.uleb128 0x1
+ 3341 01ce 13       		.uleb128 0x13
+ 3342 01cf 00       		.byte	0
+ 3343 01d0 00       		.byte	0
+ 3344 01d1 24       		.uleb128 0x24
+ 3345 01d2 2E       		.uleb128 0x2e
+ 3346 01d3 01       		.byte	0x1
+ 3347 01d4 3F       		.uleb128 0x3f
+ 3348 01d5 19       		.uleb128 0x19
+ 3349 01d6 03       		.uleb128 0x3
+ 3350 01d7 0E       		.uleb128 0xe
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 66
+
+
+ 3351 01d8 3A       		.uleb128 0x3a
+ 3352 01d9 0B       		.uleb128 0xb
+ 3353 01da 3B       		.uleb128 0x3b
+ 3354 01db 0B       		.uleb128 0xb
+ 3355 01dc 27       		.uleb128 0x27
+ 3356 01dd 19       		.uleb128 0x19
+ 3357 01de 11       		.uleb128 0x11
+ 3358 01df 01       		.uleb128 0x1
+ 3359 01e0 12       		.uleb128 0x12
+ 3360 01e1 06       		.uleb128 0x6
+ 3361 01e2 40       		.uleb128 0x40
+ 3362 01e3 18       		.uleb128 0x18
+ 3363 01e4 9642     		.uleb128 0x2116
+ 3364 01e6 19       		.uleb128 0x19
+ 3365 01e7 01       		.uleb128 0x1
+ 3366 01e8 13       		.uleb128 0x13
+ 3367 01e9 00       		.byte	0
+ 3368 01ea 00       		.byte	0
+ 3369 01eb 25       		.uleb128 0x25
+ 3370 01ec 34       		.uleb128 0x34
+ 3371 01ed 00       		.byte	0
+ 3372 01ee 03       		.uleb128 0x3
+ 3373 01ef 08       		.uleb128 0x8
+ 3374 01f0 3A       		.uleb128 0x3a
+ 3375 01f1 0B       		.uleb128 0xb
+ 3376 01f2 3B       		.uleb128 0x3b
+ 3377 01f3 0B       		.uleb128 0xb
+ 3378 01f4 49       		.uleb128 0x49
+ 3379 01f5 13       		.uleb128 0x13
+ 3380 01f6 02       		.uleb128 0x2
+ 3381 01f7 18       		.uleb128 0x18
+ 3382 01f8 00       		.byte	0
+ 3383 01f9 00       		.byte	0
+ 3384 01fa 26       		.uleb128 0x26
+ 3385 01fb 05       		.uleb128 0x5
+ 3386 01fc 00       		.byte	0
+ 3387 01fd 03       		.uleb128 0x3
+ 3388 01fe 0E       		.uleb128 0xe
+ 3389 01ff 3A       		.uleb128 0x3a
+ 3390 0200 0B       		.uleb128 0xb
+ 3391 0201 3B       		.uleb128 0x3b
+ 3392 0202 0B       		.uleb128 0xb
+ 3393 0203 49       		.uleb128 0x49
+ 3394 0204 13       		.uleb128 0x13
+ 3395 0205 02       		.uleb128 0x2
+ 3396 0206 18       		.uleb128 0x18
+ 3397 0207 00       		.byte	0
+ 3398 0208 00       		.byte	0
+ 3399 0209 00       		.byte	0
+ 3400              		.section	.debug_aranges,"",%progbits
+ 3401 0000 54000000 		.4byte	0x54
+ 3402 0004 0200     		.2byte	0x2
+ 3403 0006 00000000 		.4byte	.Ldebug_info0
+ 3404 000a 04       		.byte	0x4
+ 3405 000b 00       		.byte	0
+ 3406 000c 0000     		.2byte	0
+ 3407 000e 0000     		.2byte	0
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 67
+
+
+ 3408 0010 00000000 		.4byte	.LFB1
+ 3409 0014 1A010000 		.4byte	.LFE1-.LFB1
+ 3410 0018 00000000 		.4byte	.LFB2
+ 3411 001c F4000000 		.4byte	.LFE2-.LFB2
+ 3412 0020 00000000 		.4byte	.LFB3
+ 3413 0024 F8010000 		.4byte	.LFE3-.LFB3
+ 3414 0028 00000000 		.4byte	.LFB4
+ 3415 002c A4000000 		.4byte	.LFE4-.LFB4
+ 3416 0030 00000000 		.4byte	.LFB5
+ 3417 0034 1C020000 		.4byte	.LFE5-.LFB5
+ 3418 0038 00000000 		.4byte	.LFB6
+ 3419 003c DC000000 		.4byte	.LFE6-.LFB6
+ 3420 0040 00000000 		.4byte	.LFB7
+ 3421 0044 30010000 		.4byte	.LFE7-.LFB7
+ 3422 0048 00000000 		.4byte	.LFB8
+ 3423 004c 04010000 		.4byte	.LFE8-.LFB8
+ 3424 0050 00000000 		.4byte	0
+ 3425 0054 00000000 		.4byte	0
+ 3426              		.section	.debug_ranges,"",%progbits
+ 3427              	.Ldebug_ranges0:
+ 3428 0000 00000000 		.4byte	.LFB1
+ 3429 0004 1A010000 		.4byte	.LFE1
+ 3430 0008 00000000 		.4byte	.LFB2
+ 3431 000c F4000000 		.4byte	.LFE2
+ 3432 0010 00000000 		.4byte	.LFB3
+ 3433 0014 F8010000 		.4byte	.LFE3
+ 3434 0018 00000000 		.4byte	.LFB4
+ 3435 001c A4000000 		.4byte	.LFE4
+ 3436 0020 00000000 		.4byte	.LFB5
+ 3437 0024 1C020000 		.4byte	.LFE5
+ 3438 0028 00000000 		.4byte	.LFB6
+ 3439 002c DC000000 		.4byte	.LFE6
+ 3440 0030 00000000 		.4byte	.LFB7
+ 3441 0034 30010000 		.4byte	.LFE7
+ 3442 0038 00000000 		.4byte	.LFB8
+ 3443 003c 04010000 		.4byte	.LFE8
+ 3444 0040 00000000 		.4byte	0
+ 3445 0044 00000000 		.4byte	0
+ 3446              		.section	.debug_line,"",%progbits
+ 3447              	.Ldebug_line0:
+ 3448 0000 F5020000 		.section	.debug_str,"MS",%progbits,1
+ 3448      0200E101 
+ 3448      00000201 
+ 3448      FB0E0D00 
+ 3448      01010101 
+ 3449              	.LASF67:
+ 3450 0000 5F64736F 		.ascii	"_dso_handle\000"
+ 3450      5F68616E 
+ 3450      646C6500 
+ 3451              	.LASF3:
+ 3452 000c 65635F74 		.ascii	"ec_target\000"
+ 3452      61726765 
+ 3452      7400
+ 3453              	.LASF75:
+ 3454 0016 5F73697A 		.ascii	"_size\000"
+ 3454      6500
+ 3455              	.LASF153:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 68
+
+
+ 3456 001c 73747265 		.ascii	"strength\000"
+ 3456      6E677468 
+ 3456      00
+ 3457              	.LASF119:
+ 3458 0025 5F72616E 		.ascii	"_rand48\000"
+ 3458      64343800 
+ 3459              	.LASF99:
+ 3460 002d 5F656D65 		.ascii	"_emergency\000"
+ 3460      7267656E 
+ 3460      637900
+ 3461              	.LASF22:
+ 3462 0038 70685F6C 		.ascii	"ph_level\000"
+ 3462      6576656C 
+ 3462      00
+ 3463              	.LASF89:
+ 3464 0041 5F646174 		.ascii	"_data\000"
+ 3464      6100
+ 3465              	.LASF163:
+ 3466 0047 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 3466      43313120 
+ 3466      352E342E 
+ 3466      31203230 
+ 3466      31363036 
+ 3467 007a 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 3467      20726576 
+ 3467      6973696F 
+ 3467      6E203233 
+ 3467      37373135 
+ 3468 00ad 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 3468      66756E63 
+ 3468      74696F6E 
+ 3468      2D736563 
+ 3468      74696F6E 
+ 3469              	.LASF139:
+ 3470 00d5 5F776372 		.ascii	"_wcrtomb_state\000"
+ 3470      746F6D62 
+ 3470      5F737461 
+ 3470      746500
+ 3471              	.LASF134:
+ 3472 00e4 5F736967 		.ascii	"_signal_buf\000"
+ 3472      6E616C5F 
+ 3472      62756600 
+ 3473              	.LASF36:
+ 3474 00f0 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 3474      206C6F6E 
+ 3474      6720756E 
+ 3474      7369676E 
+ 3474      65642069 
+ 3475              	.LASF159:
+ 3476 0107 73617665 		.ascii	"save_file\000"
+ 3476      5F66696C 
+ 3476      6500
+ 3477              	.LASF79:
+ 3478 0111 5F6C6266 		.ascii	"_lbfsize\000"
+ 3478      73697A65 
+ 3478      00
+ 3479              	.LASF6:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 69
+
+
+ 3480 011a 6832305F 		.ascii	"h20_stored\000"
+ 3480      73746F72 
+ 3480      656400
+ 3481              	.LASF9:
+ 3482 0125 70685F64 		.ascii	"ph_down_stored\000"
+ 3482      6F776E5F 
+ 3482      73746F72 
+ 3482      656400
+ 3483              	.LASF137:
+ 3484 0134 5F6D6272 		.ascii	"_mbrtowc_state\000"
+ 3484      746F7763 
+ 3484      5F737461 
+ 3484      746500
+ 3485              	.LASF8:
+ 3486 0143 70685F75 		.ascii	"ph_up_stored\000"
+ 3486      705F7374 
+ 3486      6F726564 
+ 3486      00
+ 3487              	.LASF7:
+ 3488 0150 70685F6D 		.ascii	"ph_measured\000"
+ 3488      65617375 
+ 3488      72656400 
+ 3489              	.LASF2:
+ 3490 015c 70685F74 		.ascii	"ph_target\000"
+ 3490      61726765 
+ 3490      7400
+ 3491              	.LASF56:
+ 3492 0166 5F5F746D 		.ascii	"__tm_sec\000"
+ 3492      5F736563 
+ 3492      00
+ 3493              	.LASF164:
+ 3494 016f 7372635C 		.ascii	"src\\sensor_data.c\000"
+ 3494      73656E73 
+ 3494      6F725F64 
+ 3494      6174612E 
+ 3494      6300
+ 3495              	.LASF35:
+ 3496 0181 6C6F6E67 		.ascii	"long long int\000"
+ 3496      206C6F6E 
+ 3496      6720696E 
+ 3496      7400
+ 3497              	.LASF30:
+ 3498 018f 7369676E 		.ascii	"signed char\000"
+ 3498      65642063 
+ 3498      68617200 
+ 3499              	.LASF85:
+ 3500 019b 5F756275 		.ascii	"_ubuf\000"
+ 3500      6600
+ 3501              	.LASF74:
+ 3502 01a1 5F626173 		.ascii	"_base\000"
+ 3502      6500
+ 3503              	.LASF58:
+ 3504 01a7 5F5F746D 		.ascii	"__tm_hour\000"
+ 3504      5F686F75 
+ 3504      7200
+ 3505              	.LASF132:
+ 3506 01b1 5F776374 		.ascii	"_wctomb_state\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 70
+
+
+ 3506      6F6D625F 
+ 3506      73746174 
+ 3506      6500
+ 3507              	.LASF114:
+ 3508 01bf 5F5F7366 		.ascii	"__sf\000"
+ 3508      00
+ 3509              	.LASF65:
+ 3510 01c4 5F6F6E5F 		.ascii	"_on_exit_args\000"
+ 3510      65786974 
+ 3510      5F617267 
+ 3510      7300
+ 3511              	.LASF4:
+ 3512 01d2 6832305F 		.ascii	"h20_level_target\000"
+ 3512      6C657665 
+ 3512      6C5F7461 
+ 3512      72676574 
+ 3512      00
+ 3513              	.LASF80:
+ 3514 01e3 5F636F6F 		.ascii	"_cookie\000"
+ 3514      6B696500 
+ 3515              	.LASF113:
+ 3516 01eb 5F5F7367 		.ascii	"__sglue\000"
+ 3516      6C756500 
+ 3517              	.LASF33:
+ 3518 01f3 6C6F6E67 		.ascii	"long int\000"
+ 3518      20696E74 
+ 3518      00
+ 3519              	.LASF1:
+ 3520 01fc 666C6F77 		.ascii	"flow_target\000"
+ 3520      5F746172 
+ 3520      67657400 
+ 3521              	.LASF77:
+ 3522 0208 5F666C61 		.ascii	"_flags\000"
+ 3522      677300
+ 3523              	.LASF69:
+ 3524 020f 5F69735F 		.ascii	"_is_cxa\000"
+ 3524      63786100 
+ 3525              	.LASF95:
+ 3526 0217 5F737464 		.ascii	"_stdin\000"
+ 3526      696E00
+ 3527              	.LASF27:
+ 3528 021e 646F7562 		.ascii	"double\000"
+ 3528      6C6500
+ 3529              	.LASF109:
+ 3530 0225 5F637674 		.ascii	"_cvtbuf\000"
+ 3530      62756600 
+ 3531              	.LASF88:
+ 3532 022d 5F6F6666 		.ascii	"_offset\000"
+ 3532      73657400 
+ 3533              	.LASF155:
+ 3534 0235 73686966 		.ascii	"shift\000"
+ 3534      7400
+ 3535              	.LASF138:
+ 3536 023b 5F6D6273 		.ascii	"_mbsrtowcs_state\000"
+ 3536      72746F77 
+ 3536      63735F73 
+ 3536      74617465 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 71
+
+
+ 3536      00
+ 3537              	.LASF136:
+ 3538 024c 5F6D6272 		.ascii	"_mbrlen_state\000"
+ 3538      6C656E5F 
+ 3538      73746174 
+ 3538      6500
+ 3539              	.LASF66:
+ 3540 025a 5F666E61 		.ascii	"_fnargs\000"
+ 3540      72677300 
+ 3541              	.LASF10:
+ 3542 0262 65635F6D 		.ascii	"ec_measured\000"
+ 3542      65617375 
+ 3542      72656400 
+ 3543              	.LASF53:
+ 3544 026e 5F736967 		.ascii	"_sign\000"
+ 3544      6E00
+ 3545              	.LASF48:
+ 3546 0274 5F666C6F 		.ascii	"_flock_t\000"
+ 3546      636B5F74 
+ 3546      00
+ 3547              	.LASF97:
+ 3548 027d 5F737464 		.ascii	"_stderr\000"
+ 3548      65727200 
+ 3549              	.LASF50:
+ 3550 0285 5F426967 		.ascii	"_Bigint\000"
+ 3550      696E7400 
+ 3551              	.LASF127:
+ 3552 028d 5F67616D 		.ascii	"_gamma_signgam\000"
+ 3552      6D615F73 
+ 3552      69676E67 
+ 3552      616D00
+ 3553              	.LASF5:
+ 3554 029c 6832305F 		.ascii	"h20_level\000"
+ 3554      6C657665 
+ 3554      6C00
+ 3555              	.LASF81:
+ 3556 02a6 5F726561 		.ascii	"_read\000"
+ 3556      6400
+ 3557              	.LASF14:
+ 3558 02ac 76616C75 		.ascii	"value\000"
+ 3558      6500
+ 3559              	.LASF17:
+ 3560 02b2 706B6579 		.ascii	"pkey_t\000"
+ 3560      5F7400
+ 3561              	.LASF55:
+ 3562 02b9 5F5F746D 		.ascii	"__tm\000"
+ 3562      00
+ 3563              	.LASF37:
+ 3564 02be 756E7369 		.ascii	"unsigned int\000"
+ 3564      676E6564 
+ 3564      20696E74 
+ 3564      00
+ 3565              	.LASF24:
+ 3566 02cb 68326F5F 		.ascii	"h2o_target\000"
+ 3566      74617267 
+ 3566      657400
+ 3567              	.LASF44:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 72
+
+
+ 3568 02d6 5F5F7763 		.ascii	"__wchb\000"
+ 3568      686200
+ 3569              	.LASF140:
+ 3570 02dd 5F776373 		.ascii	"_wcsrtombs_state\000"
+ 3570      72746F6D 
+ 3570      62735F73 
+ 3570      74617465 
+ 3570      00
+ 3571              	.LASF96:
+ 3572 02ee 5F737464 		.ascii	"_stdout\000"
+ 3572      6F757400 
+ 3573              	.LASF108:
+ 3574 02f6 5F637674 		.ascii	"_cvtlen\000"
+ 3574      6C656E00 
+ 3575              	.LASF151:
+ 3576 02fe 72616E64 		.ascii	"randomExponentially\000"
+ 3576      6F6D4578 
+ 3576      706F6E65 
+ 3576      6E746961 
+ 3576      6C6C7900 
+ 3577              	.LASF0:
+ 3578 0312 696E7661 		.ascii	"invalid_key\000"
+ 3578      6C69645F 
+ 3578      6B657900 
+ 3579              	.LASF78:
+ 3580 031e 5F66696C 		.ascii	"_file\000"
+ 3580      6500
+ 3581              	.LASF117:
+ 3582 0324 5F6E696F 		.ascii	"_niobs\000"
+ 3582      627300
+ 3583              	.LASF32:
+ 3584 032b 73686F72 		.ascii	"short unsigned int\000"
+ 3584      7420756E 
+ 3584      7369676E 
+ 3584      65642069 
+ 3584      6E7400
+ 3585              	.LASF111:
+ 3586 033e 5F617465 		.ascii	"_atexit0\000"
+ 3586      78697430 
+ 3586      00
+ 3587              	.LASF72:
+ 3588 0347 5F666E73 		.ascii	"_fns\000"
+ 3588      00
+ 3589              	.LASF125:
+ 3590 034c 5F617363 		.ascii	"_asctime_buf\000"
+ 3590      74696D65 
+ 3590      5F627566 
+ 3590      00
+ 3591              	.LASF104:
+ 3592 0359 5F726573 		.ascii	"_result\000"
+ 3592      756C7400 
+ 3593              	.LASF43:
+ 3594 0361 5F5F7763 		.ascii	"__wch\000"
+ 3594      6800
+ 3595              	.LASF147:
+ 3596 0367 73656E73 		.ascii	"sensor_data_init\000"
+ 3596      6F725F64 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 73
+
+
+ 3596      6174615F 
+ 3596      696E6974 
+ 3596      00
+ 3597              	.LASF42:
+ 3598 0378 77696E74 		.ascii	"wint_t\000"
+ 3598      5F7400
+ 3599              	.LASF160:
+ 3600 037f 73617665 		.ascii	"saveData\000"
+ 3600      44617461 
+ 3600      00
+ 3601              	.LASF90:
+ 3602 0388 5F6C6F63 		.ascii	"_lock\000"
+ 3602      6B00
+ 3603              	.LASF92:
+ 3604 038e 5F666C61 		.ascii	"_flags2\000"
+ 3604      67733200 
+ 3605              	.LASF21:
+ 3606 0396 68326F5F 		.ascii	"h2o_stored\000"
+ 3606      73746F72 
+ 3606      656400
+ 3607              	.LASF25:
+ 3608 03a1 74656D70 		.ascii	"temp_target\000"
+ 3608      5F746172 
+ 3608      67657400 
+ 3609              	.LASF82:
+ 3610 03ad 5F777269 		.ascii	"_write\000"
+ 3610      746500
+ 3611              	.LASF61:
+ 3612 03b4 5F5F746D 		.ascii	"__tm_year\000"
+ 3612      5F796561 
+ 3612      7200
+ 3613              	.LASF23:
+ 3614 03be 65635F6C 		.ascii	"ec_level\000"
+ 3614      6576656C 
+ 3614      00
+ 3615              	.LASF28:
+ 3616 03c7 73697A65 		.ascii	"sizetype\000"
+ 3616      74797065 
+ 3616      00
+ 3617              	.LASF38:
+ 3618 03d0 6C6F6E67 		.ascii	"long double\000"
+ 3618      20646F75 
+ 3618      626C6500 
+ 3619              	.LASF158:
+ 3620 03dc 66696C65 		.ascii	"filename\000"
+ 3620      6E616D65 
+ 3620      00
+ 3621              	.LASF162:
+ 3622 03e5 706B6579 		.ascii	"pkey_const\000"
+ 3622      5F636F6E 
+ 3622      737400
+ 3623              	.LASF142:
+ 3624 03f0 5F6E6578 		.ascii	"_nextf\000"
+ 3624      746600
+ 3625              	.LASF156:
+ 3626 03f7 72616E64 		.ascii	"randomWalk\000"
+ 3626      6F6D5761 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 74
+
+
+ 3626      6C6B00
+ 3627              	.LASF60:
+ 3628 0402 5F5F746D 		.ascii	"__tm_mon\000"
+ 3628      5F6D6F6E 
+ 3628      00
+ 3629              	.LASF149:
+ 3630 040b 72657475 		.ascii	"return_val\000"
+ 3630      726E5F76 
+ 3630      616C00
+ 3631              	.LASF70:
+ 3632 0416 5F617465 		.ascii	"_atexit\000"
+ 3632      78697400 
+ 3633              	.LASF102:
+ 3634 041e 5F5F7364 		.ascii	"__sdidinit\000"
+ 3634      6964696E 
+ 3634      697400
+ 3635              	.LASF40:
+ 3636 0429 5F6F6666 		.ascii	"_off_t\000"
+ 3636      5F7400
+ 3637              	.LASF152:
+ 3638 0430 63757272 		.ascii	"current\000"
+ 3638      656E7400 
+ 3639              	.LASF145:
+ 3640 0438 74696D65 		.ascii	"time_t\000"
+ 3640      5F7400
+ 3641              	.LASF105:
+ 3642 043f 5F726573 		.ascii	"_result_k\000"
+ 3642      756C745F 
+ 3642      6B00
+ 3643              	.LASF165:
+ 3644 0449 433A5C55 		.ascii	"C:\\Users\\tpbw4321\\AppData\\Roaming\\SPB_Data\\Hy"
+ 3644      73657273 
+ 3644      5C747062 
+ 3644      77343332 
+ 3644      315C4170 
+ 3645 0476 64726F70 		.ascii	"droponicsAutomation\\Designs\\Software\\Embedded\\P"
+ 3645      6F6E6963 
+ 3645      73417574 
+ 3645      6F6D6174 
+ 3645      696F6E5C 
+ 3646 04a5 536F435C 		.ascii	"SoC\\HydroponicAutomationSensorPerf.cydsn\000"
+ 3646      48796472 
+ 3646      6F706F6E 
+ 3646      69634175 
+ 3646      746F6D61 
+ 3647              	.LASF161:
+ 3648 04ce 67657447 		.ascii	"getGETstr\000"
+ 3648      45547374 
+ 3648      7200
+ 3649              	.LASF16:
+ 3650 04d8 666C6F61 		.ascii	"float\000"
+ 3650      7400
+ 3651              	.LASF107:
+ 3652 04de 5F667265 		.ascii	"_freelist\000"
+ 3652      656C6973 
+ 3652      7400
+ 3653              	.LASF39:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 75
+
+
+ 3654 04e8 5F4C4F43 		.ascii	"_LOCK_RECURSIVE_T\000"
+ 3654      4B5F5245 
+ 3654      43555253 
+ 3654      4956455F 
+ 3654      5400
+ 3655              	.LASF15:
+ 3656 04fa 756E7369 		.ascii	"unsigned char\000"
+ 3656      676E6564 
+ 3656      20636861 
+ 3656      7200
+ 3657              	.LASF110:
+ 3658 0508 5F6E6577 		.ascii	"_new\000"
+ 3658      00
+ 3659              	.LASF141:
+ 3660 050d 5F685F65 		.ascii	"_h_errno\000"
+ 3660      72726E6F 
+ 3660      00
+ 3661              	.LASF31:
+ 3662 0516 73686F72 		.ascii	"short int\000"
+ 3662      7420696E 
+ 3662      7400
+ 3663              	.LASF63:
+ 3664 0520 5F5F746D 		.ascii	"__tm_yday\000"
+ 3664      5F796461 
+ 3664      7900
+ 3665              	.LASF73:
+ 3666 052a 5F5F7362 		.ascii	"__sbuf\000"
+ 3666      756600
+ 3667              	.LASF118:
+ 3668 0531 5F696F62 		.ascii	"_iobs\000"
+ 3668      7300
+ 3669              	.LASF13:
+ 3670 0537 666C6F77 		.ascii	"flow_measured\000"
+ 3670      5F6D6561 
+ 3670      73757265 
+ 3670      6400
+ 3671              	.LASF115:
+ 3672 0545 5F5F4649 		.ascii	"__FILE\000"
+ 3672      4C4500
+ 3673              	.LASF47:
+ 3674 054c 5F6D6273 		.ascii	"_mbstate_t\000"
+ 3674      74617465 
+ 3674      5F7400
+ 3675              	.LASF76:
+ 3676 0557 5F5F7346 		.ascii	"__sFILE\000"
+ 3676      494C4500 
+ 3677              	.LASF91:
+ 3678 055f 5F6D6273 		.ascii	"_mbstate\000"
+ 3678      74617465 
+ 3678      00
+ 3679              	.LASF128:
+ 3680 0568 5F72616E 		.ascii	"_rand_next\000"
+ 3680      645F6E65 
+ 3680      787400
+ 3681              	.LASF130:
+ 3682 0573 5F6D626C 		.ascii	"_mblen_state\000"
+ 3682      656E5F73 
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 76
+
+
+ 3682      74617465 
+ 3682      00
+ 3683              	.LASF98:
+ 3684 0580 5F696E63 		.ascii	"_inc\000"
+ 3684      00
+ 3685              	.LASF71:
+ 3686 0585 5F696E64 		.ascii	"_ind\000"
+ 3686      00
+ 3687              	.LASF101:
+ 3688 058a 5F637572 		.ascii	"_current_locale\000"
+ 3688      72656E74 
+ 3688      5F6C6F63 
+ 3688      616C6500 
+ 3689              	.LASF103:
+ 3690 059a 5F5F636C 		.ascii	"__cleanup\000"
+ 3690      65616E75 
+ 3690      7000
+ 3691              	.LASF146:
+ 3692 05a4 46494C45 		.ascii	"FILE\000"
+ 3692      00
+ 3693              	.LASF52:
+ 3694 05a9 5F6D6178 		.ascii	"_maxwds\000"
+ 3694      77647300 
+ 3695              	.LASF93:
+ 3696 05b1 5F726565 		.ascii	"_reent\000"
+ 3696      6E7400
+ 3697              	.LASF120:
+ 3698 05b8 5F736565 		.ascii	"_seed\000"
+ 3698      6400
+ 3699              	.LASF45:
+ 3700 05be 5F5F636F 		.ascii	"__count\000"
+ 3700      756E7400 
+ 3701              	.LASF46:
+ 3702 05c6 5F5F7661 		.ascii	"__value\000"
+ 3702      6C756500 
+ 3703              	.LASF83:
+ 3704 05ce 5F736565 		.ascii	"_seek\000"
+ 3704      6B00
+ 3705              	.LASF41:
+ 3706 05d4 5F66706F 		.ascii	"_fpos_t\000"
+ 3706      735F7400 
+ 3707              	.LASF157:
+ 3708 05dc 6C6F6164 		.ascii	"loadData\000"
+ 3708      44617461 
+ 3708      00
+ 3709              	.LASF34:
+ 3710 05e5 6C6F6E67 		.ascii	"long unsigned int\000"
+ 3710      20756E73 
+ 3710      69676E65 
+ 3710      6420696E 
+ 3710      7400
+ 3711              	.LASF94:
+ 3712 05f7 5F657272 		.ascii	"_errno\000"
+ 3712      6E6F00
+ 3713              	.LASF29:
+ 3714 05fe 63686172 		.ascii	"char\000"
+ 3714      00
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 77
+
+
+ 3715              	.LASF87:
+ 3716 0603 5F626C6B 		.ascii	"_blksize\000"
+ 3716      73697A65 
+ 3716      00
+ 3717              	.LASF57:
+ 3718 060c 5F5F746D 		.ascii	"__tm_min\000"
+ 3718      5F6D696E 
+ 3718      00
+ 3719              	.LASF12:
+ 3720 0615 74656D70 		.ascii	"temp_measured\000"
+ 3720      5F6D6561 
+ 3720      73757265 
+ 3720      6400
+ 3721              	.LASF121:
+ 3722 0623 5F6D756C 		.ascii	"_mult\000"
+ 3722      7400
+ 3723              	.LASF26:
+ 3724 0629 50726F64 		.ascii	"ProductID\000"
+ 3724      75637449 
+ 3724      4400
+ 3725              	.LASF51:
+ 3726 0633 5F6E6578 		.ascii	"_next\000"
+ 3726      7400
+ 3727              	.LASF124:
+ 3728 0639 5F737472 		.ascii	"_strtok_last\000"
+ 3728      746F6B5F 
+ 3728      6C617374 
+ 3728      00
+ 3729              	.LASF150:
+ 3730 0646 75706461 		.ascii	"updateSensors\000"
+ 3730      74655365 
+ 3730      6E736F72 
+ 3730      7300
+ 3731              	.LASF148:
+ 3732 0654 73657452 		.ascii	"setRandomData\000"
+ 3732      616E646F 
+ 3732      6D446174 
+ 3732      6100
+ 3733              	.LASF68:
+ 3734 0662 5F666E74 		.ascii	"_fntypes\000"
+ 3734      79706573 
+ 3734      00
+ 3735              	.LASF122:
+ 3736 066b 5F616464 		.ascii	"_add\000"
+ 3736      00
+ 3737              	.LASF11:
+ 3738 0670 65635F73 		.ascii	"ec_stored\000"
+ 3738      746F7265 
+ 3738      6400
+ 3739              	.LASF49:
+ 3740 067a 5F5F554C 		.ascii	"__ULong\000"
+ 3740      6F6E6700 
+ 3741              	.LASF154:
+ 3742 0682 72616E64 		.ascii	"randDouble\000"
+ 3742      446F7562 
+ 3742      6C6500
+ 3743              	.LASF135:
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 78
+
+
+ 3744 068d 5F676574 		.ascii	"_getdate_err\000"
+ 3744      64617465 
+ 3744      5F657272 
+ 3744      00
+ 3745              	.LASF18:
+ 3746 069a 6D657373 		.ascii	"message_t\000"
+ 3746      6167655F 
+ 3746      7400
+ 3747              	.LASF100:
+ 3748 06a4 5F637572 		.ascii	"_current_category\000"
+ 3748      72656E74 
+ 3748      5F636174 
+ 3748      65676F72 
+ 3748      7900
+ 3749              	.LASF123:
+ 3750 06b6 5F756E75 		.ascii	"_unused_rand\000"
+ 3750      7365645F 
+ 3750      72616E64 
+ 3750      00
+ 3751              	.LASF54:
+ 3752 06c3 5F776473 		.ascii	"_wds\000"
+ 3752      00
+ 3753              	.LASF62:
+ 3754 06c8 5F5F746D 		.ascii	"__tm_wday\000"
+ 3754      5F776461 
+ 3754      7900
+ 3755              	.LASF116:
+ 3756 06d2 5F676C75 		.ascii	"_glue\000"
+ 3756      6500
+ 3757              	.LASF143:
+ 3758 06d8 5F6E6D61 		.ascii	"_nmalloc\000"
+ 3758      6C6C6F63 
+ 3758      00
+ 3759              	.LASF133:
+ 3760 06e1 5F6C3634 		.ascii	"_l64a_buf\000"
+ 3760      615F6275 
+ 3760      6600
+ 3761              	.LASF112:
+ 3762 06eb 5F736967 		.ascii	"_sig_func\000"
+ 3762      5F66756E 
+ 3762      6300
+ 3763              	.LASF19:
+ 3764 06f5 53656E73 		.ascii	"SensorData\000"
+ 3764      6F724461 
+ 3764      746100
+ 3765              	.LASF86:
+ 3766 0700 5F6E6275 		.ascii	"_nbuf\000"
+ 3766      6600
+ 3767              	.LASF144:
+ 3768 0706 5F756E75 		.ascii	"_unused\000"
+ 3768      73656400 
+ 3769              	.LASF64:
+ 3770 070e 5F5F746D 		.ascii	"__tm_isdst\000"
+ 3770      5F697364 
+ 3770      737400
+ 3771              	.LASF126:
+ 3772 0719 5F6C6F63 		.ascii	"_localtime_buf\000"
+ARM GAS  C:\Users\tpbw4321\AppData\Local\Temp\cczUgNqJ.s 			page 79
+
+
+ 3772      616C7469 
+ 3772      6D655F62 
+ 3772      756600
+ 3773              	.LASF20:
+ 3774 0728 68326F5F 		.ascii	"h2o_level\000"
+ 3774      6C657665 
+ 3774      6C00
+ 3775              	.LASF84:
+ 3776 0732 5F636C6F 		.ascii	"_close\000"
+ 3776      736500
+ 3777              	.LASF129:
+ 3778 0739 5F723438 		.ascii	"_r48\000"
+ 3778      00
+ 3779              	.LASF131:
+ 3780 073e 5F6D6274 		.ascii	"_mbtowc_state\000"
+ 3780      6F77635F 
+ 3780      73746174 
+ 3780      6500
+ 3781              	.LASF106:
+ 3782 074c 5F703573 		.ascii	"_p5s\000"
+ 3782      00
+ 3783              	.LASF59:
+ 3784 0751 5F5F746D 		.ascii	"__tm_mday\000"
+ 3784      5F6D6461 
+ 3784      7900
+ 3785              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

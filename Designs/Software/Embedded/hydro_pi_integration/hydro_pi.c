@@ -101,7 +101,7 @@ void *sdThread(void * vargp){
 		if (USBCom_CheckReceivedData(rx_data)) {
 			msg = Protocol_DecodeInput(rx_data);
 			updateSensors(&msg, &sd);
-			//Protocol_PrintMessage(&msg);
+			Protocol_PrintMessage(&msg);
 		}
 	}
 }
