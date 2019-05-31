@@ -27,14 +27,15 @@
 
 //new and improved position macros
 //X positions
-#define RINSE_POSITION 100
-#define SPONGE_POSITION 1000
-#define PH4_POSITION 2300
-#define PH7_POSITION 3500
-#define PH10_POSITION 4000
+#define RINSE_POSITION 75 //Check
+#define SPONGE_POSITION 1100 //Check
+#define PH4_POSITION 2325 //Check
+#define PH7_POSITION 3600 //Check   
+#define PH10_POSITION 4800 //Check
+
 //Z positions
 #define BOTTOM_POSITION 3000
-#define CALIBRATION_POSITION 1600
+#define CALIBRATION_POSITION 2100
 
 //Timekeeping
 #define FIVE_SECONDS 1000000
@@ -406,7 +407,7 @@ uint8_t Calibration_RunCalibration(){
                 } else {
                     X_STOP;
                     Ph4State = Z_AXIS_MOVE_PH4;
-                    Z_target = TOP_TO_CALIBRATE;
+                    Z_target = CALIBRATION_POSITION;
                 }
                 break;
             case Z_AXIS_MOVE_PH4:
