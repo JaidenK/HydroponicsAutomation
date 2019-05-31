@@ -10,7 +10,7 @@
  * ========================================
 */
 
-#define CALIBRATION_TEST
+//#define CALIBRATION_TEST
 
 #ifdef CALIBRATION_TEST
     #define MODULE_TEST
