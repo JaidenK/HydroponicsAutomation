@@ -6,23 +6,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-//struct SensorData {
-//	double h2o_level;
-//	double h2o_stored;
-//	double ph_level;
-//	double ph_up_stored;
-//	double ph_down_stored;
-//	double ec_level;
-//	double ec_stored;
-//	double temp_measured;
-//	double flow_measured;
-//	double flow_target;
-//	double ph_target;
-//	double ec_target;
-//	double h2o_target;
-//	double temp_target;
-//	char ProductID[256];
-//};
+#define SUPPLY_MAX 100
+#define SUPPLY_MIN 0
+#define H20_LEVEL_MAX 16
+#define H20_LEVEL_MIN 0
 /**
  * @function sensor_data_Init(char * input)
  * @param pointer to a SensorData Structure
@@ -34,10 +21,12 @@ int updateSensors(message_t * msg, struct SensorData * sd) {
 	int return_val = 0;
 	switch (msg->key) {
 	case h20_level:
-		sd->h2o_level = msg->value;
+		if(msg->value < H20_LEVEL_MAX && msg->value > H20_LEVEL_MIN)
+			sd->h2o_level = msg->value;
 		break;
 	case h20_stored:
-		sd->h2o_stored = msg->value;
+		if(msg->value < SUPPLY_MAX && msg->value > SUPPLY_MIN)
+			sd->h2o_stored = msg->value;
 		break;
 	case ph_measured:
 		sd->ph_level = msg->value;

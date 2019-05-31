@@ -4,6 +4,7 @@
 #include "hydro_gui_Scene.h"
 #include "scene_targetSelect.h"
 #include "scene_flowTarget.h"
+#include "sensor_data.h"
 
 // Graphics
 #include <fcntl.h>

@@ -50,7 +50,8 @@ enum hydro_states{
 
 // static int clicked = 0;
 
-struct SensorData sd;
+static struct SensorData sd;
+static struct SensorData prevSD;
 static char rx_data[64]; // Receive data block
 static 	message_t msg;   // message data
 
@@ -109,7 +110,6 @@ void *sdThread(void * vargp){
 void * httpThread(void *vargp){
 	
 	time_t timestamp;
-	static struct SensorData prevSD;
 	
 	//Initialize HTTP library
 	HTTP_Init("sdp.ballistaline.com");
@@ -148,7 +148,29 @@ void * httpThread(void *vargp){
 		}
 	}
 }
-
+void checkTargetChange(){
+	char buffer[BUF_SIZE];
+	if(prevSD.h2o_target != sd.h2o_target){
+		Protocol_EncodeOutput(h20_level_target, sd.h2o_target,buffer);
+		USBCom_SendData(buffer);
+		prevSD.h2o_target = sd.h2o_target;
+	}
+	if(prevSD.flow_target != sd.flow_target){
+		Protocol_EncodeOutput(flow_target, sd.flow_target,buffer);
+		USBCom_SendData(buffer);
+		prevSD.flow_target = sd.flow_target;
+	}
+	if(prevSD.ph_target != sd.ph_target){
+		Protocol_EncodeOutput(ph_target, sd.ph_target,buffer);
+		USBCom_SendData(buffer);
+		prevSD.ph_target = sd.ph_target;
+	}
+	if(prevSD.ec_target != sd.ec_target){
+		Protocol_EncodeOutput(ec_target, sd.ec_target,buffer);
+		USBCom_SendData(buffer);
+		prevSD.ec_target = sd.ec_target;
+	}
+}
 int main(int argc, char *argv[]) {
   hydro_state = HYDRO_IDLE;
 
@@ -190,6 +212,7 @@ int main(int argc, char *argv[]) {
       sscanf(buf,"%s %lf",cmd,&val_d);
       parseCmd(cmd,val_d);
     }
+	checkTargetChange();
     loopCount++;
     usleep(MAIN_DELAY);
   }
