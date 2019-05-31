@@ -68,13 +68,18 @@ message_t Protocol_DecodeInput(char * input){
 */
 char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
     int size = strlen(buffer);
+    char floatBuff[BUFF_SIZE];
  
     //clear buffer
     for(int i = 0; i < size; i++){
         buffer[0] = 0;
     }
+    
+    SensorData_FloatToString(floatBuff,value);
+    
     if(key > invalid_key && key <= flow_measured){
-        sprintf(buffer,"%d:%f",(int)key,value);
+        sprintf(buffer,"%d:%f",(int)key, value);
+        //sprintf(buffer,"%d:%s",(int)key,floatBuff);
     }
     
     return buffer;

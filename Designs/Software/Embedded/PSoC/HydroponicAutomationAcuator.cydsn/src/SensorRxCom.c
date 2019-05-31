@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define OFF 1
+#define ON 0
 
 static char RxBuffer[BUFF_SIZE];
 static uint8_t ready = FALSE;
@@ -40,8 +42,10 @@ uint8_t SensorComRx_CheckStatus(){
  * @author Barron Wong 04/05/19
  */
 void SensorComRx_Init(){
+    SensorSW_Write(OFF);
     DataComRxISR_StartEx(DataComRxISR);
     SensorRxComUART_Start();
+    SensorSW_Write(ON);
 }
 
 /**

@@ -46,6 +46,15 @@ void ECController_Init();
 */
 void ECController_AdjustEC(uint16_t drops);
 
+/**
+ * @function ECController_GetEC(void)
+ * @param None
+ * @return EC reading
+ * @brief Get the current EC reading 
+ * @author Barron Wong 05/25/19
+*/
+double ECController_GetEC();
+
 #endif
 
 /* [] END OF FILE */

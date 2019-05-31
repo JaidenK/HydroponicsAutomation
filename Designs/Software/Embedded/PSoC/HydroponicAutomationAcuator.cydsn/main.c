@@ -28,6 +28,16 @@
 
 #define FLOW_REF 1.5
 #define PH_REF 7
+#define PH_UP_SUPPLY_MAX 8.653
+#define PH_DOWN_SUPPLY_MAX 7.259
+
+#define EC_SUPPLY_MAX 9.231
+#define EC_SUPPLY_BIAS 2.652
+#define EC_SUPPLY_DIVISOR 6.61
+
+#define WATERLEVEL_MIN 3.5
+
+
 
 #ifndef MODULE_TEST 
     
@@ -37,31 +47,40 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     char buffer[BUFF_SIZE];
+    char phBuffer[BUFF_SIZE];
+    char ecBuffer[BUFF_SIZE];
+    
     uint16_t adc_val;
     message_t target;
     
-    USBCom_Init();
     FlowController_Init();
     SerialCom_Init();
     pHController_Init();
     Mixing_Init();
     SensorComRx_Init();
     WaterLevelController_Init();
+    FlowController_SetFlowReference(1.5);
+    pHController_SetpHReference(sd.ph_target);
+    
+    USBCom_Init();
     
     
-    
-    
-    FlowController_SetFlowReference(FLOW_REF);
-    pHController_SetpHReference(PH_REF);
     
     printf("Hydroponic Automation\r\n");
     
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
-    {
+    {   
+        if( WaterLevelController_GetWaterLevel() < WATERLEVEL_MIN)
+            FlowController_TurnOff();  
+        else
+            FlowController_TurnOn();
+        
+        
         if(SensorComRx_CheckStatus()){
+              
             //Flow
-            Protocol_EncodeOutput(flow_measured, sd.flow_measured, buffer);
+            Protocol_EncodeOutput(flow_measured, FlowController_GetFlowRate(), buffer);
             USBCom_SendData(buffer);
             
             //pH
@@ -69,7 +88,7 @@ int main(void)
             USBCom_SendData(buffer);
 
             //EC
-            Protocol_EncodeOutput(ec_measured, sd.ec_level, buffer);
+            Protocol_EncodeOutput(ec_measured, ECController_GetEC(), buffer);
             USBCom_SendData(buffer);
             
             //Temp
@@ -108,22 +127,6 @@ int main(void)
                 printf("ph_target: %f\r\n", (sd.ph_target));
                 printf("ec_target: %f\r\n", (sd.ec_target));
             }
-            
-        
-//            printf("\r\n\r\n\r\n\r\n\r\n");
-//            printf("ph_measured: %d\r\n", (int)(sd.ph_level*100));
-//            printf("ec_measured: %d\r\n", (int) (sd.ec_level));
-//            printf("temp_measured: %d\r\n", (int) (sd.temp_measured*100));
-//            printf("flow_measured: %d\r\n", (int) (sd.flow_measured*100));
-//            printf("h20_level: %d\r\n", (int) (sd.h2o_level*100));
-//            printf("h20_stored: %d\r\n", (int) (sd.h2o_stored*100));
-//            printf("ph_up_stored: %d\r\n", (int) (sd.ph_up_stored*100));
-//            printf("ph_down_stored: %d\r\n", (int) (sd.ph_down_stored*100));
-//            printf("ec_stored: %d\r\n", (int) (sd.ec_stored*100));
-//            printf("h20_target: %f\r\n", (sd.h2o_target));
-//            printf("flow_target: %f\r\n", (sd.flow_target));
-//            printf("ph_target: %f\r\n", (sd.ph_target));
-//            printf("ec_target: %f\r\n", (sd.ec_target));
         }
         
     }

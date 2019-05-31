@@ -21,9 +21,11 @@
 #define TRUE 1
 #define ADC_MAX 255
 #define MARGIN 0.00
+#define DUTY_MAX 1
+#define DUTY_MIN 0
 
 static float flow_ref = 0;
-
+static float dutyCycle = 0;
 extern struct SensorData sd;
 
 
@@ -37,18 +39,21 @@ extern struct SensorData sd;
  */
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
-    static float dutyCycle = 0.3;
     float kp = 9.0;
     float error = 0;
     
     flow_ref = sd.flow_target;
-     
-    
     flowRate = FlowController_GetFlowRate();
     
     error = flow_ref - flowRate;
     if(fabs(error) > flow_ref*MARGIN){
         dutyCycle = dutyCycle+(kp*error)/100.0;
+        
+        if(dutyCycle < DUTY_MIN)
+            dutyCycle = DUTY_MIN;
+        else if(dutyCycle > DUTY_MAX)
+            dutyCycle = DUTY_MAX;
+        
         FlowController_SetFlowDutyCycle(dutyCycle);
     }
     
@@ -70,7 +75,6 @@ void FlowController_Init(void){
     FlowSpeedPWM_Start();
     FlowCounterTimerISR_StartEx(FlowCounterTimerISRHandler);
     FlowCountTimer_Start();
-    flow_ref = 1.5;
 }
 
 #define SLOPE 1.1763
@@ -83,6 +87,8 @@ void FlowController_Init(void){
  * @author Barron Wong 01/25/19
 */
 float FlowController_GetFlowRate(){
+    if (sd.flow_measured < FLOW_SENSE_MIN)
+        return 0;
     return sd.flow_measured;
 }
 /**
@@ -111,10 +117,31 @@ uint8_t FlowController_SetFlowReference(float reference){
     if(reference < 0 || reference > 10){
         return ERROR;
     }
-    flow_ref = reference;
+    sd.flow_target = reference;
     return SUCCESS;
 }
+/**
+ * @function FlowController_TurnOff(void)
+ * @param float value 0 - 1
+ * @return None
+ * @brief Turns off FlowController
+ * @author Barron Wong 01/25/19
+*/
+void FlowController_TurnOff(){
+    FlowSpeedPWM_Stop();
+    FlowCounterTimerISR_Disable();
+}
 
+/**
+ * @function FlowController_TurnOff(void)
+ * @param float value 0 - 1
+ * @return None
+ * @brief Turns off FlowController
+ * @author Barron Wong 01/25/19
+*/
+void FlowController_TurnOn(){
+    FlowController_Init();  
+}
 #ifdef FLOWCONTROLLER_TEST
 #define MODULE_TEST
 /*

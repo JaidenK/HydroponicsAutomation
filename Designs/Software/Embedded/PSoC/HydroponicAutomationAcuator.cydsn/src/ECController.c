@@ -1,4 +1,9 @@
 #include "ECController.h"
+#include "sensor_data.h"
+
+
+extern struct SensorData sd;
+#define EC_DROP_DURATION 100
 
 /**
  * @function ECController_Init(void)
@@ -11,6 +16,7 @@ void ECController_Init(){
     ECControllerPWMCounter_Start();
     ECControllerPWMCounter_WriteCounter(0);
     ECControllerPWM_Start();
+    
 }
 
 /**
@@ -20,13 +26,32 @@ void ECController_Init(){
  * @brief Initializes hardware components necessary for flow control and monitoring
  * @author Barron Wong 05/09/19
 */
-#define EC_DROP_DURATION 100
 void ECController_AdjustEC(uint16_t drops){
     
     uint32_t duration = drops*EC_DROP_DURATION;
     
     ECControllerPWMCounter_WritePeriod(drops);
     ECControlReg_Write(1);
+}
+/**
+ * @function ECController_GetEC(void)
+ * @param None
+ * @return EC reading
+ * @brief Get the current EC reading 
+ * @author Barron Wong 05/25/19
+*/
+double ECController_GetEC(){
+    return sd.ec_level;
+}
+/**
+ * @function ECController_GetEC(void)
+ * @param None
+ * @return EC reading
+ * @brief Get the current EC reading 
+ * @author Barron Wong 05/25/19
+*/
+double ECController_TurnOff(){
+    return sd.ec_level;
 }
 
 #ifdef ECCONTROLLER_TEST   
