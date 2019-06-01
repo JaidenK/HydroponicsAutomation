@@ -1,9 +1,54 @@
 #include "ECController.h"
 #include "sensor_data.h"
+#include "Mixing.h"
+#include <math.h>
+
+#define TRUE 1
+#define FALSE 0
 
 
 extern struct SensorData sd;
 #define EC_DROP_DURATION 100
+#define MARGIN 0.05
+#define EC_LOWERBOUND sd.ec_level*MARGIN
+
+/**
+ * @function ECControllerISRHandler(void)
+ * @param None
+ * @return None
+ * @brief Handler for pH ISR. Makes pH adjustments every two minutes.
+ * @author Barron Wong 01/25/19
+ */
+CY_ISR_PROTO(ECControllerISRHandler){
+    static float kp = 30;
+    static int drops = 0;
+    static uint8 adjust = FALSE;
+    float error; 
+    
+    ECControllerISR_ClearPending();
+    error = sd.ec_target - sd.ph_level;
+    
+    
+    if(fabs(error) < MARGIN){
+        adjust = FALSE;
+        Mixing_TurnOff();
+    }
+    
+    //Hystersis bound for error
+    if(!adjust){
+        if(error < EC_LOWERBOUND){
+            adjust = TRUE;
+            Mixing_TurnOn();
+        }
+    }
+    
+    if(adjust){
+        drops = kp*error;
+        ECController_AdjustEC(drops);
+    }
+    
+    
+}
 
 /**
  * @function ECController_Init(void)
