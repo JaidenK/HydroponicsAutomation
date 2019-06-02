@@ -26,7 +26,7 @@ void scene_phTarget_init() {
   btnBack->click = click_phTarget_back;
   btnOk->click = click_phTarget_ok;
 
-  Flipper *flipper = newFlipper(220,height/2,600,80,2,3,12.345);
+  Flipper *flipper = newFlipper(220,height/2,600,80,2,2,12.345);
 
   setGuiNeighbors(btnOk->gui_base,flipper->gui_base,NULL,NULL,btnBack->gui_base);
   setGuiNeighbors(flipper->gui_base,NULL,NULL,btnOk->gui_base,btnBack->gui_base);

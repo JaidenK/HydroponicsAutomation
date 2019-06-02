@@ -101,9 +101,11 @@ void *sdThread(void * vargp){
 
 		if (USBCom_CheckReceivedData(rx_data)) {
 			msg = Protocol_DecodeInput(rx_data);
-			updateSensors(&msg, &sd);
-			Protocol_PrintMessage(&msg);
+			if(updateSensors(&msg, &sd) != -1){
+				//Protocol_PrintMessage(&msg);
+			}
 		}
+		
 	}
 }
 
@@ -123,27 +125,30 @@ void * httpThread(void *vargp){
 		if (difftime(time(NULL), timestamp) > 60) {
 			timestamp = time(NULL);
 			getGETstr(request, &sd);
-			HTTP_Get("dataReceiver.php", request, response, 1024);
-			
-			//update targets
-			prevSD = sd;
-			if(HTTP_ParseResponse(response, &sd)){
-				if(prevSD.h2o_target != sd.h2o_target){
-					Protocol_EncodeOutput(h20_level_target, sd.h2o_target,buffer);
-					USBCom_SendData(buffer);
+			if(HTTP_Get("dataReceiver.php", request, response, 1024) != -1){
+				//update targets
+				prevSD = sd;
+				if(HTTP_ParseResponse(response, &sd)){
+					if(prevSD.h2o_target != sd.h2o_target){
+						Protocol_EncodeOutput(h20_level_target, sd.h2o_target,buffer);
+						USBCom_SendData(buffer);
+					}
+					if(prevSD.flow_target != sd.flow_target){
+						Protocol_EncodeOutput(flow_target, sd.flow_target,buffer);
+						USBCom_SendData(buffer);
+					}
+					if(prevSD.ph_target != sd.ph_target){
+						Protocol_EncodeOutput(ph_target, sd.ph_target,buffer);
+						USBCom_SendData(buffer);
+					}
+					if(prevSD.ec_target != sd.ec_target){
+						Protocol_EncodeOutput(ec_target, sd.ec_target,buffer);
+						USBCom_SendData(buffer);
+					}	
 				}
-				if(prevSD.flow_target != sd.flow_target){
-					Protocol_EncodeOutput(flow_target, sd.flow_target,buffer);
-					USBCom_SendData(buffer);
-				}
-				if(prevSD.ph_target != sd.ph_target){
-					Protocol_EncodeOutput(ph_target, sd.ph_target,buffer);
-					USBCom_SendData(buffer);
-				}
-				if(prevSD.ec_target != sd.ec_target){
-					Protocol_EncodeOutput(ec_target, sd.ec_target,buffer);
-					USBCom_SendData(buffer);
-				}	
+			}
+			else{
+				printf("Error GET\n");
 			}
 		}
 	}
