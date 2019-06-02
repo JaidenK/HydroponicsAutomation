@@ -35,35 +35,34 @@
 #define EC_SUPPLY_BIAS 2.652
 #define EC_SUPPLY_DIVISOR 6.61
 
-#define WATERLEVEL_MIN 3.5
+#define WATERLEVEL_MIN 3
+#define PHLEVEL_MIN 3
+#define FLOW_MIN 0.5
 
 
+uint8_t EC_Enable = OFF;
+uint8_t Flow_Enable = OFF;
+uint8_t pH_Enable = OFF;
 
 #ifndef MODULE_TEST 
     
-struct SensorData sd;
     
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     char buffer[BUFF_SIZE];
-    char phBuffer[BUFF_SIZE];
-    char ecBuffer[BUFF_SIZE];
-    
-    uint16_t adc_val;
     message_t target;
     
-    FlowController_Init();
     SerialCom_Init();
+    FlowController_Init();
     pHController_Init();
+    ECController_Init();
     Mixing_Init();
     SensorComRx_Init();
     WaterLevelController_Init();
-    FlowController_SetFlowReference(1.5);
-    pHController_SetpHReference(sd.ph_target);
     
     USBCom_Init();
-    
+    double water_level = 0;
     
     
     printf("Hydroponic Automation\r\n");
@@ -71,14 +70,37 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {   
-        if( WaterLevelController_GetWaterLevel() < WATERLEVEL_MIN)
-            FlowController_TurnOff();  
-        else
+        water_level = WaterLevelController_GetWaterLevel();
+        
+        //Flow Controller
+        if( water_level < WATERLEVEL_MIN){
+            FlowController_TurnOff();
+            Flow_Enable = OFF;
+        }
+        else if(!Flow_Enable){
             FlowController_TurnOn();
+            Flow_Enable = ON;
+        }
+        
+        //EC Controller
+        if(Flow_Enable){
+            ECController_TurnOn();
+        }else{
+            ECController_TurnOff();
+        }
+            
+        //pH Controller
+        if( pH_Enable){
+            pHController_TurnOn();
+        }
+        else{
+            pHController_TurnOff();
+        }
+        
+        //printf("Flow: %d EC: %d pH: %d\r\n", Flow_Enable, EC_Enable, pH_Enable);
         
         
         if(SensorComRx_CheckStatus()){
-              
             //Flow
             Protocol_EncodeOutput(flow_measured, FlowController_GetFlowRate(), buffer);
             USBCom_SendData(buffer);

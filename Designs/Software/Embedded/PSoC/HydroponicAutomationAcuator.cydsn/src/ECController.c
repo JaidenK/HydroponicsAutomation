@@ -7,10 +7,12 @@
 #define FALSE 0
 
 
-extern struct SensorData sd;
 #define EC_DROP_DURATION 100
 #define MARGIN 0.05
-#define EC_LOWERBOUND sd.ec_level*MARGIN
+#define EC_LOWERBOUND sd.ec_target*MARGIN
+#define EC_TARGET_MIN 100
+
+extern uint8_t pH_Enable;
 
 /**
  * @function ECControllerISRHandler(void)
@@ -19,35 +21,38 @@ extern struct SensorData sd;
  * @brief Handler for pH ISR. Makes pH adjustments every two minutes.
  * @author Barron Wong 01/25/19
  */
-CY_ISR_PROTO(ECControllerISRHandler){
-    static float kp = 30;
+CY_ISR(ECControllerISRHandler){
+    static float kp = 1;
     static int drops = 0;
     static uint8 adjust = FALSE;
     float error; 
     
-    ECControllerISR_ClearPending();
-    error = sd.ec_target - sd.ph_level;
+    float ec_level = ECController_GetEC();
     
-    
-    if(fabs(error) < MARGIN){
-        adjust = FALSE;
-        Mixing_TurnOff();
-    }
-    
-    //Hystersis bound for error
-    if(!adjust){
-        if(error < EC_LOWERBOUND){
-            adjust = TRUE;
-            Mixing_TurnOn();
+    ECControllerTimerISR_ClearPending();
+    if(sd.ec_target >= EC_TARGET_MIN){
+        error = sd.ec_target - ec_level;
+        if(sd.ec_target <= ec_level){
+            adjust = FALSE;
+            Mixing_TurnOff();
+            pH_Enable = ON;
+        }
+
+        //Hystersis bound for error
+        if(!adjust){
+            if(error > EC_LOWERBOUND){
+                adjust = TRUE;
+                Mixing_TurnOn();
+                pH_Enable = OFF;
+            }
+        }
+
+        if(adjust){
+            printf("EC Adjust\r\n");
+            drops = kp*error;
+            ECController_AdjustEC(drops);
         }
     }
-    
-    if(adjust){
-        drops = kp*error;
-        ECController_AdjustEC(drops);
-    }
-    
-    
 }
 
 /**
@@ -61,7 +66,9 @@ void ECController_Init(){
     ECControllerPWMCounter_Start();
     ECControllerPWMCounter_WriteCounter(0);
     ECControllerPWM_Start();
-    
+    ECControllerTimer_Start();
+    ECControllerTimerISR_StartEx(ECControllerISRHandler);
+    //sd.ec_target = 1300;
 }
 
 /**
@@ -73,9 +80,9 @@ void ECController_Init(){
 */
 void ECController_AdjustEC(uint16_t drops){
     
-    uint32_t duration = drops*EC_DROP_DURATION;
-    
-    ECControllerPWMCounter_WritePeriod(drops);
+    uint32_t duration = drops*EC_DROP_DURATION + 1;
+    printf("Duration: %d\r\n", duration);
+    ECControllerPWMCounter_WritePeriod(duration);
     ECControlReg_Write(1);
 }
 /**
@@ -89,14 +96,26 @@ double ECController_GetEC(){
     return sd.ec_level;
 }
 /**
- * @function ECController_GetEC(void)
+ * @function ECController_TurnOff()
  * @param None
- * @return EC reading
- * @brief Get the current EC reading 
- * @author Barron Wong 05/25/19
+ * @return 
+ * @brief Turn off EC controller
+ * @author Barron Wong 06/01/19
 */
-double ECController_TurnOff(){
-    return sd.ec_level;
+void ECController_TurnOff(){
+    ECControllerTimerISR_ClearPending();
+    ECControllerTimerISR_Disable();
+}
+
+/**
+ * @function ECController_TurnOn()
+ * @param None
+ * @return 
+ * @brief Turn on EC controller
+ * @author Barron Wong 06/01/19
+*/
+void ECController_TurnOn(){
+    ECControllerTimerISR_Enable();
 }
 
 #ifdef ECCONTROLLER_TEST   
@@ -117,7 +136,7 @@ int main(void)
     for(;;)
     {
         CyDelay(1000);
-        //ECController_AdjustEC();
+        ECController_AdjustEC(1);
         CyDelay(1000);
 
     }

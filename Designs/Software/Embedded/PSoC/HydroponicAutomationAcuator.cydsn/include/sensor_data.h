@@ -2,7 +2,11 @@
 #define _SENSOR_DATA_H
 
 #include "Protocol.h"
-
+#include <stdio.h>
+    
+#define OFF 0
+#define ON 1
+    
 struct SensorData {
    double h2o_level;
    double h2o_stored;
@@ -20,11 +24,16 @@ struct SensorData {
    double temp_target;
    char ProductID[256];
 };
+
+struct SensorData sd;
+
+
 void sensor_data_init(struct SensorData *sd);
 
 
 int SensorData_UpdateSensors(message_t * msg, struct SensorData * sd);
 int SensorData_UpdateTarget(message_t target, struct SensorData * sd);
+
 
 /**
  * @function SensorData_FloatToString(char * buffer, float data)

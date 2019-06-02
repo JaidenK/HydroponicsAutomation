@@ -23,9 +23,8 @@
 #define MAX_HEIGHT 16.2
 #define MARGIN 0.05
 #define LOWER_THRESH sd.h2o_target - MARGIN*sd.h2o_target
-
-extern struct SensorData sd;
-
+extern uint8_t EC_Enable;
+extern uint8_t pH_Enable;
 /**
  * @function WaterLevelControllerISRHandler(void)
  * @param None
@@ -38,11 +37,15 @@ CY_ISR(WaterLevelControllerISRHandler){
     float waterLevel = WaterLevelController_GetWaterLevel();
     
     WaterLevelControllerISR_ClearPending();
-
-    if (waterLevel < LOWER_THRESH)
+    if (waterLevel < LOWER_THRESH){
         WaterLevelControlReg_Write(1);
-    else if (waterLevel > sd.h2o_target)
+        EC_Enable = OFF;
+        pH_Enable = OFF;
+    }
+    else if (waterLevel >= sd.h2o_target){
         WaterLevelControlReg_Write(0);
+        EC_Enable = ON;
+    }
 }
 
 /**

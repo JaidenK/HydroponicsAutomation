@@ -20,15 +20,14 @@
 #define FALSE 0 
 #define TRUE 1
 #define ADC_MAX 255
-#define MARGIN 0.00
+#define MARGIN 0.01
 #define DUTY_MAX 1
 #define DUTY_MIN 0
 
 static float flow_ref = 0;
 static float dutyCycle = 0;
-extern struct SensorData sd;
 
-
+extern uint8_t EC_Enable;
 
 /**
  * @function FlowCounterTimerISRHandler(void)

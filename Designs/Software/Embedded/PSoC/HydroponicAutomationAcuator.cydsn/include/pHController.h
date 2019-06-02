@@ -92,6 +92,22 @@ void pHController_SetpHReference(float reference);
  * @author Barron Wong 02/19/19
 */
 float pHController_GetpH(void);
+/**
+ * @function pHController_GetpH(void)
+ * @param  Nonw
+ * @return pH level
+ * @brief Turns off pH controller
+ * @author Barron Wong 06/01/19
+*/
+void pHController_TurnOff(void);
+/**
+ * @function pHController_TurnOn(void)
+ * @param  Nonw
+ * @return pH level
+ * @brief Turns on the pH Controller
+ * @author Barron Wong 06/01/19
+*/
+void pHController_TurnOn(void);
     
 #endif
 /* [] END OF FILE */

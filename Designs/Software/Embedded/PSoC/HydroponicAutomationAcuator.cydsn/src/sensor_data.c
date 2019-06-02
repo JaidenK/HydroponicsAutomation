@@ -13,11 +13,10 @@
 #define MIN_HEIGHT 0
 #define MIN_FLOW 0
 #define MAX_FLOW 3.5
-#define PH_MAX 8
+#define PH_MAX 10
 #define PH_MIN 3
-#define EC_MIN 200
+#define EC_MIN 0
 #define EC_MAX 3000
-
 /**
  * @function SensorData_UpdateSensors(message_t * msg, struct SensorData * sd)
  * @param pointer to a SensorData Structure
@@ -76,20 +75,21 @@ int SensorData_UpdateTarget(message_t target, struct SensorData * sd){
         }
         
         case flow_target:{
-        if (target.key < MIN_FLOW)
-            target.key = MIN_FLOW;
-        else if (target.key > MAX_FLOW)
-            target.key = MAX_FLOW;
+        if (target.value < MIN_FLOW)
+            target.value = MIN_FLOW;
+        else if (target.value > MAX_FLOW)
+            target.value = MAX_FLOW;
         else 
             sd->flow_target = target.value;
         break;
         }
         
         case ph_target:{
-        if (target.key < PH_MIN || target.key > PH_MAX)
+        if (target.value < PH_MIN || target.value > PH_MAX)
             break;
         sd->ph_target = target.value;
         break;
+        
         case ec_target:
         if (target.value < EC_MIN || target.value > EC_MAX)
             break;
