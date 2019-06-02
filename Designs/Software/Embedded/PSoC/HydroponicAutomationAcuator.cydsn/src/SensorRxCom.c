@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define TURN_OFF 1
+#define TURN_ON 0
 
 static char RxBuffer[BUFF_SIZE];
 static uint8_t ready = FALSE;
 
 #ifdef SENSOR_COM_RX_TEST
     static struct SensorData sd;
-#else
-    extern struct SensorData sd;
 #endif
 
 uint16_t CalcChecksum(const char *s);
@@ -40,8 +40,10 @@ uint8_t SensorComRx_CheckStatus(){
  * @author Barron Wong 04/05/19
  */
 void SensorComRx_Init(){
+    SensorSW_Write(TURN_OFF);
     DataComRxISR_StartEx(DataComRxISR);
     SensorRxComUART_Start();
+    SensorSW_Write(TURN_ON);
 }
 
 /**

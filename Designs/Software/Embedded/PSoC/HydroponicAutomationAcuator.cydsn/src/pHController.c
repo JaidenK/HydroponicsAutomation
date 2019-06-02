@@ -18,7 +18,7 @@
 #include "sensor_data.h"
 
 #define PH_MAX_REF 10
-#define PH_MIN_REF 2
+#define PH_MIN_REF 3
 #define PH_DEFAULT_REF 5
 #define PWM_MAX 255.0
 #define HIST_CNT 1024
@@ -33,17 +33,18 @@
 #define DOWN_PUMP_DROP_CMP 100
 #define MARGIN 0.05
 
+
 #define FALSE 0
 #define TRUE 1
 
-#define PH_UPPERBOUND pHRef*MARGIN
-#define PH_LOWERBOUND -pHRef*MARGIN
+#define PH_UPPERBOUND sd.ph_target*MARGIN
+#define PH_LOWERBOUND -sd.ph_target*MARGIN
 
-static float pHRef = 4.5;
-static float pH = 0;
-static uint16_t phRaw = 0;
+#ifdef PHCONTROLLER_TEST
+    static float pHRef = 4.5;
+    static float pH = 0;
+#endif
 
-extern struct SensorData sd;
 
 /**
  * @function pHControlISRHandler(void)
@@ -52,45 +53,46 @@ extern struct SensorData sd;
  * @brief Handler for pH ISR. Makes pH adjustments every two minutes.
  * @author Barron Wong 01/25/19
  */
-CY_ISR_PROTO(pHControlISRHandler){
-    static float kp = 30;
+CY_ISR(pHControlISRHandler){
+    static float kp = 80;
     static int drops = 0;
     static uint8 adjust = FALSE;
     float error; 
     
     pHControlISR_ClearPending();
-    error = pHRef - sd.ph_level;
     
-    
-    if(fabs(error) < MARGIN){
-        adjust = FALSE;
-        Mixing_TurnOff();
-    }
-    
-    //Hystersis bound for error
-    if(!adjust){
-        if(error > PH_UPPERBOUND){
-            adjust = TRUE;
+    if(sd.ph_target >= PH_MIN_REF){
+        error = sd.ph_target - sd.ph_level;
+        
+        if(fabs(error) < sd.ph_target*MARGIN){
+            adjust = FALSE;
+            Mixing_TurnOff();
+        }
+        
+        //Hystersis bound for error
+        if(!adjust){
+            if(error > PH_UPPERBOUND){
+                adjust = TRUE;;
+            }
+            if(error < PH_LOWERBOUND){
+                adjust = TRUE;
+            }
+        }
+        
+        if(adjust){
             Mixing_TurnOn();
+            printf("pH Target: %f Meas: %f Error: %f\r\n",sd.ph_target, sd.ph_level, error);
+            drops = kp*error;
+            //printf("ph_ref: %f ph_level: %f error: %f\r\n",pHRef, sd.ph_level, error);
+            if(drops > 0){
+                printf("pH up: %d\r\n", drops);
+                pHController_AdjustpH(UP,drops);
+            }else{
+                printf("pH down: %d\r\n", drops*-1);
+                pHController_AdjustpH(DOWN,drops*-1);
+            }
         }
-        if(error < PH_LOWERBOUND){
-            adjust = TRUE;
-            Mixing_TurnOn();
-        }
-    }
-    
-    if(adjust){
-        drops = kp*error;
-        //printf("ph_ref: %f ph_level: %f error: %f\r\n",pHRef, sd.ph_level, error);
-        if(drops > 0){
-            //printf("pH up\r\n");
-            pHController_AdjustpH(UP,drops);
-        }else{
-            //printf("pH down\r\n");
-            pHController_AdjustpH(DOWN,drops*-1);
-        }
-    }
-    
+    }  
 }
 
 
@@ -110,9 +112,6 @@ void pHController_Init(void){
     
     //ISR Setup
     pHControlISR_StartEx(pHControlISRHandler);
-    
-    //Set Reference
-    pHController_SetpHReference(PH_DEFAULT_REF);
 }
 
 /**
@@ -165,7 +164,7 @@ void pHController_SetpHReference(float reference){
     if(reference < PH_MIN_REF)
         reference = PH_MIN_REF;
  
-    pHRef = reference;
+    sd.ph_target = reference;
 }
 /**
  * @function pHController_GetpH(void)
@@ -176,6 +175,27 @@ void pHController_SetpHReference(float reference){
 */
 float pHController_GetpH(void){
     return sd.ph_level;
+}
+/**
+ * @function pHController_GetpH(void)
+ * @param  Nonw
+ * @return pH level
+ * @brief Turns off pH controller
+ * @author Barron Wong 06/01/19
+*/
+void pHController_TurnOff(void){
+    pHControlISR_ClearPending();
+    pHControlISR_Disable();
+}
+/**
+ * @function pHController_TurnOn(void)
+ * @param  Nonw
+ * @return pH level
+ * @brief Turns on the pH Controller
+ * @author Barron Wong 06/01/19
+*/
+void pHController_TurnOn(void){
+    pHControlISR_Enable();
 }
 
 

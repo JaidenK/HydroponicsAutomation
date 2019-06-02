@@ -14,6 +14,7 @@
 
 #include "WaterLevelController.h"
 #include "sensor_data.h"
+#include <stdio.h>
 
 #include "project.h"
 
@@ -22,9 +23,8 @@
 #define MAX_HEIGHT 16.2
 #define MARGIN 0.05
 #define LOWER_THRESH sd.h2o_target - MARGIN*sd.h2o_target
-
-extern struct SensorData sd;
-
+extern uint8_t EC_Enable;
+extern uint8_t pH_Enable;
 /**
  * @function WaterLevelControllerISRHandler(void)
  * @param None
@@ -37,12 +37,15 @@ CY_ISR(WaterLevelControllerISRHandler){
     float waterLevel = WaterLevelController_GetWaterLevel();
     
     WaterLevelControllerISR_ClearPending();
-    
-    
-    if (waterLevel < LOWER_THRESH)
+    if (waterLevel < LOWER_THRESH){
         WaterLevelControlReg_Write(1);
-    else if (waterLevel > sd.h2o_target)
+        EC_Enable = OFF;
+        pH_Enable = OFF;
+    }
+    else if (waterLevel >= sd.h2o_target){
         WaterLevelControlReg_Write(0);
+        EC_Enable = ON;
+    }
 }
 
 /**
@@ -65,12 +68,7 @@ void WaterLevelController_Init(){
  * @author Barron Wong 05/013/19
 */
 float WaterLevelController_GetWaterLevel(){
-    float waterLevel = (MAX_HEIGHT - sd.h2o_level);
-    
-    if (waterLevel < 0.001)
-        waterLevel = 0;
-    
-    return waterLevel;
+    return sd.h2o_level;
 }
 
 

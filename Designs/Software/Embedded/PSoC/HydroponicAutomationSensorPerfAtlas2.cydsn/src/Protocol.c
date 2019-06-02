@@ -14,134 +14,66 @@
 #include <stdlib.h>
 #include "Protocol.h"
 #include "project.h"
-#include "sensor_data.h"
-
-#define BUFF_SIZE 255
-
-extern struct SensorData sd;
 
 /**
  * @function Protocol_DecodeInput(char * input)
  * @param None
- * @return Takes an incoming data transmission and decodes it
- * @brief Converts the current frequency and returns flow rate
+ * @return decoded input stored in a message_t structure
+ * @brief Takes an incoming data transmission and decodes it
  * @author Barron Wong 02/08/19
 */
 message_t Protocol_DecodeInput(char * input){
     char * ptr;
-    message_t message;
+    message_t target;
     uint8_t count = 0;
     
-    message.key = invalid_key;
-    message.key = 0;
+    target.key = invalid_key;
+    target.key = 0;
     
     ptr = strtok(input,":");
     
     while(ptr != NULL){
         switch(count){
             case 0:{
-                message.key = atoi(ptr);
+                target.key = atoi(ptr);
             break;
             }
             case 1:{
-                message.value = atof(ptr);
+                target.value = atof(ptr);
             break;
             }
             default:{
-                message.key = invalid_key;
-                message.value = -1;
+                target.key = invalid_key;
+                target.value = -1;
             }
         }
         count++;
         ptr = strtok(NULL,":");
     }
     
-    return message;
+    return target;
     
 }
 /**
  * @function Protocol_EncodeOutput(char * input)
  * @param key, value, and buffer
  * @return String pointer ready for output
- * @brief Takes a key and a parameter and get it read for output
+ * @brief Takes a key and a value and get it read for output
  * @author Barron Wong 02/08/19
 */
 char * Protocol_EncodeOutput(pkey_t key, float value, char * buffer){
     int size = strlen(buffer);
-    char floatBuff[BUFF_SIZE];
  
     //clear buffer
     for(int i = 0; i < size; i++){
         buffer[0] = 0;
     }
-    
-    SensorData_FloatToString(floatBuff,value);
-    
     if(key > invalid_key && key <= flow_measured){
-        sprintf(buffer,"%d:%f",(int)key, value);
-        //sprintf(buffer,"%d:%s",(int)key,floatBuff);
+        sprintf(buffer,"%d:%0.3f",(int)key,value);
     }
     
     return buffer;
 }
-
-/**
- * @function SensorComTx_EncodeMessage()
- * @param SensorData structure, buffer
- * @return None
- * @brief Takes in a SensorData structure and returns
- *        a string in nmea0183 format
- * @author Barron Wong 04/04/19
- */
-char * Protocol_EncodeMessage(char * buffer){
-    int len;
-    int checksum;
-    char data_buffer[BUFF_SIZE];
-    
-    //Clear buffer
-    len = strlen(buffer);
-    for(int i = 0; i < len; i++){
-        buffer[i] = 0;
-    }
-    
-    //h20_level
-    strcat(buffer,Protocol_EncodeOutput(h20_level, sd.h2o_level, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //h20_stored
-    strcat(buffer,Protocol_EncodeOutput(h20_stored, sd.h2o_stored, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //ph_measured
-    strcat(buffer,Protocol_EncodeOutput(ph_measured, sd.ph_level, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //ph_up_stored
-    strcat(buffer,Protocol_EncodeOutput(ph_up_stored, sd.ph_up_stored, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //ph_down_stored
-    strcat(buffer,Protocol_EncodeOutput(ph_down_stored, sd.ph_down_stored, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //ec_measured
-    strcat(buffer,Protocol_EncodeOutput(ec_measured, sd.ec_level, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //ec_stored
-    strcat(buffer,Protocol_EncodeOutput(ec_stored, sd.ec_stored, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //temp_measured
-    strcat(buffer,Protocol_EncodeOutput(temp_measured, sd.temp_measured, data_buffer));
-    buffer[strlen(buffer)]= ',';
-    
-    //flow_measured
-    strcat(buffer,Protocol_EncodeOutput(flow_measured, sd.flow_measured, data_buffer));
-    
-    return buffer;
-}
-
 /**
  * @function Protocol_PrintMessage(char * input)
  * @param target_t

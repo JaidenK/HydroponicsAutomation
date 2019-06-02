@@ -57,20 +57,10 @@ CY_ISR(ECSenseDataRxISRHandler){
     RxBuffer[count] = '\0';
     
     
-    if(remainder){
-        if(remainder == 1){
-            count = 0;
-            printf("%s\r\n",RxBuffer);
-            if(ECSense_DecodeMessage(RxBuffer)){
-                ready = TRUE;
-            }
-        }
-        remainder--;
-    }
-    
-        //Check for end of message
-    if(RxBuffer[count - 1] == '*'){
-        remainder = 2;
+    //Check for end of message
+    if(RxBuffer[count - 1] == '\r'){
+        ec = atoi(RxBuffer);
+        count = 0;
     }
 }
 
@@ -113,7 +103,7 @@ uint16_t CalcCheckSum(const char *s){
     }
     else{
         //Update sd
-        printf("%s\r\n", buffer);
+        //printf("%s\r\n", buffer);
         token = strtok(buffer,delim);
         while(token != NULL){;
             sscanf(token,"%d", &key);
@@ -151,7 +141,7 @@ void ECSense_Init(){
  * @author Barron Wong 05/15/19
 */
 uint16_t ECSense_GetEC(){
-    
+    //printf("EC %d\r\n", ec);
     return ec;
 }
 
@@ -211,13 +201,14 @@ int main(void)
     CyGlobalIntEnable; /* Enable global interrupts. */
     SerialCom_Init();
     ECSense_Init();
+    int result = 0;
     
     printf("Hydroponic Automation\r\n");
     
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
-
+        printf("%d\r\n",ECSense_GetEC());
     }
     
 }

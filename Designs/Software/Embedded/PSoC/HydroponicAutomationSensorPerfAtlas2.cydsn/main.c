@@ -23,6 +23,7 @@
 #include "sensor_data.h"
 #include "ECSense.h"
 #include "SenseSwitch.h"
+#include "TempSense.h"
 
 #define FLOW_REF 2.0
 #define PH_REF 4.5
@@ -41,13 +42,13 @@ int main(void)
     SerialCom_Init();
     PingSensor_Init();
     ECSense_Init();
+    TempSense_Init();
 
     
     //Sensor Transmit
     SensorComTx_Init();
     pHSense_Init();
     sensor_data_init(&sd);
-    //SenseSwitch_Init();
     
     
     
@@ -65,7 +66,7 @@ int main(void)
         sd.ph_down_stored = PingSensor_GetpHDownLevel();
         sd.ec_level = ECSense_GetEC();
         sd.ec_stored = PingSensor_GetNutLevel();
-        sd.temp_measured = 0;
+        sd.temp_measured = TempSense_GetTemp();
         sd.flow_measured = FlowSense_GetFlowRate();
         
         //Set Targets

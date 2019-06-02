@@ -26,6 +26,7 @@
 
 #define SUCCESS 1
 #define ERROR -1
+#define FLOW_SENSE_MIN 0.14
     
 /**
  * @function FlowCounterTimerISRHandler(void)
@@ -71,6 +72,23 @@ uint8_t FlowController_SetFlowDutyCycle(float flowRate);
  * @author Barron Wong 01/25/19
 */
 uint8_t FlowController_SetFlowReference(float reference);
+/**
+ * @function FlowController_TurnOff(void)
+ * @param float value 0 - 1
+ * @return None
+ * @brief Turns off FlowController
+ * @author Barron Wong 05/30/19
+*/
+void FlowController_TurnOff();
+
+/**
+ * @function FlowController_TurnOff(void)
+ * @param float value 0 - 1
+ * @return None
+ * @brief Turns on FlowController
+ * @author Barron Wong 05/30/19
+*/
+void FlowController_TurnOn();
 #endif
 
 /* [] END OF FILE */
