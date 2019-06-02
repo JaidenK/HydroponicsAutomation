@@ -47,7 +47,7 @@ int main(void)
     SensorComTx_Init();
     pHSense_Init();
     sensor_data_init(&sd);
-    SenseSwitch_Init();
+    //SenseSwitch_Init();
     
     
     

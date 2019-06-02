@@ -472,8 +472,10 @@
       <Data key="e7977a95-4089-4779-8ed7-4e0b93bf4386/b6592af9-e743-4dfd-a597-27f9102033ee" value="ADC_DelSig_1_IRQ" />
     </Group>
     <Group key="Pin">
+      <Data key="0af83cce-069f-450c-aa89-043a4ffe2b32" value="B" />
       <Data key="01fb91db-638e-46d7-b242-0bf842db35a2" value="pHDownEcho" />
       <Data key="2bb17829-8184-440f-9152-d2c60af368b5" value="NutsEcho" />
+      <Data key="2e712e0e-cbc3-4f96-9fc9-0fd94f912574" value="A" />
       <Data key="2eb9bdc7-989d-49ea-aa69-0466a9131261" value="pHControllerDirPin" />
       <Data key="3a641820-357e-4ef4-a364-bc77eeec9c61" value="pH" />
       <Data key="4d68f60b-b521-426d-ba49-921794f35a39" value="TestTrig" />
@@ -500,6 +502,7 @@
       <Data key="5353893c-cc68-42be-af72-898688c538a0" value="pHUpTrig" />
       <Data key="26213394-b743-44f7-bff7-154d81f1e2c9" value="WaterResEcho" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="ECPos" />
+      <Data key="a2cf7873-199a-4349-98dd-b67bf421b61d" value="EN" />
       <Data key="a83fec49-d759-48cd-918c-841203016a01" value="pHDownPump" />
       <Data key="cb1c3c8b-d517-4f86-baf3-924b3afbd2cf" value="WaterResTrig" />
       <Data key="cdcafb18-a71a-4ba8-acc4-02ff0f67c309" value="ECNeg" />
@@ -3646,6 +3649,11 @@
     </Group>
   </Group>
   <Group key="Pin2">
+    <Group key="0af83cce-069f-450c-aa89-043a4ffe2b32">
+      <Group key="0">
+        <Data key="Port Format" value="1,6" />
+      </Group>
+    </Group>
     <Group key="01fb91db-638e-46d7-b242-0bf842db35a2">
       <Group key="0">
         <Data key="Port Format" value="0,2" />
@@ -3654,6 +3662,11 @@
     <Group key="2bb17829-8184-440f-9152-d2c60af368b5">
       <Group key="0">
         <Data key="Port Format" value="0,7" />
+      </Group>
+    </Group>
+    <Group key="2e712e0e-cbc3-4f96-9fc9-0fd94f912574">
+      <Group key="0">
+        <Data key="Port Format" value="1,5" />
       </Group>
     </Group>
     <Group key="2eb9bdc7-989d-49ea-aa69-0466a9131261">
@@ -3764,6 +3777,11 @@
     <Group key="77715107-f8d5-47e5-a629-0fb83101ac6b">
       <Group key="0">
         <Data key="Port Format" value="3,3" />
+      </Group>
+    </Group>
+    <Group key="a2cf7873-199a-4349-98dd-b67bf421b61d">
+      <Group key="0">
+        <Data key="Port Format" value="1,4" />
       </Group>
     </Group>
     <Group key="a83fec49-d759-48cd-918c-841203016a01">

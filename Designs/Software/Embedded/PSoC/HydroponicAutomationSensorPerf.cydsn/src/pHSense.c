@@ -40,7 +40,7 @@
 #define SHIFT_CNT 10
 
 static float pHRef = 4.5;
-static float pH = 0;
+static uint16_t pH = 0;
 static uint16_t phRaw = 0;
 static uint16_t phHistory[HIST_CNT] = {0};
 static uint32_t sum = 0;
@@ -73,7 +73,8 @@ CY_ISR(pHSampleTimerISRHandler){
     index = (index + 1) % (HIST_CNT);
     
     phRaw = sum>>SHIFT_CNT;
-    pH = A0*phRaw + A1;
+    pH = phRaw;
+    //pH = A0*phRaw + A1;
     
     pHSampleTimerISR_ClearPending();
     

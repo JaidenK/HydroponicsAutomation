@@ -19,10 +19,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#define A2 8.13E-05
-//#define A1 -0.491
-//#define A0 962
-
 #define SUCCESS 1
 #define ERROR -1
 #define FALSE 0
@@ -64,7 +60,7 @@ CY_ISR(ECSenseDataRxISRHandler){
     if(remainder){
         if(remainder == 1){
             count = 0;
-            //printf("%s\r\n",RxBuffer);
+            printf("%s\r\n",RxBuffer);
             if(ECSense_DecodeMessage(RxBuffer)){
                 ready = TRUE;
             }
@@ -117,7 +113,7 @@ uint16_t CalcCheckSum(const char *s){
     }
     else{
         //Update sd
-        //printf("%s\r\n", buffer);
+        printf("%s\r\n", buffer);
         token = strtok(buffer,delim);
         while(token != NULL){;
             sscanf(token,"%d", &key);
@@ -155,6 +151,7 @@ void ECSense_Init(){
  * @author Barron Wong 05/15/19
 */
 uint16_t ECSense_GetEC(){
+    
     return ec;
 }
 
