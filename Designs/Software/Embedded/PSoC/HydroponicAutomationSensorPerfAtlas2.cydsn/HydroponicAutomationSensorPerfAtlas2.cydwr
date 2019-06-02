@@ -460,6 +460,7 @@
       <Data key="1317d60a-c1f6-4303-8eb0-d2e4981e2843" value="SenseSwitchTimerISR" />
       <Data key="4051a405-157f-4384-9df4-5c5ccf07972c" value="PingSensorEchoISR" />
       <Data key="aad92d78-f2f1-457c-8db9-8af83518fbe7" value="FlowSenseCaptureISR" />
+      <Data key="ac49ab57-f02c-4509-8f46-26c41df1a55a" value="TempSenseDataRxISR" />
       <Data key="b3ce65c2-af12-4a0a-b76e-042443430693" value="FlowSenseTimeOutISR" />
       <Data key="bcd5c967-9918-4316-9324-9614fbf73f23" value="isr_rx" />
       <Data key="c1b53305-1c2f-441b-87e5-7ee488eed6ec/b73dcd38-4bce-4cd7-acec-33f53e91ccd6" value="pHADC_IRQ" />
@@ -488,16 +489,17 @@
       <Data key="9b2b51d0-5b81-426f-8ab7-513b4a491465" value="ECSenseRx" />
       <Data key="9fed8531-b1d5-464b-9bf0-b3d733ec5766" value="WaterEcho" />
       <Data key="019d2344-5756-4737-88cd-fc56f9743a75" value="Echo" />
-      <Data key="30a7e89a-8375-4773-a6f7-2bceb46abf5e" value="pHControl" />
+      <Data key="30a7e89a-8375-4773-a6f7-2bceb46abf5e" value="pHEnable" />
       <Data key="38afc59f-fef9-4233-bd5b-7d011ef1817e" value="HalfBridgeSW1" />
       <Data key="098d52a1-cd33-4d20-b813-657f6fdc6b03" value="ECSenseRxInv" />
       <Data key="493fce26-7f83-4a83-92ec-191d848a8043/16a808f6-2e13-45b9-bce0-b001c8655113" value="pHADC_Bypass" />
-      <Data key="631a298c-944b-479b-9203-701b96bf004a" value="ECControl" />
+      <Data key="631a298c-944b-479b-9203-701b96bf004a" value="ECEnable" />
       <Data key="995ca484-61f2-423c-9047-6e3179a7643a" value="HalfBridgeSW2" />
       <Data key="2885c429-5932-4155-917a-0938783b4618" value="NutsTrig" />
       <Data key="7081a449-5876-4437-a055-ced157b3fac6" value="pHDownTrig" />
       <Data key="35016d87-8004-4039-a214-1fa210488325" value="TimerOut" />
       <Data key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5" value="pH" />
+      <Data key="567337af-90b5-461b-a504-c3f4ddd324bf" value="TempSenseRx" />
       <Data key="605176ba-3189-451c-ac0e-10aa2ed1a8bb" value="DataComTx" />
       <Data key="893425e2-b901-46a8-80e5-5d2d9917eaf4" value="pHUpPump" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
@@ -3643,6 +3645,13 @@
         <Data key="Vector" value="-1" />
       </Group>
     </Group>
+    <Group key="ac49ab57-f02c-4509-8f46-26c41df1a55a">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="1" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
     <Group key="c1b53305-1c2f-441b-87e5-7ee488eed6ec/b73dcd38-4bce-4cd7-acec-33f53e91ccd6">
       <Group key="CortexM3">
         <Data key="Assigned" value="True" />
@@ -3762,6 +3771,11 @@
     <Group key="88508c76-9fb7-4110-aaaa-cfaedb17dbc5">
       <Group key="0">
         <Data key="Port Format" value="3,0" />
+      </Group>
+    </Group>
+    <Group key="567337af-90b5-461b-a504-c3f4ddd324bf">
+      <Group key="0">
+        <Data key="Port Format" value="2,4" />
       </Group>
     </Group>
     <Group key="605176ba-3189-451c-ac0e-10aa2ed1a8bb">
