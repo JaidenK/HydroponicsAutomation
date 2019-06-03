@@ -22,15 +22,15 @@ struct SensorData {
 
 typedef struct SensorData SensorData;
 
-void getGETstr(char *buf, struct SensorData *sd);
-void setRandomData(struct SensorData *sd);
-void randomWalk(struct SensorData *sd);
-void sensor_data_init(struct SensorData *sd);
+void getGETstr(char *buf, SensorData *sd);
+void setRandomData(SensorData *sd);
+void randomWalk(SensorData *sd);
+void sensor_data_init(SensorData *sd);
 
-int logData(struct SensorData *sd, char *filename);
-int loadData(struct SensorData *sd, char *filename);
-int saveData(struct SensorData *sd, char *filename);
-int updateSensors(message_t * msg, struct SensorData *sd);
+int logData(SensorData *sd, char *filename);
+int loadData(SensorData *sd, char *filename);
+int saveData(SensorData *sd, char *filename);
+int updateSensors(message_t * msg, SensorData *sd);
 
 
 #endif
