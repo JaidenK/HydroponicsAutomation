@@ -8,10 +8,12 @@
 #include <sys/socket.h> /* socket, connect */
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
 #include <netdb.h> /* struct hostent, gethostbyname */
+#include <pthread.h>
 
 #include <ctype.h> // isspace()
 
 int isResponseReady = 0;
+#define RESPONSE_SIZE 2048
 
 // Data received during the HTTP request
 char httpGETdata[2048];
@@ -36,6 +38,7 @@ static HTTPStatus_t status;
 
 int sendMessage();
 int receiveResponse();
+void *http_get_thread(void *foo);
 
 void error(const char *msg) { 
   printf("%s\n", msg);
@@ -95,7 +98,7 @@ int HTTP_GetResponse(char *dest) {
   return 0;
 }
 
-int sendMessage(char *message) {
+int sendMessage() {
    /* send the request */
    // Total number of bytes in the message
    int total = strlen(message);
@@ -116,30 +119,33 @@ int sendMessage(char *message) {
    return 0;
 }
 
-int receiveResponse(char *response, unsigned int size) {
-   /* receive the response */
-   // Clear the old data
-   memset(response,0,size);
-   // Bytes received
-   int received = 0;
-   int bytes = 0;
-   do {
-      bytes = read(sockfd,response+received,size-received);
-      if (bytes < 0) {
-         error("ERROR reading response from socket");
-      }
-      if (bytes == 0) {
-         break;
-      }
-      received+=bytes;
-   } while (received < size);
+int receiveResponse() {
+  /* receive the response */
+  // Clear the old data
+  memset(response,0,RESPONSE_SIZE);
+  // Bytes received
+  int received = 0;
+  int bytes = 0;
+  do {
+    bytes = read(sockfd,response+received,RESPONSE_SIZE-received);
+    if (bytes < 0) {
+      error("ERROR reading response from socket");
+      close(sockfd);
+      return 0;
+    }
+    if (bytes == 0) {
+      break;
+    }
+    received+=bytes;
+  } while (received < RESPONSE_SIZE);
 
-   // Receive buffer full
-   if (received == size) {
-      error("ERROR storing complete response from socket");
-   }
-
-   return 0;
+  // Receive buffer full
+  if (received == RESPONSE_SIZE) {
+    error("ERROR storing complete response from socket");
+    close(sockfd);
+    return 0;
+  }
+  return 0;
 }
 
 int HTTP_ParseResponse(char * response, SensorData * sd){
