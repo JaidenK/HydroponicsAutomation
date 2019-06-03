@@ -23,7 +23,7 @@ $sql .= " WHERE `ProductID` = '" . mysqli_real_escape_string($conn,$_POST['Produ
 
 $result = mysqli_query($conn,$sql);
 if(!$result) {
- die('Could not get data: ' . mysqli_error());
+ die('Could not get data: ' . mysqli_error($conn));
 }
 
 echo "success";
