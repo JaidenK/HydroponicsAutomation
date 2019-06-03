@@ -20,7 +20,9 @@ $keys = array(
    "flow_measured",
    "flow_target",
    "ph_target",
-   "ec_target"
+   "ec_target",
+   "h2o_target",
+   "temp_target"
 );
 
 $isBadRequest = false; 
@@ -50,15 +52,17 @@ $flow_measured =  (double) $_GET["flow_measured"];
 $flow_target =    (double) $_GET["flow_target"];
 $ph_target =      (double) $_GET["ph_target"];
 $ec_target =      (double) $_GET["ec_target"];
+$h2o_target =     (double) $_GET["h2o_target"];
+$temp_target =    (double) $_GET["temp_target"];
 
 $ProductID = mysqli_real_escape_string($conn, $_GET["ProductID"]);
 
 if($_GET["notify"]) {
-   sendNotification($ProductID,mysqli_real_escape_string($conn, $_GET["notify"]));
+   sendNotification($ProductID,mysqli_real_escape_string($conn, $_GET["notify"]),$conn);
 }
 
 
-$sql = "INSERT INTO `TestTable` (`h2o_level`, `h2o_stored`, `ph_level`, `ph_up_stored`, `ph_down_stored`, `ec_level`, `ec_stored`, `temp_measured`, `flow_measured`, `flow_target`, `ph_target`, `ec_target`, `time`, `table_key`) VALUES ('$h2o_level', '$h2o_stored', '$ph_level', '$ph_up_stored', '$ph_down_stored', '$ec_level', '$ec_stored', '$temp_measured', '$flow_measured', '$flow_target', '$ph_target', '$ec_target', CURRENT_TIMESTAMP, NULL);";
+$sql = "INSERT INTO `TestTable` (`h2o_level`, `h2o_stored`, `ph_level`, `ph_up_stored`, `ph_down_stored`, `ec_level`, `ec_stored`, `temp_measured`, `flow_measured`, `flow_target`, `ph_target`, `h2o_target`, `temp_target`, `ec_target`, `time`, `table_key`) VALUES ('$h2o_level', '$h2o_stored', '$ph_level', '$ph_up_stored', '$ph_down_stored', '$ec_level', '$ec_stored', '$temp_measured', '$flow_measured', '$flow_target', '$ph_target', '$h2o_target', '$temp_target', '$ec_target', CURRENT_TIMESTAMP, NULL);";
 
 if ($conn->query($sql) === TRUE) {
    echo "new_record=success\n";
