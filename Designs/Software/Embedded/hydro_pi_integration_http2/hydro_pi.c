@@ -128,7 +128,7 @@ void * httpThread(void *vargp){
          }else{
            // Load the sensor data as a formatted string into a char buffer
            memset(buf,0,BUF_SIZE);
-           getGETstr(buf,sd);
+           getGETstr(buf,&sd);
            // Upload the data to the website
            HTTP_Get("dataReceiver.php",buf);
          }
