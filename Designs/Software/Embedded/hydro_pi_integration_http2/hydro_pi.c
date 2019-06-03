@@ -50,8 +50,8 @@ enum hydro_states{
 
 // static int clicked = 0;
 
-static struct SensorData sd;
-static struct SensorData prevSD;
+static SensorData sd;
+static SensorData prevSD;
 static char rx_data[64]; // Receive data block
 static 	message_t msg;   // message data
 
