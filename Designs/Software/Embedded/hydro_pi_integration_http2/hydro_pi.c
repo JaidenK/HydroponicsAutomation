@@ -110,7 +110,6 @@ void *sdThread(void * vargp){
 }
 
 void * httpThread(void *vargp){
-	
 	time_t timestamp;
 	
 	//Initialize HTTP library
@@ -124,35 +123,42 @@ void * httpThread(void *vargp){
 	while(1){
 		if (difftime(time(NULL), timestamp) > 60) {
 			timestamp = time(NULL);
-			getGETstr(request, &sd);
-			if(HTTP_Get("dataReceiver.php", request, response, 1024) != -1){
-				//update targets
-				prevSD = sd;
-				if(HTTP_ParseResponse(response, &sd)){
-					if(prevSD.h2o_target != sd.h2o_target){
-						Protocol_EncodeOutput(h20_level_target, sd.h2o_target,buffer);
-						USBCom_SendData(buffer);
-					}
-					if(prevSD.flow_target != sd.flow_target){
-						Protocol_EncodeOutput(flow_target, sd.flow_target,buffer);
-						USBCom_SendData(buffer);
-					}
-					if(prevSD.ph_target != sd.ph_target){
-						Protocol_EncodeOutput(ph_target, sd.ph_target,buffer);
-						USBCom_SendData(buffer);
-					}
-					if(prevSD.ec_target != sd.ec_target){
-						Protocol_EncodeOutput(ec_target, sd.ec_target,buffer);
-						USBCom_SendData(buffer);
-					}	
-				}
-			}
-			else{
-				printf("Error GET\n");
-			}
+         if(HTTP_getStatus() != HTTP_IDLE) {
+           printf("Warning: HTTP busy. %s\n", HTTP_getStatusString());
+         }else{
+           // Load the sensor data as a formatted string into a char buffer
+           memset(buf,0,BUF_SIZE);
+           getGETstr(buf,sd);
+           // Upload the data to the website
+           HTTP_Get("dataReceiver.php",buf);
+         }
+      }
+      // Once the http response is ready, print it out.
+      if(HTTP_GetResponse(response)) {
+         printf("Response received.\n");
+         prevSD = sd;
+         if(HTTP_ParseResponse(response, &sd)){
+            if(prevSD.h2o_target != sd.h2o_target){
+               Protocol_EncodeOutput(h20_level_target, sd.h2o_target,buffer);
+               USBCom_SendData(buffer);
+            }
+            if(prevSD.flow_target != sd.flow_target){
+               Protocol_EncodeOutput(flow_target, sd.flow_target,buffer);
+               USBCom_SendData(buffer);
+            }
+            if(prevSD.ph_target != sd.ph_target){
+               Protocol_EncodeOutput(ph_target, sd.ph_target,buffer);
+               USBCom_SendData(buffer);
+            }
+            if(prevSD.ec_target != sd.ec_target){
+               Protocol_EncodeOutput(ec_target, sd.ec_target,buffer);
+               USBCom_SendData(buffer);
+            }  
+         }
 		}
 	}
 }
+
 void checkTargetChange(){
 	char buffer[BUF_SIZE];
 	if(prevSD.h2o_target != sd.h2o_target){

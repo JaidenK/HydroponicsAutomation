@@ -11,6 +11,8 @@
 
 #include <ctype.h> // isspace()
 
+int isResponseReady = 0;
+
 // Data received during the HTTP request
 char httpGETdata[2048];
 
@@ -20,6 +22,7 @@ int portno = 80;
 char host[1024];// =        "sdp.ballistaline.com";
 // The format of the http message to be sent. A simple GET request.
 char message_fmt[1024];// = "GET http://sdp.ballistaline.com/dataReceiver.php?%s HTTP/1.0\r\n\r\n";
+char message[4096];
 
 // Will store the details about the server, like it's IP, given a URL
 struct hostent *server;
@@ -27,11 +30,17 @@ struct hostent *server;
 struct sockaddr_in serv_addr;
 int sockfd;
 
+static char response[RESPONSE_SIZE];
+
+static HTTPStatus_t status;
+
 int sendMessage();
 int receiveResponse();
 
-int error(const char *msg) { perror(msg); return -1; }
-
+void error(const char *msg) { 
+  printf("%s\n", msg);
+  status = HTTP_ERROR;
+}
 int HTTP_Init(char *host_) {
   printf("Initializing HTTP.\n");
   HTTP_SetHost(host_);
@@ -53,40 +62,27 @@ int HTTP_SetMessageFormat(char *message_fmt_) {
   return 0;
 }
 
-int HTTP_Get(char *page, char *data, char *response, unsigned int size) {
-   /* create the socket */
-   sockfd = socket(AF_INET, SOCK_STREAM, 0);
-   if (sockfd < 0) error("ERROR opening socket");
+HTTPStatus_t HTTP_getStatus() {
+  return status;
+}
+void HTTP_setStatus(HTTPStatus_t newStatus) {
+  status = newStatus;
+}
 
-   /* lookup the ip address */
-   server = gethostbyname(host);
-   if (server == NULL) error("ERROR, no such host");
+const char *HTTP_getStatusString() {
+  return HTTP_StatusNames[status];
+}
 
-   /* fill in the parameters */
-   // Clear the message so that garbage doesn't go on the end.
-   char message[4096];
-   memset(message,0,sizeof(message));
-   sprintf(message,message_fmt,page,data);
-   printf("HTTP GET Request:\n%s\n",message);
+int HTTP_Get(char *page, char *data) {
+  /* fill in the parameters */
+  // Clear the message so that garbage doesn't go on the end.
+  memset(message,0,sizeof(message));
+  sprintf(message,message_fmt,page,data);
+  // printf("HTTP GET Request:\n%s\n",message);
+  pthread_t tid_http_get;
+  pthread_create(&tid_http_get, NULL, http_get_thread, NULL);
 
-   /* fill in the structure */
-   memset(&serv_addr,0,sizeof(serv_addr));
-   serv_addr.sin_family = AF_INET; // Address Family
-   serv_addr.sin_port = htons(portno);
-   memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
-
-   /* connect the socket */
-   if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0)
-   error("ERROR connecting");
-
-   sendMessage(message);
-
-   receiveResponse(response, size);
-
-   /* close the socket */
-   close(sockfd);
-
-   return 0;
+  return 0;
 }
 
 
@@ -187,3 +183,64 @@ int HTTP_ParseResponse(char * response, struct SensorData * sd){
     } 	
 	return return_val;
 }
+
+void *http_get_thread(void *foo) {  
+  status = HTTP_OPENING_SOCKET;
+  // printf("Opening socket -> \n");
+  /* create the socket */
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);
+  if (sockfd < 0) {
+    error("ERROR opening socket");
+    return NULL;
+  }
+
+  /* lookup the ip address */
+  server = gethostbyname(host);
+  if (server == NULL) {
+    error("ERROR, no such host");
+    close(sockfd);
+    return NULL;
+  }
+
+
+  /* fill in the structure */
+  memset(&serv_addr,0,sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET; // Address Family
+  serv_addr.sin_port = htons(portno);
+  memcpy(&serv_addr.sin_addr.s_addr,server->h_addr,server->h_length);
+
+  status = HTTP_CONNECTING;
+  // printf("Connecting -> \n");
+
+  /* connect the socket */
+  if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0) {
+    error("ERROR connecting");
+    close(sockfd);
+    return NULL;
+  }
+
+  status = HTTP_SENDING_MESSAGE;
+  // printf("Sending message -> \n");
+
+  sendMessage();
+
+  status = HTTP_RECEIVING_MESSAGE;
+  // printf("Receiving message -> \n");
+
+  receiveResponse();
+
+  status = HTTP_CLOSING_SOCKET;
+  // printf("Closing -> \n");
+
+  /* close the socket */
+  close(sockfd);
+
+  status = HTTP_IDLE;
+  // printf("Done.\n");
+
+  isResponseReady = 1;
+
+  return NULL;
+}
+
+
