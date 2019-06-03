@@ -67,14 +67,19 @@ int HTTP_SetMessageFormat(char *message_format);
     @param[out] response String where the complete HTTP reponse will be stored.
     @param[in] size Maximum number of bytes to store in response.
 */
-int HTTP_Get(char *page, char *data, char *response, unsigned int size);
+int HTTP_Get(char *page, char *data);
 
 
 /** Parses response from HTTP_Get function.
     @param[in] Response message from HTTP_GET request
     @param[out] 1 if there is a resonse 0 if not.
 */
-int HTTP_ParseResponse(char * response, struct SensorData * sd);
+int HTTP_ParseResponse(char * response, SensorData * sd);
+
+/** If data is ready, copies it into response. 
+    @return 1 If data was ready and read, 0 otherwise.
+*/
+int HTTP_GetResponse(char *response);
 
 HTTPStatus_t HTTP_getStatus();
 void HTTP_setStatus(HTTPStatus_t newStatus);

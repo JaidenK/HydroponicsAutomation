@@ -86,6 +86,15 @@ int HTTP_Get(char *page, char *data) {
 }
 
 
+int HTTP_GetResponse(char *dest) {
+  if(isResponseReady) {
+    strcpy(dest, response);
+    isResponseReady = 0;
+    return 1;
+  }
+  return 0;
+}
+
 int sendMessage(char *message) {
    /* send the request */
    // Total number of bytes in the message
@@ -133,7 +142,7 @@ int receiveResponse(char *response, unsigned int size) {
    return 0;
 }
 
-int HTTP_ParseResponse(char * response, struct SensorData * sd){
+int HTTP_ParseResponse(char * response, SensorData * sd){
 	char* line; strtok(response, "\n"); 
 	int return_val = 0;
 	
