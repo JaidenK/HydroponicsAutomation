@@ -138,7 +138,7 @@ int logData(struct SensorData *sd, char *filename) {
    }else{
       fprintf(
          log_file,
-         "%lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %s, %ld\n",
+         "%lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %ld\n",
          sd->h2o_level,
          sd->h2o_stored,
          sd->ph_level,
@@ -153,7 +153,6 @@ int logData(struct SensorData *sd, char *filename) {
          sd->ec_target,
          sd->h2o_target,
          sd->temp_target,
-         sd->ProductID,
          secs
       );
       fclose(log_file);
