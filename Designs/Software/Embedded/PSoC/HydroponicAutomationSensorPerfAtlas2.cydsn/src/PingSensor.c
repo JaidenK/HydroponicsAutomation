@@ -140,11 +140,11 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {
-        printf("Water Level: %f\r\n", PingSensor_GetWaterLevel());
-        printf("pH Up Level: %f\r\n", SupplyLevel[LEVEL_pH_UP]);
-        printf("pH Down Level: %f\r\n", SupplyLevel[LEVEL_pH_DOWN]);
-        printf("Nut Level: %f\r\n", SupplyLevel[LEVEL_NUTS]);
-        printf("Water Res Level: %f\r\n", SupplyLevel[LEVEL_WATER_RES]);
+        printf("Water Level: %f ", PingSensor_GetWaterLevel());
+        printf("pH Up Level: %f ", SupplyLevel[LEVEL_pH_UP]);
+        printf("pH Down Level: %f ", SupplyLevel[LEVEL_pH_DOWN]);
+        printf("Nut Level: %f ", SupplyLevel[LEVEL_NUTS]);
+        printf("Water Res Level: %f\r", SupplyLevel[LEVEL_WATER_RES]);
 
     }
 }

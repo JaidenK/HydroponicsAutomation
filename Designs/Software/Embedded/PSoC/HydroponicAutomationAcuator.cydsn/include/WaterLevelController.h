@@ -53,7 +53,22 @@ void WaterLevelController_Init();
  * @author Barron Wong 05/013/19
 */
 float WaterLevelController_GetWaterLevel();
-
+/**
+ * @function WaterLevelController_TurnOff(void)
+ * @param None
+ * @return Height of water level in centimeters
+ * @brief None
+ * @author Barron Wong 06/05/19
+*/
+void WaterLevelController_TurnOff();
+/**
+ * @function WaterLevelController_TurnOn(void)
+ * @param None
+ * @return None
+ * @brief Turn on water level controller
+ * @author Barron Wong 06/05/19
+*/
+void WaterLevelController_TurnOn();
 #endif
 
 /* [] END OF FILE */

@@ -130,7 +130,7 @@ uint16_t CalcCheckSum(const char *s){
 void ECSense_Init(){
     ECSenseUART_Start();
     ECSenseDataRxISR_StartEx(ECSenseDataRxISRHandler);
-    ECSense_TurnOff();
+    ECSense_TurnOn();
 }
 
 /**
