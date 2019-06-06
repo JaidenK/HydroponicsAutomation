@@ -30,7 +30,7 @@ int sockfd;
 int sendMessage();
 int receiveResponse();
 
-void error(const char *msg) { perror(msg); exit(0); }
+int error(const char *msg) { perror(msg); return -1; }
 
 int HTTP_Init(char *host_) {
   printf("Initializing HTTP.\n");
@@ -138,8 +138,18 @@ int receiveResponse(char *response, unsigned int size) {
 }
 
 int HTTP_ParseResponse(char * response, struct SensorData * sd){
-	char* line = strtok(response, "\n"); 
+	char* line; strtok(response, "\n"); 
 	int return_val = 0;
+	
+	
+	int response_len = strlen(response);
+	
+	if(response_len < 0){
+		return 0;
+	}
+	
+	line = strtok(response, "\n"); 
+	
 	while (line != NULL) { 
 		char key[256];
 		double value = 0;
