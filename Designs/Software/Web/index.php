@@ -58,6 +58,11 @@
       <hr class="d-sm-none">
     </div>
     <div class="col-sm-8">
+      <h2>Prototype Assembled</h2>
+      <h5>Prototype Assembled, June 5, 2019</h5>
+      <p>The final prototype has been cut out of acrylic and assembled.</p>
+      <img width="100%" src="media/images/PartnersDay_OnTransparent_LowerRes.png"></img>
+      <br>
       <h2>Greenlight</h2>
       <h5>Project approved, Nov 20, 2018</h5>
       <p>After meeting with Gabriel Elkaim and Max Dunne, the Hydroponics Automation project was approved for a team of 4.</p>
