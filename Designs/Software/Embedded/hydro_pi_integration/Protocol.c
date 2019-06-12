@@ -28,17 +28,27 @@ message_t Protocol_DecodeInput(char * input){
     char * ptr;
     message_t message;
     uint8_t count = 0;
+	uint8_t key = 0;
+	double value = 0;
     
     ptr = strtok(input,":");
     
     while(ptr != NULL){
         switch(count){
             case 0:{
-				message.key = atoi(ptr);
+				key = atoi(ptr);
+				if(key > invalid_key && key  <= flow_measured)
+					message.key = atoi(ptr);
+				else
+					message.key = invalid_key;
             break;
             }
             case 1:{
-				message.value = atof(ptr);
+				value = atof(ptr);
+				if(value >= 0 &&  value <= 5000)
+					message.value = value;
+				else
+					message.key = -1;
             break;
             }
             default:{

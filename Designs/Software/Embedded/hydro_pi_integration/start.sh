@@ -1,1 +1,1 @@
-sudo screen ./hydro_pi -S hydro_pi
+while true; do sudo screen ./hydro_pi -S hydro_pi; done

@@ -128,9 +128,11 @@ void randomWalk(struct SensorData *sd) {
 }
 
 int logData(struct SensorData *sd, char *filename) {
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  long secs = now.tv_sec;
+    time_t timeStamp = time(NULL);
+    
+    struct tm *localStamp = localtime(&timeStamp);
+    
+    timeStamp = mktime(localStamp);
 
    FILE *log_file = fopen(filename, "a");
    if(!log_file) {
@@ -153,7 +155,7 @@ int logData(struct SensorData *sd, char *filename) {
          sd->ec_target,
          sd->h2o_target,
          sd->temp_target,
-         secs
+         timeStamp
       );
       fclose(log_file);
    }

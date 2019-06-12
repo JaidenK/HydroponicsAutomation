@@ -157,7 +157,7 @@ void * httpThread(void *vargp){
 void * logThread(void * vargp){
     time_t timestamp = time(NULL);
     while(1){
-        if(difftime(time(NULL), timestamp) >  1){
+        if(difftime(time(NULL), timestamp) >  60){
             logData(&sd,"logfile.csv");
             timestamp = time(NULL);
         }
@@ -207,13 +207,13 @@ int main(int argc, char *argv[]) {
     pthread_create(&thread_sd, NULL, sdThread, NULL);
     
     //HTTP Theard_init
-    // pthread_t thread_http;
-    // pthread_create(&thread_http, NULL, httpThread, NULL);
+    pthread_t thread_http;
+    pthread_create(&thread_http, NULL, httpThread, NULL);
     
     //logThread_Init
-    pthread_t thread_log;
-    pthread_create(&thread_log, NULL, logThread, NULL);
-    
+//    pthread_t thread_log;
+//    pthread_create(&thread_log, NULL, logThread, NULL);
+  
     
     
     printf("Waiting (to allow network to connect).\n");
