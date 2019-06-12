@@ -1,4 +1,5 @@
 #include "Mixing.h"
+#include "WaterLevelController.h"
 #define ADC_MAX 255
 static int dutyCycle = 200;
 /**
@@ -39,6 +40,7 @@ void Mixing_SetDutyCycle(int newDutyCycle){
 */
 void Mixing_TurnOff(){
     MixingDAC_SetValue(0);
+    WaterLevelController_TurnOn();
 }
 
 /**
@@ -50,6 +52,7 @@ void Mixing_TurnOff(){
 */
 void Mixing_TurnOn(){
     MixingDAC_SetValue(dutyCycle);
+    WaterLevelController_TurnOff();
 }
 #ifdef MIXING_TEST   
     

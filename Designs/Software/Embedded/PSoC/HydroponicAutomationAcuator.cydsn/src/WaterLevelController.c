@@ -38,6 +38,7 @@ CY_ISR(WaterLevelControllerISRHandler){
     
     WaterLevelControllerISR_ClearPending();
     if (waterLevel < LOWER_THRESH){
+        
         WaterLevelControlReg_Write(1);
         EC_Enable = OFF;
         pH_Enable = OFF;
@@ -70,6 +71,31 @@ void WaterLevelController_Init(){
 float WaterLevelController_GetWaterLevel(){
     return sd.h2o_level;
 }
-
+/**
+ * @function WaterLevelController_TurnOff(void)
+ * @param None
+ * @return Height of water level in centimeters
+ * @brief None
+ * @author Barron Wong 06/05/19
+*/
+void WaterLevelController_TurnOff(){
+    WaterLevelControllerISR_Disable();
+}
+/**
+ * @function WaterLevelController_TurnOn(void)
+ * @param None
+ * @return None
+ * @brief Turn on water level controller
+ * @author Barron Wong 06/05/19
+*/
+void WaterLevelController_TurnOn(){
+    WaterLevelControllerISR_Enable();
+}
+#ifdef WATERLEVELCONTROLLER_TEST
+int main(){
+    WaterLevelController_Init();
+    WaterLevelControlReg_Write(1);
+}
+#endif
 
 /* [] END OF FILE */

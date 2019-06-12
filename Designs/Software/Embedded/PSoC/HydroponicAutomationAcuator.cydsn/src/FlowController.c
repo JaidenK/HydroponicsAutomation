@@ -38,7 +38,7 @@ extern uint8_t EC_Enable;
  */
 CY_ISR(FlowCounterTimerISRHandler){
     float flowRate = 0;
-    float kp = 9.0;
+    float kp = 9.0;//0.05;//9.0;
     float error = 0;
     
     flow_ref = sd.flow_target;
@@ -157,7 +157,6 @@ void FlowController_TurnOn(){
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
-    ADC_DelSig_1_Start();
     FlowController_Init();
     SerialCom_Init();
     //USBFS_Init();
@@ -177,11 +176,8 @@ int main(void)
     {
         
         //Check voltage reading from pin 0.1
-        adcReading = ADC_DelSig_1_Read16();
-        if(adcReading > 600)
-            adcReading = 0;
-        if(adcReading > ADC_MAX)
-            adcReading = ADC_MAX;
+        FlowController_SetFlowReference(1.5);
+        
         
 
     }

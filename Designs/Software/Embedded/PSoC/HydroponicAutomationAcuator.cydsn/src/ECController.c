@@ -8,7 +8,7 @@
 
 
 #define EC_DROP_DURATION 100
-#define MARGIN 0.05
+#define MARGIN 100
 #define EC_LOWERBOUND sd.ec_target*MARGIN
 #define EC_TARGET_MIN 100
 
@@ -40,14 +40,15 @@ CY_ISR(ECControllerISRHandler){
 
         //Hystersis bound for error
         if(!adjust){
-            if(error > EC_LOWERBOUND){
+            if(error > MARGIN){
                 adjust = TRUE;
-                Mixing_TurnOn();
                 pH_Enable = OFF;
+                Mixing_TurnOn();
             }
         }
 
         if(adjust){
+            Mixing_TurnOn();
             printf("EC Adjust\r\n");
             drops = kp*error;
             ECController_AdjustEC(drops);

@@ -64,15 +64,16 @@ CY_ISR(pHControlISRHandler){
     if(sd.ph_target >= PH_MIN_REF){
         error = sd.ph_target - sd.ph_level;
         
-        if(fabs(error) < sd.ph_target*MARGIN){
+        if(fabs(error) < MARGIN){
             adjust = FALSE;
             Mixing_TurnOff();
         }
         
         //Hystersis bound for error
         if(!adjust){
+            Mixing_TurnOff();
             if(error > PH_UPPERBOUND){
-                adjust = TRUE;;
+                adjust = TRUE;
             }
             if(error < PH_LOWERBOUND){
                 adjust = TRUE;
@@ -83,7 +84,6 @@ CY_ISR(pHControlISRHandler){
             Mixing_TurnOn();
             printf("pH Target: %f Meas: %f Error: %f\r\n",sd.ph_target, sd.ph_level, error);
             drops = kp*error;
-            //printf("ph_ref: %f ph_level: %f error: %f\r\n",pHRef, sd.ph_level, error);
             if(drops > 0){
                 printf("pH up: %d\r\n", drops);
                 pHController_AdjustpH(UP,drops);

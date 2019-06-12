@@ -520,90 +520,10 @@
 	"buffers":
 	[
 		{
-			"file": "hydro_pi.c",
+			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/index.php",
 			"settings":
 			{
-				"buffer_size": 4610,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "notifications.c",
-			"settings":
-			{
-				"buffer_size": 3929,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/notificationSystem.php",
-			"settings":
-			{
-				"buffer_size": 867,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "hydro_gui.h",
-			"settings":
-			{
-				"buffer_size": 972,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Makefile",
-			"settings":
-			{
-				"buffer_size": 1057,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "sensor_data.c",
-			"settings":
-			{
-				"buffer_size": 6268,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "hydro_gui.c",
-			"settings":
-			{
-				"buffer_size": 7342,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/dataReceiver.php",
-			"settings":
-			{
-				"buffer_size": 2935,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/controlPanel.php",
-			"settings":
-			{
-				"buffer_size": 18645,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/setSettings.php",
-			"settings":
-			{
-				"buffer_size": 1198,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/jaidenking/Documents/PythonScripts/ES_Framework_helper/ES_Framework_helper.py",
-			"settings":
-			{
-				"buffer_size": 5397,
+				"buffer_size": 3070,
 				"line_ending": "Unix"
 			}
 		}
@@ -640,19 +560,34 @@
 	},
 	"file_history":
 	[
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/sensor_data.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/sensor_data.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/hydro_pi.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/Protocol.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/Protocol.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/http.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/http.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/http.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/http.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_pi.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/hydro_pi",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/sensor_data.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/notifications.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/sensor_data.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/notifications.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/notificationSystem.php",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui.h",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/Makefile",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi_integration_http2/Makefile",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui.c",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/dataReceiver.php",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/controlPanel.php",
+		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/setSettings.php",
 		"/Users/jaidenking/Documents/PythonScripts/ES_Framework_helper/ES_Framework_helper.py",
 		"/Users/jaidenking/Dropbox/Lab 0/CheckOff/Lab0/Lab0_Part8.X/Lab0_Part8_SeekingDarkFSM.c",
 		"/Users/jaidenking/Dropbox/Lab 0/CheckOff/Lab0/Lab0_Part7.X/ES_Configure.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/setTargets.php",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/sensor_data.h",
 		"/Users/jaidenking/Documents/Classes/CE 249/Homework/HW5/Matlab/P1_init.m",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/notificationSystem.php",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui.c",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/http.c",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/http.h",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/Makefile",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/sensor_data.c",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/dataReceiver.php",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/Joy.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/Joy.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/VersionControl/Classes/CE 167/CE167/Lab4/Lab4.X/lab4_main.c",
@@ -667,7 +602,6 @@
 		"/Users/jaidenking/Documents/Classes/CE 118/CanvasDownload/Labs/LabGeneral/CMPE118/scripts/Enum_To_String.py",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/.profile",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/scene_displayIP.c",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_Scene.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/login.php",
 		"/Users/jaidenking/Documents/Roblox/DarkenedDawn/BigBrother/www/panopticon/index.php",
@@ -676,7 +610,6 @@
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/scene_dashboard.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_Graph.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_Graph.h",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_pi.c",
 		"/Users/jaidenking/Downloads/CMPE118/src/roach.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/scene_displayIP.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/scene_dashboard.h",
@@ -702,7 +635,6 @@
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_GuiElement.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/vg_keyboard.c",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/error_log",
-		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/controlPanel.php",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/.gitignore",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_Boke.h",
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Embedded/hydro_pi/hydro_gui_Button.h",
@@ -755,19 +687,7 @@
 		"/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/conrolPanel.php",
 		"/Users/jaidenking/Documents/Classes/CE 167/CE167/.gitignore",
 		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/Designs/Software/Web/login.php",
-		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/Designs/Software/Web/dbinfo.php",
-		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/Designs/Software/Web/SampleDataGenerator.php",
-		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/.gitignore",
-		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/Designs/Software/Web/index.php",
-		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/Designs/Software/Web/nav.php",
-		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/Designs/Software/Web/logout.php",
-		"/Users/jaidenking/Documents/Roblox/DarkenedDawn/BigBrother/www/panopticon/logMessages.php",
-		"/Users/jaidenking/Documents/Roblox/DarkenedDawn/BigBrother/www/panopticon/request.php",
-		"/Users/jaidenking/Documents/Roblox/DarkenedDawn/BigBrother/www/panopticon/dbinfo.php",
-		"/Users/jaidenking/Documents/Classes/CE 167/CE167/lab0/Lab0.X/part3main.c",
-		"/Users/jaidenking/Documents/Classes/CE 167/CE167/CMPE167/include/BOARD.h",
-		"/Users/jaidenking/Documents/Classes/CE 167/CE167/CMPE167/include/ToneGeneration.h",
-		"/Users/jaidenking/Documents/Classes/CE 167/CE167/CMPE167/include/pwm.h"
+		"/Users/jaidenking/Documents/Classes/CE 129/HydroponicsAutomation/Designs/Software/Web/dbinfo.php"
 	],
 	"find":
 	{
@@ -786,6 +706,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"struct",
 			"senDN",
 			"error(",
 			"carrierInput",
@@ -912,8 +833,7 @@
 			"h2o",
 			"level",
 			"h2o_level_data",
-			"h2o_level",
-			"'"
+			"h2o_level"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -938,244 +858,22 @@
 	"groups":
 	[
 		{
-			"selected": 10,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "hydro_pi.c",
+					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/index.php",
 					"settings":
 					{
-						"buffer_size": 4610,
+						"buffer_size": 3070,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3084,
-								3084
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "notifications.c",
-					"settings":
-					{
-						"buffer_size": 3929,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3840,
-								3872
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 3,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/notificationSystem.php",
-					"settings":
-					{
-						"buffer_size": 867,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								106,
-								106
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 3,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "hydro_gui.h",
-					"settings":
-					{
-						"buffer_size": 972,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								346,
-								346
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Makefile",
-					"settings":
-					{
-						"buffer_size": 1057,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								104,
-								104
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Makefile/Makefile.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "sensor_data.c",
-					"settings":
-					{
-						"buffer_size": 6268,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								10,
-								21
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 3,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "hydro_gui.c",
-					"settings":
-					{
-						"buffer_size": 7342,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								382,
-								382
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 483.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/dataReceiver.php",
-					"settings":
-					{
-						"buffer_size": 2935,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1705,
-								1705
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_wrap": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1258.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/controlPanel.php",
-					"settings":
-					{
-						"buffer_size": 18645,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2124,
-								2130
+								2167,
+								2167
 							]
 						],
 						"settings":
@@ -1185,63 +883,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1023.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "/Users/jaidenking/Google Drive (jaaking@ucsc.edu)/TEAM HydroponicAutomation/GitRepo/HydroponicsAutomation/Designs/Software/Web/setSettings.php",
-					"settings":
-					{
-						"buffer_size": 1198,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								121,
-								121
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "/Users/jaidenking/Documents/PythonScripts/ES_Framework_helper/ES_Framework_helper.py",
-					"settings":
-					{
-						"buffer_size": 5397,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								573,
-								573
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 3,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1437.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

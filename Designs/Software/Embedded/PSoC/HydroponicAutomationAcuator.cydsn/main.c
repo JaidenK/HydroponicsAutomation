@@ -70,6 +70,7 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     for(;;)
     {   
+        //printf("flow %d ec %d ph %d\r",Flow_Enable,EC_Enable,pH_Enable);
         water_level = WaterLevelController_GetWaterLevel();
         
         //Flow Controller
@@ -83,14 +84,14 @@ int main(void)
         }
         
         //EC Controller
-        if(Flow_Enable){
+        if(Flow_Enable && EC_Enable){
             ECController_TurnOn();
         }else{
             ECController_TurnOff();
         }
             
         //pH Controller
-        if( pH_Enable){
+        if(pH_Enable){
             pHController_TurnOn();
         }
         else{

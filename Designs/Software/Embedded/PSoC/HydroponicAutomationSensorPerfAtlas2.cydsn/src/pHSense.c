@@ -76,7 +76,7 @@ CY_ISR(pHSenseDataRxISRHandler){
 void pHSense_Init(){
     pHSenseUART_Start();
     pHSenseDataRxISR_StartEx(pHSenseDataRxISRHandler);
-    pHSense_TurnOff();
+    pHSense_TurnOn();
 }
 
 /**
